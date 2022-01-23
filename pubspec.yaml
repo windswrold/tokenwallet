@@ -1,0 +1,57 @@
+name: cstoken
+description: cstoken
+
+# The following line prevents the package from being accidentally published to
+# pub.dev using `flutter pub publish`. This is preferred for private packages.
+publish_to: 'none' # Remove this line if you wish to publish to pub.dev
+
+version: 1.0.0+1
+
+environment:
+  sdk: ">=2.12.0 <3.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  cupertino_icons: ^1.0.2
+  bip39: ^1.0.6
+  bip32: ^2.0.0
+  web3dart: ^2.3.3
+  eth_sig_util: ^0.0.6
+  decimal: ^2.1.0
+  encrypt: ^5.0.1
+  dio: ^4.0.4              
+  floor: ^1.2.0 
+  flutter_screenutil: ^5.1.0   
+  # common_utils: ^2.0.2
+  # scan: ^1.6.0
+  # qr_flutter: ^4.0.0 
+  # share_plus: ^3.0.4
+  # path_provider: ^2.0.8  
+  provider: ^6.0.2    
+  # json_annotation: ^4.4.0
+  # json_serializable: ^6.1.4
+  pull_to_refresh: ^2.0.0    
+  bot_toast: ^4.0.1
+  # permission_handler: ^8.0.1 
+  # shared_preferences: ^2.0.6  
+  # easy_localization: ^3.0.0   
+  # package_info: ^2.0.2
+  # auto_size_text: ^3.0.0-nullsafety.0
+  # flutter_swiper_null_safety: ^1.0.2
+  # cached_network_image: ^3.1.0
+  # flutter_inappwebview: ^5.3.2 
+  # flutter_swipe_action_cell: ^2.1.5
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+  flutter_lints: ^1.0.0
+  floor_generator: ^1.2.0
+  build_runner: ^2.1.2
+
+flutter:
+
+  uses-material-design: true
+
