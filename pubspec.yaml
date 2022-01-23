@@ -22,7 +22,8 @@ dependencies:
   encrypt: ^5.0.1
   dio: ^4.0.4              
   floor: ^1.2.0 
-  flutter_screenutil: ^5.1.0   
+  flutter_screenutil: ^5.1.0  
+  element_ui: ^0.1.3 
   # common_utils: ^2.0.2
   # scan: ^1.6.0
   # qr_flutter: ^4.0.0 
@@ -35,7 +36,7 @@ dependencies:
   bot_toast: ^4.0.1
   # permission_handler: ^8.0.1 
   # shared_preferences: ^2.0.6  
-  # easy_localization: ^3.0.0   
+  easy_localization: ^3.0.0   
   # package_info: ^2.0.2
   # auto_size_text: ^3.0.0-nullsafety.0
   # flutter_swiper_null_safety: ^1.0.2

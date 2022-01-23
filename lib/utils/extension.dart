@@ -1,4 +1,6 @@
 import '../public.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:easy_localization/src/public.dart' as ez;
 
 extension StringTranslateExtension on String {
   bool checkPassword() {
@@ -16,6 +18,13 @@ extension StringTranslateExtension on String {
     }
   }
 
+  String local(
+          {BuildContext? context,
+          List<String>? args,
+          Map<String, String>? namedArgs,
+          String? gender}) =>
+      ez.tr(this, args: args, namedArgs: namedArgs, gender: gender);
+
   bool checkAmount(int decimals) {
     String amount = '^[0-9]{0,$decimals}(\\.[0-9]{0,$decimals})?\$';
     RegExp reg = RegExp(amount);
@@ -23,6 +32,12 @@ extension StringTranslateExtension on String {
   }
 }
 
-extension FormatterBalance on BigInt {}
+extension offsetExtension on num {
+  Widget get rowWidget => SizedBox(width: w);
+  Widget get columnWidget => SizedBox(height: h);
+  double get width => w;
 
+  double get height => h;
 
+  double get font => sp;
+}

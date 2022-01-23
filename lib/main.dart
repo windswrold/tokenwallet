@@ -8,6 +8,8 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
+import 'pages/choose/choose_type_page.dart';
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized(); //不加这个强制横/竖屏会报错
   SystemChrome.setPreferredOrientations([
@@ -35,7 +37,18 @@ class _AppState extends State<App> {
     super.initState();
   }
 
-  void getSkip() async {}
+  void getSkip() async {
+    // List<MHWallet> wallets = await tr.findAllWallets();
+    // if (wallets.length > 0) {
+    //   setState(() {
+    //     state = 3;
+    //   });
+    // } else {
+    //   setState(() {
+    //     state = 2;
+    //   });
+    // }
+  }
 
   Widget buildEmptyView() {
     return Container();
@@ -72,7 +85,7 @@ class _AppState extends State<App> {
                     builder: BotToastInit(),
                     navigatorObservers: [BotToastNavigatorObserver()],
                     routes: {
-                      "/": (context) => HomeTabbar(),
+                      "/": (context) => ChooseTypePage(),
                     },
                   ),
                 )));
