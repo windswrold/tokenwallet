@@ -1,0 +1,10 @@
+{
+    "refresh_pull_down_to_refresh_data": "下拉刷新数据",
+    "refresh_release_to_refresh_data": "松开即可刷新数据",
+    "refresh_data": "刷新数据中",
+    "refresh_finish": "加载完成!",
+    "refresh_pull_up_loading": "上拉加载数据",
+    "refresh_failed_to_load": "加载失败！点击重试！",
+    "refresh_let_go": "松手,加载更多!",
+    "refresh_empty": "没有更多数据了!"
+}
