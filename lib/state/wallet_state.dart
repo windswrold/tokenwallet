@@ -1,9 +1,12 @@
+import 'package:cstoken/model/tr_wallet.dart';
 import '../public.dart';
 
 class CurrentChooseWalletState with ChangeNotifier {
-
-  
-  void loadWallet() async {}
+  TRWallet? currentWallet;
+  void loadWallet() async {
+    currentWallet = await TRWallet.queryChooseWallet();
+    notifyListeners();
+  }
 
   void delWallets() async {}
 

@@ -169,7 +169,7 @@ class _$WalletDao extends WalletDao {
   final DeletionAdapter<TRWallet> _tRWalletDeletionAdapter;
 
   @override
-  Future<TRWallet?> findWalletByWalletID(String walletID) async {
+  Future<TRWallet?> queryWalletByWalletID(String walletID) async {
     return _queryAdapter.query('SELECT * FROM wallet_table WHERE walletID = ?1',
         mapper: (Map<String, Object?> row) => TRWallet(
             walletID: row['walletID'] as String?,
@@ -189,8 +189,27 @@ class _$WalletDao extends WalletDao {
   }
 
   @override
-  Future<List<TRWallet>> findAllWallets() async {
+  Future<List<TRWallet>> queryAllWallets() async {
     return _queryAdapter.queryList('SELECT * FROM wallet_table',
+        mapper: (Map<String, Object?> row) => TRWallet(
+            walletID: row['walletID'] as String?,
+            walletAaddress: row['walletAaddress'] as String?,
+            pin: row['pin'] as String?,
+            prvKey: row['prvKey'] as String?,
+            coinType: row['coinType'] as int?,
+            accountState: row['accountState'] as int?,
+            mnemonic: row['mnemonic'] as String?,
+            descName: row['descName'] as String?,
+            isChoose:
+                row['isChoose'] == null ? null : (row['isChoose'] as int) != 0,
+            leadType: row['leadType'] as int?,
+            pinTip: row['pinTip'] as String?,
+            pubKey: row['pubKey'] as String?));
+  }
+
+  @override
+  Future<TRWallet?> queryChooseWallet() async {
+    return _queryAdapter.query('SELECT * FROM wallet_table WHERE isChoose = 1',
         mapper: (Map<String, Object?> row) => TRWallet(
             walletID: row['walletID'] as String?,
             walletAaddress: row['walletAaddress'] as String?,
