@@ -1,6 +1,8 @@
 import '../public.dart';
 
 class CurrentChooseWalletState with ChangeNotifier {
+
+  
   void loadWallet() async {}
 
   void delWallets() async {}

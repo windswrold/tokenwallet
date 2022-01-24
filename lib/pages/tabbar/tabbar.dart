@@ -1,5 +1,11 @@
 import 'package:cstoken/component/custom_image.dart';
 import 'package:cstoken/component/custom_pageview.dart';
+import 'package:cstoken/pages/apps/apps_page.dart';
+import 'package:cstoken/pages/choose/choose_type_page.dart';
+import 'package:cstoken/pages/home/home_page.dart';
+import 'package:cstoken/pages/mine/mine_page.dart';
+import 'package:cstoken/pages/news/news_page.dart';
+import 'package:cstoken/pages/wallet/wallet_page.dart';
 import 'package:flutter/material.dart';
 
 import '../../public.dart';
@@ -45,11 +51,11 @@ class HomeTabbarState extends State<HomeTabbar> {
       ];
 
   List<Widget> bodyList = [
-    Container(),
-    Container(),
-    Container(),
-    Container(),
-    Container()
+    HomePage(),
+    WalletPage(),
+    AppsPage(),
+    NewsPage(),
+    MinePage()
   ];
 
   void onTap(int index) {
@@ -60,11 +66,7 @@ class HomeTabbarState extends State<HomeTabbar> {
 
   @override
   Widget build(BuildContext context) {
-    return CustomPageView(
-        hiddenScrollView: true,
-        hiddenAppBar: true,
-        safeAreaTop: false,
-        hiddenLeading: true,
+    return Scaffold(
         bottomNavigationBar: Theme(
             data: ThemeData(
                 splashColor: const Color.fromRGBO(0, 0, 0, 0),
@@ -87,7 +89,7 @@ class HomeTabbarState extends State<HomeTabbar> {
               selectedFontSize: 9.font,
               unselectedFontSize: 9.font,
             )),
-        child: Stack(
+        body: Stack(
           alignment: Alignment.bottomCenter,
           children: <Widget>[
             IndexedStack(
