@@ -12,6 +12,29 @@ enum KCoinType {
   Arbitrum,
 }
 
+extension CoinTypeString on KCoinType {
+  String coinTypeString() {
+    switch (this) {
+      case KCoinType.BSC:
+        return "BSC";
+      case KCoinType.ETH:
+        return "ETH";
+      case KCoinType.HECO:
+        return "HECO";
+      case KCoinType.OKChain:
+        return "OKChain";
+      case KCoinType.Matic:
+        return "Matic";
+      case KCoinType.AVAX:
+        return "AVAX";
+      case KCoinType.Arbitrum:
+        return "Arbitrum";
+      default:
+        throw Error();
+    }
+  }
+}
+
 enum KLeadType {
   Prvkey, //通过私钥
   KeyStore, //通过keystore
@@ -19,9 +42,9 @@ enum KLeadType {
 }
 
 enum KAccountState {
+  noauthed, //无需备份
   init, //未备份
   authed, //已备份
-  noauthed, //无需备份
 }
 
 enum KCurrencyType {

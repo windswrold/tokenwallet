@@ -27,7 +27,7 @@ class TREncode {
     pwd = pwd.padRight(32, "0");
     final key = Key.fromUtf8(pwd);
     final iv = IV.fromLength(0);
-    final encrypter = Encrypter(AES(key));
+    final encrypter = Encrypter(AES(key, mode: AESMode.cbc));
     final encrypt = encrypter.encrypt(input, iv: iv);
     return encrypt.base64;
   }
@@ -36,7 +36,7 @@ class TREncode {
     pwd = pwd.padRight(32, "0");
     final key = Key.fromUtf8(pwd);
     final iv = IV.fromLength(0);
-    final encrypter = Encrypter(AES(key));
+    final encrypter = Encrypter(AES(key, mode: AESMode.cbc));
     final decrypted = encrypter.decrypt64(input, iv: iv);
     return decrypted;
   }

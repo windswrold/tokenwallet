@@ -14,9 +14,7 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  int state = 0; //0 load  1 skin, 2 create ,3 tabbar
-
-  CurrentChooseWalletState _walletState = CurrentChooseWalletState();
+  final CurrentChooseWalletState _walletState = CurrentChooseWalletState();
   @override
   void initState() {
     super.initState();

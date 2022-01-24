@@ -29,6 +29,8 @@ abstract class HDWalletProtocol {
 
   String getPublicAddress(String privateKey);
 
+  // String getPublicKey(String privateKey);
+
   HDWallet? importWallet(
       {required String content,
       required String pin,
