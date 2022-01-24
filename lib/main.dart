@@ -7,7 +7,6 @@ import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
-
 import 'pages/choose/choose_type_page.dart';
 
 void main() async {
@@ -57,7 +56,7 @@ class _AppState extends State<App> {
   @override
   Widget build(BuildContext context) {
     return ScreenUtilInit(
-        designSize: const Size(375, 812),
+        designSize: const Size(375, 667),
         builder: () => MultiProvider(
                 providers: [
                   ChangeNotifierProvider.value(

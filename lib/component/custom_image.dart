@@ -22,7 +22,7 @@ class LoadAssetsImage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Image.asset(
-      './assets/img' + name,
+      './assets/images/' + name,
       height: height,
       width: width,
       fit: fit,

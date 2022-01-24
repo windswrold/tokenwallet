@@ -6,3 +6,6 @@ export 'package:provider/provider.dart';
 export 'package:cstoken/utils/log_util.dart';
 export 'package:cstoken/component/custom_pageview.dart';
 export 'package:cstoken/utils/extension.dart';
+export 'package:cstoken/component/custom_image.dart';
+export 'package:cstoken/component/custom_pageview.dart';
+export 'package:element_ui/widgets.dart';

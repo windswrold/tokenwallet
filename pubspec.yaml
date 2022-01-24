@@ -55,4 +55,12 @@ dev_dependencies:
 flutter:
 
   uses-material-design: true
+  assets:
+    - resources/langs/zh-CN.json
+    - resources/langs/en-US.json 
+    - assets/data/
+    - assets/images/
+    - assets/images/icons/ 
+    - assets/images/tabbar/ 
+    - assets/images/bg/ 
 
