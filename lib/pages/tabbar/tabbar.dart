@@ -1,7 +1,6 @@
 import 'package:cstoken/component/custom_image.dart';
 import 'package:cstoken/component/custom_pageview.dart';
 import 'package:cstoken/pages/apps/apps_page.dart';
-import 'package:cstoken/pages/choose/choose_type_page.dart';
 import 'package:cstoken/pages/home/home_page.dart';
 import 'package:cstoken/pages/mine/mine_page.dart';
 import 'package:cstoken/pages/news/news_page.dart';

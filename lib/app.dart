@@ -1,4 +1,3 @@
-import 'package:cstoken/pages/choose/choose_type_page.dart';
 import 'package:cstoken/pages/tabbar/tabbar.dart';
 import 'package:cstoken/state/wallet_state.dart';
 import 'package:flutter/material.dart';

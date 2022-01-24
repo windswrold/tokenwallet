@@ -73,8 +73,7 @@ class TRWallet {
           await database?.walletDao.queryWalletByWalletID(walletID);
       return wallet;
     } catch (e) {
-      LogUtil.v("失败" + e.toString());
-      return null;
+      rethrow;
     }
   }
 
@@ -84,8 +83,7 @@ class TRWallet {
       List<TRWallet>? wallet = await database?.walletDao.queryAllWallets();
       return wallet ??= [];
     } catch (e) {
-      LogUtil.v("失败" + e.toString());
-      return [];
+      rethrow;
     }
   }
 
@@ -95,8 +93,7 @@ class TRWallet {
       TRWallet? wallet = await database?.walletDao.queryChooseWallet();
       return wallet;
     } catch (e) {
-      LogUtil.v("失败" + e.toString());
-      return null;
+      rethrow;
     }
   }
 
@@ -106,8 +103,7 @@ class TRWallet {
       database?.walletDao.insertWallet(wallet);
       return true;
     } catch (e) {
-      LogUtil.v("失败" + e.toString());
-      return false;
+      rethrow;
     }
   }
 
@@ -117,8 +113,7 @@ class TRWallet {
       database?.walletDao.insertWallets(wallets);
       return true;
     } catch (e) {
-      LogUtil.v("失败" + e.toString());
-      return false;
+      rethrow;
     }
   }
 
@@ -128,8 +123,7 @@ class TRWallet {
       database?.walletDao.updateWallet(wallet);
       return true;
     } catch (e) {
-      LogUtil.v("失败" + e.toString());
-      return false;
+      rethrow;
     }
   }
 
@@ -139,8 +133,7 @@ class TRWallet {
       database?.walletDao.updateWallets(wallets);
       return true;
     } catch (e) {
-      LogUtil.v("失败" + e.toString());
-      return false;
+      rethrow;
     }
   }
 
@@ -150,8 +143,7 @@ class TRWallet {
       database?.walletDao.deleteWallet(wallet);
       return true;
     } catch (e) {
-      LogUtil.v("失败" + e.toString());
-      return false;
+      rethrow;
     }
   }
 
@@ -161,8 +153,7 @@ class TRWallet {
       database?.walletDao.deleteWallets(wallets);
       return true;
     } catch (e) {
-      LogUtil.v("失败" + e.toString());
-      return false;
+      rethrow;
     }
   }
 
@@ -193,8 +184,7 @@ class TRWallet {
       String prv = this.prvKey!;
       return TREncode.decrypt(prv, pin);
     } catch (e) {
-      LogUtil.v("exportPrv出错" + e.toString());
-      return null;
+      rethrow;
     }
   }
 
@@ -204,8 +194,7 @@ class TRWallet {
       String memo = this.mnemonic!;
       return memo.length == 0 ? "" : TREncode.decrypt(memo, pin);
     } catch (e) {
-      LogUtil.v("exportMemo er" + e.toString());
-      return null;
+      rethrow;
     }
   }
 
@@ -232,7 +221,7 @@ class TRWallet {
     LogUtil.v(
         "importWallet $content pin $pin kCoinType $kCoinType kLeadType $kLeadType");
     try {} catch (e) {
-      LogUtil.v("钱包数据插入失败" + e.toString());
+      rethrow;
     }
   }
 }
