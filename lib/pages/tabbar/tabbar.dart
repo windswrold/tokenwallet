@@ -44,7 +44,13 @@ class HomeTabbarState extends State<HomeTabbar> {
             label: "tabbar_mine".local()),
       ];
 
-  List<Widget> bodyList = [Container(), Container(), Container()];
+  List<Widget> bodyList = [
+    Container(),
+    Container(),
+    Container(),
+    Container(),
+    Container()
+  ];
 
   void onTap(int index) {
     setState(() {
@@ -61,8 +67,8 @@ class HomeTabbarState extends State<HomeTabbar> {
         hiddenLeading: true,
         bottomNavigationBar: Theme(
             data: ThemeData(
-                splashColor: Color.fromRGBO(0, 0, 0, 0),
-                highlightColor: Color.fromRGBO(0, 0, 0, 0)),
+                splashColor: const Color.fromRGBO(0, 0, 0, 0),
+                highlightColor: const Color.fromRGBO(0, 0, 0, 0)),
             child: BottomNavigationBar(
               items: items,
               currentIndex: currentIndex,
@@ -76,8 +82,8 @@ class HomeTabbarState extends State<HomeTabbar> {
               unselectedLabelStyle: const TextStyle(
                 fontWeight: FontWeightUtils.medium,
               ),
-              selectedItemColor: Color(0xffFF0080FF),
-              unselectedItemColor: Color(0xffFF909DB2),
+              selectedItemColor: const Color(0xFF0080FF),
+              unselectedItemColor: const Color(0xFF909DB2),
               selectedFontSize: 9.font,
               unselectedFontSize: 9.font,
             )),
