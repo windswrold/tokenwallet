@@ -1,5 +1,5 @@
-
 import '../../public.dart';
+
 typedef NextButtonCallback = void Function();
 
 class NextButton extends StatelessWidget {

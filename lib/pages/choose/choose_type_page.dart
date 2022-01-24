@@ -10,6 +10,10 @@ class ChooseTypePage extends StatefulWidget {
 }
 
 class _ChooseTypePageState extends State<ChooseTypePage> {
+  void _create() {}
+
+  void _restore() {}
+
   @override
   Widget build(BuildContext context) {
     return CustomPageView(
@@ -33,9 +37,9 @@ class _ChooseTypePageState extends State<ChooseTypePage> {
                     child: Text(
                       'Aggregation of NFT',
                       style: TextStyle(
-                        fontWeight: FontWeight.w400,
+                        fontWeight: FontWeightUtils.medium,
                         fontSize: 18.font,
-                        color: Color(0xFF7685A2),
+                        color: const Color(0xFF7685A2),
                       ),
                     ),
                   ),
@@ -50,37 +54,36 @@ class _ChooseTypePageState extends State<ChooseTypePage> {
                     margin: EdgeInsets.only(top: 16.width),
                     height: 48.width,
                     width: 240.width,
-                    border: Border.all(color: Color(0xFF0060FF)),
-                    bgc: Color(0xFF0060FF),
-                    title: '创建钱包',
+                    bgc: const Color(0xFF0060FF),
+                    title: 'choose_createwallet'.local(),
                     textStyle: TextStyle(
-                      fontWeight: FontWeight.w400,
+                      fontWeight: FontWeightUtils.medium,
                       fontSize: 16.font,
                       color: Colors.white,
                     ),
-                    onPressed: () {},
+                    onPressed: _create,
                   ),
                   NextButton(
                     margin: EdgeInsets.only(top: 16.width),
                     height: 48.width,
                     width: 240.width,
-                    border: Border.all(color: Color(0xFF0060FF)),
-                    title: '恢复钱包',
+                    border: Border.all(color: const Color(0xFF0060FF)),
+                    title: 'choose_restorewallet'.local(),
                     textStyle: TextStyle(
-                      fontWeight: FontWeight.w400,
+                      fontWeight: FontWeightUtils.medium,
                       fontSize: 16.font,
-                      color: Color(0xFF0060FF),
+                      color: const Color(0xFF0060FF),
                     ),
-                    onPressed: () {},
+                    onPressed: _restore,
                   ),
                   Container(
                     margin: EdgeInsets.only(top: 40.width),
                     child: Text(
                       'Digicenter Wallet',
                       style: TextStyle(
-                        fontWeight: FontWeight.w400,
+                        fontWeight: FontWeightUtils.regular,
                         fontSize: 14.font,
-                        color: Color(0x66000000),
+                        color: const Color(0x66000000),
                       ),
                     ),
                   ),

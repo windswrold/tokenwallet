@@ -56,8 +56,8 @@ flutter:
 
   uses-material-design: true
   assets:
-    - resources/langs/zh-CN.json
-    - resources/langs/en-US.json 
+    - resources/lang/zh-CN.json
+    - resources/lang/en-US.json 
     - assets/data/
     - assets/images/
     - assets/images/icons/ 

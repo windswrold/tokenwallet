@@ -6,5 +6,7 @@
     "refresh_pull_up_loading": "上拉加载数据",
     "refresh_failed_to_load": "加载失败！点击重试！",
     "refresh_let_go": "松手,加载更多!",
-    "refresh_empty": "没有更多数据了!"
+    "refresh_empty": "没有更多数据了!",
+    "choose_createwallet": "创建钱包",
+    "choose_restorewallet": "恢复钱包"
 }
