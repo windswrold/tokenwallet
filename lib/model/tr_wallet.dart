@@ -9,13 +9,18 @@ const String tableName = "wallet_table";
 @Entity(tableName: tableName)
 class TRWallet {
   @primaryKey
-  String? walletID;
+  String? walletID; //唯一id  coinType|sha(pubKey)
   String? walletAaddress; //钱包地址
   String? pin; //密码
   String? prvKey; //私钥
   int? coinType; //链类型
   int? accountState; // 账号状态
   String? mnemonic; //助记词
+  bool? isChoose; //当前选中
+  String? pubKey; //公钥
+  int? leadType; //导入类型
+  String? pinTip; // 密码提示
+  String? descName; //默认空字符
 
   TRWallet(this.walletID, this.walletAaddress, this.pin, this.prvKey,
       this.coinType, this.accountState, this.mnemonic);

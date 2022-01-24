@@ -24,28 +24,7 @@ class _MyAppState extends State<MyApp> {
   }
 
   void getSkip() async {
-    // final prefs = await SharedPreferences.getInstance();
-    // bool? isSkip = prefs.getBool("skip");
-    // if (isSkip != null && isSkip) {
-    // List<MHWallet> wallets = await MHWallet.findAllWallets();
-    // if (wallets.length > 0) {
-    //   setState(() {
-    //     state = 3;
-    //   });
-    // } else {
-    //   setState(() {
-    //     state = 2;
-    //   });
-    // }
-    // } else {
-    //   setState(() {
-    //     state = 1;
-    //   });
-    // }
-  }
-
-  Widget buildEmptyView() {
-    return Container();
+    _walletState.loadWallet();
   }
 
   @override
@@ -57,11 +36,6 @@ class _MyAppState extends State<MyApp> {
                   ChangeNotifierProvider.value(value: _walletState),
                 ],
                 child: CustomApp(
-                  // state == 3
-                  //         ? SplashPage() //TabbarPage()
-                  //         : state == 2
-                  //             ? ChooseTypePage()
-                  //             : ChooseTypePage(),
                   child: HomeTabbar(),
                 )));
     ;
