@@ -1,4 +1,5 @@
 import 'package:cstoken/component/next_button.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 import '../../public.dart';
 
@@ -16,6 +17,7 @@ class _ChooseTypePageState extends State<ChooseTypePage> {
 
   @override
   Widget build(BuildContext context) {
+    EasyLocalization.of(context)!.delegates;
     return CustomPageView(
         hiddenAppBar: true,
         hiddenLeading: true,
