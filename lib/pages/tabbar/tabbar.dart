@@ -13,23 +13,35 @@ class HomeTabbarState extends State<HomeTabbar> {
 
   get items => [
         BottomNavigationBarItem(
-            icon: LoadAssetsImage("tabbar/icon_wallet_normal.png",
+            icon: LoadAssetsImage("tabbar/tab_home_normal.png",
                 width: 24, height: 24),
-            activeIcon: LoadAssetsImage("tabbar/icon_wallet_selected.png",
-                width: 24, height: 24),
-            label: "钱包"),
+            activeIcon:
+                LoadAssetsImage("tabbar/tab_home.png", width: 24, height: 24),
+            label: "tabbar_home".local()),
         BottomNavigationBarItem(
-            icon: LoadAssetsImage("tabbar/icon_home_normal.png",
+            icon: LoadAssetsImage("tabbar/tab_wallet_normal.png",
                 width: 24, height: 24),
-            activeIcon: LoadAssetsImage("tabbar/icon_home_selected.png",
-                width: 24, height: 24),
-            label: "浏览"),
+            activeIcon:
+                LoadAssetsImage("tabbar/tab_wallet.png", width: 24, height: 24),
+            label: "tabbar_wallet".local()),
         BottomNavigationBarItem(
-            icon: LoadAssetsImage("tabbar/icon_mine_normal.png",
+            icon: LoadAssetsImage("tabbar/tab_apps_normal.png",
                 width: 24, height: 24),
-            activeIcon: LoadAssetsImage("tabbar/icon_mine_selected.png",
+            activeIcon:
+                LoadAssetsImage("tabbar/tab_apps.png", width: 24, height: 24),
+            label: "tabbar_dapp".local()),
+        BottomNavigationBarItem(
+            icon: LoadAssetsImage("tabbar/tab_news_normal.png",
                 width: 24, height: 24),
-            label: "设置"),
+            activeIcon:
+                LoadAssetsImage("tabbar/tab_news.png", width: 24, height: 24),
+            label: "tabbar_news".local()),
+        BottomNavigationBarItem(
+            icon: LoadAssetsImage("tabbar/tab_mine_normal.png",
+                width: 24, height: 24),
+            activeIcon:
+                LoadAssetsImage("tabbar/tab_mine.png", width: 24, height: 24),
+            label: "tabbar_mine".local()),
       ];
 
   List<Widget> bodyList = [Container(), Container(), Container()];
@@ -58,8 +70,16 @@ class HomeTabbarState extends State<HomeTabbar> {
               elevation: 8,
               type: BottomNavigationBarType.fixed,
               backgroundColor: Colors.white,
-              selectedFontSize: 10,
-              unselectedFontSize: 10,
+              selectedLabelStyle: const TextStyle(
+                fontWeight: FontWeightUtils.medium,
+              ),
+              unselectedLabelStyle: const TextStyle(
+                fontWeight: FontWeightUtils.medium,
+              ),
+              selectedItemColor: Color(0xffFF0080FF),
+              unselectedItemColor: Color(0xffFF909DB2),
+              selectedFontSize: 9.font,
+              unselectedFontSize: 9.font,
             )),
         child: Stack(
           alignment: Alignment.bottomCenter,

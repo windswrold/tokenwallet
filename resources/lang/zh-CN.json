@@ -8,5 +8,10 @@
     "refresh_let_go": "松手,加载更多!",
     "refresh_empty": "没有更多数据了!",
     "choose_createwallet": "创建钱包",
-    "choose_restorewallet": "恢复钱包"
+    "choose_restorewallet": "恢复钱包",
+    "tabbar_home": "首页",
+    "tabbar_wallet": "钱包",
+    "tabbar_dapp": "Dapp",
+    "tabbar_news": "资讯",
+    "tabbar_mine": "我的"
 }
