@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:cstoken/const/constant.dart';
 import 'package:cstoken/db/database.dart';
 import 'package:cstoken/db/database_config.dart';
+import 'package:cstoken/utils/custom_toast.dart';
 import 'package:cstoken/utils/encode.dart';
 import 'package:floor/floor.dart';
 import '../../public.dart';
@@ -13,14 +14,14 @@ const String tableName = "wallet_table";
 @Entity(tableName: tableName)
 class TRWallet {
   @primaryKey
-  String? walletID; //唯一id  助记词hash 或者私钥hash
-  String? walletName;
-  String? pin; //密码
+  String? walletID; //唯一id  助记词hash 或者私钥hash keystore
+  String? walletName; //钱包名称
+  String? pin; //密码hash
   int? chainType; //链类型
   int? accountState; // 账号状态
-  String? encContent; //密文
+  String? encContent; //密文 助记词 或者私钥
   bool? isChoose; //当前选中
-  int? leadType; //导入类型
+  int? leadType; //导入类型 Prvkey 助记词 keystore
   String? pinTip; // 密码提示
 
   TRWallet({
@@ -51,6 +52,72 @@ class TRWallet {
   //       encContent: encContent,
   //       leadType: leadType);
   // }
+
+  static importWallet(BuildContext context,
+      {required String content,
+      required String pin,
+      required String pinAgain,
+      required String pinTip,
+      required String walletName,
+      required KChainType kChainType,
+      required KLeadType kLeadType}) async {
+    LogUtil.v(
+        "importWallet $content pin $pin kChainType $kChainType kLeadType $kLeadType");
+    try {
+      content = content.trim();
+      walletName = walletName.trim();
+      pin = pin.trim();
+      pinTip = pinTip.trim();
+      pinAgain = pinAgain.trim();
+      if (kLeadType == KLeadType.Prvkey) {
+        content = content.replaceFirst("0x", "");
+      }
+      if (content.isEmpty) {
+        if (KLeadType.KeyStore == kLeadType) {
+        } else if (KLeadType.Prvkey == kLeadType) {
+          HWToast.showText(text: "input_prvkey".local());
+        } else {
+          HWToast.showText(text: "input_memos".local());
+        }
+        return;
+      }
+      if (walletName.isEmpty) {
+        HWToast.showText(text: "input_name".local());
+        return;
+      }
+      if (pin.isEmpty) {
+        HWToast.showText(text: "input_pwd".local());
+        return;
+      }
+      if (pinAgain.isEmpty) {
+        HWToast.showText(text: "input_pwd".local());
+        return;
+      }
+      if (pin != pinAgain) {
+        HWToast.showText(text: "input_pwd_wrong".local());
+        return;
+      }
+      if (pin.checkPassword() == false) {
+        HWToast.showText(text: "input_pwd_regexp".local());
+        return;
+      }
+      if (kLeadType == KLeadType.Prvkey &&
+          content.checkPrv(kChainType) == false) {
+        HWToast.showText(text: "import_prvwrong".local());
+        return;
+      }
+      if (kLeadType == KLeadType.Memo && content.checkMemo() == false) {
+        HWToast.showText(text: "input_memo_wrong".local());
+        return;
+      }
+      
+       
+
+
+    } catch (e) {
+      rethrow;
+    }
+  }
 
   static Future<TRWallet?> queryWalletByWalletID(String walletID) async {
     try {
@@ -196,19 +263,6 @@ class TRWallet {
     LogUtil.v("手续费beanValue $beanValue  offsetValue $offsetValue 计算是 " +
         feeValue.toStringAsFixed(6));
     return feeValue.toStringAsFixed(6);
-  }
-
-  static importWallet(BuildContext context,
-      {required String content,
-      required String pin,
-      required String walletName,
-      required KCoinType kCoinType,
-      required KLeadType kLeadType}) async {
-    LogUtil.v(
-        "importWallet $content pin $pin kCoinType $kCoinType kLeadType $kLeadType");
-    try {} catch (e) {
-      rethrow;
-    }
   }
 }
 

@@ -13,5 +13,7 @@
     "tabbar_wallet": "钱包",
     "tabbar_dapp": "Dapp",
     "tabbar_news": "资讯",
-    "tabbar_mine": "我的"
+    "tabbar_mine": "我的",
+    "input_prvkey": "请您先输入秘钥",
+    "input_memos": "输入助记词，用空格做分离"
 }

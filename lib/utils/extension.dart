@@ -1,3 +1,5 @@
+import 'package:cstoken/model/mnemonic/mnemonic.dart';
+
 import '../public.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:easy_localization/src/public.dart' as ez;
@@ -15,6 +17,33 @@ extension StringTranslateExtension on String {
       return reg.hasMatch(this);
     } catch (e) {
       return false;
+    }
+  }
+
+  bool checkPrv(KChainType kChainType) {
+    int len = 0;
+    switch (kChainType) {
+      case KChainType.ETH:
+        len = 64;
+        break;
+      default:
+    }
+    String regex = "^[0-9A-Fa-f]{$len}\$";
+    try {
+      RegExp reg = RegExp(regex);
+      print("checkPrv $this hasMatch${reg.hasMatch(this)} regex $regex");
+      return reg.hasMatch(this);
+    } catch (e) {
+      LogUtil.v("checkPassword $e");
+      return false;
+    }
+  }
+
+  bool checkMemo() {
+    try {
+      return Mnemonic.validateMnemonic(this);
+    } catch (e) {
+      rethrow;
     }
   }
 

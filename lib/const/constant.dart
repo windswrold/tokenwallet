@@ -46,8 +46,8 @@ extension CoinTypeString on KCoinType {
 
 enum KLeadType {
   Prvkey, //通过私钥
+  Memo, //通过助记词
   KeyStore, //通过keystore
-  Memo //通过助记词
 }
 
 enum KAccountState {
