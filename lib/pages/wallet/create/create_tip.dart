@@ -10,11 +10,10 @@ class CreateTip extends StatelessWidget {
   Widget build(BuildContext context) {
     return CustomPageView(
       hiddenScrollView: true,
-      title: CustomPageView.getTitle(
-        title: "createwallet_tip".local(),
-        fontSize: 18,
-        fontWeight: FontWeightUtils.semiBold,
-      ),
+      leading: CustomPageView.getCloseLeading(() {
+        Routers.goBack(context);
+      }),
+      title: CustomPageView.getTitle(title: "createwallet_tip".local()),
       child: Container(
         padding: EdgeInsets.only(
             left: 24.width, right: 24.width, top: 32.width, bottom: 40.width),

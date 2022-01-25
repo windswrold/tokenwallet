@@ -17,7 +17,7 @@
     "input_prvkey": "请输入秘钥",
     "input_memos": "输入助记词，用空格做分离",
     "input_name": "请输入钱包名",
-    "input_pwd": "请输入密码",
+    "input_pwd": "请输入钱包密码",
     "input_pwd_wrong": "密码不一致，请您重新输入",
     "input_pwd_regexp": "密码不少于8位，建议混合大小写字母、数字、特殊符号",
     "import_prvwrong": "您输入的私钥不正确",
@@ -27,5 +27,15 @@
     "createwallet_tip2": "2.我知晓并理解，根据TokenVault设计原理，TokenVault不存储用户的钱包密码，忘记钱包密码将无法找回钱包密码。同时如果我忘记了助记词，那么我将遗失所有TokenVault内的资产。",
     "createwallet_tip3": "3.我知晓并理解，当此APP被删除或在新设备上登录此APP或忘记钱包密码时，所有TokenVault内的资产只能被我备份的助记词找回并恢复。",
     "createwallet_tip4": "4.我知晓并理解，由于我本人没有妥善保存钱包密码和助记词以及忘记钱包密码造成的资产损失，由我独自承担，与TokenVault无关。",
-    "createwallet_next": "我已充分知晓上述规则和风险"
+    "createwallet_next": "我已充分知晓上述规则和风险",
+    "createwallet_title": "创建钱包",
+    "createwallet_toptip": "首次使用Digicenter需要设置钱包密码，钱包密码在您进行链上交易时使用",
+    "createwallet_walletname": "钱包名称",
+    "createwallet_walletpwd": "设置密码",
+    "createwallet_walletpwdagain": "确认密码",
+    "input_pwdagain": "请再次输入钱包密码",
+    "createwallet_pwdtip": "密码提示",
+    "input_pwdtip": "密码提示，非必填，密码输入错误时显示",
+    "createwallet_warning": "注意",
+    "createwallet_warningvalue":"TokenVault不存储用户的钱包密码，请务必保管好您的钱包密码！钱包密码用来加密您的私钥，使用安全的保密性强的密码策略也非常重要。"
 }

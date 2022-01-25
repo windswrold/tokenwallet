@@ -48,13 +48,26 @@ class CustomPageView extends StatelessWidget {
 
   static Widget getTitle(
       {String title = "",
-      double fontSize = 17,
-      int color = 0xFF333333,
-      FontWeight fontWeight = FontWeight.bold}) {
+      double fontSize = 18,
+      int color = 0xFF000000,
+      FontWeight fontWeight = FontWeightUtils.semiBold}) {
     return Text(
       title,
       style: TextStyle(
           color: Color(color), fontWeight: fontWeight, fontSize: fontSize.sp),
+    );
+  }
+
+  static Widget getCloseLeading(VoidCallback onTap) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Center(
+        child: Image.asset(
+         ASSETS_IMG + "icons/icon_lightclose.png",
+          width: 24,
+          height: 24,
+        ),
+      ),
     );
   }
 
@@ -77,27 +90,29 @@ class CustomPageView extends StatelessWidget {
                 backgroundColor: backgroundColor,
                 actions: actions,
                 leading: hiddenLeading == true
-                    ? (leading != null ? leading : Text(""))
+                    ? Text("")
                     : Routers.canGoPop(context) == true
-                        ? GestureDetector(
-                            onTap: () => {
-                              if (leadBack != null)
-                                {
-                                  leadBack!(),
-                                }
-                              else
-                                {
-                                  Routers.goBackWithParams(context, {}),
-                                }
-                            },
-                            child: Center(
-                              child: Image.asset(
-                                './assets/images/' + "icons/icon_back_dark.png",
-                                width: 24,
-                                height: 24,
+                        ? leading ??
+                            GestureDetector(
+                              onTap: () => {
+                                if (leadBack != null)
+                                  {
+                                    leadBack!(),
+                                  }
+                                else
+                                  {
+                                    Routers.goBackWithParams(context, {}),
+                                  }
+                              },
+                              child: Center(
+                                child: Image.asset(
+                                 ASSETS_IMG +
+                                      "icons/icon_back_dark.png",
+                                  width: 24,
+                                  height: 24,
+                                ),
                               ),
-                            ),
-                          )
+                            )
                         : Text(""),
               ),
               backgroundColor: backgroundColor,
