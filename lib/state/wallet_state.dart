@@ -1,4 +1,4 @@
-import 'package:cstoken/model/tr_wallet.dart';
+import 'package:cstoken/model/wallet/tr_wallet.dart';
 import '../public.dart';
 
 class CurrentChooseWalletState with ChangeNotifier {

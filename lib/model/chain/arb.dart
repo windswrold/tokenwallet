@@ -1,5 +1,4 @@
 import 'package:cstoken/const/constant.dart';
-import 'package:cstoken/model/hd_wallet.dart';
 import 'package:web3dart/web3dart.dart';
 import 'package:bip39/bip39.dart' as bip39;
 import 'package:bip32/bip32.dart' as bip32;

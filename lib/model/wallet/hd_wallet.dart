@@ -1,4 +1,4 @@
-import '../public.dart';
+import '../../public.dart';
 
 class HDWallet {
   String? prv; //加密后的

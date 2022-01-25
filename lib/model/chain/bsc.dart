@@ -4,7 +4,6 @@ import 'package:bip39/bip39.dart' as bip39;
 import 'package:bip32/bip32.dart' as bip32;
 import 'package:web3dart/web3dart.dart';
 import '../../public.dart';
-import '../hd_wallet.dart';
 
 class BSCChain implements HDWalletProtocol {
   @override

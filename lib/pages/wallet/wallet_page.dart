@@ -1,4 +1,4 @@
-import 'package:cstoken/model/tr_wallet.dart';
+import 'package:cstoken/model/wallet/tr_wallet.dart';
 import 'package:cstoken/state/wallet_state.dart';
 import 'package:flutter/material.dart';
 

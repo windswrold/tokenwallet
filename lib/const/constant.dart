@@ -2,9 +2,16 @@ import 'dart:io';
 import 'package:flutter/foundation.dart';
 import '../public.dart';
 
-enum KCoinType {
-  BSC,
+enum KChainType {
+  HD,
   ETH,
+  BTC,
+  TRX,
+}
+
+enum KCoinType {
+  ETH,
+  BSC,
   HECO,
   OKChain,
   Matic,

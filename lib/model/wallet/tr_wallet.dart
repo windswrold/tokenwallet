@@ -5,7 +5,7 @@ import 'package:cstoken/db/database.dart';
 import 'package:cstoken/db/database_config.dart';
 import 'package:cstoken/utils/encode.dart';
 import 'package:floor/floor.dart';
-import '../public.dart';
+import '../../public.dart';
 import 'hd_wallet.dart';
 
 const String tableName = "wallet_table";
@@ -13,58 +13,44 @@ const String tableName = "wallet_table";
 @Entity(tableName: tableName)
 class TRWallet {
   @primaryKey
-  String? walletID; //唯一id  coinType|sha(pubKey)
-  String? walletAaddress; //钱包地址
+  String? walletID; //唯一id  助记词hash 或者私钥hash
+  String? walletName;
   String? pin; //密码
-  String? prvKey; //私钥
-  int? coinType; //链类型
+  int? chainType; //链类型
   int? accountState; // 账号状态
-  String? mnemonic; //助记词
+  String? encContent; //密文
   bool? isChoose; //当前选中
-  String? pubKey; //公钥
   int? leadType; //导入类型
   String? pinTip; // 密码提示
-  String? descName; //默认空字符
 
-  TRWallet(
-      {this.walletID,
-      this.walletAaddress,
-      this.pin,
-      this.prvKey,
-      this.coinType,
-      this.accountState,
-      this.mnemonic,
-      this.descName,
-      this.isChoose,
-      this.leadType,
-      this.pinTip,
-      this.pubKey});
+  TRWallet({
+    this.walletID,
+    this.walletName,
+    this.pin,
+    this.chainType,
+    this.accountState,
+    this.encContent,
+    this.isChoose,
+    this.leadType,
+    this.pinTip,
+  });
 
-  TRWallet.instance(HDWallet object) {
-    walletID = object.coinType!.coinTypeString() +
-        "|" +
-        TREncode.SHA256(walletAaddress!);
-    walletAaddress = object.address;
-    pin = TREncode.SHA256(object.pin!);
-    prvKey = TREncode.encrypt(object.prv!, object.pin!);
-    coinType = object.coinType!.index;
-    accountState = object.leadType == KLeadType.Memo
-        ? KAccountState.init.index
-        : KAccountState.noauthed.index;
-    mnemonic = object.leadType == KLeadType.Memo
-        ? TREncode.encrypt(object.content!, object.pin!)
-        : "";
-    leadType = object.leadType!.index;
-    TRWallet(
-        walletID: walletID,
-        walletAaddress: walletAaddress,
-        pin: pin,
-        pinTip: pinTip,
-        prvKey: prvKey,
-        coinType: coinType,
-        accountState: accountState,
-        leadType: leadType);
-  }
+  // TRWallet.instance(HDWallet object) {
+  //   walletID = TREncode.SHA256(object.content!.replaceAll(" ", "") + "CSTOKEM");
+  //   pin = TREncode.SHA256(object.pin!);
+  //   accountState = object.leadType == KLeadType.Memo
+  //       ? KAccountState.init.index
+  //       : KAccountState.noauthed.index;
+  //   encContent = TREncode.encrypt(object.content!, object.pin!);
+  //   leadType = object.leadType!.index;
+  //   TRWallet(
+  //       walletID: walletID,
+  //       pin: pin,
+  //       pinTip: pinTip,
+  //       accountState: accountState,
+  //       encContent: encContent,
+  //       leadType: leadType);
+  // }
 
   static Future<TRWallet?> queryWalletByWalletID(String walletID) async {
     try {
@@ -181,8 +167,8 @@ class TRWallet {
   String? exportPrv({required String pin}) {
     assert(pin != null, "pin为空");
     try {
-      String prv = this.prvKey!;
-      return TREncode.decrypt(prv, pin);
+      // String prv = this.prvKey!;
+      // return TREncode.decrypt(prv, pin);
     } catch (e) {
       rethrow;
     }
@@ -191,8 +177,8 @@ class TRWallet {
   String? exportMemo({required String pin}) {
     assert(pin != null, "pin为空");
     try {
-      String memo = this.mnemonic!;
-      return memo.length == 0 ? "" : TREncode.decrypt(memo, pin);
+      // String memo = this.mnemonic!;
+      // return memo.length == 0 ? "" : TREncode.decrypt(memo, pin);
     } catch (e) {
       rethrow;
     }
