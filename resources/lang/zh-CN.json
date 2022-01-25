@@ -14,6 +14,12 @@
     "tabbar_dapp": "Dapp",
     "tabbar_news": "资讯",
     "tabbar_mine": "我的",
-    "input_prvkey": "请您先输入秘钥",
-    "input_memos": "输入助记词，用空格做分离"
+    "input_prvkey": "请输入秘钥",
+    "input_memos": "输入助记词，用空格做分离",
+    "input_name": "请输入钱包名",
+    "input_pwd": "请输入密码",
+    "input_pwd_wrong": "密码不一致，请您重新输入",
+    "input_pwd_regexp": "密码不少于8位，建议混合大小写字母、数字、特殊符号",
+    "import_prvwrong": "您输入的私钥不正确",
+    "input_memo_wrong": "输入的助记词不正确"
 }

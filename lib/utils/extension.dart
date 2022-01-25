@@ -43,7 +43,7 @@ extension StringTranslateExtension on String {
     try {
       return Mnemonic.validateMnemonic(this);
     } catch (e) {
-      rethrow;
+      return false;
     }
   }
 
