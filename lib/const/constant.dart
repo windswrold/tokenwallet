@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:flutter/foundation.dart';
 import '../public.dart';
 
+//链类型
 enum KChainType {
   HD,
   ETH,
@@ -9,6 +10,7 @@ enum KChainType {
   TRX,
 }
 
+//主币
 enum KCoinType {
   ETH,
   BSC,

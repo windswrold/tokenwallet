@@ -82,7 +82,7 @@ class _$FlutterDatabase extends FlutterDatabase {
       },
       onCreate: (database, version) async {
         await database.execute(
-            'CREATE TABLE IF NOT EXISTS `wallet_table` (`walletID` TEXT, `walletAaddress` TEXT, `pin` TEXT, `prvKey` TEXT, `coinType` INTEGER, `accountState` INTEGER, `mnemonic` TEXT, `isChoose` INTEGER, `pubKey` TEXT, `leadType` INTEGER, `pinTip` TEXT, `descName` TEXT, PRIMARY KEY (`walletID`))');
+            'CREATE TABLE IF NOT EXISTS `wallet_table` (`walletID` TEXT, `walletName` TEXT, `pin` TEXT, `chainType` INTEGER, `accountState` INTEGER, `encContent` TEXT, `isChoose` INTEGER, `leadType` INTEGER, `pinTip` TEXT, PRIMARY KEY (`walletID`))');
 
         await callback?.onCreate?.call(database, version);
       },
@@ -104,18 +104,15 @@ class _$WalletDao extends WalletDao {
             'wallet_table',
             (TRWallet item) => <String, Object?>{
                   'walletID': item.walletID,
-                  'walletAaddress': item.walletAaddress,
+                  'walletName': item.walletName,
                   'pin': item.pin,
-                  'prvKey': item.prvKey,
-                  'coinType': item.coinType,
+                  'chainType': item.chainType,
                   'accountState': item.accountState,
-                  'mnemonic': item.mnemonic,
+                  'encContent': item.encContent,
                   'isChoose':
                       item.isChoose == null ? null : (item.isChoose! ? 1 : 0),
-                  'pubKey': item.pubKey,
                   'leadType': item.leadType,
-                  'pinTip': item.pinTip,
-                  'descName': item.descName
+                  'pinTip': item.pinTip
                 }),
         _tRWalletUpdateAdapter = UpdateAdapter(
             database,
@@ -123,18 +120,15 @@ class _$WalletDao extends WalletDao {
             ['walletID'],
             (TRWallet item) => <String, Object?>{
                   'walletID': item.walletID,
-                  'walletAaddress': item.walletAaddress,
+                  'walletName': item.walletName,
                   'pin': item.pin,
-                  'prvKey': item.prvKey,
-                  'coinType': item.coinType,
+                  'chainType': item.chainType,
                   'accountState': item.accountState,
-                  'mnemonic': item.mnemonic,
+                  'encContent': item.encContent,
                   'isChoose':
                       item.isChoose == null ? null : (item.isChoose! ? 1 : 0),
-                  'pubKey': item.pubKey,
                   'leadType': item.leadType,
-                  'pinTip': item.pinTip,
-                  'descName': item.descName
+                  'pinTip': item.pinTip
                 }),
         _tRWalletDeletionAdapter = DeletionAdapter(
             database,
@@ -142,18 +136,15 @@ class _$WalletDao extends WalletDao {
             ['walletID'],
             (TRWallet item) => <String, Object?>{
                   'walletID': item.walletID,
-                  'walletAaddress': item.walletAaddress,
+                  'walletName': item.walletName,
                   'pin': item.pin,
-                  'prvKey': item.prvKey,
-                  'coinType': item.coinType,
+                  'chainType': item.chainType,
                   'accountState': item.accountState,
-                  'mnemonic': item.mnemonic,
+                  'encContent': item.encContent,
                   'isChoose':
                       item.isChoose == null ? null : (item.isChoose! ? 1 : 0),
-                  'pubKey': item.pubKey,
                   'leadType': item.leadType,
-                  'pinTip': item.pinTip,
-                  'descName': item.descName
+                  'pinTip': item.pinTip
                 });
 
   final sqflite.DatabaseExecutor database;
@@ -173,18 +164,15 @@ class _$WalletDao extends WalletDao {
     return _queryAdapter.query('SELECT * FROM wallet_table WHERE walletID = ?1',
         mapper: (Map<String, Object?> row) => TRWallet(
             walletID: row['walletID'] as String?,
-            walletAaddress: row['walletAaddress'] as String?,
+            walletName: row['walletName'] as String?,
             pin: row['pin'] as String?,
-            prvKey: row['prvKey'] as String?,
-            coinType: row['coinType'] as int?,
+            chainType: row['chainType'] as int?,
             accountState: row['accountState'] as int?,
-            mnemonic: row['mnemonic'] as String?,
-            descName: row['descName'] as String?,
+            encContent: row['encContent'] as String?,
             isChoose:
                 row['isChoose'] == null ? null : (row['isChoose'] as int) != 0,
             leadType: row['leadType'] as int?,
-            pinTip: row['pinTip'] as String?,
-            pubKey: row['pubKey'] as String?),
+            pinTip: row['pinTip'] as String?),
         arguments: [walletID]);
   }
 
@@ -193,18 +181,15 @@ class _$WalletDao extends WalletDao {
     return _queryAdapter.queryList('SELECT * FROM wallet_table',
         mapper: (Map<String, Object?> row) => TRWallet(
             walletID: row['walletID'] as String?,
-            walletAaddress: row['walletAaddress'] as String?,
+            walletName: row['walletName'] as String?,
             pin: row['pin'] as String?,
-            prvKey: row['prvKey'] as String?,
-            coinType: row['coinType'] as int?,
+            chainType: row['chainType'] as int?,
             accountState: row['accountState'] as int?,
-            mnemonic: row['mnemonic'] as String?,
-            descName: row['descName'] as String?,
+            encContent: row['encContent'] as String?,
             isChoose:
                 row['isChoose'] == null ? null : (row['isChoose'] as int) != 0,
             leadType: row['leadType'] as int?,
-            pinTip: row['pinTip'] as String?,
-            pubKey: row['pubKey'] as String?));
+            pinTip: row['pinTip'] as String?));
   }
 
   @override
@@ -212,18 +197,15 @@ class _$WalletDao extends WalletDao {
     return _queryAdapter.query('SELECT * FROM wallet_table WHERE isChoose = 1',
         mapper: (Map<String, Object?> row) => TRWallet(
             walletID: row['walletID'] as String?,
-            walletAaddress: row['walletAaddress'] as String?,
+            walletName: row['walletName'] as String?,
             pin: row['pin'] as String?,
-            prvKey: row['prvKey'] as String?,
-            coinType: row['coinType'] as int?,
+            chainType: row['chainType'] as int?,
             accountState: row['accountState'] as int?,
-            mnemonic: row['mnemonic'] as String?,
-            descName: row['descName'] as String?,
+            encContent: row['encContent'] as String?,
             isChoose:
                 row['isChoose'] == null ? null : (row['isChoose'] as int) != 0,
             leadType: row['leadType'] as int?,
-            pinTip: row['pinTip'] as String?,
-            pubKey: row['pubKey'] as String?));
+            pinTip: row['pinTip'] as String?));
   }
 
   @override
