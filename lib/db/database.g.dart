@@ -63,6 +63,8 @@ class _$FlutterDatabase extends FlutterDatabase {
 
   WalletDao? _walletDaoInstance;
 
+  WalletInfoDao? _walletInfoDaoInstance;
+
   Future<sqflite.Database> open(String path, List<Migration> migrations,
       [Callback? callback]) async {
     final databaseOptions = sqflite.OpenDatabaseOptions(
@@ -83,6 +85,8 @@ class _$FlutterDatabase extends FlutterDatabase {
       onCreate: (database, version) async {
         await database.execute(
             'CREATE TABLE IF NOT EXISTS `wallet_table` (`walletID` TEXT, `walletName` TEXT, `pin` TEXT, `chainType` INTEGER, `accountState` INTEGER, `encContent` TEXT, `isChoose` INTEGER, `leadType` INTEGER, `pinTip` TEXT, PRIMARY KEY (`walletID`))');
+        await database.execute(
+            'CREATE TABLE IF NOT EXISTS `wallet_info_table` (`key` TEXT NOT NULL, `walletID` TEXT, `walletAaddress` TEXT, `coinType` INTEGER, `pubKey` TEXT, PRIMARY KEY (`key`))');
 
         await callback?.onCreate?.call(database, version);
       },
@@ -93,6 +97,11 @@ class _$FlutterDatabase extends FlutterDatabase {
   @override
   WalletDao get walletDao {
     return _walletDaoInstance ??= _$WalletDao(database, changeListener);
+  }
+
+  @override
+  WalletInfoDao get walletInfoDao {
+    return _walletInfoDaoInstance ??= _$WalletInfoDao(database, changeListener);
   }
 }
 
@@ -237,5 +246,115 @@ class _$WalletDao extends WalletDao {
   @override
   Future<void> deleteWallets(List<TRWallet> wallet) async {
     await _tRWalletDeletionAdapter.deleteList(wallet);
+  }
+}
+
+class _$WalletInfoDao extends WalletInfoDao {
+  _$WalletInfoDao(this.database, this.changeListener)
+      : _queryAdapter = QueryAdapter(database),
+        _tRWalletInfoInsertionAdapter = InsertionAdapter(
+            database,
+            'wallet_info_table',
+            (TRWalletInfo item) => <String, Object?>{
+                  'key': item.key,
+                  'walletID': item.walletID,
+                  'walletAaddress': item.walletAaddress,
+                  'coinType': item.coinType,
+                  'pubKey': item.pubKey
+                }),
+        _tRWalletInfoUpdateAdapter = UpdateAdapter(
+            database,
+            'wallet_info_table',
+            ['key'],
+            (TRWalletInfo item) => <String, Object?>{
+                  'key': item.key,
+                  'walletID': item.walletID,
+                  'walletAaddress': item.walletAaddress,
+                  'coinType': item.coinType,
+                  'pubKey': item.pubKey
+                }),
+        _tRWalletInfoDeletionAdapter = DeletionAdapter(
+            database,
+            'wallet_info_table',
+            ['key'],
+            (TRWalletInfo item) => <String, Object?>{
+                  'key': item.key,
+                  'walletID': item.walletID,
+                  'walletAaddress': item.walletAaddress,
+                  'coinType': item.coinType,
+                  'pubKey': item.pubKey
+                });
+
+  final sqflite.DatabaseExecutor database;
+
+  final StreamController<String> changeListener;
+
+  final QueryAdapter _queryAdapter;
+
+  final InsertionAdapter<TRWalletInfo> _tRWalletInfoInsertionAdapter;
+
+  final UpdateAdapter<TRWalletInfo> _tRWalletInfoUpdateAdapter;
+
+  final DeletionAdapter<TRWalletInfo> _tRWalletInfoDeletionAdapter;
+
+  @override
+  Future<List<TRWalletInfo?>> queryWalletInfosByWalletID(
+      String walletID) async {
+    return _queryAdapter.queryList(
+        'SELECT * FROM wallet_info_table WHERE walletID = ?1',
+        mapper: (Map<String, Object?> row) => TRWalletInfo(
+            key: row['key'] as String,
+            walletID: row['walletID'] as String?,
+            coinType: row['coinType'] as int?,
+            walletAaddress: row['walletAaddress'] as String?,
+            pubKey: row['pubKey'] as String?),
+        arguments: [walletID]);
+  }
+
+  @override
+  Future<List<TRWalletInfo?>> queryWalletInfo(
+      String walletID, int coinType) async {
+    return _queryAdapter.queryList(
+        'SELECT * FROM wallet_info_table WHERE walletID = ?1 and coinType = ?2',
+        mapper: (Map<String, Object?> row) => TRWalletInfo(
+            key: row['key'] as String,
+            walletID: row['walletID'] as String?,
+            coinType: row['coinType'] as int?,
+            walletAaddress: row['walletAaddress'] as String?,
+            pubKey: row['pubKey'] as String?),
+        arguments: [walletID, coinType]);
+  }
+
+  @override
+  Future<void> insertWallet(TRWalletInfo wallet) async {
+    await _tRWalletInfoInsertionAdapter.insert(
+        wallet, OnConflictStrategy.replace);
+  }
+
+  @override
+  Future<void> insertWallets(List<TRWalletInfo> wallet) async {
+    await _tRWalletInfoInsertionAdapter.insertList(
+        wallet, OnConflictStrategy.replace);
+  }
+
+  @override
+  Future<void> updateWallet(TRWalletInfo wallet) async {
+    await _tRWalletInfoUpdateAdapter.update(wallet, OnConflictStrategy.abort);
+  }
+
+  @override
+  Future<void> updateWallets(List<TRWalletInfo> wallet) async {
+    await _tRWalletInfoUpdateAdapter.updateList(
+        wallet, OnConflictStrategy.abort);
+  }
+
+  @override
+  Future<void> deleteWallet(TRWalletInfo wallet) async {
+    await _tRWalletInfoDeletionAdapter.delete(wallet);
+  }
+
+  @override
+  Future<void> deleteWallets(List<TRWalletInfo> wallet) async {
+    await _tRWalletInfoDeletionAdapter.deleteList(wallet);
   }
 }
