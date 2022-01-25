@@ -92,7 +92,7 @@ class CustomPageView extends StatelessWidget {
                             },
                             child: Center(
                               child: Image.asset(
-                                './assets/img/' + "identity/back-icon.png",
+                                './assets/images/' + "icons/icon_back_dark.png",
                                 width: 24,
                                 height: 24,
                               ),

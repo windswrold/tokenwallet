@@ -4,7 +4,7 @@ import '../public.dart';
 
 //链类型
 enum KChainType {
-  HD,
+  HD, // 与KLeadType memo联动
   ETH,
   BTC,
   TRX,

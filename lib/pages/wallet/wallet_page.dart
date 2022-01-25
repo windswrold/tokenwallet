@@ -3,6 +3,7 @@ import 'package:cstoken/state/wallet_state.dart';
 import 'package:flutter/material.dart';
 
 import '../../public.dart';
+import 'create/create_tip.dart';
 
 class WalletPage extends StatefulWidget {
   WalletPage({Key? key}) : super(key: key);
@@ -12,9 +13,21 @@ class WalletPage extends StatefulWidget {
 }
 
 class _WalletPageState extends State<WalletPage> {
-  void _create() {}
+  void _create() async {
+    List<TRWallet> datas = await TRWallet.queryAllWallets();
+    if (datas.isEmpty) {
+      Routers.push(context, const CreateTip());
+      return;
+    }
+  }
 
-  void _restore() {}
+  void _restore() async {
+    List<TRWallet> datas = await TRWallet.queryAllWallets();
+    if (datas.isEmpty) {
+      Routers.push(context, const CreateTip());
+      return;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {

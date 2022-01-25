@@ -3,6 +3,9 @@ import 'dart:math';
 import 'package:cstoken/const/constant.dart';
 import 'package:cstoken/db/database.dart';
 import 'package:cstoken/db/database_config.dart';
+import 'package:cstoken/model/chain/bsc.dart';
+import 'package:cstoken/model/chain/eth.dart';
+import 'package:cstoken/model/chain/heco.dart';
 import 'package:cstoken/utils/custom_toast.dart';
 import 'package:cstoken/utils/encode.dart';
 import 'package:floor/floor.dart';
@@ -110,10 +113,21 @@ class TRWallet {
         HWToast.showText(text: "input_memo_wrong".local());
         return;
       }
-      
-       
-
-
+      List<TRWallet> datas = [];
+      List<HDWallet> _hdwallets = [];
+      if (kLeadType == KLeadType.Memo) {
+        _hdwallets.add(await ETHChain()
+            .importWallet(content: content, pin: pin, kLeadType: kLeadType)!);
+        _hdwallets.add(await BSCChain()
+            .importWallet(content: content, pin: pin, kLeadType: kLeadType)!);
+        _hdwallets.add(await HecoChain()
+            .importWallet(content: content, pin: pin, kLeadType: kLeadType)!);
+        _hdwallets.add(await ETHChain()
+            .importWallet(content: content, pin: pin, kLeadType: kLeadType)!);
+        _hdwallets.add(await ETHChain()
+            .importWallet(content: content, pin: pin, kLeadType: kLeadType)!);
+      }
+      if (kLeadType == KLeadType.Prvkey && kChainType == KChainType.ETH) {}
     } catch (e) {
       rethrow;
     }
