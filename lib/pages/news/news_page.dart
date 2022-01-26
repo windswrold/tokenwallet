@@ -10,6 +10,6 @@ class NewsPage extends StatefulWidget {
 class _NewsPageState extends State<NewsPage> {
   @override
   Widget build(BuildContext context) {
-    return CustomPageView(child: Container());
+    return CustomPageView(hiddenLeading: true, child: Container());
   }
 }

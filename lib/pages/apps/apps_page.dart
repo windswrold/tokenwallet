@@ -10,6 +10,8 @@ class AppsPage extends StatefulWidget {
 class _AppsPageState extends State<AppsPage> {
   @override
   Widget build(BuildContext context) {
-    return CustomPageView(child: Container());
+    return CustomPageView(
+      hiddenLeading: true,
+      child: Container());
   }
 }

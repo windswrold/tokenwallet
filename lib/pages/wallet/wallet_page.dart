@@ -48,6 +48,7 @@ class _WalletPageState extends State<WalletPage> {
     return wallet != null
         ? CustomPageView(
             title: CustomPageView.getTitle(title: "ssss"),
+            hiddenLeading: true,
             child: Container(
               alignment: Alignment.center,
               height: 50,

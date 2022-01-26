@@ -10,6 +10,7 @@ class NoScreentshots extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       margin: EdgeInsets.all(16.width),
+      height: 340.width,
       child: Column(
         children: [
           Container(

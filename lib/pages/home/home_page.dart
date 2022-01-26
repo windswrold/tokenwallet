@@ -10,6 +10,7 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
-    return CustomPageView(child: Container());
+    return CustomPageView( hiddenLeading: true,
+      child: Container());
   }
 }

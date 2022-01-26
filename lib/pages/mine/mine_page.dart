@@ -10,6 +10,6 @@ class MinePage extends StatefulWidget {
 class _MinePageState extends State<MinePage> {
   @override
   Widget build(BuildContext context) {
-    return CustomPageView(child: Container());
+    return CustomPageView( hiddenLeading: true,child: Container());
   }
 }
