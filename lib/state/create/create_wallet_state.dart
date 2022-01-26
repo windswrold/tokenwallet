@@ -1,3 +1,6 @@
+import 'package:cstoken/model/mnemonic/mnemonic.dart';
+import 'package:cstoken/model/wallet/tr_wallet.dart';
+
 import '../../public.dart';
 
 class CreateWalletProvider with ChangeNotifier {
@@ -18,7 +21,17 @@ class CreateWalletProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  void createWallet(BuildContext context) {}
+  void createWallet(BuildContext context) {
+    String memo = Mnemonic.generateMnemonic();
+    TRWallet.validImportValue(
+        content: memo,
+        pin: _pwdEC.text,
+        pinAgain: _pwdAgainEC.text,
+        pinTip: _pwdTipEC.text,
+        walletName: _walletNameEC.text,
+        kChainType: KChainType.HD,
+        kLeadType: KLeadType.Memo);
+  }
 
   TextEditingController get walletNameEC => _walletNameEC;
   TextEditingController get pwdEC => _pwdEC;

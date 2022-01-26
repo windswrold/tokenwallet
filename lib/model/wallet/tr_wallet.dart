@@ -56,6 +56,65 @@ class TRWallet {
   //       leadType: leadType);
   // }
 
+  static bool validImportValue(
+      {required String content,
+      required String pin,
+      required String pinAgain,
+      required String pinTip,
+      required String walletName,
+      required KChainType kChainType,
+      required KLeadType kLeadType}) {
+    LogUtil.v(
+        "importWallet $content pin $pin kChainType $kChainType kLeadType $kLeadType");
+    content = content.trim();
+    walletName = walletName.trim();
+    pin = pin.trim();
+    pinTip = pinTip.trim();
+    pinAgain = pinAgain.trim();
+    if (kLeadType == KLeadType.Prvkey) {
+      content = content.replaceFirst("0x", "");
+    }
+    if (content.isEmpty) {
+      if (KLeadType.KeyStore == kLeadType) {
+      } else if (KLeadType.Prvkey == kLeadType) {
+        HWToast.showText(text: "input_prvkey".local());
+      } else {
+        HWToast.showText(text: "input_memos".local());
+      }
+      return false;
+    }
+    if (walletName.isEmpty) {
+      HWToast.showText(text: "input_name".local());
+      return false;
+    }
+    if (pin.isEmpty) {
+      HWToast.showText(text: "input_pwd".local());
+      return false;
+    }
+    if (pinAgain.isEmpty) {
+      HWToast.showText(text: "input_pwd".local());
+      return false;
+    }
+    if (pin != pinAgain) {
+      HWToast.showText(text: "input_pwd_wrong".local());
+      return false;
+    }
+    if (pin.checkPassword() == false) {
+      HWToast.showText(text: "input_pwd_regexp".local());
+      return false;
+    }
+    if (kLeadType == KLeadType.Prvkey &&
+        content.checkPrv(kChainType) == false) {
+      HWToast.showText(text: "import_prvwrong".local());
+      return false;
+    }
+    if (kLeadType == KLeadType.Memo && content.checkMemo() == false) {
+      HWToast.showText(text: "input_memo_wrong".local());
+      return false;
+    }
+    return true;
+  }
+
   static importWallet(BuildContext context,
       {required String content,
       required String pin,
@@ -64,53 +123,16 @@ class TRWallet {
       required String walletName,
       required KChainType kChainType,
       required KLeadType kLeadType}) async {
-    LogUtil.v(
-        "importWallet $content pin $pin kChainType $kChainType kLeadType $kLeadType");
     try {
-      content = content.trim();
-      walletName = walletName.trim();
-      pin = pin.trim();
-      pinTip = pinTip.trim();
-      pinAgain = pinAgain.trim();
-      if (kLeadType == KLeadType.Prvkey) {
-        content = content.replaceFirst("0x", "");
-      }
-      if (content.isEmpty) {
-        if (KLeadType.KeyStore == kLeadType) {
-        } else if (KLeadType.Prvkey == kLeadType) {
-          HWToast.showText(text: "input_prvkey".local());
-        } else {
-          HWToast.showText(text: "input_memos".local());
-        }
-        return;
-      }
-      if (walletName.isEmpty) {
-        HWToast.showText(text: "input_name".local());
-        return;
-      }
-      if (pin.isEmpty) {
-        HWToast.showText(text: "input_pwd".local());
-        return;
-      }
-      if (pinAgain.isEmpty) {
-        HWToast.showText(text: "input_pwd".local());
-        return;
-      }
-      if (pin != pinAgain) {
-        HWToast.showText(text: "input_pwd_wrong".local());
-        return;
-      }
-      if (pin.checkPassword() == false) {
-        HWToast.showText(text: "input_pwd_regexp".local());
-        return;
-      }
-      if (kLeadType == KLeadType.Prvkey &&
-          content.checkPrv(kChainType) == false) {
-        HWToast.showText(text: "import_prvwrong".local());
-        return;
-      }
-      if (kLeadType == KLeadType.Memo && content.checkMemo() == false) {
-        HWToast.showText(text: "input_memo_wrong".local());
+      if (validImportValue(
+              content: content,
+              pin: pin,
+              pinAgain: pinAgain,
+              pinTip: pinTip,
+              walletName: walletName,
+              kChainType: kChainType,
+              kLeadType: kLeadType) ==
+          false) {
         return;
       }
       List<TRWallet> datas = [];

@@ -18,7 +18,7 @@ class HWToast {
     HWToast.hiddenAllToast();
     BotToast.showText(
       text: text,
-      contentColor: Color(0xff000000).withOpacity(0.6),
+      contentColor: Color(0xff000000),
       align: align,
       backgroundColor: backgroundColor,
       borderRadius: borderRadius,
