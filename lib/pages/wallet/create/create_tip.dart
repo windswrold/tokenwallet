@@ -59,7 +59,7 @@ class CreateTip extends StatelessWidget {
               ],
             ),
             NextButton(
-                bgc: ColorUtils.fromHex("#FF0060FF"),
+                bgc: UIConstant.blueColor,
                 textStyle: TextStyle(
                   color: Colors.white,
                   fontWeight: FontWeightUtils.medium,

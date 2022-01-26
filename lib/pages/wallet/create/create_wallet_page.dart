@@ -103,7 +103,7 @@ class _CreateWalletPageState extends State<CreateWalletPage> {
                 onPressed: () {
                   _kprovier.createWallet(context);
                 },
-                bgc: ColorUtils.fromHex("#FF0060FF"),
+                bgc: UIConstant.blueColor,
                 textStyle: TextStyle(
                     color: Colors.white,
                     fontSize: 16.font,

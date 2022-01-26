@@ -93,8 +93,8 @@ class CustomTextField extends StatefulWidget {
         const BoxConstraints(maxWidth: 100, maxHeight: double.infinity),
     BoxConstraints prefixIconConstraints =
         const BoxConstraints(minWidth: 80, maxHeight: double.infinity),
-    int underLineColor = 0xffffffff,
-    int focusedUnderLineColor = 0xffffffff,
+    Color underLineColor = Colors.white,
+    Color focusedUnderLineColor = Colors.white,
     double underLineWidth = 1,
     Color fillColor = Colors.white,
     EdgeInsetsGeometry contentPadding = EdgeInsets.zero,
@@ -105,12 +105,11 @@ class CustomTextField extends StatefulWidget {
       suffixIconConstraints: suffixIconConstraints,
       prefixIconConstraints: prefixIconConstraints,
       enabledBorder: UnderlineInputBorder(
-        borderSide:
-            BorderSide(width: underLineWidth, color: Color(underLineColor)),
+        borderSide: BorderSide(width: underLineWidth, color: underLineColor),
       ),
       focusedBorder: UnderlineInputBorder(
-        borderSide: BorderSide(
-            width: underLineWidth, color: Color(focusedUnderLineColor)),
+        borderSide:
+            BorderSide(width: underLineWidth, color: focusedUnderLineColor),
       ),
       counterText: "",
       hintText: hintText,
@@ -213,8 +212,8 @@ class CustomTextField extends StatefulWidget {
                 color: ColorUtils.fromHex("#FF000000"),
               ),
               decoration: CustomTextField.getUnderLineDecoration(
-                  underLineColor: 0x1A000000,
-                  focusedUnderLineColor: 0xFF0060FF,
+                  underLineColor: UIConstant.lineColor,
+                  focusedUnderLineColor: UIConstant.blueColor,
                   underLineWidth: 0.5,
                   hintText: hintText,
                   hintStyle: TextStyle(

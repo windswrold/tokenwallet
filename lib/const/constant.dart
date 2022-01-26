@@ -84,3 +84,8 @@ final bool inProduction = kReleaseMode;
 final bool isAndroid = Platform.isAndroid;
 final bool isIOS = Platform.isIOS;
 final String ASSETS_IMG = './assets/images/';
+
+class UIConstant {
+  static const Color blueColor = Color(0xff2cabec);
+  static const Color lineColor = Color(0x1A000000);
+}
