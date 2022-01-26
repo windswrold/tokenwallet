@@ -2,22 +2,27 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
 import 'package:flutter/widgets.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
-
 import '../public.dart';
+
+class SortViewItem {
+  final String value;
+  final bool? select;
+  final bool? isWrong;
+  final int index;
+  SortViewItem(
+      {required this.value, this.select, this.isWrong, required this.index});
+}
 
 class SortIndexButton extends StatelessWidget {
   const SortIndexButton(
       {Key? key,
-      required this.index,
-      required this.value,
+      required this.item,
       required this.width,
       required this.height,
       required this.type,
       required this.onTap})
       : super(key: key);
-  final int index;
-  final String value;
+  final SortViewItem item;
   final double width;
   final double height;
   final SortIndexType type;
@@ -37,7 +42,7 @@ class SortIndexButton extends StatelessWidget {
         children: [
           Positioned(
             child: AutoSizeText(
-              value,
+              item.value,
               maxLines: 1,
               minFontSize: 6,
               style: TextStyle(
@@ -51,7 +56,7 @@ class SortIndexButton extends StatelessWidget {
             left: 0,
             bottom: 0,
             child: Text(
-              (index + 1).toString(),
+              (item.index + 1).toString(),
               style: TextStyle(
                 fontSize: 24.font,
                 fontWeight: FontWeightUtils.medium,
@@ -68,12 +73,11 @@ class SortIndexButton extends StatelessWidget {
     return GestureDetector(
       behavior: HitTestBehavior.opaque,
       onTap: () {
-        onTap(index);
+        onTap(item.index);
       },
       child: Container(
         height: height + 8.width,
         width: width,
-        // color: Colors.blue,
         child: Stack(
           alignment: AlignmentDirectional.center,
           children: [
@@ -84,13 +88,15 @@ class SortIndexButton extends StatelessWidget {
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(4),
                 color: Colors.white,
-                border: Border.all(
-                  color: ColorUtils.fromHex("#FFFF233E"),
-                ),
+                border: item.isWrong == true
+                    ? Border.all(
+                        color: ColorUtils.fromHex("#FFFF233E"),
+                      )
+                    : null,
               ),
-              child: value.isEmpty
+              child: item.value.isEmpty
                   ? AutoSizeText(
-                      (index + 1).toString(),
+                      (item.index + 1).toString(),
                       maxLines: 1,
                       minFontSize: 6,
                       textAlign: TextAlign.center,
@@ -101,7 +107,7 @@ class SortIndexButton extends StatelessWidget {
                       ),
                     )
                   : AutoSizeText(
-                      value,
+                      item.value,
                       maxLines: 1,
                       minFontSize: 6,
                       textAlign: TextAlign.center,
@@ -112,13 +118,16 @@ class SortIndexButton extends StatelessWidget {
                       ),
                     ),
             ),
-            Positioned(
-              top: 0,
-              right: 0,
-              child: LoadAssetsImage(
-                "icons/icon_redclose.png",
-                width: 16,
-                height: 16,
+            Visibility(
+              visible: item.isWrong == true,
+              child: Positioned(
+                top: 0,
+                right: 0,
+                child: LoadAssetsImage(
+                  "icons/icon_redclose.png",
+                  width: 16,
+                  height: 16,
+                ),
               ),
             ),
           ],
@@ -131,14 +140,16 @@ class SortIndexButton extends StatelessWidget {
     return GestureDetector(
         behavior: HitTestBehavior.opaque,
         onTap: () {
-          onTap(index);
+          onTap(item.index);
         },
         child: Container(
             height: height,
             width: width,
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(4),
-              color: ColorUtils.fromHex("#0D000000"),
+              color: item.select == true
+                  ? ColorUtils.fromHex("#0D000000")
+                  : Colors.white,
               border: Border.all(
                 color: ColorUtils.fromHex("#1A000000"),
                 width: 0.5,
@@ -149,7 +160,7 @@ class SortIndexButton extends StatelessWidget {
               children: [
                 Positioned(
                   child: AutoSizeText(
-                    value,
+                    item.value,
                     maxLines: 1,
                     minFontSize: 6,
                     style: TextStyle(

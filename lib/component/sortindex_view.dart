@@ -13,7 +13,7 @@ class SortIndexView extends StatelessWidget {
       this.verifyMemos})
       : super(key: key);
 
-  final List<String> memos;
+  final List<SortViewItem> memos;
   final List<Map>? verifyMemos;
   final double offsetWidth;
   final Color? bgColor;
@@ -42,12 +42,11 @@ class SortIndexView extends StatelessWidget {
     for (var i = 0; i < memos.length; i++) {
       final value = memos[i];
       views.add(SortIndexButton(
-        index: i,
-        value: value,
         height: itemHeight,
         width: itemWidth,
         type: type,
         onTap: onTap,
+        item: value,
       ));
     }
 

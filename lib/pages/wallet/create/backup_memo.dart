@@ -41,7 +41,8 @@ class _BackupMemoState extends State<BackupMemo> {
                       ),
                     ),
                     SortIndexView(
-                      memos: List.filled(12, "fill"),
+                      memos:
+                          List.filled(12, SortViewItem(value: '111', index: 1)),
                       offsetWidth: 48.width,
                       bgColor: ColorUtils.fromHex("#FFF6F8FF"),
                       type: SortIndexType.leftIndex,

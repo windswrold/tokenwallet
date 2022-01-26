@@ -1,3 +1,4 @@
+import 'package:cstoken/component/sortindex_button.dart';
 import 'package:cstoken/component/sortindex_view.dart';
 
 import '../../../public.dart';
@@ -36,7 +37,10 @@ class _VerifyMemoState extends State<VerifyMemo> {
                       ),
                     ),
                     SortIndexView(
-                      memos: List.filled(12, ""),
+                      memos: List.filled(
+                        12,
+                        SortViewItem(value: "value", index: 1, isWrong: true),
+                      ),
                       offsetWidth: 48.width,
                       bgColor: ColorUtils.fromHex("#FFF6F8FF"),
                       type: SortIndexType.wrongIndex,
@@ -45,7 +49,8 @@ class _VerifyMemoState extends State<VerifyMemo> {
                       },
                     ),
                     SortIndexView(
-                      memos: List.filled(12, "fill"),
+                      memos: List.filled(12,
+                          SortViewItem(value: "111", index: 12, select: false)),
                       offsetWidth: 48.width,
                       bgColor: Colors.white,
                       type: SortIndexType.actionIndex,
