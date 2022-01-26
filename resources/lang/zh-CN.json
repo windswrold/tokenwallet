@@ -37,5 +37,6 @@
     "createwallet_pwdtip": "密码提示",
     "input_pwdtip": "密码提示，非必填，密码输入错误时显示",
     "createwallet_warning": "注意",
-    "createwallet_warningvalue":"TokenVault不存储用户的钱包密码，请务必保管好您的钱包密码！钱包密码用来加密您的私钥，使用安全的保密性强的密码策略也非常重要。"
+    "createwallet_warningvalue":"TokenVault不存储用户的钱包密码，请务必保管好您的钱包密码！钱包密码用来加密您的私钥，使用安全的保密性强的密码策略也非常重要。",
+    "createwallet_createnext":"我已妥善保管钱包密码"
 }

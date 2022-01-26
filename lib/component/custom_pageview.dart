@@ -11,7 +11,6 @@ class CustomPageView extends StatelessWidget {
     Key? key,
     required this.child,
     this.title,
-    this.hiddenScrollView,
     this.bottom,
     this.hiddenAppBar,
     this.hiddenLeading,
@@ -19,7 +18,7 @@ class CustomPageView extends StatelessWidget {
     this.leadBack,
     this.actions,
     this.leading,
-    this.hiddenResizeToAvoidBottomInset = false,
+    this.hiddenResizeToAvoidBottomInset = true,
     this.elevation = 0,
     this.backgroundColor = Colors.white,
     this.safeAreaTop = true,
@@ -32,7 +31,6 @@ class CustomPageView extends StatelessWidget {
   Widget? title;
   final PreferredSizeWidget? bottom;
   final bool? hiddenAppBar;
-  final bool? hiddenScrollView;
   final bool? hiddenLeading;
   final bool hiddenResizeToAvoidBottomInset; //是否弹出软键盘压缩界面
   final Widget? bottomNavigationBar;
@@ -63,7 +61,7 @@ class CustomPageView extends StatelessWidget {
       onTap: onTap,
       child: Center(
         child: Image.asset(
-         ASSETS_IMG + "icons/icon_lightclose.png",
+          ASSETS_IMG + "icons/icon_lightclose.png",
           width: 24,
           height: 24,
         ),
@@ -106,8 +104,7 @@ class CustomPageView extends StatelessWidget {
                               },
                               child: Center(
                                 child: Image.asset(
-                                 ASSETS_IMG +
-                                      "icons/icon_back_dark.png",
+                                  ASSETS_IMG + "icons/icon_back_dark.png",
                                   width: 24,
                                   height: 24,
                                 ),
@@ -124,16 +121,11 @@ class CustomPageView extends StatelessWidget {
 
   Widget _body() {
     return SafeArea(
-      top: safeAreaTop,
-      left: safeAreaLeft,
-      bottom: safeAreaBottom,
-      right: safeAreaRight,
-      child: hiddenScrollView == true
-          ? child
-          : SingleChildScrollView(
-              child: child,
-            ),
-    );
+        top: safeAreaTop,
+        left: safeAreaLeft,
+        bottom: safeAreaBottom,
+        right: safeAreaRight,
+        child: child);
   }
 
   Widget _annotatedRegion() {

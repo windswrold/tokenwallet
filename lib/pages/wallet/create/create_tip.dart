@@ -9,7 +9,6 @@ class CreateTip extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return CustomPageView(
-      hiddenScrollView: true,
       leading: CustomPageView.getCloseLeading(() {
         Routers.goBack(context);
       }),

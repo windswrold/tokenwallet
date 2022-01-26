@@ -44,7 +44,6 @@ class _WalletPageState extends State<WalletPage> {
         : CustomPageView(
             hiddenAppBar: true,
             hiddenLeading: true,
-            hiddenScrollView: true,
             child: Stack(
               alignment: AlignmentDirectional.topCenter,
               children: [
