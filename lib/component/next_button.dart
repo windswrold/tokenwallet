@@ -53,7 +53,7 @@ class NextButton extends StatelessWidget {
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(borderRadius ?? 0),
           border: border,
-          color: bgc,
+          color: enabled == true ? bgc : enableColor,
           image: bgImg == null
               ? null
               : DecorationImage(

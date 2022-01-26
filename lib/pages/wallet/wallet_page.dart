@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import '../../public.dart';
 import 'create/create_tip.dart';
 import 'create/create_wallet_page.dart';
+import 'restore/restore_wallet_page.dart';
 
 class WalletPage extends StatefulWidget {
   WalletPage({Key? key}) : super(key: key);
@@ -17,7 +18,11 @@ class _WalletPageState extends State<WalletPage> {
   void _create() async {
     List<TRWallet> datas = await TRWallet.queryAllWallets();
     if (datas.isEmpty) {
-      Routers.push(context, const CreateTip());
+      Routers.push(
+          context,
+          const CreateTip(
+            isCreate: true,
+          ));
       return;
     }
     Routers.push(context, CreateWalletPage());
@@ -26,10 +31,14 @@ class _WalletPageState extends State<WalletPage> {
   void _restore() async {
     List<TRWallet> datas = await TRWallet.queryAllWallets();
     if (datas.isEmpty) {
-      Routers.push(context, const CreateTip());
+      Routers.push(
+          context,
+          const CreateTip(
+            isCreate: false,
+          ));
       return;
     }
-    // Routers.push(context, CreateWalletPage());
+    Routers.push(context, RestoreWalletPage());
   }
 
   @override
@@ -106,7 +115,7 @@ class _WalletPageState extends State<WalletPage> {
                       Container(
                         margin: EdgeInsets.only(top: 40.width),
                         child: Text(
-                          'Digicenter Wallet',
+                          'Consensus  Wallet',
                           style: TextStyle(
                             fontWeight: FontWeightUtils.regular,
                             fontSize: 14.font,

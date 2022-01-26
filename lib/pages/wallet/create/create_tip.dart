@@ -1,10 +1,21 @@
 import 'package:cstoken/pages/wallet/create/create_wallet_page.dart';
+import 'package:cstoken/pages/wallet/restore/restore_wallet_page.dart';
 import 'package:cstoken/utils/extension.dart';
 
 import '../../../public.dart';
 
 class CreateTip extends StatelessWidget {
-  const CreateTip({Key? key}) : super(key: key);
+  const CreateTip({Key? key, required this.isCreate}) : super(key: key);
+
+  final bool isCreate;
+
+  void _onTap(BuildContext context) {
+    if (isCreate) {
+      Routers.push(context, CreateWalletPage());
+    } else {
+      Routers.push(context, RestoreWalletPage());
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -66,7 +77,7 @@ class CreateTip extends StatelessWidget {
                   fontSize: 16.font,
                 ),
                 onPressed: () {
-                  Routers.push(context, CreateWalletPage());
+                  _onTap(context);
                 },
                 title: "createwallet_next".local()),
           ],

@@ -2,26 +2,23 @@ import 'package:cstoken/state/create/create_wallet_state.dart';
 
 import '../../../public.dart';
 
-class CreateWalletPage extends StatefulWidget {
-  CreateWalletPage({Key? key}) : super(key: key);
+class RestoreWalletPage extends StatefulWidget {
+  RestoreWalletPage({Key? key}) : super(key: key);
 
   @override
-  State<CreateWalletPage> createState() => _CreateWalletPageState();
+  State<RestoreWalletPage> createState() => _RestoreWalletPageState();
 }
 
-class _CreateWalletPageState extends State<CreateWalletPage> {
+class _RestoreWalletPageState extends State<RestoreWalletPage> {
   final CreateWalletProvider _kprovier =
-      CreateWalletProvider.init(isRestore: false);
+      CreateWalletProvider.init(isRestore: true);
 
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
       create: (_) => _kprovier,
       child: CustomPageView(
-        leading: CustomPageView.getCloseLeading(() {
-          Routers.goBack(context);
-        }),
-        title: CustomPageView.getTitle(title: "createwallet_title".local()),
+        title: CustomPageView.getTitle(title: "restorewallet_title".local()),
         child: Container(
           padding: EdgeInsets.all(16.width),
           child: Column(
@@ -38,8 +35,20 @@ class _CreateWalletPageState extends State<CreateWalletPage> {
                           color: ColorUtils.fromHex("#FF000000"),
                         ),
                       ),
+                      CustomTextField(
+                        controller: _kprovier.memoEC,
+                        padding: EdgeInsets.only(top: 24.width),
+                        maxLines: 5,
+                        decoration: CustomTextField.getBorderLineDecoration(
+                          context: context,
+                          fillColor: Colors.white,
+                          borderColor: UIConstant.lineColor,
+                          hintText: "input_memos".local(),
+                          contentPadding: EdgeInsets.all(10),
+                        ),
+                      ),
                       CustomTextField.getInputTextField(context,
-                          padding: EdgeInsets.only(top: 24.width),
+                          padding: EdgeInsets.only(top: 16.width),
                           controller: _kprovier.walletNameEC,
                           titleText: "createwallet_walletname".local(),
                           hintText: "input_name".local()),

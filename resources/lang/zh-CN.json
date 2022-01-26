@@ -40,6 +40,20 @@
     "createwallet_warningvalue": "CSToken不存储用户的钱包密码，请务必保管好您的钱包密码！钱包密码用来加密您的私钥，使用安全的保密性强的密码策略也非常重要。",
     "createwallet_createnext": "我已妥善保管钱包密码",
     "backup_memotitle": "备份助记词",
-    "backup_know":"备份须知",
-    "backup_memoowner":"获得助记词等于拥有钱包资产的所有权"
+    "backup_know": "备份须知",
+    "backup_memoowner": "获得助记词等于拥有钱包资产的所有权",
+    "backup_memotype": "助记词由英文字母组成，请抄写并妥善保管助记词丢失，无法找回，请务必备份好助记词",
+    "backup_nextbackup": "开始备份",
+    "backup_nobackup": "暂不备份",
+    "dialog_next": "知道了",
+    "dialog_noscreenshots": "请勿截屏",
+    "dialog_noscreenshotstips": "请勿截屏分享和存储，这将可能被第三方恶意软件收集，造成资产被盗",
+    "backup_pleasewrite": "请按顺序抄写助记词，确保备份正确。",
+    "backupmemo_warning": "切记",
+    "backupmemo_warningvalue": "妥善保管助记词至远离互联网的安全地方。请勿将助记词在联网环境下分享和存储，比如邮件、相册、云盘、社交应用等。",
+    "backupmemo_next": "我已备份完成，进行验证",
+    "backupmemo_copymemo": "复制助记词",
+    "verifymemo_nextclick": "请按顺序点击助记词，以确认您正确备份。",
+    "verifymemo_verifystate": "我确认填写无误",
+    "restorewallet_title": "恢复钱包"
 }
