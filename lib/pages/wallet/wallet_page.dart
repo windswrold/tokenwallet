@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 
 import '../../public.dart';
 import 'create/create_tip.dart';
+import 'create/create_wallet_page.dart';
 
 class WalletPage extends StatefulWidget {
   WalletPage({Key? key}) : super(key: key);
@@ -19,6 +20,7 @@ class _WalletPageState extends State<WalletPage> {
       Routers.push(context, const CreateTip());
       return;
     }
+    Routers.push(context, CreateWalletPage());
   }
 
   void _restore() async {
@@ -27,6 +29,7 @@ class _WalletPageState extends State<WalletPage> {
       Routers.push(context, const CreateTip());
       return;
     }
+    // Routers.push(context, CreateWalletPage());
   }
 
   @override

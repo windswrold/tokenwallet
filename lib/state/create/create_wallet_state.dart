@@ -1,10 +1,12 @@
 import 'package:cstoken/model/mnemonic/mnemonic.dart';
 import 'package:cstoken/model/wallet/tr_wallet.dart';
+import 'package:cstoken/pages/wallet/create/backup_memo.dart';
 
 import '../../public.dart';
 
 class CreateWalletProvider with ChangeNotifier {
-  TextEditingController _walletNameEC = TextEditingController();
+  TextEditingController _walletNameEC =
+      TextEditingController(text: TRWallet.randomWalletName());
   TextEditingController _pwdEC = TextEditingController();
   TextEditingController _pwdAgainEC = TextEditingController();
   TextEditingController _pwdTipEC = TextEditingController();
@@ -23,7 +25,7 @@ class CreateWalletProvider with ChangeNotifier {
 
   void createWallet(BuildContext context) {
     String memo = Mnemonic.generateMnemonic();
-    TRWallet.validImportValue(
+    bool state = TRWallet.validImportValue(
         content: memo,
         pin: _pwdEC.text,
         pinAgain: _pwdAgainEC.text,
@@ -31,6 +33,11 @@ class CreateWalletProvider with ChangeNotifier {
         walletName: _walletNameEC.text,
         kChainType: KChainType.HD,
         kLeadType: KLeadType.Memo);
+    if (state == false) {
+      return;
+    }
+    //已经生成了存到本地了
+    Routers.push(context, BackupMemo());
   }
 
   TextEditingController get walletNameEC => _walletNameEC;

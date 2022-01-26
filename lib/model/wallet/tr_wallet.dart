@@ -56,6 +56,11 @@ class TRWallet {
   //       leadType: leadType);
   // }
 
+  static String randomWalletName() {
+    int random = Random().nextInt(9999);
+    return "钱包#" + random.toString();
+  }
+
   static bool validImportValue(
       {required String content,
       required String pin,

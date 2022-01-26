@@ -5,6 +5,8 @@
 // gestures. You can also use WidgetTester to find child widgets in the widget
 // tree, read text, and verify that the values of widget properties are correct.
 
+import 'dart:math';
+
 import 'package:cstoken/utils/encode.dart';
 import 'package:encrypt/encrypt.dart';
 import 'package:cstoken/main.dart';
@@ -29,15 +31,18 @@ void main() {
   });
 
   test("hdwallet", () async {
-    String input = "0xB74693f2DAbdb84570755E536e016d3CBDEB0810";
-    String pwd = "BpLnfgDsc2WD8F2qNfHK5a84jjJkwzDk";
-    final iv = IV.fromLength(0);
-    pwd = pwd.padRight(32, "0");
-    final key = Key.fromUtf8(pwd);
-    final encrypter = Encrypter(AES(key, mode: AESMode.ecb));
-    final decrypted = encrypter.encrypt(input,iv: iv);
-    print(decrypted.base64);
+    // String input = "0xB74693f2DAbdb84570755E536e016d3CBDEB0810";
+    // String pwd = "BpLnfgDsc2WD8F2qNfHK5a84jjJkwzDk";
+    // final iv = IV.fromLength(0);
+    // pwd = pwd.padRight(32, "0");
+    // final key = Key.fromUtf8(pwd);
+    // final encrypter = Encrypter(AES(key, mode: AESMode.ecb));
+    // final decrypted = encrypter.encrypt(input, iv: iv);
+    // print(decrypted.base64);
 
-    // print(eth);
+    for (var i = 0; i < 10; i++) {
+      int random = Random().nextInt(9999);
+      print(random);
+    }
   });
 }
