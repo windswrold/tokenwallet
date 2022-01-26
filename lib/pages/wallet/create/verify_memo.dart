@@ -1,3 +1,5 @@
+import 'package:cstoken/component/sortindex_view.dart';
+
 import '../../../public.dart';
 
 class VerifyMemo extends StatefulWidget {
@@ -32,6 +34,24 @@ class _VerifyMemoState extends State<VerifyMemo> {
                         fontWeight: FontWeightUtils.regular,
                         color: ColorUtils.fromHex("#FF000000"),
                       ),
+                    ),
+                    SortIndexView(
+                      memos: List.filled(12, ""),
+                      offsetWidth: 48.width,
+                      bgColor: ColorUtils.fromHex("#FFF6F8FF"),
+                      type: SortIndexType.wrongIndex,
+                      onTap: (int index) {
+                        print("wrongIndex $index");
+                      },
+                    ),
+                    SortIndexView(
+                      memos: List.filled(12, "fill"),
+                      offsetWidth: 48.width,
+                      bgColor: Colors.white,
+                      type: SortIndexType.actionIndex,
+                      onTap: (int index) {
+                        print("actionIndex $index");
+                      },
                     ),
                   ],
                 ),

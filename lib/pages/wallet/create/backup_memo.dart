@@ -1,4 +1,5 @@
 import 'package:cstoken/component/sortindex_button.dart';
+import 'package:cstoken/component/sortindex_view.dart';
 import 'package:cstoken/pages/wallet/create/verify_memo.dart';
 import 'package:flutter/material.dart';
 
@@ -42,6 +43,9 @@ class _BackupMemoState extends State<BackupMemo> {
                     SortIndexView(
                       memos: List.filled(12, "fill"),
                       offsetWidth: 48.width,
+                      bgColor: ColorUtils.fromHex("#FFF6F8FF"),
+                      type: SortIndexType.leftIndex,
+                      onTap: (int index) {},
                     ),
                     Container(
                       padding: EdgeInsets.only(top: 32.width),

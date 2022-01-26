@@ -61,6 +61,12 @@ enum KCurrencyType {
   USD,
 }
 
+enum SortIndexType {
+  leftIndex,
+  actionIndex,
+  wrongIndex,
+}
+
 enum KChainID { Mainnet, Ropsten, Rinkeby, Localhost }
 
 extension ChainIdNum on KChainID {
