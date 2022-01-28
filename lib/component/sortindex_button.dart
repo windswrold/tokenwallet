@@ -5,10 +5,11 @@ import 'package:flutter/widgets.dart';
 import '../public.dart';
 
 class SortViewItem {
-  final String value;
-  final bool? select;
-  final bool? isWrong;
+  String value;
+  bool? select;
+  bool? isWrong;
   final int index;
+  int? bottomIndex;
   SortViewItem(
       {required this.value, this.select, this.isWrong, required this.index});
 }

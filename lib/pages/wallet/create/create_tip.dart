@@ -19,70 +19,77 @@ class CreateTip extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return CustomPageView(
-      leading: CustomPageView.getCloseLeading(() {
-        Routers.goBack(context);
-      }),
-      title: CustomPageView.getTitle(title: "createwallet_tip".local()),
-      child: Container(
-        padding: EdgeInsets.only(
-            left: 24.width, right: 24.width, top: 32.width, bottom: 40.width),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Column(
+    return WillPopScope(
+        child: CustomPageView(
+          leading: CustomPageView.getCloseLeading(() {
+            Routers.goBack(context);
+          }),
+          title: CustomPageView.getTitle(title: "createwallet_tip".local()),
+          child: Container(
+            padding: EdgeInsets.only(
+                left: 24.width,
+                right: 24.width,
+                top: 32.width,
+                bottom: 40.width),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(
-                  "createwallet_tip1".local(),
-                  style: TextStyle(
-                    fontSize: 14.font,
-                    fontWeight: FontWeightUtils.regular,
-                    color: ColorUtils.fromHex("#CC000000"),
-                  ),
+                Column(
+                  children: [
+                    Text(
+                      "createwallet_tip1".local(),
+                      style: TextStyle(
+                        fontSize: 14.font,
+                        fontWeight: FontWeightUtils.regular,
+                        color: ColorUtils.fromHex("#CC000000"),
+                      ),
+                    ),
+                    25.columnWidget,
+                    Text(
+                      "createwallet_tip2".local(),
+                      style: TextStyle(
+                        fontSize: 14.font,
+                        fontWeight: FontWeightUtils.regular,
+                        color: ColorUtils.fromHex("#CC000000"),
+                      ),
+                    ),
+                    25.columnWidget,
+                    Text(
+                      "createwallet_tip3".local(),
+                      style: TextStyle(
+                        fontSize: 14.font,
+                        fontWeight: FontWeightUtils.regular,
+                        color: ColorUtils.fromHex("#CC000000"),
+                      ),
+                    ),
+                    25.columnWidget,
+                    Text(
+                      "createwallet_tip4".local(),
+                      style: TextStyle(
+                        fontSize: 14.font,
+                        fontWeight: FontWeightUtils.regular,
+                        color: ColorUtils.fromHex("#CC000000"),
+                      ),
+                    ),
+                  ],
                 ),
-                25.columnWidget,
-                Text(
-                  "createwallet_tip2".local(),
-                  style: TextStyle(
-                    fontSize: 14.font,
-                    fontWeight: FontWeightUtils.regular,
-                    color: ColorUtils.fromHex("#CC000000"),
-                  ),
-                ),
-                25.columnWidget,
-                Text(
-                  "createwallet_tip3".local(),
-                  style: TextStyle(
-                    fontSize: 14.font,
-                    fontWeight: FontWeightUtils.regular,
-                    color: ColorUtils.fromHex("#CC000000"),
-                  ),
-                ),
-                25.columnWidget,
-                Text(
-                  "createwallet_tip4".local(),
-                  style: TextStyle(
-                    fontSize: 14.font,
-                    fontWeight: FontWeightUtils.regular,
-                    color: ColorUtils.fromHex("#CC000000"),
-                  ),
-                ),
+                NextButton(
+                    bgc: UIConstant.blueColor,
+                    textStyle: TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeightUtils.medium,
+                      fontSize: 16.font,
+                    ),
+                    onPressed: () {
+                      _onTap(context);
+                    },
+                    title: "createwallet_next".local()),
               ],
             ),
-            NextButton(
-                bgc: UIConstant.blueColor,
-                textStyle: TextStyle(
-                  color: Colors.white,
-                  fontWeight: FontWeightUtils.medium,
-                  fontSize: 16.font,
-                ),
-                onPressed: () {
-                  _onTap(context);
-                },
-                title: "createwallet_next".local()),
-          ],
+          ),
         ),
-      ),
-    );
+        onWillPop: () async {
+          return false;
+        });
   }
 }

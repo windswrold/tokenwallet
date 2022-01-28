@@ -10,7 +10,8 @@ class SortIndexView extends StatelessWidget {
       this.bgColor,
       required this.type,
       required this.onTap,
-      this.verifyMemos})
+      this.verifyMemos,
+      this.margin = const EdgeInsets.only(top: 16)})
       : super(key: key);
 
   final List<SortViewItem> memos;
@@ -19,6 +20,7 @@ class SortIndexView extends StatelessWidget {
   final Color? bgColor;
   final SortIndexType type;
   final Function(int index) onTap;
+  final EdgeInsetsGeometry? margin;
 
   @override
   Widget build(BuildContext context) {
@@ -54,7 +56,7 @@ class SortIndexView extends StatelessWidget {
       alignment: Alignment.center,
       padding:
           EdgeInsets.fromLTRB(_paddingLeft, 16.width, _paddingLeft, 16.width),
-      margin: EdgeInsets.only(top: 16.width),
+      margin: margin,
       decoration: BoxDecoration(
         color: bgColor,
         borderRadius: BorderRadius.circular(10),

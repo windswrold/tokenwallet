@@ -45,7 +45,7 @@ class _WalletPageState extends State<WalletPage> {
   Widget build(BuildContext context) {
     TRWallet? wallet =
         Provider.of<CurrentChooseWalletState>(context).currentWallet;
-    return wallet != null
+    return wallet == null
         ? CustomPageView(
             title: CustomPageView.getTitle(title: "ssss"),
             hiddenLeading: true,

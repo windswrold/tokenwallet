@@ -34,10 +34,11 @@ class CreateWalletProvider with ChangeNotifier {
   }
 
   void createWallet(BuildContext context) {
-
     HWToast.showLoading();
     String memo = "";
+    KLeadType leadType = KLeadType.Create;
     if (_isRestore == true) {
+      leadType = KLeadType.KeyStore;
       memo = _memoEC!.text;
     } else {
       memo = Mnemonic.generateMnemonic();
@@ -49,7 +50,7 @@ class CreateWalletProvider with ChangeNotifier {
         pinTip: _pwdTipEC.text,
         walletName: _walletNameEC.text,
         kChainType: KChainType.HD,
-        kLeadType: KLeadType.Memo);
+        kLeadType: leadType);
     if (state == false) {
       return;
     }
@@ -60,10 +61,7 @@ class CreateWalletProvider with ChangeNotifier {
         pinTip: _pwdTipEC.text,
         walletName: _walletNameEC.text,
         kChainType: KChainType.HD,
-        kLeadType: KLeadType.Memo);
-    //已经生成了存到本地了
-    // HWToast.hiddenAllToast();
-    // Routers.push(context, BackupTipMemo());
+        kLeadType: leadType);
   }
 
   TextEditingController? get memoEC => _memoEC;

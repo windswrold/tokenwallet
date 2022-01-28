@@ -8,6 +8,7 @@ import 'package:cstoken/model/chain/eth.dart';
 import 'package:cstoken/model/chain/heco.dart';
 import 'package:cstoken/model/wallet/tr_wallet_info.dart';
 import 'package:cstoken/pages/tabbar/tabbar.dart';
+import 'package:cstoken/pages/wallet/create/backup_tip_memo.dart';
 import 'package:cstoken/state/wallet_state.dart';
 import 'package:cstoken/utils/custom_toast.dart';
 import 'package:cstoken/utils/encode.dart';
@@ -185,7 +186,14 @@ class TRWallet {
       HWToast.hiddenAllToast();
       Provider.of<CurrentChooseWalletState>(context, listen: false)
           .loadWallet();
-      Routers.push(context, HomeTabbar());
+      //如果是创建则去跳转备份
+      //如果其他则去tabbar
+      //关闭备份则去tababr
+      if (kLeadType == KLeadType.Create) {
+        Routers.push(context, BackupTipMemo(memo: content, walletID: walletID));
+      } else {
+        Routers.push(context, HomeTabbar(), clearStack: true);
+      }
     } catch (e) {
       rethrow;
     }
