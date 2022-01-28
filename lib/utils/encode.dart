@@ -26,7 +26,7 @@ class TREncode {
   static String encrypt(String input, String pwd) {
     pwd = pwd.padRight(32, "0");
     final key = Key.fromUtf8(pwd);
-    final iv = IV.fromLength(0);
+    final iv = IV.fromUtf8("CSTOKENCSTOKEN20");
     final encrypter = Encrypter(AES(key, mode: AESMode.cbc));
     final encrypt = encrypter.encrypt(input, iv: iv);
     return encrypt.base64;
@@ -35,7 +35,7 @@ class TREncode {
   static String decrypt(String input, String pwd) {
     pwd = pwd.padRight(32, "0");
     final key = Key.fromUtf8(pwd);
-    final iv = IV.fromLength(0);
+    final iv = IV.fromUtf8("CSTOKENCSTOKEN20");
     final encrypter = Encrypter(AES(key, mode: AESMode.cbc));
     final decrypted = encrypter.decrypt64(input, iv: iv);
     return decrypted;

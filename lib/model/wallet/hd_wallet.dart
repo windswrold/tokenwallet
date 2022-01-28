@@ -1,3 +1,11 @@
+import 'package:cstoken/model/chain/arb.dart';
+import 'package:cstoken/model/chain/avax.dart';
+import 'package:cstoken/model/chain/bsc.dart';
+import 'package:cstoken/model/chain/eth.dart';
+import 'package:cstoken/model/chain/heco.dart';
+import 'package:cstoken/model/chain/matic.dart';
+import 'package:cstoken/model/chain/okchain.dart';
+
 import '../../public.dart';
 
 class HDWallet {
@@ -19,6 +27,33 @@ class HDWallet {
   String toString() {
     // TODO: implement toString
     return "prv $prv , address $address pin $pin coinType $coinType";
+  }
+
+  static List<HDWallet> getHDWallet(
+      {required String content,
+      required String pin,
+      required KLeadType kLeadType,
+      required KChainType chainType}) {
+    List<HDWallet> _hdwallets = [];
+    if (kLeadType == KLeadType.Memo ||
+        chainType == KChainType.HD ||
+        chainType == KChainType.ETH) {
+      _hdwallets.add(ETHChain()
+          .importWallet(content: content, pin: pin, kLeadType: kLeadType)!);
+      _hdwallets.add(BSCChain()
+          .importWallet(content: content, pin: pin, kLeadType: kLeadType)!);
+      _hdwallets.add(HecoChain()
+          .importWallet(content: content, pin: pin, kLeadType: kLeadType)!);
+      _hdwallets.add(ARBChain()
+          .importWallet(content: content, pin: pin, kLeadType: kLeadType)!);
+      _hdwallets.add(AVAXChain()
+          .importWallet(content: content, pin: pin, kLeadType: kLeadType)!);
+      _hdwallets.add(MaticChain()
+          .importWallet(content: content, pin: pin, kLeadType: kLeadType)!);
+      _hdwallets.add(OKChain()
+          .importWallet(content: content, pin: pin, kLeadType: kLeadType)!);
+    }
+    return _hdwallets;
   }
 }
 

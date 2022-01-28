@@ -39,6 +39,7 @@
     "createwallet_warning": "注意",
     "createwallet_warningvalue": "CSToken不存储用户的钱包密码，请务必保管好您的钱包密码！钱包密码用来加密您的私钥，使用安全的保密性强的密码策略也非常重要。",
     "createwallet_createnext": "我已妥善保管钱包密码",
+    "create_wallet_exist": "钱包已创建，请勿重复导入",
     "backup_memotitle": "备份助记词",
     "backup_know": "备份须知",
     "backup_memoowner": "获得助记词等于拥有钱包资产的所有权",

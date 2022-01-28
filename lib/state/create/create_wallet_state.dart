@@ -1,6 +1,7 @@
 import 'package:cstoken/model/mnemonic/mnemonic.dart';
 import 'package:cstoken/model/wallet/tr_wallet.dart';
 import 'package:cstoken/pages/wallet/create/backup_tip_memo.dart';
+import 'package:cstoken/utils/custom_toast.dart';
 
 import '../../public.dart';
 
@@ -33,7 +34,14 @@ class CreateWalletProvider with ChangeNotifier {
   }
 
   void createWallet(BuildContext context) {
-    String memo = Mnemonic.generateMnemonic();
+
+    HWToast.showLoading();
+    String memo = "";
+    if (_isRestore == true) {
+      memo = _memoEC!.text;
+    } else {
+      memo = Mnemonic.generateMnemonic();
+    }
     bool state = TRWallet.validImportValue(
         content: memo,
         pin: _pwdEC.text,
@@ -45,8 +53,17 @@ class CreateWalletProvider with ChangeNotifier {
     if (state == false) {
       return;
     }
+    TRWallet.importWallet(context,
+        content: memo,
+        pin: _pwdEC.text,
+        pinAgain: _pwdAgainEC.text,
+        pinTip: _pwdTipEC.text,
+        walletName: _walletNameEC.text,
+        kChainType: KChainType.HD,
+        kLeadType: KLeadType.Memo);
     //已经生成了存到本地了
-    Routers.push(context, BackupTipMemo());
+    // HWToast.hiddenAllToast();
+    // Routers.push(context, BackupTipMemo());
   }
 
   TextEditingController? get memoEC => _memoEC;

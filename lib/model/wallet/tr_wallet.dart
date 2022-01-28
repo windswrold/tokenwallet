@@ -6,6 +6,9 @@ import 'package:cstoken/db/database_config.dart';
 import 'package:cstoken/model/chain/bsc.dart';
 import 'package:cstoken/model/chain/eth.dart';
 import 'package:cstoken/model/chain/heco.dart';
+import 'package:cstoken/model/wallet/tr_wallet_info.dart';
+import 'package:cstoken/pages/tabbar/tabbar.dart';
+import 'package:cstoken/state/wallet_state.dart';
 import 'package:cstoken/utils/custom_toast.dart';
 import 'package:cstoken/utils/encode.dart';
 import 'package:floor/floor.dart';
@@ -140,21 +143,49 @@ class TRWallet {
           false) {
         return;
       }
-      List<TRWallet> datas = [];
-      List<HDWallet> _hdwallets = [];
-      if (kLeadType == KLeadType.Memo) {
-        _hdwallets.add(await ETHChain()
-            .importWallet(content: content, pin: pin, kLeadType: kLeadType)!);
-        _hdwallets.add(await BSCChain()
-            .importWallet(content: content, pin: pin, kLeadType: kLeadType)!);
-        _hdwallets.add(await HecoChain()
-            .importWallet(content: content, pin: pin, kLeadType: kLeadType)!);
-        _hdwallets.add(await ETHChain()
-            .importWallet(content: content, pin: pin, kLeadType: kLeadType)!);
-        _hdwallets.add(await ETHChain()
-            .importWallet(content: content, pin: pin, kLeadType: kLeadType)!);
+      final walletID = TREncode.SHA256(content.replaceAll(" ", "") + "CSTOKEM");
+      TRWallet? oldWallets = await TRWallet.queryWalletByWalletID(walletID);
+      if (oldWallets != null) {
+        LogUtil.v("查找到有已经导入的钱包");
+        HWToast.showText(text: "create_wallet_exist".local());
+        return;
       }
-      if (kLeadType == KLeadType.Prvkey && kChainType == KChainType.ETH) {}
+      TRWallet trWallet = TRWallet();
+      trWallet.walletID = walletID;
+      trWallet.walletName = walletName;
+      trWallet.pinTip = pinTip;
+      trWallet.chainType = kChainType.index;
+      trWallet.leadType = kLeadType.index;
+      //通过创建时需要提示备份
+      trWallet.accountState = kLeadType == KLeadType.Create
+          ? KAccountState.init.index
+          : KAccountState.noauthed.index;
+      trWallet.encContent = TREncode.encrypt(content, pin);
+      trWallet.pin = TREncode.SHA256(pin);
+      TRWallet? chooseTR = await TRWallet.queryChooseWallet();
+      if (chooseTR == null) {
+        trWallet.isChoose = true;
+      }
+      //开始生成地址信息
+      List<HDWallet> _hdwallets = HDWallet.getHDWallet(
+          content: content,
+          pin: pin,
+          kLeadType: kLeadType,
+          chainType: kChainType);
+      TRWallet.insertWallet(trWallet);
+      for (var object in _hdwallets) {
+        String address = object.address!;
+        String key = walletID + address + object.coinType!.coinTypeString();
+        TRWalletInfo infos = TRWalletInfo(key: key);
+        infos.walletID = walletID;
+        infos.walletAaddress = address;
+        infos.coinType = object.coinType!.index;
+        TRWalletInfo.insertWallets([infos]);
+      }
+      HWToast.hiddenAllToast();
+      Provider.of<CurrentChooseWalletState>(context, listen: false)
+          .loadWallet();
+      Routers.push(context, HomeTabbar());
     } catch (e) {
       rethrow;
     }

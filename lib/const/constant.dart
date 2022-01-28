@@ -4,7 +4,7 @@ import '../public.dart';
 
 //链类型
 enum KChainType {
-  HD, // 与KLeadType memo联动
+  HD,
   ETH,
   BTC,
   TRX,
@@ -47,13 +47,20 @@ extension CoinTypeString on KCoinType {
 enum KLeadType {
   Prvkey, //通过私钥
   Memo, //通过助记词
-  KeyStore, //通过keystore
+  KeyStore,
+  Create,
+  Restore,
 }
 
 enum KAccountState {
-  noauthed, //无需备份
-  init, //未备份
-  authed, //已备份
+  ///无需备份
+  noauthed,
+
+  ///未备份
+  init,
+
+  ///已备份
+  authed,
 }
 
 enum KCurrencyType {
