@@ -1,3 +1,5 @@
+import 'package:cstoken/component/mine_list_cell.dart';
+
 import '../../public.dart';
 
 class MinePage extends StatefulWidget {
@@ -10,6 +12,17 @@ class MinePage extends StatefulWidget {
 class _MinePageState extends State<MinePage> {
   @override
   Widget build(BuildContext context) {
-    return CustomPageView( hiddenLeading: true,child: Container());
+    return CustomPageView(
+      hiddenLeading: true,
+      title: CustomPageView.getTitle(title: "minepage_minetitle".local(),),
+      backgroundColor: UIConstant.backgroudColor,
+      child: ListView.builder(
+        padding: EdgeInsets.only(top: 8.width),
+        itemCount: 5,
+        itemBuilder: (BuildContext context, int index) {
+          return MineListViewCell();
+        },
+      ),
+    );
   }
 }

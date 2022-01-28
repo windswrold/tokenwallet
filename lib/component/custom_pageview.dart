@@ -85,7 +85,7 @@ class CustomPageView extends StatelessWidget {
                 centerTitle: true,
                 elevation: elevation,
                 bottom: bottom,
-                backgroundColor: backgroundColor,
+                backgroundColor: Colors.white,
                 actions: actions,
                 leading: hiddenLeading == true
                     ? Text("")

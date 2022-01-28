@@ -39,7 +39,7 @@ dependencies:
   easy_localization: ^3.0.0   
   # package_info: ^2.0.2
   auto_size_text: ^3.0.0
-  # flutter_swiper_null_safety: ^1.0.2
+  flutter_swiper_null_safety: ^1.0.2
   # cached_network_image: ^3.1.0
   flutter_inappwebview: ^5.3.2 
   # flutter_swipe_action_cell: ^2.1.5
@@ -63,4 +63,5 @@ flutter:
     - assets/images/icons/ 
     - assets/images/tabbar/ 
     - assets/images/bg/ 
+    - assets/images/mine/ 
 

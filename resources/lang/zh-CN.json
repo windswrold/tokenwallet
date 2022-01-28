@@ -55,5 +55,6 @@
     "backupmemo_copymemo": "复制助记词",
     "verifymemo_nextclick": "请按顺序点击助记词，以确认您正确备份。",
     "verifymemo_verifystate": "我确认填写无误",
-    "restorewallet_title": "恢复钱包"
+    "restorewallet_title": "恢复钱包",
+    "minepage_minetitle": "我的"
 }
