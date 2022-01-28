@@ -144,6 +144,7 @@ class TRWallet {
           false) {
         return;
       }
+      HWToast.showLoading();
       final walletID = TREncode.SHA256(content.replaceAll(" ", "") + "CSTOKEM");
       TRWallet? oldWallets = await TRWallet.queryWalletByWalletID(walletID);
       if (oldWallets != null) {

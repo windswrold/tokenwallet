@@ -59,5 +59,7 @@
     "restorewallet_title": "恢复钱包",
     "minepage_minetitle": "我的",
     "copy_success": "复制成功",
-    "verifymemo_verifwrong": "助记词顺序错误，请检查抄写的助记词是否正确"
+    "verifymemo_verifwrong": "助记词顺序错误，请检查抄写的助记词是否正确",
+    "verifymemo_havewrong":"确认已正确备份",
+    "verifymemo_backupcomplation":"备份完成"
 }

@@ -34,7 +34,6 @@ class CreateWalletProvider with ChangeNotifier {
   }
 
   void createWallet(BuildContext context) {
-    HWToast.showLoading();
     String memo = "";
     KLeadType leadType = KLeadType.Create;
     if (_isRestore == true) {
