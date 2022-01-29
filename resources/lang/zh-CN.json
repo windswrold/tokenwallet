@@ -61,5 +61,7 @@
     "copy_success": "复制成功",
     "verifymemo_verifwrong": "助记词顺序错误，请检查抄写的助记词是否正确",
     "verifymemo_havewrong":"确认已正确备份",
-    "verifymemo_backupcomplation":"备份完成"
+    "verifymemo_backupcomplation":"备份完成",
+    "wallets_manager_createnew":"创建新钱包",
+    "wallets_manager_importnew":"导入钱包"
 }

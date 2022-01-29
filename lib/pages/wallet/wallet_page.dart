@@ -1,4 +1,5 @@
 import 'package:cstoken/model/wallet/tr_wallet.dart';
+import 'package:cstoken/pages/wallet/wallets/wallets_manager.dart';
 import 'package:cstoken/state/wallet_state.dart';
 import 'package:flutter/material.dart';
 
@@ -18,11 +19,7 @@ class _WalletPageState extends State<WalletPage> {
   void _create() async {
     List<TRWallet> datas = await TRWallet.queryAllWallets();
     if (datas.isEmpty) {
-      Routers.push(
-          context,
-          const CreateTip(
-            isCreate: true,
-          ));
+      Routers.push(context, const CreateTip(isCreate: true));
       return;
     }
     Routers.push(context, CreateWalletPage());
@@ -45,15 +42,8 @@ class _WalletPageState extends State<WalletPage> {
   Widget build(BuildContext context) {
     TRWallet? wallet =
         Provider.of<CurrentChooseWalletState>(context).currentWallet;
-    return wallet == null
-        ? CustomPageView(
-            title: CustomPageView.getTitle(title: "ssss"),
-            hiddenLeading: true,
-            child: Container(
-              alignment: Alignment.center,
-              height: 50,
-              color: Colors.red,
-            ))
+    return wallet != null
+        ? WalletsManager()
         : CustomPageView(
             hiddenAppBar: true,
             hiddenLeading: true,

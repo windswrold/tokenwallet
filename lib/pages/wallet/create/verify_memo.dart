@@ -151,7 +151,6 @@ class _VerifyMemoState extends State<VerifyMemo> {
   @override
   Widget build(BuildContext context) {
     return CustomPageView(
-    
       title: CustomPageView.getTitle(title: "backup_memotitle".local()),
       child: Container(
         padding: EdgeInsets.all(24.width),

@@ -354,6 +354,13 @@ packages:
       url: "https://pub.flutter-io.cn"
     source: hosted
     version: "5.1.0"
+  flutter_swipe_action_cell:
+    dependency: "direct main"
+    description:
+      name: flutter_swipe_action_cell
+      url: "https://pub.flutter-io.cn"
+    source: hosted
+    version: "2.1.6"
   flutter_swiper_null_safety:
     dependency: "direct main"
     description:
