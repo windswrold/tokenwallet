@@ -92,7 +92,7 @@ class _BackupTipMemoState extends State<BackupTipMemo> {
                   padding: EdgeInsets.only(top: 120.width),
                   child: NextButton(
                     onPressed: _startBackup,
-                    bgc: UIConstant.blueColor,
+                    bgc: ColorUtils.blueColor,
                     textStyle: TextStyle(
                       color: Colors.white,
                       fontSize: 16.font,

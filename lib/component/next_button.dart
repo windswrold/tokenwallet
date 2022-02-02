@@ -65,8 +65,8 @@ class NextButton extends StatelessWidget {
           //         begin: Alignment.centerLeft,
           //         end: Alignment.centerRight,
           //         colors: enabled
-          //             ? UIConstant.gradientColors
-          //             : UIConstant.enabledGradientColors,
+          //             ? ColorUtils.gradientColors
+          //             : ColorUtils.enabledGradientColors,
           //       )
           //     : null,
         ),

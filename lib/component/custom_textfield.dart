@@ -212,8 +212,8 @@ class CustomTextField extends StatefulWidget {
                 color: ColorUtils.fromHex("#FF000000"),
               ),
               decoration: CustomTextField.getUnderLineDecoration(
-                  underLineColor: UIConstant.lineColor,
-                  focusedUnderLineColor: UIConstant.blueColor,
+                  underLineColor: ColorUtils.lineColor,
+                  focusedUnderLineColor: ColorUtils.blueColor,
                   underLineWidth: 0.5,
                   hintText: hintText,
                   hintStyle: TextStyle(

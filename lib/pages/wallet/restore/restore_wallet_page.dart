@@ -42,7 +42,7 @@ class _RestoreWalletPageState extends State<RestoreWalletPage> {
                         decoration: CustomTextField.getBorderLineDecoration(
                           context: context,
                           fillColor: Colors.white,
-                          borderColor: UIConstant.lineColor,
+                          borderColor: ColorUtils.lineColor,
                           hintText: "input_memos".local(),
                           contentPadding: EdgeInsets.all(10),
                         ),
@@ -113,7 +113,7 @@ class _RestoreWalletPageState extends State<RestoreWalletPage> {
                 onPressed: () {
                   _kprovier.createWallet(context);
                 },
-                bgc: UIConstant.blueColor,
+                bgc: ColorUtils.blueColor,
                 textStyle: TextStyle(
                     color: Colors.white,
                     fontSize: 16.font,

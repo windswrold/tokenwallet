@@ -15,7 +15,7 @@ class _MinePageState extends State<MinePage> {
     return CustomPageView(
       hiddenLeading: true,
       title: CustomPageView.getTitle(title: "minepage_minetitle".local(),),
-      backgroundColor: UIConstant.backgroudColor,
+      backgroundColor: ColorUtils.backgroudColor,
       child: ListView.builder(
         padding: EdgeInsets.only(top: 8.width),
         itemCount: 5,

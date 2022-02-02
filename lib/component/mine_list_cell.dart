@@ -24,7 +24,7 @@ class MineListViewCell extends StatelessWidget {
             ),
           ),
           Container(
-            color: UIConstant.lineColor,
+            color: ColorUtils.lineColor,
             height: 0.5,
             margin: EdgeInsets.only(left: 48.width),
           ),

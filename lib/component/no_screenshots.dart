@@ -74,7 +74,7 @@ class NoScreentshots extends StatelessWidget {
               margin: EdgeInsets.only(top: 16.width),
               bgc: Colors.white,
               textStyle: TextStyle(
-                color: UIConstant.blueColor,
+                color: ColorUtils.blueColor,
                 fontSize: 16.font,
                 fontWeight: FontWeightUtils.medium,
               ),

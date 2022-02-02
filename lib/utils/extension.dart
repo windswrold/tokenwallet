@@ -80,6 +80,9 @@ class FontWeightUtils {
 }
 
 class ColorUtils {
+  static const Color blueColor = Color(0xff2cabec);
+  static const Color lineColor = Color(0x1A000000);
+  static Color backgroudColor = ColorUtils.fromHex("#FFF6F8FF");
   static Color fromHex(String hexString) {
     final buffer = StringBuffer();
     if (hexString.length == 6 || hexString.length == 7) buffer.write('ff');

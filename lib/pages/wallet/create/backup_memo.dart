@@ -116,7 +116,7 @@ class _BackupMemoState extends State<BackupMemo> {
                 ),
                 NextButton(
                   onPressed: _backMemo,
-                  bgc: UIConstant.blueColor,
+                  bgc: ColorUtils.blueColor,
                   textStyle: TextStyle(
                       color: Colors.white,
                       fontSize: 16.font,
@@ -126,7 +126,7 @@ class _BackupMemoState extends State<BackupMemo> {
                 NextButton(
                   onPressed: _copyMemo,
                   textStyle: TextStyle(
-                      color: UIConstant.blueColor,
+                      color: ColorUtils.blueColor,
                       fontSize: 14.font,
                       fontWeight: FontWeightUtils.regular),
                   title: "backupmemo_copymemo".local(),

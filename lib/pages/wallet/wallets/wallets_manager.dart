@@ -3,6 +3,7 @@ import 'package:cstoken/model/wallet/tr_wallet.dart';
 import 'package:cstoken/pages/wallet/create/create_tip.dart';
 import 'package:cstoken/pages/wallet/create/create_wallet_page.dart';
 import 'package:cstoken/pages/wallet/import/import_wallets.dart';
+import 'package:flutter/material.dart';
 
 import '../../../public.dart';
 
@@ -50,14 +51,14 @@ class _WalletsManagerState extends State<WalletsManager> {
   @override
   Widget build(BuildContext context) {
     return CustomPageView(
-      backgroundColor: UIConstant.backgroudColor,
+      backgroundColor: ColorUtils.backgroudColor,
       child: Container(
         child: Column(
           children: [
-            Container(
-              height: 64.width,
-              color: UIConstant.lineColor,
-            ),
+            // Container(
+            //   height: 64.width,
+            //   color: ColorUtils.lineColor,
+            // ),
             Expanded(
               child: ListView.builder(
                 itemCount: _datas.length,
@@ -87,7 +88,7 @@ class _WalletsManagerState extends State<WalletsManager> {
                       onPressed: _create,
                       height: 44,
                       width: 160.width,
-                      bgc: UIConstant.blueColor,
+                      bgc: ColorUtils.blueColor,
                       borderRadius: 12,
                       textStyle: TextStyle(
                         fontSize: 16.font,
@@ -101,7 +102,7 @@ class _WalletsManagerState extends State<WalletsManager> {
                       width: 160.width,
                       borderRadius: 12,
                       textStyle: TextStyle(
-                        color: UIConstant.blueColor,
+                        color: ColorUtils.blueColor,
                         fontWeight: FontWeightUtils.medium,
                         fontSize: 16.font,
                       ),

@@ -214,7 +214,7 @@ class _VerifyMemoState extends State<VerifyMemo> {
               onPressed: () {
                 _verifyAction();
               },
-              bgc: UIConstant.blueColor,
+              bgc: ColorUtils.blueColor,
               enableColor: ColorUtils.fromHex("#667685A2"),
               textStyle: TextStyle(
                   color: Colors.white,

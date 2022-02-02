@@ -81,7 +81,7 @@ class _WalletPageState extends State<WalletPage> {
                         margin: EdgeInsets.only(top: 16.width),
                         height: 48.width,
                         width: 240.width,
-                        bgc: UIConstant.blueColor,
+                        bgc: ColorUtils.blueColor,
                         title: 'choose_createwallet'.local(),
                         textStyle: TextStyle(
                           fontWeight: FontWeightUtils.medium,
@@ -94,12 +94,12 @@ class _WalletPageState extends State<WalletPage> {
                         margin: EdgeInsets.only(top: 16.width),
                         height: 48.width,
                         width: 240.width,
-                        border: Border.all(color: UIConstant.blueColor),
+                        border: Border.all(color: ColorUtils.blueColor),
                         title: 'choose_restorewallet'.local(),
                         textStyle: TextStyle(
                           fontWeight: FontWeightUtils.medium,
                           fontSize: 16.font,
-                          color: UIConstant.blueColor,
+                          color: ColorUtils.blueColor,
                         ),
                         onPressed: _restore,
                       ),
