@@ -25,6 +25,20 @@ class CreateWalletProvider with ChangeNotifier {
 
   void updateLeadType(KLeadType leadType) {
     _leadType = leadType;
+    _contentEC?.clear();
+    _walletNameEC.clear();
+    _pwdEC.clear();
+    _pwdAgainEC.clear();
+    _pwdTipEC.clear();
+    if (inProduction == false) {
+      _contentEC?.text =
+          "40730f5ddc6b492688ce3897b9ff54e582f6ad8243a90ece21b060a46db46b44";
+      // contentEC.text =
+      //     "f335fb8d70f27351a2a20541464f87057112e3245efa8c119fc7a08742622044";
+
+      // contentEC.text =
+      //     "0db163591450cd67f3febe856460460e99ef5bb70c6a98cb2a0bcb873d0526be";
+    }
   }
 
   @override
@@ -49,7 +63,7 @@ class CreateWalletProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  void createWallet(BuildContext context) {
+  void createWallet(BuildContext context, {required KChainType chainType}) {
     String memo = "";
     if (_leadType == KLeadType.Memo) {
       memo = Mnemonic.generateMnemonic();
@@ -62,7 +76,7 @@ class CreateWalletProvider with ChangeNotifier {
         pinAgain: _pwdAgainEC.text,
         pinTip: _pwdTipEC.text,
         walletName: _walletNameEC.text,
-        kChainType: KChainType.HD,
+        kChainType: chainType,
         kLeadType: _leadType);
     if (state == false) {
       return;
@@ -73,7 +87,7 @@ class CreateWalletProvider with ChangeNotifier {
         pinAgain: _pwdAgainEC.text,
         pinTip: _pwdTipEC.text,
         walletName: _walletNameEC.text,
-        kChainType: KChainType.HD,
+        kChainType: chainType,
         kLeadType: _leadType);
   }
 

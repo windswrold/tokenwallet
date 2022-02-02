@@ -298,7 +298,7 @@ class _$WalletInfoDao extends WalletInfoDao {
   final DeletionAdapter<TRWalletInfo> _tRWalletInfoDeletionAdapter;
 
   @override
-  Future<List<TRWalletInfo?>> queryWalletInfosByWalletID(
+  Future<List<TRWalletInfo>?> queryWalletInfosByWalletID(
       String walletID) async {
     return _queryAdapter.queryList(
         'SELECT * FROM wallet_info_table WHERE walletID = ?1',
@@ -312,7 +312,7 @@ class _$WalletInfoDao extends WalletInfoDao {
   }
 
   @override
-  Future<List<TRWalletInfo?>> queryWalletInfo(
+  Future<List<TRWalletInfo>?> queryWalletInfo(
       String walletID, int coinType) async {
     return _queryAdapter.queryList(
         'SELECT * FROM wallet_info_table WHERE walletID = ?1 and coinType = ?2',

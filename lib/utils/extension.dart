@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:cstoken/model/mnemonic/mnemonic.dart';
 
 import '../public.dart';
@@ -58,6 +60,46 @@ extension StringTranslateExtension on String {
     String amount = '^[0-9]{0,$decimals}(\\.[0-9]{0,$decimals})?\$';
     RegExp reg = RegExp(amount);
     return reg.hasMatch(this);
+  }
+
+  ///合约地址缩略
+  String contractAddress({int end = 7, int start = 7}) {
+    String contractAddress = '';
+    if (isNotEmpty && length > 14) {
+      String startString = substring(0, start);
+      String afterString = substring(length - end);
+      contractAddress = startString + '...' + afterString;
+    } else {
+      contractAddress = this;
+    }
+    return contractAddress;
+  }
+
+  int compare(String str1, String str2) {
+    List<String> strInt1 = str1.trim().split(".");
+    List<String> strInt2 = str2.trim().split(".");
+    int maxLen = max(strInt1.length, strInt2.length);
+    for (var i = 0; i < maxLen; i++) {
+      int a = 0;
+      int b = 0;
+      if (i < strInt1.length) {
+        a = int.tryParse(strInt1[i])!;
+      }
+      if (i < strInt2.length) {
+        b = int.tryParse(strInt2[i])!;
+      }
+      if (a > b) {
+        LogUtil.v("比对结果  1");
+        return 1;
+      } else if (a == b) {
+        continue;
+      } else {
+        LogUtil.v("比对结果  -1");
+        return -1;
+      }
+    }
+    LogUtil.v("比对结果  0");
+    return 0;
   }
 }
 

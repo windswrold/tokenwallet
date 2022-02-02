@@ -31,6 +31,8 @@ class TRWallet {
   int? leadType; //导入类型 Prvkey 助记词 keystore
   String? pinTip; // 密码提示
 
+  List<TRWalletInfo>? walletsInfo;
+
   TRWallet({
     this.walletID,
     this.walletName,
@@ -117,7 +119,8 @@ class TRWallet {
       HWToast.showText(text: "import_prvwrong".local());
       return false;
     }
-    if (kLeadType == KLeadType.Memo && content.checkMemo() == false) {
+    if ((kLeadType == KLeadType.Memo || kLeadType == KLeadType.Restore) &&
+        content.checkMemo() == false) {
       HWToast.showText(text: "input_memo_wrong".local());
       return false;
     }
@@ -205,6 +208,8 @@ class TRWallet {
       FlutterDatabase? database = await DataBaseConfig.openDataBase();
       TRWallet? wallet =
           await database?.walletDao.queryWalletByWalletID(walletID);
+      wallet?.walletsInfo =
+          await database?.walletInfoDao.queryWalletInfosByWalletID(walletID);
       return wallet;
     } catch (e) {
       rethrow;
@@ -215,6 +220,10 @@ class TRWallet {
     try {
       FlutterDatabase? database = await DataBaseConfig.openDataBase();
       List<TRWallet>? wallet = await database?.walletDao.queryAllWallets();
+      wallet?.forEach((element) async {
+        element.walletsInfo = await database?.walletInfoDao
+            .queryWalletInfosByWalletID(element.walletID ?? "");
+      });
       return wallet ??= [];
     } catch (e) {
       rethrow;
@@ -225,6 +234,8 @@ class TRWallet {
     try {
       FlutterDatabase? database = await DataBaseConfig.openDataBase();
       TRWallet? wallet = await database?.walletDao.queryChooseWallet();
+      wallet?.walletsInfo = (await database?.walletInfoDao
+          .queryWalletInfosByWalletID(wallet.walletID ?? ''));
       return wallet;
     } catch (e) {
       rethrow;

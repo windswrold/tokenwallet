@@ -20,27 +20,25 @@ class TRWalletInfo {
       this.walletAaddress,
       this.pubKey}); //公钥
 
-  static Future<List<TRWalletInfo?>> queryWalletInfosByWalletID(
+  static Future<List<TRWalletInfo>> queryWalletInfosByWalletID(
       String walletID) async {
     try {
       FlutterDatabase? database = await DataBaseConfig.openDataBase();
-      List<TRWalletInfo?> datas = (await database?.walletInfoDao
-              .queryWalletInfosByWalletID(walletID)) ??
-          [];
-      return datas;
+      List<TRWalletInfo>? datas =
+          (await database?.walletInfoDao.queryWalletInfosByWalletID(walletID));
+      return datas ?? [];
     } catch (e) {
       rethrow;
     }
   }
 
-  static Future<List<TRWalletInfo?>> queryWalletInfo(
+  static Future<List<TRWalletInfo>> queryWalletInfo(
       String walletID, int coinType) async {
     try {
       FlutterDatabase? database = await DataBaseConfig.openDataBase();
-      List<TRWalletInfo?> datas =
-          (await database?.walletInfoDao.queryWalletInfo(walletID, coinType)) ??
-              [];
-      return datas;
+      List<TRWalletInfo>? datas =
+          (await database?.walletInfoDao.queryWalletInfo(walletID, coinType));
+      return datas ?? [];
     } catch (e) {
       rethrow;
     }
@@ -59,12 +57,12 @@ class TRWalletInfo {
 @dao
 abstract class WalletInfoDao {
   @Query('SELECT * FROM ' + tableName + ' WHERE walletID = :walletID')
-  Future<List<TRWalletInfo?>> queryWalletInfosByWalletID(String walletID);
+  Future<List<TRWalletInfo>?> queryWalletInfosByWalletID(String walletID);
 
   @Query('SELECT * FROM ' +
       tableName +
       ' WHERE walletID = :walletID and coinType = :coinType')
-  Future<List<TRWalletInfo?>> queryWalletInfo(String walletID, int coinType);
+  Future<List<TRWalletInfo>?> queryWalletInfo(String walletID, int coinType);
 
   @Insert(onConflict: OnConflictStrategy.replace)
   Future<void> insertWallet(TRWalletInfo wallet);

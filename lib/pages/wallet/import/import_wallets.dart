@@ -22,7 +22,9 @@ class _ImportsWalletState extends State<ImportsWallet> {
     Tab(text: 'importwallet_memo'.local())
   ];
 
+  int _pageIndex = 0;
   void _onTap(int index) {
+    _pageIndex = index;
     KLeadType leadType = KLeadType.Prvkey;
     if (index == 0) {
       leadType = KLeadType.Prvkey;
@@ -30,6 +32,16 @@ class _ImportsWalletState extends State<ImportsWallet> {
       leadType = KLeadType.Restore;
     }
     _kprovier.updateLeadType(leadType);
+  }
+
+  void _createWallet() {
+    KChainType chainType = KChainType.HD;
+    if (_pageIndex == 0) {
+      chainType = KChainType.ETH;
+    } else {
+      chainType = KChainType.HD;
+    }
+    _kprovier.createWallet(context, chainType: chainType);
   }
 
   Widget _getPageViewWidget(Tab leadtype) {
@@ -46,6 +58,11 @@ class _ImportsWalletState extends State<ImportsWallet> {
       widgets.add(CustomTextField(
         controller: _kprovier.contentEC,
         maxLines: 5,
+        style: TextStyle(
+          fontSize: 14.font,
+          fontWeight: FontWeightUtils.medium,
+          color: ColorUtils.fromHex("#FF000000"),
+        ),
         decoration: CustomTextField.getBorderLineDecoration(
           context: context,
           fillColor: Colors.white,
@@ -121,9 +138,7 @@ class _ImportsWalletState extends State<ImportsWallet> {
             ),
           ),
           NextButton(
-            onPressed: () {
-              _kprovier.createWallet(context);
-            },
+            onPressed: _createWallet,
             bgc: ColorUtils.blueColor,
             textStyle: TextStyle(
                 color: Colors.white,

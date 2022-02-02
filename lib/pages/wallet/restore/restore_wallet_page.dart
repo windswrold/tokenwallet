@@ -39,6 +39,11 @@ class _RestoreWalletPageState extends State<RestoreWalletPage> {
                         controller: _kprovier.contentEC,
                         padding: EdgeInsets.only(top: 24.width),
                         maxLines: 5,
+                        style: TextStyle(
+                          fontSize: 14.font,
+                          fontWeight: FontWeightUtils.medium,
+                          color: ColorUtils.fromHex("#FF000000"),
+                        ),
                         decoration: CustomTextField.getBorderLineDecoration(
                           context: context,
                           fillColor: Colors.white,
@@ -111,7 +116,7 @@ class _RestoreWalletPageState extends State<RestoreWalletPage> {
               ),
               NextButton(
                 onPressed: () {
-                  _kprovier.createWallet(context);
+                  _kprovier.createWallet(context, chainType: KChainType.HD);
                 },
                 bgc: ColorUtils.blueColor,
                 textStyle: TextStyle(

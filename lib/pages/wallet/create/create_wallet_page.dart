@@ -106,7 +106,7 @@ class _CreateWalletPageState extends State<CreateWalletPage> {
                 ),
                 NextButton(
                   onPressed: () {
-                    _kprovier.createWallet(context);
+                    _kprovier.createWallet(context, chainType: KChainType.HD);
                   },
                   bgc: ColorUtils.blueColor,
                   textStyle: TextStyle(

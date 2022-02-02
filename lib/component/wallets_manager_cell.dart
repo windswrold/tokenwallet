@@ -12,13 +12,19 @@ import '../public.dart';
 class WalletsManagetCell extends StatelessWidget {
   const WalletsManagetCell({Key? key, required this.walet}) : super(key: key);
   final TRWallet walet;
-  
 
   @override
   Widget build(BuildContext context) {
     bool isChoose = walet.isChoose == true ? true : false;
     String address = "";
-    bool isMultiChain = walet.chainType == KChainType.HD.index ? true : false;
+    String chainType = "";
+    if (walet.chainType == KChainType.HD.index) {
+      chainType = "wallets_manager_multichain".local();
+    } else if (walet.chainType == KChainType.ETH.index) {
+      chainType = "importwallet_ethchaintype".local();
+      address = walet.walletsInfo?.first.walletAaddress ?? "";
+      address = address.contractAddress();
+    }
     bool backupState =
         walet.accountState == KAccountState.init.index ? true : false;
 
@@ -71,23 +77,19 @@ class WalletsManagetCell extends StatelessWidget {
                           color: ColorUtils.fromHex("#FF000000"),
                         ),
                       ),
-                      Visibility(
-                        visible: isMultiChain,
-                        child: Container(
-                          margin: EdgeInsets.only(left: 10.width),
-                          padding:
-                              EdgeInsets.only(left: 4.width, right: 4.width),
-                          height: 20.width,
-                          decoration: BoxDecoration(
-                              color: ColorUtils.blueBGColor,
-                              borderRadius: BorderRadius.circular(4)),
-                          child: Text(
-                            "wallets_manager_multichain".local(),
-                            style: TextStyle(
-                              fontSize: 12.width,
-                              fontWeight: FontWeightUtils.medium,
-                              color: ColorUtils.blueColor,
-                            ),
+                      Container(
+                        margin: EdgeInsets.only(left: 10.width),
+                        padding: EdgeInsets.only(left: 4.width, right: 4.width),
+                        height: 20.width,
+                        decoration: BoxDecoration(
+                            color: ColorUtils.blueBGColor,
+                            borderRadius: BorderRadius.circular(4)),
+                        child: Text(
+                          chainType,
+                          style: TextStyle(
+                            fontSize: 12.width,
+                            fontWeight: FontWeightUtils.medium,
+                            color: ColorUtils.blueColor,
                           ),
                         ),
                       ),
@@ -121,7 +123,7 @@ class WalletsManagetCell extends StatelessWidget {
                       style: TextStyle(
                         fontSize: 12.width,
                         fontWeight: FontWeightUtils.regular,
-                        color: ColorUtils.fromHex("#FF000000"),
+                        color: ColorUtils.fromHex("#FF000000").withOpacity(0.4),
                       ),
                     ),
                   ),
