@@ -6,7 +6,7 @@ import 'package:cstoken/utils/custom_toast.dart';
 import '../../public.dart';
 
 class CreateWalletProvider with ChangeNotifier {
-  TextEditingController? _memoEC;
+  TextEditingController? _contentEC;
   final TextEditingController _walletNameEC =
       TextEditingController(text: TRWallet.randomWalletName());
   final TextEditingController _pwdEC = TextEditingController();
@@ -14,13 +14,25 @@ class CreateWalletProvider with ChangeNotifier {
   final TextEditingController _pwdTipEC = TextEditingController();
   bool _pwdisClose = true;
   bool _pwdAgainisClose = true;
-  bool _isRestore = false;
+  KLeadType _leadType = KLeadType.Memo;
 
-  CreateWalletProvider.init({required bool isRestore}) {
-    _isRestore = isRestore;
-    if (_isRestore == true) {
-      _memoEC = TextEditingController();
+  CreateWalletProvider.init({required KLeadType leadType}) {
+    _leadType = leadType;
+    if (leadType == KLeadType.Prvkey || leadType == KLeadType.Restore) {
+      _contentEC = TextEditingController();
     }
+  }
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    print("CreateWalletProvider dispose");
+    _contentEC?.dispose();
+    _walletNameEC.dispose();
+    _pwdEC.dispose();
+    _pwdAgainEC.dispose();
+    _pwdTipEC.dispose();
+    super.dispose();
   }
 
   void changePwdisClose() {
@@ -35,12 +47,11 @@ class CreateWalletProvider with ChangeNotifier {
 
   void createWallet(BuildContext context) {
     String memo = "";
-    KLeadType leadType = KLeadType.Create;
-    if (_isRestore == true) {
-      leadType = KLeadType.KeyStore;
-      memo = _memoEC!.text;
-    } else {
+
+    if (_leadType == KLeadType.Memo) {
       memo = Mnemonic.generateMnemonic();
+    } else {
+      memo = _contentEC!.text;
     }
     bool state = TRWallet.validImportValue(
         content: memo,
@@ -49,7 +60,7 @@ class CreateWalletProvider with ChangeNotifier {
         pinTip: _pwdTipEC.text,
         walletName: _walletNameEC.text,
         kChainType: KChainType.HD,
-        kLeadType: leadType);
+        kLeadType: _leadType);
     if (state == false) {
       return;
     }
@@ -60,10 +71,10 @@ class CreateWalletProvider with ChangeNotifier {
         pinTip: _pwdTipEC.text,
         walletName: _walletNameEC.text,
         kChainType: KChainType.HD,
-        kLeadType: leadType);
+        kLeadType: _leadType);
   }
 
-  TextEditingController? get memoEC => _memoEC;
+  TextEditingController? get contentEC => _contentEC;
   TextEditingController get walletNameEC => _walletNameEC;
   TextEditingController get pwdEC => _pwdEC;
   TextEditingController get pwdAgainEC => _pwdAgainEC;

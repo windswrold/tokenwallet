@@ -36,13 +36,10 @@ class HDWallet {
       required KChainType chainType}) {
     List<HDWallet> _hdwallets = [];
     if (kLeadType == KLeadType.Memo ||
-        kLeadType == KLeadType.Create ||
         kLeadType == KLeadType.Restore ||
         chainType == KChainType.HD ||
         chainType == KChainType.ETH) {
-      if (kLeadType == KLeadType.Memo ||
-          kLeadType == KLeadType.Create ||
-          kLeadType == KLeadType.Restore) {
+      if (kLeadType == KLeadType.Memo || kLeadType == KLeadType.Restore) {
         kLeadType = KLeadType.Memo;
       }
       _hdwallets.add(ETHChain()

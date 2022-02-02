@@ -159,7 +159,7 @@ class TRWallet {
       trWallet.chainType = kChainType.index;
       trWallet.leadType = kLeadType.index;
       //通过创建时需要提示备份
-      trWallet.accountState = kLeadType == KLeadType.Create
+      trWallet.accountState = kLeadType == KLeadType.Memo
           ? KAccountState.init.index
           : KAccountState.noauthed.index;
       trWallet.encContent = TREncode.encrypt(content, pin);
@@ -190,7 +190,7 @@ class TRWallet {
       //如果是创建则去跳转备份
       //如果其他则去tabbar
       //关闭备份则去tababr
-      if (kLeadType == KLeadType.Create) {
+      if (kLeadType == KLeadType.Memo) {
         Routers.push(context, BackupTipMemo(memo: content, walletID: walletID));
       } else {
         Routers.push(context, HomeTabbar(), clearStack: true);

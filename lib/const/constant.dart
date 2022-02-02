@@ -45,10 +45,9 @@ extension CoinTypeString on KCoinType {
 }
 
 enum KLeadType {
+  Memo, //通过创建助记词
   Prvkey, //通过私钥
-  Memo, //通过助记词
   KeyStore,
-  Create,
   Restore,
 }
 

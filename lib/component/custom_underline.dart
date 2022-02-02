@@ -88,16 +88,16 @@ class _UnderlinePainter extends BoxPainter {
     final Rect indicator = decoration
         ._indicatorRectFor(rect, textDirection)
         .deflate(decoration.borderSide.width / 2.0);
-    double wantWidth = 30;
+    double wantWidth = 20;
     double cw = (indicator.left + indicator.right);
     Rect myRect =
         Rect.fromLTWH((cw - wantWidth) / 2, rect.bottom - 7, wantWidth, 2);
     final Paint paint = decoration.borderSide.toPaint();
     paint.shader = ui.Gradient.linear(
         Offset(myRect.left, 0), Offset(myRect.right, 0), gradientColor);
-    paint.strokeWidth = 2;
+    paint.strokeWidth = 4;
     canvas.drawRRect(
-        RRect.fromRectAndRadius(myRect, Radius.circular(8)), paint);
+        RRect.fromRectAndRadius(myRect, Radius.circular(4)), paint);
     // canvas.drawLine(indicator.bottomLeft, indicator.bottomRight, paint);
   }
 }

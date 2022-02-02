@@ -32,6 +32,7 @@ class _NewsPageState extends State<NewsPage> {
     return DefaultTabController(
       length: _myTabs.length,
       child: CustomPageView(
+        hiddenLeading: true,
         bottom: PreferredSize(
           preferredSize: Size.fromHeight(50.width),
           child: Material(

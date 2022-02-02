@@ -11,7 +11,7 @@ class RestoreWalletPage extends StatefulWidget {
 
 class _RestoreWalletPageState extends State<RestoreWalletPage> {
   final CreateWalletProvider _kprovier =
-      CreateWalletProvider.init(isRestore: true);
+      CreateWalletProvider.init(leadType: KLeadType.Restore);
 
   @override
   Widget build(BuildContext context) {
@@ -36,7 +36,7 @@ class _RestoreWalletPageState extends State<RestoreWalletPage> {
                         ),
                       ),
                       CustomTextField(
-                        controller: _kprovier.memoEC,
+                        controller: _kprovier.contentEC,
                         padding: EdgeInsets.only(top: 24.width),
                         maxLines: 5,
                         decoration: CustomTextField.getBorderLineDecoration(

@@ -11,7 +11,7 @@ class CreateWalletPage extends StatefulWidget {
 
 class _CreateWalletPageState extends State<CreateWalletPage> {
   final CreateWalletProvider _kprovier =
-      CreateWalletProvider.init(isRestore: false);
+      CreateWalletProvider.init(leadType: KLeadType.Memo);
 
   @override
   Widget build(BuildContext context) {

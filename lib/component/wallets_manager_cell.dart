@@ -3,6 +3,7 @@ import 'package:cstoken/model/wallet/tr_wallet.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_swipe_action_cell/core/cell.dart';
 
@@ -11,11 +12,15 @@ import '../public.dart';
 class WalletsManagetCell extends StatelessWidget {
   const WalletsManagetCell({Key? key, required this.walet}) : super(key: key);
   final TRWallet walet;
+  
 
   @override
   Widget build(BuildContext context) {
-    bool visible = walet.isChoose == true ? true : false;
+    bool isChoose = walet.isChoose == true ? true : false;
     String address = "";
+    bool isMultiChain = walet.chainType == KChainType.HD.index ? true : false;
+    bool backupState =
+        walet.accountState == KAccountState.init.index ? true : false;
 
     return Container(
       margin: EdgeInsets.only(left: 16.width, bottom: 8.width, right: 16.width),
@@ -66,10 +71,16 @@ class WalletsManagetCell extends StatelessWidget {
                           color: ColorUtils.fromHex("#FF000000"),
                         ),
                       ),
-                      10.rowWidget,
                       Visibility(
-                        visible: true,
+                        visible: isMultiChain,
                         child: Container(
+                          margin: EdgeInsets.only(left: 10.width),
+                          padding:
+                              EdgeInsets.only(left: 4.width, right: 4.width),
+                          height: 20.width,
+                          decoration: BoxDecoration(
+                              color: ColorUtils.blueBGColor,
+                              borderRadius: BorderRadius.circular(4)),
                           child: Text(
                             "wallets_manager_multichain".local(),
                             style: TextStyle(
@@ -80,8 +91,27 @@ class WalletsManagetCell extends StatelessWidget {
                           ),
                         ),
                       ),
-                      5.rowWidget,
-                      Text(walet.accountState.toString()),
+                      Visibility(
+                        visible: backupState,
+                        child: Container(
+                          margin: EdgeInsets.only(left: 10.width),
+                          padding:
+                              EdgeInsets.only(left: 4.width, right: 4.width),
+                          height: 20.width,
+                          decoration: BoxDecoration(
+                              color: ColorUtils.fromHex("#FFFF233E")
+                                  .withOpacity(0.1),
+                              borderRadius: BorderRadius.circular(4)),
+                          child: Text(
+                            "wallets_manager_backupstate".local(),
+                            style: TextStyle(
+                              fontSize: 12.width,
+                              fontWeight: FontWeightUtils.medium,
+                              color: ColorUtils.fromHex("#FFFF233E"),
+                            ),
+                          ),
+                        ),
+                      ),
                     ],
                   ),
                   Visibility(
@@ -98,7 +128,7 @@ class WalletsManagetCell extends StatelessWidget {
                 ],
               ),
               Visibility(
-                visible: visible,
+                visible: isChoose,
                 child: LoadAssetsImage(
                   "icons/wallets_choose.png",
                   width: 24,

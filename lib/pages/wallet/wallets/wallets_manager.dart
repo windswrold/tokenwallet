@@ -106,7 +106,7 @@ class _WalletsManagerState extends State<WalletsManager> {
                         fontWeight: FontWeightUtils.medium,
                         fontSize: 16.font,
                       ),
-                      bgc: ColorUtils.fromHex("#1A216EFF"),
+                      bgc: ColorUtils.blueBGColor,
                       title: "wallets_manager_importnew".local()),
                 ],
               ),
