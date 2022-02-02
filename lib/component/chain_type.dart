@@ -10,6 +10,7 @@ class ChooseChainType extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    String currentBsc = "ETH,BSC,Heco,OK,Matic,AVAX,Arbitrum";
     return Container(
       padding: padding,
       alignment: Alignment.centerLeft,
@@ -32,7 +33,7 @@ class ChooseChainType extends StatelessWidget {
             height: 44.width,
             alignment: Alignment.centerLeft,
             child: Text(
-              "ETH,Heco,BSC",
+              currentBsc,
               style: TextStyle(
                 fontSize: 14.font,
                 fontWeight: FontWeightUtils.medium,

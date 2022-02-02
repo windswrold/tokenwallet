@@ -23,17 +23,17 @@ class CreateWalletProvider with ChangeNotifier {
     }
   }
 
-  @override
-  void dispose() {
-    // TODO: implement dispose
-    print("CreateWalletProvider dispose");
-    _contentEC?.dispose();
-    _walletNameEC.dispose();
-    _pwdEC.dispose();
-    _pwdAgainEC.dispose();
-    _pwdTipEC.dispose();
-    super.dispose();
-  }
+  // @override
+  // void dispose() {
+  //   // TODO: implement dispose
+  //   print("CreateWalletProvider dispose");
+  //   // _contentEC?.dispose();
+  //   // _walletNameEC.dispose();
+  //   // _pwdEC.dispose();
+  //   // _pwdAgainEC.dispose();
+  //   // _pwdTipEC.dispose();
+  //   super.dispose();
+  // }
 
   void changePwdisClose() {
     _pwdisClose = !_pwdisClose;
