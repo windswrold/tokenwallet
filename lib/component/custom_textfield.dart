@@ -107,6 +107,9 @@ class CustomTextField extends StatefulWidget {
       enabledBorder: UnderlineInputBorder(
         borderSide: BorderSide(width: underLineWidth, color: underLineColor),
       ),
+      disabledBorder: UnderlineInputBorder(
+        borderSide: BorderSide(width: underLineWidth, color: underLineColor),
+      ),
       focusedBorder: UnderlineInputBorder(
         borderSide:
             BorderSide(width: underLineWidth, color: focusedUnderLineColor),
@@ -168,21 +171,20 @@ class CustomTextField extends StatefulWidget {
     );
   }
 
-  static Widget getInputTextField(
-    BuildContext context, {
-    TextEditingController? controller,
-    String? hintText,
-    String? titleText,
-    String? helpText,
-    bool obscureText = false, //控制秘方
-    EdgeInsetsGeometry padding = EdgeInsets.zero,
-    int? maxLength,
-    int maxLines = 1,
-    EdgeInsetsGeometry contentPadding = EdgeInsets.zero,
-    bool isPasswordText = false,
-    bool isScanText = false,
-    VoidCallback? onPressBack,
-  }) {
+  static Widget getInputTextField(BuildContext context,
+      {TextEditingController? controller,
+      String? hintText,
+      String? titleText,
+      String? helpText,
+      bool obscureText = false, //控制秘方
+      EdgeInsetsGeometry padding = EdgeInsets.zero,
+      int? maxLength,
+      int maxLines = 1,
+      EdgeInsetsGeometry contentPadding = EdgeInsets.zero,
+      bool isPasswordText = false,
+      bool isScanText = false,
+      VoidCallback? onPressBack,
+      bool enabled = true}) {
     return Padding(
       padding: padding,
       child: Column(
@@ -211,6 +213,7 @@ class CustomTextField extends StatefulWidget {
                 fontWeight: FontWeightUtils.medium,
                 color: ColorUtils.fromHex("#FF000000"),
               ),
+              enabled: enabled,
               decoration: CustomTextField.getUnderLineDecoration(
                   underLineColor: ColorUtils.lineColor,
                   focusedUnderLineColor: ColorUtils.blueColor,

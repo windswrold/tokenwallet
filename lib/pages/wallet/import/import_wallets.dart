@@ -1,3 +1,4 @@
+import 'package:cstoken/component/chain_type.dart';
 import 'package:cstoken/component/custom_underline.dart';
 import 'package:cstoken/pages/wallet/create/create_wallet_page.dart';
 import 'package:cstoken/pages/wallet/restore/restore_wallet_page.dart';
@@ -31,6 +32,7 @@ class _ImportsWalletState extends State<ImportsWallet> {
               child: SingleChildScrollView(
                 child: Column(
                   children: [
+                    ChooseChainType(),
                     CustomTextField.getInputTextField(context,
                         controller: _kprovier.contentEC,
                         titleText: "importwallet_prvtitle".local(),

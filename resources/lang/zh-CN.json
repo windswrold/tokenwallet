@@ -70,5 +70,6 @@
     "importwallet_prv": "私钥导入",
     "importwallet_memo": "助记词导入",
     "importwallet_prvtitle": "私钥",
-    "importwallet_pwdtitlenew":"输入新密码"
+    "importwallet_pwdtitlenew":"输入新密码",
+    "importwallet_chaintype":"公链类型"
 }

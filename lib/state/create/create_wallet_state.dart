@@ -47,7 +47,6 @@ class CreateWalletProvider with ChangeNotifier {
 
   void createWallet(BuildContext context) {
     String memo = "";
-
     if (_leadType == KLeadType.Memo) {
       memo = Mnemonic.generateMnemonic();
     } else {
