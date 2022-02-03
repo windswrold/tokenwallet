@@ -10,6 +10,17 @@ class CurrentChooseWalletState with ChangeNotifier {
 
   void delWallets() async {}
 
+  void updateChoose(TRWallet wallet) async {
+    TRWallet? chooseWallet = await TRWallet.queryChooseWallet();
+    if (chooseWallet == null) {
+      return;
+    }
+    chooseWallet.isChoose = false;
+    wallet.isChoose = true;
+    TRWallet.updateWallets([wallet, chooseWallet]);
+    loadWallet();
+  }
+
   @override
   void dispose() {
     // TODO: implement dispose

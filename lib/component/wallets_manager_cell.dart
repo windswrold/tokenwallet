@@ -1,5 +1,6 @@
 import 'package:cstoken/const/constant.dart';
 import 'package:cstoken/model/wallet/tr_wallet.dart';
+import 'package:cstoken/state/wallet_state.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
@@ -28,116 +29,126 @@ class WalletsManagetCell extends StatelessWidget {
     bool backupState =
         walet.accountState == KAccountState.init.index ? true : false;
 
-    return Container(
-      margin: EdgeInsets.only(left: 16.width, bottom: 8.width, right: 16.width),
-      child: SwipeActionCell(
-        key: ObjectKey(walet),
-        trailingActions: <SwipeAction>[
-          SwipeAction(
-              color: Colors.transparent,
-              content: Container(
-                alignment: Alignment.center,
-                decoration: const BoxDecoration(
-                  borderRadius: BorderRadius.only(
-                      topRight: Radius.circular(8),
-                      bottomRight: Radius.circular(8)),
-                  color: Colors.blue,
+    return GestureDetector(
+      behavior: HitTestBehavior.opaque,
+      onTap: () {
+        Provider.of<CurrentChooseWalletState>(context, listen: false)
+            .updateChoose(walet);
+      },
+      child: Container(
+        margin:
+            EdgeInsets.only(left: 16.width, bottom: 8.width, right: 16.width),
+        child: SwipeActionCell(
+          key: ObjectKey(walet),
+          trailingActions: <SwipeAction>[
+            SwipeAction(
+                color: Colors.transparent,
+                content: Container(
+                  alignment: Alignment.center,
+                  decoration: const BoxDecoration(
+                    borderRadius: BorderRadius.only(
+                        topRight: Radius.circular(8),
+                        bottomRight: Radius.circular(8)),
+                    color: Colors.blue,
+                  ),
+                  child: Text('wallets_manager_setting'.local(),
+                      style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 14.font,
+                          fontWeight: FontWeightUtils.medium)),
                 ),
-                child: Text('wallets_manager_setting'.local(),
-                    style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 14.font,
-                        fontWeight: FontWeightUtils.medium)),
-              ),
-              onTap: (handler) async {}),
-        ],
-        child: Container(
-          alignment: Alignment.center,
-          height: 68.width,
-          padding: EdgeInsets.symmetric(horizontal: 12.width),
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(8),
-          ),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      Text(
-                        walet.walletName ?? "ssss",
-                        style: TextStyle(
-                          fontSize: 16.width,
-                          fontWeight: FontWeightUtils.medium,
-                          color: ColorUtils.fromHex("#FF000000"),
-                        ),
-                      ),
-                      Container(
-                        margin: EdgeInsets.only(left: 10.width),
-                        padding: EdgeInsets.only(left: 4.width, right: 4.width),
-                        height: 20.width,
-                        decoration: BoxDecoration(
-                            color: ColorUtils.blueBGColor,
-                            borderRadius: BorderRadius.circular(4)),
-                        child: Text(
-                          chainType,
+                onTap: (handler) async {}),
+          ],
+          child: Container(
+            alignment: Alignment.center,
+            height: 68.width,
+            padding: EdgeInsets.symmetric(horizontal: 12.width),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(8),
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        Text(
+                          walet.walletName ?? "ssss",
                           style: TextStyle(
-                            fontSize: 12.width,
+                            fontSize: 16.width,
                             fontWeight: FontWeightUtils.medium,
-                            color: ColorUtils.blueColor,
+                            color: ColorUtils.fromHex("#FF000000"),
                           ),
                         ),
-                      ),
-                      Visibility(
-                        visible: backupState,
-                        child: Container(
+                        Container(
                           margin: EdgeInsets.only(left: 10.width),
                           padding:
                               EdgeInsets.only(left: 4.width, right: 4.width),
                           height: 20.width,
                           decoration: BoxDecoration(
-                              color: ColorUtils.fromHex("#FFFF233E")
-                                  .withOpacity(0.1),
+                              color: ColorUtils.blueBGColor,
                               borderRadius: BorderRadius.circular(4)),
                           child: Text(
-                            "wallets_manager_backupstate".local(),
+                            chainType,
                             style: TextStyle(
                               fontSize: 12.width,
                               fontWeight: FontWeightUtils.medium,
-                              color: ColorUtils.fromHex("#FFFF233E"),
+                              color: ColorUtils.blueColor,
                             ),
                           ),
                         ),
-                      ),
-                    ],
-                  ),
-                  Visibility(
-                    visible: address.isNotEmpty,
-                    child: Text(
-                      address,
-                      style: TextStyle(
-                        fontSize: 12.width,
-                        fontWeight: FontWeightUtils.regular,
-                        color: ColorUtils.fromHex("#FF000000").withOpacity(0.4),
+                        Visibility(
+                          visible: backupState,
+                          child: Container(
+                            margin: EdgeInsets.only(left: 10.width),
+                            padding:
+                                EdgeInsets.only(left: 4.width, right: 4.width),
+                            height: 20.width,
+                            decoration: BoxDecoration(
+                                color: ColorUtils.fromHex("#FFFF233E")
+                                    .withOpacity(0.1),
+                                borderRadius: BorderRadius.circular(4)),
+                            child: Text(
+                              "wallets_manager_backupstate".local(),
+                              style: TextStyle(
+                                fontSize: 12.width,
+                                fontWeight: FontWeightUtils.medium,
+                                color: ColorUtils.fromHex("#FFFF233E"),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    Visibility(
+                      visible: address.isNotEmpty,
+                      child: Text(
+                        address,
+                        style: TextStyle(
+                          fontSize: 12.width,
+                          fontWeight: FontWeightUtils.regular,
+                          color:
+                              ColorUtils.fromHex("#FF000000").withOpacity(0.4),
+                        ),
                       ),
                     ),
-                  ),
-                ],
-              ),
-              Visibility(
-                visible: isChoose,
-                child: LoadAssetsImage(
-                  "icons/wallets_choose.png",
-                  width: 24,
-                  height: 24,
+                  ],
                 ),
-              ),
-            ],
+                Visibility(
+                  visible: isChoose,
+                  child: LoadAssetsImage(
+                    "icons/wallets_choose.png",
+                    width: 24,
+                    height: 24,
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),
