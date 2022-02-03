@@ -82,13 +82,6 @@ class CustomAlert extends StatefulWidget {
 
 ///alert弹窗的基本样式
 class _CustomAlertState extends State<CustomAlert> {
-  //私钥
-  String _privateText = '';
-
-  //node
-  String _nodeText1 = '';
-  String _nodeText2 = '';
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -228,7 +221,7 @@ class _CustomAlertState extends State<CustomAlert> {
         fontWeight: FontWeightUtils.regular,
         color: widget.leftButtonColor,
       ),
-       borderRadius: 0,
+      borderRadius: 0,
       onPressed: () {
         Navigator.pop(context);
         if (widget.cancelPressed != null) {
