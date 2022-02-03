@@ -1,3 +1,4 @@
+import 'package:cstoken/utils/extension.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
@@ -82,6 +83,27 @@ class CustomAlert extends StatefulWidget {
 
 ///alert弹窗的基本样式
 class _CustomAlertState extends State<CustomAlert> {
+  TextEditingController? _edTextEC;
+  Color? _confirmBgc;
+  double _confirmRadius = 0;
+  Color _colorText = ColorUtils.fromHex("#99000000");
+  String? _errText;
+  Color? _errColor;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    if (widget.alertType == KAlertType.password) {
+      _edTextEC = TextEditingController();
+
+      _confirmBgc = ColorUtils.blueColor;
+      _confirmRadius = 8;
+      _colorText = Colors.white;
+      _errColor = ColorUtils.fromHex("#FFFF233E");
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -167,6 +189,28 @@ class _CustomAlertState extends State<CustomAlert> {
         textAlign: TextAlign.center,
       );
     } else if (widget.alertType == KAlertType.password) {
+      _child = CustomTextField(
+        controller: _edTextEC,
+        obscureText: true,
+        style: TextStyle(
+          color: ColorUtils.fromHex("#FF000000"),
+          fontSize: 14.font,
+          fontWeight: FontWeightUtils.regular,
+        ),
+        onChange: (value) {
+          setState(() {
+            _errText = null;
+            // _errColor = ColorUtils.fromHex("#FFFF233E");
+          });
+        },
+        decoration: CustomTextField.getUnderLineDecoration(
+            errorText: _errText,
+            underLineWidth: 0.5,
+            underLineColor: ColorUtils.lineColor,
+            focusedUnderLineColor: ColorUtils.lineColor,
+            errorTextColor: _errColor!),
+      );
+
       // _child = PrivateKeyAlertCenterView(
       //     subTitle: widget.subtitleText,
       //     privateControllerCallBack: (text) {
@@ -188,7 +232,6 @@ class _CustomAlertState extends State<CustomAlert> {
       // });
     }
     return Container(
-      color: Colors.red,
       padding: EdgeInsets.only(top: 16.width),
       child: _child,
     );
@@ -197,7 +240,6 @@ class _CustomAlertState extends State<CustomAlert> {
   /// 底部按钮组合
   Widget _bottomActions() {
     return Container(
-      color: Colors.black26,
       padding: EdgeInsets.only(top: 16.width, bottom: 24.width),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -215,11 +257,10 @@ class _CustomAlertState extends State<CustomAlert> {
   Widget _cancelButton() {
     return NextButton(
       title: widget.leftButtonTitle,
-      bgc: Colors.black38,
       textStyle: TextStyle(
         fontSize: 16.font,
-        fontWeight: FontWeightUtils.regular,
-        color: widget.leftButtonColor,
+        fontWeight: FontWeightUtils.medium,
+        color: ColorUtils.fromHex("#99000000"),
       ),
       borderRadius: 0,
       onPressed: () {
@@ -234,17 +275,38 @@ class _CustomAlertState extends State<CustomAlert> {
   Widget _confirmButton() {
     return NextButton(
       title: widget.rightButtonTitle,
-      bgc: Colors.black54,
       textStyle: TextStyle(
         fontSize: 16.font,
-        fontWeight: FontWeightUtils.regular,
-        color: widget.rightButtonColor,
+        fontWeight: FontWeightUtils.medium,
+        color: _colorText,
       ),
-      borderRadius: 0,
+      bgc: _confirmBgc,
+      borderRadius: _confirmRadius,
       onPressed: () {
-        Navigator.pop(context);
-        widget.confirmPressed({});
+        _confirmOnPressed();
       },
     );
+  }
+
+  void _confirmOnPressed() {
+    if (widget.alertType == KAlertType.text) {
+      widget.confirmPressed({});
+      Navigator.pop(context);
+    } else if (widget.alertType == KAlertType.password) {
+      String text = _edTextEC!.text;
+      //导出私钥  输入密码
+      TRWallet mwallet = widget.currentWallet;
+      bool isPassword = mwallet.lockPin(text: text, ok: null, wrong: null);
+      if (isPassword) {
+        widget.confirmPressed({'text': text});
+        Navigator.pop(context);
+      } else {
+        String tip = mwallet.pinTip!;
+        setState(() {
+          _errText = "createwallet_pwdtip".local() + ":" + tip;
+          _errColor = ColorUtils.fromHex("#FFFF6613");
+        });
+      }
+    }
   }
 }

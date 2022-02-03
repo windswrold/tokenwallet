@@ -85,5 +85,8 @@
     "walletssetting_newpwd":"新密码",
     "walletssetting_newpwdhint":"请输入新密码",
     "walletssetting_againnewpwd":"确认密码",
-    "walletssetting_againnewpwdhint":"请再次输入新密码"
+    "walletssetting_againnewpwdhint":"请再次输入新密码",
+    "dialog_title":"钱包密码"
+   
+    
 }

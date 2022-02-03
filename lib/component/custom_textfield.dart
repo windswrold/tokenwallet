@@ -98,6 +98,8 @@ class CustomTextField extends StatefulWidget {
     double underLineWidth = 1,
     Color fillColor = Colors.white,
     EdgeInsetsGeometry contentPadding = EdgeInsets.zero,
+    String? errorText,
+    Color errorTextColor = const Color(0xFFFF233E),
   }) {
     return InputDecoration(
       prefixIcon: prefixIcon,
@@ -121,6 +123,20 @@ class CustomTextField extends StatefulWidget {
       helperStyle: helperStyle,
       helperMaxLines: 5,
       fillColor: fillColor,
+      errorText: errorText,
+      errorStyle: TextStyle(
+        fontSize: 12.font,
+        fontWeight: FontWeightUtils.regular,
+        color: errorTextColor,
+      ),
+      focusedErrorBorder: UnderlineInputBorder(
+        borderSide:
+            BorderSide(width: underLineWidth, color: focusedUnderLineColor),
+      ),
+      errorBorder: UnderlineInputBorder(
+        borderSide:
+            BorderSide(width: underLineWidth, color: focusedUnderLineColor),
+      ),
       filled: true,
       contentPadding: contentPadding,
     );

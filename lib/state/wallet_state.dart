@@ -10,18 +10,21 @@ class CurrentChooseWalletState with ChangeNotifier {
 
   Future<bool> updateChoose(BuildContext context,
       {required TRWallet wallet}) async {
-    TRWallet? chooseWallet = await TRWallet.queryChooseWallet();
-    if (chooseWallet == null) {
-      return false;
+    List<TRWallet> wallets = await TRWallet.queryAllWallets();
+    for (var item in wallets) {
+      item.isChoose = false;
+      if (wallet.walletID == item.walletID) {
+        item.isChoose = true;
+      }
     }
-    chooseWallet.isChoose = false;
-    wallet.isChoose = true;
-    return TRWallet.updateWallets([wallet, chooseWallet]);
+    return TRWallet.updateWallets(wallets);
   }
 
   void deleteWallet(BuildContext context, {required TRWallet wallet}) {
     ShowCustomAlert.showCustomAlertType(
-        context, KAlertType.text, "null", currentWallet!,
+        context, KAlertType.password, "dialog_title".local(), currentWallet!,
+        hideLeftButton: true,
+        rightButtonTitle: "walletssetting_modifyok".local(),
         subtitleText:
             "33KrFMz32433KrFMz32433KrFMz324jAwMttvi1t33KrFMz324jAwMttvi1jAwMttvi1tjAwMttvi1t33KrFMz32433KrFMz32433KrFMz324jAwMttvi1t33KrFMz324jAwMttvi1jAwMttvi1tjAwMttvi1t",
         confirmPressed: (result) {});
