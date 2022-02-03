@@ -22,7 +22,7 @@ class CurrentChooseWalletState with ChangeNotifier {
 
   void deleteWallet(BuildContext context, {required TRWallet wallet}) {
     ShowCustomAlert.showCustomAlertType(
-        context, KAlertType.password, "dialog_title".local(), currentWallet!,
+        context, KAlertType.text, "dialog_title".local(), currentWallet!,
         hideLeftButton: true,
         rightButtonTitle: "walletssetting_modifyok".local(),
         subtitleText:

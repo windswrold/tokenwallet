@@ -210,27 +210,8 @@ class _CustomAlertState extends State<CustomAlert> {
             focusedUnderLineColor: ColorUtils.lineColor,
             errorTextColor: _errColor!),
       );
-
-      // _child = PrivateKeyAlertCenterView(
-      //     subTitle: widget.subtitleText,
-      //     privateControllerCallBack: (text) {
-      //       _privateText = text;
-      //     });
     } else if (widget.alertType == KAlertType.edit_name) {
-      // _child = PrivateKeyAlertCenterView(
-      //     subTitle: widget.subtitleText,
-      //     obscureText: false,
-      //     hintText: 'enter_name'.local(),
-      //     privateControllerCallBack: (text) {
-      //       _privateText = text;
-      //     });
-    } else {
-      // _child = NodeUrlAlertCenterView(nodeControllerCallBack1: (String text) {
-      //   _nodeText1 = text;
-      // }, nodeControllerCallBack2: (String text) {
-      //   _nodeText2 = text;
-      // });
-    }
+    } else {}
     return Container(
       padding: EdgeInsets.only(top: 16.width),
       child: _child,
@@ -301,10 +282,10 @@ class _CustomAlertState extends State<CustomAlert> {
         widget.confirmPressed({'text': text});
         Navigator.pop(context);
       } else {
-        String tip = mwallet.pinTip!;
+        // String tip = mwallet.pinTip!;
         setState(() {
-          _errText = "createwallet_pwdtip".local() + ":" + tip;
-          _errColor = ColorUtils.fromHex("#FFFF6613");
+          _errText = "dialog_wrongpin".local();
+          // _errColor = ColorUtils.fromHex("#FFFF6613");
         });
       }
     }
