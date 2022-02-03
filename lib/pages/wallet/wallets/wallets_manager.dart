@@ -77,7 +77,9 @@ class _WalletsManagerState extends State<WalletsManager> {
                       await Provider.of<CurrentChooseWalletState>(context,
                               listen: false)
                           .updateChoose(context, wallet: walet);
-                      Routers.push(context, WalletsSetting(wallet: walet));
+                      Routers.push(context, WalletsSetting(wallet: walet)).then((value) => {
+                        _initData(),
+                      });
                       _initData();
                     },
                   );

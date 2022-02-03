@@ -26,11 +26,9 @@ class WalletsManagetCell extends StatelessWidget {
   Widget build(BuildContext context) {
     bool isChoose = walet.isChoose == true ? true : false;
     String address = "";
-    String chainType = "";
+    String chainType = walet.getChainType();
     if (walet.chainType == KChainType.HD.index) {
-      chainType = "wallets_manager_multichain".local();
     } else if (walet.chainType == KChainType.ETH.index) {
-      chainType = "importwallet_ethchaintype".local();
       address = walet.walletsInfo?.first.walletAaddress ?? "";
       address = address.contractAddress();
     }

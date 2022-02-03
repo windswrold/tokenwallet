@@ -31,8 +31,8 @@ void main() {
   });
 
   test("hdwallet", () async {
-    // String input = "0xB74693f2DAbdb84570755E536e016d3CBDEB0810";
-    // String pwd = "BpLnfgDsc2WD8F2qNfHK5a84jjJkwzDk";
+    String input = "0xB74693f2DAbdb84570755E536e016d3CBDEB0810";
+    String pwd = "222222";
     // final iv = IV.fromLength(0);
     // pwd = pwd.padRight(32, "0");
     // final key = Key.fromUtf8(pwd);
@@ -40,9 +40,9 @@ void main() {
     // final decrypted = encrypter.encrypt(input, iv: iv);
     // print(decrypted.base64);
 
-    for (var i = 0; i < 10; i++) {
-      int random = Random().nextInt(9999);
-      print(random);
-    }
+    String enc = TREncode.encrypt(input, pwd);
+    print(enc);
+    String dec = TREncode.decrypt(enc, pwd);
+    print(dec);
   });
 }

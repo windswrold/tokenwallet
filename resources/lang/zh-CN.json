@@ -77,17 +77,17 @@
     "walletssetting_name": "钱包名称",
     "walletssetting_chaintype": "主链类型",
     "walletssetting_modifypwd": "修改密码",
-    "walletssetting_exportprv":"导出私钥",
-    "walletssetting_backupwallet":"备份钱包",
-    "walletssetting_modifyok":"确认",
-    "walletssetting_oldpwd":"原密码",
-    "walletssetting_oldpwdhint":"请输入钱包原密码",
-    "walletssetting_newpwd":"新密码",
-    "walletssetting_newpwdhint":"请输入新密码",
-    "walletssetting_againnewpwd":"确认密码",
-    "walletssetting_againnewpwdhint":"请再次输入新密码",
-    "dialog_title":"钱包密码",
-    "dialog_wrongpin":"密码错误"
-   
-    
+    "walletssetting_exportprv": "导出私钥",
+    "walletssetting_backupwallet": "备份钱包",
+    "walletssetting_modifyok": "确认",
+    "walletssetting_oldpwd": "原密码",
+    "walletssetting_oldpwdhint": "请输入钱包原密码",
+    "walletssetting_newpwd": "新密码",
+    "walletssetting_newpwdhint": "请输入新密码",
+    "walletssetting_againnewpwd": "确认密码",
+    "walletssetting_againnewpwdhint": "请再次输入新密码",
+    "dialog_title": "钱包密码",
+    "dialog_wrongpin": "密码错误",
+    "wallet_delwallet": "删除钱包成功",
+    "dialog_modifyok": "修改成功"
 }

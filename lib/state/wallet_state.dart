@@ -1,4 +1,6 @@
 import 'package:cstoken/model/wallet/tr_wallet.dart';
+import 'package:cstoken/pages/wallet/create/backup_tip_memo.dart';
+import 'package:cstoken/utils/custom_toast.dart';
 import '../public.dart';
 
 class CurrentChooseWalletState with ChangeNotifier {
@@ -22,12 +24,96 @@ class CurrentChooseWalletState with ChangeNotifier {
 
   void deleteWallet(BuildContext context, {required TRWallet wallet}) {
     ShowCustomAlert.showCustomAlertType(
-        context, KAlertType.text, "dialog_title".local(), currentWallet!,
+        context, KAlertType.password, "dialog_title".local(), currentWallet!,
+        hideLeftButton: true,
+        rightButtonTitle: "walletssetting_modifyok".local(),
+        subtitleText:
+            "33KrFMz32433KrFMz32433KrFMz324jAwMttvi1t33KrFMz324jAwMttvi1jAwMttvi1tjAwMttvi1t33KrFMz32433KrFMz32433KrFMz324jAwMttvi1t33KrFMz324jAwMttvi1jAwMttvi1tjAwMttvi1t",
+        confirmPressed: (result) async {
+      bool flag = await TRWallet.deleteWallet(wallet);
+      if (flag) {
+        TRWallet? wallet = await TRWallet.queryChooseWallet();
+        if (wallet == null) {
+          List<TRWallet> wallets = await TRWallet.queryAllWallets();
+          if (wallets.isNotEmpty) {
+            wallet = wallets.first;
+            wallet.isChoose = true;
+            await updateChoose(context, wallet: wallet);
+            HWToast.showText(text: "wallet_delwallet".local());
+            Future.delayed(Duration(seconds: 2)).then((value) => {
+                  Routers.goBackWithParams(context, {}),
+                });
+          } else {
+            HWToast.showText(text: "wallet_delwallet".local());
+            // Routers.push(context, choosewa, clearStack: true);
+          }
+        }
+      }
+    });
+  }
+
+  void exportPrv(BuildContext context, {required TRWallet wallet}) {
+    ShowCustomAlert.showCustomAlertType(
+        context, KAlertType.password, "dialog_title".local(), currentWallet!,
         hideLeftButton: true,
         rightButtonTitle: "walletssetting_modifyok".local(),
         subtitleText:
             "33KrFMz32433KrFMz32433KrFMz324jAwMttvi1t33KrFMz324jAwMttvi1jAwMttvi1tjAwMttvi1t33KrFMz32433KrFMz32433KrFMz324jAwMttvi1t33KrFMz324jAwMttvi1jAwMttvi1tjAwMttvi1t",
         confirmPressed: (result) {});
+  }
+
+  void backupWallet(BuildContext context, {required TRWallet wallet}) {
+    ShowCustomAlert.showCustomAlertType(
+        context, KAlertType.password, "dialog_title".local(), currentWallet!,
+        hideLeftButton: true,
+        rightButtonTitle: "walletssetting_modifyok".local(),
+        subtitleText:
+            "33KrFMz32433KrFMz32433KrFMz324jAwMttvi1t33KrFMz324jAwMttvi1jAwMttvi1tjAwMttvi1t33KrFMz32433KrFMz32433KrFMz324jAwMttvi1t33KrFMz324jAwMttvi1jAwMttvi1tjAwMttvi1t",
+        confirmPressed: (result) {
+      String? memo = wallet.exportEncContent(pin: result["text"]);
+      Routers.push(
+          context, BackupTipMemo(memo: memo!, walletID: wallet.walletID!));
+    });
+  }
+
+  void modifyPwd(
+    BuildContext context, {
+    required TRWallet wallet,
+    required String oldPin,
+    required String newPin,
+    required String againPin,
+    required String pinTip,
+  }) {
+    if (oldPin.length == 0 || newPin.length == 0 || againPin.length == 0) {
+      HWToast.showText(text: "input_pwd".local());
+      return;
+    }
+    if (newPin != againPin) {
+      HWToast.showText(text: "input_pwd_wrong".local());
+      return;
+    }
+    if (newPin.checkPassword() == false) {
+      HWToast.showText(text: "input_pwd_regexp".local());
+      return;
+    }
+    wallet.lockPin(
+        text: oldPin,
+        ok: (value) {
+          //旧的解密
+          //新的将私钥助记词加密
+          final content = wallet.exportEncContent(pin: oldPin);
+          wallet.pin = TREncode.SHA256(newPin);
+          wallet.encContent = TREncode.encrypt(content!, newPin);
+          wallet.pinTip = pinTip;
+          TRWallet.updateWallet(wallet);
+          HWToast.showText(text: "dialog_modifyok".local());
+          Future.delayed(Duration(seconds: 2)).then((value) => {
+                Routers.goBack(context),
+              });
+        },
+        wrong: () {
+          HWToast.showText(text: "dialog_wrongpin".local());
+        });
   }
 
   @override

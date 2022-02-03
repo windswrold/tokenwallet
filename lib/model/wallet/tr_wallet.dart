@@ -46,6 +46,15 @@ class TRWallet {
     this.pinTip,
   });
 
+  String getChainType() {
+    if (chainType == KChainType.HD.index) {
+      return "wallets_manager_multichain".local();
+    } else if (chainType == KChainType.ETH.index) {
+      return "importwallet_ethchaintype".local();
+    }
+    return "";
+  }
+
   // TRWallet.instance(HDWallet object) {
   //   walletID = TREncode.SHA256(object.content!.replaceAll(" ", "") + "CSTOKEM");
   //   pin = TREncode.SHA256(object.pin!);
@@ -324,21 +333,10 @@ class TRWallet {
   }
 
   //导出私钥
-  String? exportPrv({required String pin}) {
+  String? exportEncContent({required String pin}) {
     assert(pin != null, "pin为空");
     try {
-      // String prv = this.prvKey!;
-      // return TREncode.decrypt(prv, pin);
-    } catch (e) {
-      rethrow;
-    }
-  }
-
-  String? exportMemo({required String pin}) {
-    assert(pin != null, "pin为空");
-    try {
-      // String memo = this.mnemonic!;
-      // return memo.length == 0 ? "" : TREncode.decrypt(memo, pin);
+      return TREncode.decrypt(encContent!, pin);
     } catch (e) {
       rethrow;
     }

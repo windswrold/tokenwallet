@@ -11,6 +11,56 @@ class WalletsSetting extends StatefulWidget {
 }
 
 class _WalletsSettingState extends State<WalletsSetting> {
+  List<Widget> _children = [];
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    _initData();
+  }
+
+  void _initData() {
+    String? walletName = widget.wallet.walletName;
+    String chainType = widget.wallet.getChainType();
+    _children.add(_buildCell(
+        leftTitle: "walletssetting_name".local(), content: walletName));
+    _children.add(_buildCell(
+        leftTitle: "walletssetting_chaintype".local(), content: chainType));
+    _children.add(8.columnWidget);
+    _children.add(_buildCell(
+        leftTitle: "walletssetting_modifypwd".local(),
+        showArrowIcon: true,
+        onTap: () {
+          Routers.push(
+              context,
+              WalletModifyPwd(
+                wallet: widget.wallet,
+              ));
+        }));
+    _children.add(_buildCell(
+        leftTitle: "walletssetting_exportprv".local(),
+        showArrowIcon: true,
+        onTap: () {
+          Provider.of<CurrentChooseWalletState>(context, listen: false)
+              .exportPrv(context, wallet: widget.wallet);
+        }));
+    if (widget.wallet.leadType != KLeadType.Prvkey.index) {
+      _children.add(_buildCell(
+          leftTitle: "walletssetting_backupwallet".local(),
+          showArrowIcon: true,
+          onTap: () {
+            Provider.of<CurrentChooseWalletState>(context, listen: false)
+                .backupWallet(context, wallet: widget.wallet);
+          }));
+    }
+  }
+
+  void _delWallets() {
+    Provider.of<CurrentChooseWalletState>(context, listen: false)
+        .deleteWallet(context, wallet: widget.wallet);
+  }
+
   Widget _buildCell(
       {required String leftTitle,
       String? content,
@@ -76,24 +126,11 @@ class _WalletsSettingState extends State<WalletsSetting> {
           children: [
             Expanded(
                 child: Column(
-              children: [
-                _buildCell(leftTitle: "walletssetting_name".local()),
-                _buildCell(leftTitle: "walletssetting_chaintype".local()),
-                8.columnWidget,
-                _buildCell(
-                    leftTitle: "walletssetting_modifypwd".local(),
-                    showArrowIcon: true,
-                    onTap: () {
-                      Routers.push(context, WalletModifyPwd());
-                    }),
-                _buildCell(leftTitle: "walletssetting_exportprv".local()),
-                _buildCell(leftTitle: "walletssetting_backupwallet".local()),
-              ],
+              children: _children,
             )),
             NextButton(
                 onPressed: () {
-                  Provider.of<CurrentChooseWalletState>(context, listen: false)
-                      .deleteWallet(context, wallet: widget.wallet);
+                  _delWallets();
                 },
                 borderRadius: 8,
                 margin: EdgeInsets.only(

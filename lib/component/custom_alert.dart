@@ -279,8 +279,8 @@ class _CustomAlertState extends State<CustomAlert> {
       TRWallet mwallet = widget.currentWallet;
       bool isPassword = mwallet.lockPin(text: text, ok: null, wrong: null);
       if (isPassword) {
-        widget.confirmPressed({'text': text});
         Navigator.pop(context);
+        widget.confirmPressed({'text': text});
       } else {
         // String tip = mwallet.pinTip!;
         setState(() {
