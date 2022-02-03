@@ -73,5 +73,17 @@
     "importwallet_pwdtitlenew": "输入新密码",
     "importwallet_chaintype": "公链类型",
     "importwallet_ethchaintype": "类ETH钱包",
-    "walletssetting_delwallet":"删除钱包"
+    "walletssetting_delwallet": "删除钱包",
+    "walletssetting_name": "钱包名称",
+    "walletssetting_chaintype": "主链类型",
+    "walletssetting_modifypwd": "修改密码",
+    "walletssetting_exportprv":"导出私钥",
+    "walletssetting_backupwallet":"备份钱包",
+    "walletssetting_modifyok":"确认",
+    "walletssetting_oldpwd":"原密码",
+    "walletssetting_oldpwdhint":"请输入钱包原密码",
+    "walletssetting_newpwd":"新密码",
+    "walletssetting_newpwdhint":"请输入新密码",
+    "walletssetting_againnewpwd":"确认密码",
+    "walletssetting_againnewpwdhint":"请再次输入新密码"
 }

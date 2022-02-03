@@ -1,3 +1,5 @@
+import 'package:cstoken/pages/wallet/wallets/wallets_modifypwd.dart';
+
 import '../../../public.dart';
 
 class WalletsSetting extends StatefulWidget {
@@ -9,6 +11,58 @@ class WalletsSetting extends StatefulWidget {
 }
 
 class _WalletsSettingState extends State<WalletsSetting> {
+  Widget _buildCell(
+      {required String leftTitle,
+      String? content,
+      bool showArrowIcon = false,
+      VoidCallback? onTap}) {
+    return GestureDetector(
+      behavior: HitTestBehavior.opaque,
+      onTap: onTap,
+      child: Container(
+        height: 56.width,
+        padding: EdgeInsets.symmetric(horizontal: 16.width),
+        decoration: const BoxDecoration(
+          color: Colors.white,
+          border: Border(
+            bottom: BorderSide(
+              width: 0.5,
+              color: ColorUtils.lineColor,
+            ),
+          ),
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              leftTitle,
+              style: TextStyle(
+                  color: ColorUtils.fromHex("#FF000000"),
+                  fontWeight: FontWeightUtils.regular,
+                  fontSize: 16.font),
+            ),
+            Row(
+              children: [
+                Text(
+                  content ?? "",
+                  style: TextStyle(
+                      color: ColorUtils.fromHex("#66000000"),
+                      fontWeight: FontWeightUtils.regular,
+                      fontSize: 16.font),
+                ),
+                Visibility(
+                  visible: showArrowIcon,
+                  child: LoadAssetsImage("icons/icon_arrow_right.png",
+                      width: 16, height: 16),
+                ),
+              ],
+            )
+          ],
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return CustomPageView(
@@ -21,8 +75,20 @@ class _WalletsSettingState extends State<WalletsSetting> {
         child: Column(
           children: [
             Expanded(
-                child: Container(
-              color: Colors.blue,
+                child: Column(
+              children: [
+                _buildCell(leftTitle: "walletssetting_name".local()),
+                _buildCell(leftTitle: "walletssetting_chaintype".local()),
+                8.columnWidget,
+                _buildCell(
+                    leftTitle: "walletssetting_modifypwd".local(),
+                    showArrowIcon: true,
+                    onTap: () {
+                      Routers.push(context, WalletModifyPwd());
+                    }),
+                _buildCell(leftTitle: "walletssetting_exportprv".local()),
+                _buildCell(leftTitle: "walletssetting_backupwallet".local()),
+              ],
             )),
             NextButton(
                 onPressed: () {

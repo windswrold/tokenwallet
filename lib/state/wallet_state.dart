@@ -19,7 +19,13 @@ class CurrentChooseWalletState with ChangeNotifier {
     return TRWallet.updateWallets([wallet, chooseWallet]);
   }
 
-  void deleteWallet(BuildContext context, {required TRWallet wallet}) {}
+  void deleteWallet(BuildContext context, {required TRWallet wallet}) {
+    ShowCustomAlert.showCustomAlertType(
+        context, KAlertType.text, "null", currentWallet!,
+        subtitleText:
+            "33KrFMz32433KrFMz32433KrFMz324jAwMttvi1t33KrFMz324jAwMttvi1jAwMttvi1tjAwMttvi1t33KrFMz32433KrFMz32433KrFMz324jAwMttvi1t33KrFMz324jAwMttvi1jAwMttvi1tjAwMttvi1t",
+        confirmPressed: (result) {});
+  }
 
   @override
   void dispose() {

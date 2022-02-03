@@ -3,6 +3,7 @@ import 'package:cstoken/model/wallet/tr_wallet.dart';
 import 'package:cstoken/pages/wallet/create/create_tip.dart';
 import 'package:cstoken/pages/wallet/create/create_wallet_page.dart';
 import 'package:cstoken/pages/wallet/import/import_wallets.dart';
+import 'package:cstoken/pages/wallet/wallets/wallets_setting.dart';
 import 'package:flutter/material.dart';
 
 import '../../../public.dart';
@@ -70,6 +71,13 @@ class _WalletsManagerState extends State<WalletsManager> {
                       await Provider.of<CurrentChooseWalletState>(context,
                               listen: false)
                           .updateChoose(context, wallet: walet);
+                      _initData();
+                    },
+                    swipeAction: (TRWallet walet) async {
+                      await Provider.of<CurrentChooseWalletState>(context,
+                              listen: false)
+                          .updateChoose(context, wallet: walet);
+                      Routers.push(context, WalletsSetting(wallet: walet));
                       _initData();
                     },
                   );

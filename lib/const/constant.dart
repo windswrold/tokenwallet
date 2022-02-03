@@ -73,6 +73,13 @@ enum SortIndexType {
   wrongIndex,
 }
 
+enum KAlertType {
+  password, //输入密码
+  text, //文本提示
+  node,
+  edit_name, //nodeUrl
+}
+
 enum KChainID { Mainnet, Ropsten, Rinkeby, Localhost }
 
 extension ChainIdNum on KChainID {

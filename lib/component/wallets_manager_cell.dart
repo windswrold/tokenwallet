@@ -13,10 +13,14 @@ import '../public.dart';
 
 class WalletsManagetCell extends StatelessWidget {
   const WalletsManagetCell(
-      {Key? key, required this.walet, required this.cellOnTap})
+      {Key? key,
+      required this.walet,
+      required this.cellOnTap,
+      required this.swipeAction})
       : super(key: key);
   final TRWallet walet;
   final Function(TRWallet walet) cellOnTap;
+  final Function(TRWallet walet) swipeAction;
 
   @override
   Widget build(BuildContext context) {
@@ -61,7 +65,7 @@ class WalletsManagetCell extends StatelessWidget {
                           fontWeight: FontWeightUtils.medium)),
                 ),
                 onTap: (handler) async {
-                  Routers.push(context, WalletsSetting(wallet: walet));
+                  swipeAction(walet);
                 }),
           ],
           child: Container(
