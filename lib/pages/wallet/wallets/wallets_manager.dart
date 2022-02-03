@@ -64,7 +64,15 @@ class _WalletsManagerState extends State<WalletsManager> {
                 itemCount: _datas.length,
                 itemBuilder: (BuildContext context, int index) {
                   TRWallet walet = _datas[index];
-                  return WalletsManagetCell(walet: walet);
+                  return WalletsManagetCell(
+                    walet: walet,
+                    cellOnTap: (TRWallet walet) async {
+                      await Provider.of<CurrentChooseWalletState>(context,
+                              listen: false)
+                          .updateChoose(context, wallet: walet);
+                      _initData();
+                    },
+                  );
                 },
               ),
             ),

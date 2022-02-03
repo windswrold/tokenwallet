@@ -1,5 +1,6 @@
 import 'package:cstoken/const/constant.dart';
 import 'package:cstoken/model/wallet/tr_wallet.dart';
+import 'package:cstoken/pages/wallet/wallets/wallets_setting.dart';
 import 'package:cstoken/state/wallet_state.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -11,8 +12,11 @@ import 'package:flutter_swipe_action_cell/core/cell.dart';
 import '../public.dart';
 
 class WalletsManagetCell extends StatelessWidget {
-  const WalletsManagetCell({Key? key, required this.walet}) : super(key: key);
+  const WalletsManagetCell(
+      {Key? key, required this.walet, required this.cellOnTap})
+      : super(key: key);
   final TRWallet walet;
+  final Function(TRWallet walet) cellOnTap;
 
   @override
   Widget build(BuildContext context) {
@@ -32,8 +36,7 @@ class WalletsManagetCell extends StatelessWidget {
     return GestureDetector(
       behavior: HitTestBehavior.opaque,
       onTap: () {
-        Provider.of<CurrentChooseWalletState>(context, listen: false)
-            .updateChoose(walet);
+        cellOnTap(walet);
       },
       child: Container(
         margin:
@@ -57,7 +60,9 @@ class WalletsManagetCell extends StatelessWidget {
                           fontSize: 14.font,
                           fontWeight: FontWeightUtils.medium)),
                 ),
-                onTap: (handler) async {}),
+                onTap: (handler) async {
+                  Routers.push(context, WalletsSetting(wallet: walet));
+                }),
           ],
           child: Container(
             alignment: Alignment.center,

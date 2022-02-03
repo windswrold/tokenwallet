@@ -31,6 +31,7 @@ class TRWallet {
   int? leadType; //导入类型 Prvkey 助记词 keystore
   String? pinTip; // 密码提示
 
+  @ignore
   List<TRWalletInfo>? walletsInfo;
 
   TRWallet({
@@ -220,10 +221,10 @@ class TRWallet {
     try {
       FlutterDatabase? database = await DataBaseConfig.openDataBase();
       List<TRWallet>? wallet = await database?.walletDao.queryAllWallets();
-      wallet?.forEach((element) async {
-        element.walletsInfo = await database?.walletInfoDao
-            .queryWalletInfosByWalletID(element.walletID ?? "");
-      });
+      // wallet?.forEach((element) async {
+      //   element.walletsInfo = await database?.walletInfoDao
+      //       .queryWalletInfosByWalletID(element.walletID ?? "");
+      // });
       return wallet ??= [];
     } catch (e) {
       rethrow;

@@ -72,5 +72,6 @@
     "importwallet_prvtitle": "私钥",
     "importwallet_pwdtitlenew": "输入新密码",
     "importwallet_chaintype": "公链类型",
-    "importwallet_ethchaintype": "类ETH钱包"
+    "importwallet_ethchaintype": "类ETH钱包",
+    "walletssetting_delwallet":"删除钱包"
 }

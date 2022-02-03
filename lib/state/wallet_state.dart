@@ -8,18 +8,18 @@ class CurrentChooseWalletState with ChangeNotifier {
     notifyListeners();
   }
 
-  void delWallets() async {}
-
-  void updateChoose(TRWallet wallet) async {
+  Future<bool> updateChoose(BuildContext context,
+      {required TRWallet wallet}) async {
     TRWallet? chooseWallet = await TRWallet.queryChooseWallet();
     if (chooseWallet == null) {
-      return;
+      return false;
     }
     chooseWallet.isChoose = false;
     wallet.isChoose = true;
-    TRWallet.updateWallets([wallet, chooseWallet]);
-    loadWallet();
+    return TRWallet.updateWallets([wallet, chooseWallet]);
   }
+
+  void deleteWallet(BuildContext context, {required TRWallet wallet}) {}
 
   @override
   void dispose() {
