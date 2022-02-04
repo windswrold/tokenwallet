@@ -3,6 +3,7 @@ import 'package:cstoken/model/wallet/tr_wallet.dart';
 import 'package:cstoken/pages/wallet/create/backup_tip_memo.dart';
 import 'package:cstoken/pages/wallet/create/create_wallet_page.dart';
 import 'package:cstoken/utils/custom_toast.dart';
+import 'package:flutter/services.dart';
 import '../public.dart';
 
 class CurrentChooseWalletState with ChangeNotifier {
@@ -25,8 +26,8 @@ class CurrentChooseWalletState with ChangeNotifier {
   }
 
   void deleteWallet(BuildContext context, {required TRWallet wallet}) {
-    ShowCustomAlert.showCustomAlertType(
-        context, KAlertType.password, "dialog_title".local(), currentWallet!,
+    ShowCustomAlert.showCustomAlertType(context, KAlertType.password,
+        "dialog_walletpin".local(), currentWallet!,
         hideLeftButton: true,
         rightButtonTitle: "walletssetting_modifyok".local(),
         subtitleText:
@@ -61,13 +62,42 @@ class CurrentChooseWalletState with ChangeNotifier {
         context: context,
         backgroundColor: Colors.transparent,
         builder: (_) {
-          return ChainListType();
+          return ChainListType(
+            onTap: (KCoinType coinType) {
+              ShowCustomAlert.showCustomAlertType(context, KAlertType.password,
+                  "dialog_walletpin".local(), currentWallet!,
+                  hideLeftButton: true,
+                  rightButtonTitle: "walletssetting_modifyok".local(),
+                  confirmPressed: (result) {
+                String? memo = wallet.exportEncContent(pin: result["text"]);
+                List<HDWallet> hdWallets = HDWallet.getHDWallet(
+                    content: memo!,
+                    pin: "",
+                    kLeadType: KLeadType.Memo,
+                    kCoinType: coinType);
+
+                if (hdWallets.isNotEmpty) {
+                  String prv = hdWallets.first.prv ?? "";
+                  ShowCustomAlert.showCustomAlertType(context, KAlertType.text,
+                      "walletssetting_exportprv".local(), currentWallet!,
+                      hideLeftButton: true,
+                      rightButtonTitle: "dialog_copy".local(),
+                      subtitleText: prv, confirmPressed: (result) {
+                    String text = result["text"] ?? '';
+                    if (text.isEmpty) return;
+                    Clipboard.setData(ClipboardData(text: text));
+                    HWToast.showText(text: "copy_success".local());
+                  });
+                }
+              });
+            },
+          );
         });
   }
 
   void backupWallet(BuildContext context, {required TRWallet wallet}) {
-    ShowCustomAlert.showCustomAlertType(
-        context, KAlertType.password, "dialog_title".local(), currentWallet!,
+    ShowCustomAlert.showCustomAlertType(context, KAlertType.password,
+        "dialog_walletpin".local(), currentWallet!,
         hideLeftButton: true,
         rightButtonTitle: "walletssetting_modifyok".local(),
         subtitleText:

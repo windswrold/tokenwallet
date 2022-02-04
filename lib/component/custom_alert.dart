@@ -96,11 +96,15 @@ class _CustomAlertState extends State<CustomAlert> {
     super.initState();
     if (widget.alertType == KAlertType.password) {
       _edTextEC = TextEditingController();
-
       _confirmBgc = ColorUtils.blueColor;
       _confirmRadius = 8;
       _colorText = Colors.white;
       _errColor = ColorUtils.fromHex("#FFFF233E");
+    }
+    if (widget.alertType == KAlertType.text) {
+      _confirmBgc = ColorUtils.blueColor;
+      _confirmRadius = 8;
+      _colorText = Colors.white;
     }
   }
 
@@ -124,14 +128,16 @@ class _CustomAlertState extends State<CustomAlert> {
         borderRadius: BorderRadius.circular(12),
         color: Colors.white,
       ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          _title(context, widget.titleText),
-          _contextView(),
-          _bottomActions(),
-        ],
+      child: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            _title(context, widget.titleText),
+            _contextView(),
+            _bottomActions(),
+          ],
+        ),
       ),
     );
   }
@@ -182,9 +188,9 @@ class _CustomAlertState extends State<CustomAlert> {
       _child = Text(
         widget.subtitleText,
         style: TextStyle(
-            color: Colors.blue,
-            fontWeight: FontWeightUtils.medium,
-            fontSize: 14,
+            color: ColorUtils.fromHex("#99000000"),
+            fontWeight: FontWeightUtils.regular,
+            fontSize: 14.font,
             decoration: TextDecoration.none),
         textAlign: TextAlign.center,
       );
@@ -269,14 +275,15 @@ class _CustomAlertState extends State<CustomAlert> {
     );
   }
 
-  void _confirmOnPressed() {
+  void _confirmOnPressed() async {
     if (widget.alertType == KAlertType.text) {
-      widget.confirmPressed({});
       Navigator.pop(context);
+      widget.confirmPressed({"text": widget.subtitleText});
     } else if (widget.alertType == KAlertType.password) {
       String text = _edTextEC!.text;
       //导出私钥  输入密码
       TRWallet mwallet = widget.currentWallet;
+      mwallet = (await TRWallet.queryWalletByWalletID(mwallet.walletID!))!;
       bool isPassword = mwallet.lockPin(text: text, ok: null, wrong: null);
       if (isPassword) {
         Navigator.pop(context);

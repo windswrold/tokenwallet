@@ -11,7 +11,7 @@ class ChainListType extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 450.width,
+      height: 600.width,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(8),
         color: Colors.white,
@@ -27,6 +27,7 @@ class ChainListType extends StatelessWidget {
                 return GestureDetector(
                   behavior: HitTestBehavior.opaque,
                   onTap: () {
+                    Routers.goBack(context);
                     onTap(type);
                   },
                   child: Container(
@@ -58,6 +59,7 @@ class ChainListType extends StatelessWidget {
                 Routers.goBack(context);
               },
               bgc: ColorUtils.blueColor,
+              margin: EdgeInsets.only(top: 16.width),
               textStyle: TextStyle(
                 color: Colors.white,
                 fontWeight: FontWeightUtils.regular,
