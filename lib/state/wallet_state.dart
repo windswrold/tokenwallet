@@ -1,5 +1,7 @@
+import 'package:cstoken/component/chain_listtype.dart';
 import 'package:cstoken/model/wallet/tr_wallet.dart';
 import 'package:cstoken/pages/wallet/create/backup_tip_memo.dart';
+import 'package:cstoken/pages/wallet/create/create_wallet_page.dart';
 import 'package:cstoken/utils/custom_toast.dart';
 import '../public.dart';
 
@@ -45,7 +47,9 @@ class CurrentChooseWalletState with ChangeNotifier {
                 });
           } else {
             HWToast.showText(text: "wallet_delwallet".local());
-            // Routers.push(context, choosewa, clearStack: true);
+            Future.delayed(Duration(seconds: 2)).then((value) => {
+                  Routers.push(context, CreateWalletPage()),
+                });
           }
         }
       }
@@ -53,13 +57,12 @@ class CurrentChooseWalletState with ChangeNotifier {
   }
 
   void exportPrv(BuildContext context, {required TRWallet wallet}) {
-    ShowCustomAlert.showCustomAlertType(
-        context, KAlertType.password, "dialog_title".local(), currentWallet!,
-        hideLeftButton: true,
-        rightButtonTitle: "walletssetting_modifyok".local(),
-        subtitleText:
-            "33KrFMz32433KrFMz32433KrFMz324jAwMttvi1t33KrFMz324jAwMttvi1jAwMttvi1tjAwMttvi1t33KrFMz32433KrFMz32433KrFMz324jAwMttvi1t33KrFMz324jAwMttvi1jAwMttvi1tjAwMttvi1t",
-        confirmPressed: (result) {});
+    showModalBottomSheet(
+        context: context,
+        backgroundColor: Colors.transparent,
+        builder: (_) {
+          return ChainListType();
+        });
   }
 
   void backupWallet(BuildContext context, {required TRWallet wallet}) {
