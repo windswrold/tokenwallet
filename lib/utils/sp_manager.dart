@@ -10,13 +10,14 @@ class SPManager {
     _sp = sp;
   }
 
-  static const String _theme = 'AppTheme';
+  static const String _languageSET = 'LANGUAGE_SET';
+  static const String _aMOUNT_SET = "AMOUNT_SET";
 
-  static String? getAppTheme() {
-    return _sp!.getString(_theme);
+  static String? getAppLanguage() {
+    return _sp!.getString(_languageSET);
   }
 
-  static void setAppTheme(String value) {
-    _sp!.setString(_theme, value);
+  static void setAppLanguage(String value) {
+    _sp!.setString(_languageSET, value);
   }
 }

@@ -67,6 +67,20 @@ enum KCurrencyType {
   USD,
 }
 
+enum KAppLanguage {
+  system,
+  zh_cn,
+  en_us,
+}
+
+extension KCurrencyTypeString on KCurrencyType {
+  String get value => <String>['人民币(CNY)', '美国(USD)'][index];
+}
+
+extension KAppLanguageString on KAppLanguage {
+  String get value => <String>['跟随系统', '简体中文', 'English'][index];
+}
+
 enum SortIndexType {
   leftIndex,
   actionIndex,
