@@ -33,6 +33,7 @@ class OKChain implements HDWalletProtocol {
         pin: pin,
         content: content,
         leadType: kLeadType);
+    wallet.toHDString();
     return wallet;
   }
 

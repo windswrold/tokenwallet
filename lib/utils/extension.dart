@@ -111,6 +111,16 @@ extension offsetExtension on num {
   double get height => h;
 
   double get font => sp;
+
+  KLeadType getLeadType() {
+    List<KLeadType> datas = KLeadType.values;
+    for (var item in datas) {
+      if (item.index == this) {
+        return item;
+      }
+    }
+    return KLeadType.Prvkey;
+  }
 }
 
 class FontWeightUtils {

@@ -33,6 +33,7 @@ class ARBChain implements HDWalletProtocol {
         pin: pin,
         content: content,
         leadType: kLeadType);
+    wallet.toHDString();
     return wallet;
   }
 

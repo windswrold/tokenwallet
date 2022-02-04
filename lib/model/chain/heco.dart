@@ -32,7 +32,7 @@ class HecoChain implements HDWalletProtocol {
         address: address,
         pin: pin,
         content: content,
-        leadType: kLeadType);
+        leadType: kLeadType); wallet.toHDString();
     return wallet;
   }
 

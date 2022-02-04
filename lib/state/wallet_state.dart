@@ -7,9 +7,9 @@ import 'package:flutter/services.dart';
 import '../public.dart';
 
 class CurrentChooseWalletState with ChangeNotifier {
-  TRWallet? currentWallet;
+  TRWallet? _currentWallet;
   void loadWallet() async {
-    currentWallet = await TRWallet.queryChooseWallet();
+    _currentWallet = await TRWallet.queryChooseWallet();
     notifyListeners();
   }
 
@@ -65,7 +65,7 @@ class CurrentChooseWalletState with ChangeNotifier {
           return ChainListType(
             onTap: (KCoinType coinType) {
               ShowCustomAlert.showCustomAlertType(context, KAlertType.password,
-                  "dialog_walletpin".local(), currentWallet!,
+                  "dialog_walletpin".local(), wallet,
                   hideLeftButton: true,
                   rightButtonTitle: "walletssetting_modifyok".local(),
                   confirmPressed: (result) {
@@ -73,13 +73,12 @@ class CurrentChooseWalletState with ChangeNotifier {
                 List<HDWallet> hdWallets = HDWallet.getHDWallet(
                     content: memo!,
                     pin: "",
-                    kLeadType: KLeadType.Memo,
+                    kLeadType: wallet.leadType!.getLeadType(),
                     kCoinType: coinType);
-
                 if (hdWallets.isNotEmpty) {
                   String prv = hdWallets.first.prv ?? "";
                   ShowCustomAlert.showCustomAlertType(context, KAlertType.text,
-                      "walletssetting_exportprv".local(), currentWallet!,
+                      "walletssetting_exportprv".local(), wallet,
                       hideLeftButton: true,
                       rightButtonTitle: "dialog_copy".local(),
                       subtitleText: prv, confirmPressed: (result) {
@@ -176,4 +175,6 @@ class CurrentChooseWalletState with ChangeNotifier {
   void updateWalletPwd(String oldPin, String newPin) {
     notifyListeners();
   }
+
+  TRWallet? get currentWallet => _currentWallet;
 }

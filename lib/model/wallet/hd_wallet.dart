@@ -23,10 +23,10 @@ class HDWallet {
       this.content,
       this.leadType});
 
-  @override
-  String toString() {
+  void toHDString() {
     // TODO: implement toString
-    return "prv $prv , address $address pin $pin coinType $coinType";
+    LogUtil.v(
+        "HDWallet prv $prv , address $address pin $pin content $content leadType $leadType coinType $coinType");
   }
 
   static List<HDWallet> getHDWallet(
