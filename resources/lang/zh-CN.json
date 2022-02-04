@@ -91,5 +91,12 @@
     "dialog_wrongpin": "密码错误",
     "wallet_delwallet": "删除钱包成功",
     "dialog_modifyok": "修改成功",
-    "dialog_copy": "复制"
+    "dialog_copy": "复制",
+    "minepage_contactadds":"地址簿",
+    "minepage_safetysetting":"安全设置",
+    "minepage_walletssetting":"钱包设置",
+    "minepage_currency":"本地货币",
+    "minepage_language":"语言",
+    "minepage_feedback":"反馈",
+    "minepage_version":"版本"
 }

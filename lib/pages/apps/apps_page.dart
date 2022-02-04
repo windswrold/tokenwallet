@@ -16,6 +16,7 @@ class _AppsPageState extends State<AppsPage> {
     EasyLocalization.of(context)!.delegates;
     return CustomPageView(
       hiddenAppBar: true,
+      hiddenLeading: true,
       child: Column(
         children: [
           TopSearchView(),
