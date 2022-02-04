@@ -65,6 +65,8 @@ class _$FlutterDatabase extends FlutterDatabase {
 
   WalletInfoDao? _walletInfoDaoInstance;
 
+  ContactAddressDao? _addressDaoInstance;
+
   Future<sqflite.Database> open(String path, List<Migration> migrations,
       [Callback? callback]) async {
     final databaseOptions = sqflite.OpenDatabaseOptions(
@@ -87,6 +89,8 @@ class _$FlutterDatabase extends FlutterDatabase {
             'CREATE TABLE IF NOT EXISTS `wallet_table` (`walletID` TEXT, `walletName` TEXT, `pin` TEXT, `chainType` INTEGER, `accountState` INTEGER, `encContent` TEXT, `isChoose` INTEGER, `leadType` INTEGER, `pinTip` TEXT, PRIMARY KEY (`walletID`))');
         await database.execute(
             'CREATE TABLE IF NOT EXISTS `wallet_info_table` (`key` TEXT NOT NULL, `walletID` TEXT, `walletAaddress` TEXT, `coinType` INTEGER, `pubKey` TEXT, PRIMARY KEY (`key`))');
+        await database.execute(
+            'CREATE TABLE IF NOT EXISTS `contacts_table` (`address` TEXT NOT NULL, `coinType` INTEGER NOT NULL, `name` TEXT NOT NULL, PRIMARY KEY (`address`))');
 
         await callback?.onCreate?.call(database, version);
       },
@@ -102,6 +106,12 @@ class _$FlutterDatabase extends FlutterDatabase {
   @override
   WalletInfoDao get walletInfoDao {
     return _walletInfoDaoInstance ??= _$WalletInfoDao(database, changeListener);
+  }
+
+  @override
+  ContactAddressDao get addressDao {
+    return _addressDaoInstance ??=
+        _$ContactAddressDao(database, changeListener);
   }
 }
 
@@ -356,5 +366,84 @@ class _$WalletInfoDao extends WalletInfoDao {
   @override
   Future<void> deleteWallets(List<TRWalletInfo> wallet) async {
     await _tRWalletInfoDeletionAdapter.deleteList(wallet);
+  }
+}
+
+class _$ContactAddressDao extends ContactAddressDao {
+  _$ContactAddressDao(this.database, this.changeListener)
+      : _queryAdapter = QueryAdapter(database),
+        _contactAddressInsertionAdapter = InsertionAdapter(
+            database,
+            'contacts_table',
+            (ContactAddress item) => <String, Object?>{
+                  'address': item.address,
+                  'coinType': item.coinType,
+                  'name': item.name
+                }),
+        _contactAddressUpdateAdapter = UpdateAdapter(
+            database,
+            'contacts_table',
+            ['address'],
+            (ContactAddress item) => <String, Object?>{
+                  'address': item.address,
+                  'coinType': item.coinType,
+                  'name': item.name
+                }),
+        _contactAddressDeletionAdapter = DeletionAdapter(
+            database,
+            'contacts_table',
+            ['address'],
+            (ContactAddress item) => <String, Object?>{
+                  'address': item.address,
+                  'coinType': item.coinType,
+                  'name': item.name
+                });
+
+  final sqflite.DatabaseExecutor database;
+
+  final StreamController<String> changeListener;
+
+  final QueryAdapter _queryAdapter;
+
+  final InsertionAdapter<ContactAddress> _contactAddressInsertionAdapter;
+
+  final UpdateAdapter<ContactAddress> _contactAddressUpdateAdapter;
+
+  final DeletionAdapter<ContactAddress> _contactAddressDeletionAdapter;
+
+  @override
+  Future<List<ContactAddress>> queryAddressType(int coinType) async {
+    return _queryAdapter.queryList(
+        'SELECT * FROM contacts_table WHERE coinType = ?1',
+        mapper: (Map<String, Object?> row) => ContactAddress(
+            row['address'] as String,
+            row['coinType'] as int,
+            row['name'] as String),
+        arguments: [coinType]);
+  }
+
+  @override
+  Future<List<ContactAddress>> queryAllAddress() async {
+    return _queryAdapter.queryList('SELECT * FROM contacts_table',
+        mapper: (Map<String, Object?> row) => ContactAddress(
+            row['address'] as String,
+            row['coinType'] as int,
+            row['name'] as String));
+  }
+
+  @override
+  Future<void> insertAddress(ContactAddress model) async {
+    await _contactAddressInsertionAdapter.insert(
+        model, OnConflictStrategy.replace);
+  }
+
+  @override
+  Future<void> updateAddress(ContactAddress model) async {
+    await _contactAddressUpdateAdapter.update(model, OnConflictStrategy.abort);
+  }
+
+  @override
+  Future<void> deleteAddress(ContactAddress model) async {
+    await _contactAddressDeletionAdapter.delete(model);
   }
 }
