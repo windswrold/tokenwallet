@@ -214,6 +214,7 @@ class ColorUtils {
   static Color blueBGColor = fromHex("#1A216EFF");
   static const Color lineColor = Color(0x1A000000);
   static Color backgroudColor = fromHex("#FFF6F8FF");
+  static Color redColor = fromHex("FFFF233E");
   static Color fromHex(String hexString) {
     final buffer = StringBuffer();
     if (hexString.length == 6 || hexString.length == 7) buffer.write('ff');

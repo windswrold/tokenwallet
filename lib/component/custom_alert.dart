@@ -1,6 +1,8 @@
 import 'package:cstoken/utils/extension.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
 
 import '../../public.dart';
@@ -9,15 +11,22 @@ class ShowCustomAlert {
   static showCustomAlertType(
     BuildContext context,
     KAlertType alertType,
-    String? title,
-    TRWallet currentWallet, {
-    String subtitleText = "",
-    String leftButtonTitle = 'aaa',
-    String rightButtonTitle = 'bbb',
+    String? titleText,
+    TRWallet? currentWallet, {
     bool hideLeftButton = false,
-    Color leftButtonColor = const Color(0x99000000),
-    Color rightButtonColor = ColorUtils.blueColor,
+    String? subtitleText,
+    TextStyle? subtitleTextStyle,
+    String? leftButtonTitle,
+    String? rightButtonTitle,
+    TextStyle? leftButtonStyle,
+    TextStyle? rightButtonStyle,
+    Color? leftButtonBGC,
+    Color? rightButtonBGC,
+    double leftButtonRadius = 8,
+    double rightButtonRadius = 8,
+    double contextViewMinHeight = 80,
     VoidCallback? cancelPressed,
+    EdgeInsetsGeometry? bottomActionsPadding,
     required Function(Map map) confirmPressed,
   }) {
     showDialog(
@@ -26,16 +35,23 @@ class ShowCustomAlert {
       builder: (context) {
         return CustomAlert(
           alertType: alertType,
-          titleText: title,
+          titleText: titleText,
           subtitleText: subtitleText,
-          leftButtonTitle: leftButtonTitle,
           rightButtonTitle: rightButtonTitle,
+          leftButtonTitle: leftButtonTitle,
           cancelPressed: cancelPressed,
           confirmPressed: confirmPressed,
-          rightButtonColor: rightButtonColor,
-          leftButtonColor: leftButtonColor,
-          hideLeftButton: hideLeftButton,
           currentWallet: currentWallet,
+          hideLeftButton: hideLeftButton,
+          subtitleTextStyle: subtitleTextStyle,
+          leftButtonStyle: leftButtonStyle,
+          rightButtonStyle: rightButtonStyle,
+          leftButtonBGC: leftButtonBGC,
+          rightButtonBGC: rightButtonBGC,
+          leftButtonRadius: leftButtonRadius,
+          rightButtonRadius: rightButtonRadius,
+          contextViewMinHeight: contextViewMinHeight,
+          bottomActionsPadding: bottomActionsPadding,
         );
       },
     );
@@ -101,20 +117,22 @@ class CustomAlert extends StatefulWidget {
   final KAlertType alertType;
   //标题
   final String? titleText;
-  //文本提示内容
-  final String subtitleText;
-  //左边按钮名称
-  final String leftButtonTitle;
-  //右边按钮名称
-  final String rightButtonTitle;
-  //左边按钮颜色
-  final Color leftButtonColor;
-  //右边按钮颜色
-  final Color rightButtonColor;
+  final TRWallet? currentWallet;
+  final bool hideLeftButton;
   //左边按钮点击回调
   final VoidCallback? cancelPressed;
-  final TRWallet currentWallet;
-  final bool hideLeftButton;
+  final String? subtitleText;
+  final TextStyle? subtitleTextStyle;
+  final String? leftButtonTitle;
+  final String? rightButtonTitle;
+  final TextStyle? leftButtonStyle;
+  final TextStyle? rightButtonStyle;
+  final Color? leftButtonBGC;
+  final Color? rightButtonBGC;
+  final double? leftButtonRadius;
+  final double? rightButtonRadius;
+  final double? contextViewMinHeight;
+  final EdgeInsetsGeometry? bottomActionsPadding;
   //右边按钮点击回调
   final Function(Map map) confirmPressed;
   const CustomAlert({
@@ -124,12 +142,19 @@ class CustomAlert extends StatefulWidget {
     required this.subtitleText,
     required this.rightButtonTitle,
     required this.leftButtonTitle,
-    this.cancelPressed,
+    required this.cancelPressed,
     required this.confirmPressed,
-    required this.leftButtonColor,
-    required this.rightButtonColor,
     required this.currentWallet,
-    this.hideLeftButton = false,
+    required this.hideLeftButton,
+    required this.subtitleTextStyle,
+    required this.leftButtonStyle,
+    required this.rightButtonStyle,
+    required this.leftButtonBGC,
+    required this.rightButtonBGC,
+    required this.leftButtonRadius,
+    required this.rightButtonRadius,
+    required this.contextViewMinHeight,
+    required this.bottomActionsPadding,
   }) : super(key: key);
 
   @override
@@ -139,8 +164,6 @@ class CustomAlert extends StatefulWidget {
 ///alert弹窗的基本样式
 class _CustomAlertState extends State<CustomAlert> {
   TextEditingController? _edTextEC;
-  Color? _confirmBgc;
-  double _confirmRadius = 0;
   Color _colorText = ColorUtils.fromHex("#99000000");
   String? _errText;
   Color? _errColor;
@@ -151,14 +174,10 @@ class _CustomAlertState extends State<CustomAlert> {
     super.initState();
     if (widget.alertType == KAlertType.password) {
       _edTextEC = TextEditingController();
-      _confirmBgc = ColorUtils.blueColor;
-      _confirmRadius = 8;
       _colorText = Colors.white;
       _errColor = ColorUtils.fromHex("#FFFF233E");
     }
     if (widget.alertType == KAlertType.text) {
-      _confirmBgc = ColorUtils.blueColor;
-      _confirmRadius = 8;
       _colorText = Colors.white;
     }
   }
@@ -241,12 +260,13 @@ class _CustomAlertState extends State<CustomAlert> {
     Widget? _child;
     if (widget.alertType == KAlertType.text) {
       _child = Text(
-        widget.subtitleText,
-        style: TextStyle(
-            color: ColorUtils.fromHex("#99000000"),
-            fontWeight: FontWeightUtils.regular,
-            fontSize: 14.font,
-            decoration: TextDecoration.none),
+        widget.subtitleText ?? "",
+        style: widget.subtitleTextStyle ??
+            TextStyle(
+                color: ColorUtils.fromHex("#99000000"),
+                fontWeight: FontWeightUtils.regular,
+                fontSize: 14.font,
+                decoration: TextDecoration.none),
         textAlign: TextAlign.center,
       );
     } else if (widget.alertType == KAlertType.password) {
@@ -275,6 +295,9 @@ class _CustomAlertState extends State<CustomAlert> {
     } else {}
     return Container(
       padding: EdgeInsets.only(top: 16.width),
+      alignment: Alignment.center,
+      constraints:
+          BoxConstraints(minHeight: widget.contextViewMinHeight ?? 80.width),
       child: _child,
     );
   }
@@ -282,7 +305,8 @@ class _CustomAlertState extends State<CustomAlert> {
   /// 底部按钮组合
   Widget _bottomActions() {
     return Container(
-      padding: EdgeInsets.only(top: 16.width, bottom: 24.width),
+      padding: widget.bottomActionsPadding ??
+          EdgeInsets.only(top: 16.width, bottom: 24.width),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         crossAxisAlignment: CrossAxisAlignment.center,
@@ -298,13 +322,15 @@ class _CustomAlertState extends State<CustomAlert> {
 
   Widget _cancelButton() {
     return NextButton(
-      title: widget.leftButtonTitle,
-      textStyle: TextStyle(
-        fontSize: 16.font,
-        fontWeight: FontWeightUtils.medium,
-        color: ColorUtils.fromHex("#99000000"),
-      ),
-      borderRadius: 0,
+      title: widget.leftButtonTitle ?? "walletssetting_modifycancel".local(),
+      textStyle: widget.leftButtonStyle ??
+          TextStyle(
+            fontSize: 16.font,
+            fontWeight: FontWeightUtils.medium,
+            color: ColorUtils.fromHex("#99000000"),
+          ),
+      borderRadius: widget.leftButtonRadius ?? 0,
+      bgc: widget.leftButtonBGC,
       onPressed: () {
         Navigator.pop(context);
         if (widget.cancelPressed != null) {
@@ -316,14 +342,15 @@ class _CustomAlertState extends State<CustomAlert> {
 
   Widget _confirmButton() {
     return NextButton(
-      title: widget.rightButtonTitle,
-      textStyle: TextStyle(
-        fontSize: 16.font,
-        fontWeight: FontWeightUtils.medium,
-        color: _colorText,
-      ),
-      bgc: _confirmBgc,
-      borderRadius: _confirmRadius,
+      title: widget.rightButtonTitle ?? "walletssetting_modifyok".local(),
+      textStyle: widget.rightButtonStyle ??
+          TextStyle(
+            fontSize: 16.font,
+            fontWeight: FontWeightUtils.medium,
+            color: _colorText,
+          ),
+      bgc: widget.rightButtonBGC,
+      borderRadius: widget.rightButtonRadius,
       onPressed: () {
         _confirmOnPressed();
       },
@@ -337,7 +364,7 @@ class _CustomAlertState extends State<CustomAlert> {
     } else if (widget.alertType == KAlertType.password) {
       String text = _edTextEC!.text;
       //导出私钥  输入密码
-      TRWallet mwallet = widget.currentWallet;
+      TRWallet mwallet = widget.currentWallet!;
       mwallet = (await TRWallet.queryWalletByWalletID(mwallet.walletID!))!;
       bool isPassword = mwallet.lockPin(text: text, ok: null, wrong: null);
       if (isPassword) {

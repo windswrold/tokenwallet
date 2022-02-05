@@ -1,5 +1,8 @@
 import 'package:cstoken/component/mine_list_cell.dart';
+import 'package:cstoken/model/contacts/contact_address.dart';
 import 'package:cstoken/pages/mine/mine_contacts.dart';
+import 'package:cstoken/utils/sp_manager.dart';
+import 'package:package_info/package_info.dart';
 
 import '../../public.dart';
 
@@ -29,7 +32,8 @@ class _MinePageState extends State<MinePage> {
     _initData();
   }
 
-  void _initData() {
+  void _initData() async {
+    _datas.clear();
     String contract = "minepage_contactadds".local();
     String safe = "minepage_safetysetting".local();
     String walletsetting = "minepage_walletssetting".local();
@@ -38,15 +42,26 @@ class _MinePageState extends State<MinePage> {
     String feedback = "minepage_feedback".local();
     String version = "minepage_version".local();
 
-    _datas.add(MinePageData("mine/mine_contact.png", contract, "", onTap: () {
-      Routers.push(context, MineContacts());
+    List<ContactAddress> datas = await ContactAddress.queryAllAddress();
+    _datas.add(MinePageData(
+        "mine/mine_contact.png", contract, datas.length.toString(), onTap: () {
+      Routers.push(context, MineContacts()).then((value) => {
+            _initData(),
+          });
     }));
     _datas.add(MinePageData("mine/mine_anquan.png", safe, ""));
     _datas.add(MinePageData("mine/mine_walletset.png", walletsetting, ""));
-    _datas.add(MinePageData("mine/mine_currency.png", currency, ""));
-    _datas.add(MinePageData("mine/mine_language.png", language, ""));
+
+    String currencyValue = SPManager.getAppCurrencyMode().value;
+    _datas.add(MinePageData("mine/mine_currency.png", currency, currencyValue));
+
+    String lanValue = SPManager.getAppLanguage();
+    _datas.add(MinePageData("mine/mine_language.png", language, lanValue));
     _datas.add(MinePageData("mine/mine_feedback.png", feedback, ""));
-    _datas.add(MinePageData("mine/mine_version.png", version, ""));
+    final PackageInfo appInfo = await PackageInfo.fromPlatform();
+    String appversion = appInfo.version;
+    _datas.add(MinePageData("mine/mine_version.png", version, appversion));
+    setState(() {});
   }
 
   @override

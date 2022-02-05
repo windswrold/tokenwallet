@@ -39,6 +39,8 @@ class CurrentChooseWalletState with ChangeNotifier {
     ShowCustomAlert.showCustomAlertType(context, KAlertType.password,
         "dialog_walletpin".local(), currentWallet!,
         hideLeftButton: true,
+        rightButtonBGC: ColorUtils.blueColor,
+        rightButtonRadius: 8,
         rightButtonTitle: "walletssetting_modifyok".local(),
         subtitleText:
             "33KrFMz32433KrFMz32433KrFMz324jAwMttvi1t33KrFMz324jAwMttvi1jAwMttvi1tjAwMttvi1t33KrFMz32433KrFMz32433KrFMz324jAwMttvi1t33KrFMz324jAwMttvi1jAwMttvi1tjAwMttvi1t",
@@ -78,6 +80,8 @@ class CurrentChooseWalletState with ChangeNotifier {
               ShowCustomAlert.showCustomAlertType(context, KAlertType.password,
                   "dialog_walletpin".local(), wallet,
                   hideLeftButton: true,
+                  rightButtonBGC: ColorUtils.blueColor,
+                  rightButtonRadius: 8,
                   rightButtonTitle: "walletssetting_modifyok".local(),
                   confirmPressed: (result) {
                 String? memo = wallet.exportEncContent(pin: result["text"]);
@@ -91,6 +95,8 @@ class CurrentChooseWalletState with ChangeNotifier {
                   ShowCustomAlert.showCustomAlertType(context, KAlertType.text,
                       "walletssetting_exportprv".local(), wallet,
                       hideLeftButton: true,
+                      rightButtonBGC: ColorUtils.blueColor,
+                      rightButtonRadius: 8,
                       rightButtonTitle: "dialog_copy".local(),
                       subtitleText: prv, confirmPressed: (result) {
                     String text = result["text"] ?? '';
@@ -107,6 +113,8 @@ class CurrentChooseWalletState with ChangeNotifier {
     ShowCustomAlert.showCustomAlertType(context, KAlertType.password,
         "dialog_walletpin".local(), currentWallet!,
         hideLeftButton: true,
+        rightButtonBGC: ColorUtils.blueColor,
+        rightButtonRadius: 8,
         rightButtonTitle: "walletssetting_modifyok".local(),
         subtitleText:
             "33KrFMz32433KrFMz32433KrFMz324jAwMttvi1t33KrFMz324jAwMttvi1jAwMttvi1tjAwMttvi1t33KrFMz32433KrFMz32433KrFMz324jAwMttvi1t33KrFMz324jAwMttvi1jAwMttvi1tjAwMttvi1t",
@@ -182,4 +190,5 @@ class CurrentChooseWalletState with ChangeNotifier {
   void _calTotalAssets() {}
 
   TRWallet? get currentWallet => _currentWallet;
+  KCurrencyType? get currencyType => _currencyType;
 }
