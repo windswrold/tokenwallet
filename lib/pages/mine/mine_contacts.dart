@@ -1,6 +1,8 @@
 import 'package:cstoken/model/contacts/contact_address.dart';
 import 'package:cstoken/pages/mine/mine_newcontacts.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/painting.dart';
 import 'package:flutter/widgets.dart';
 
 import '../../public.dart';
@@ -26,7 +28,65 @@ class _MineContactsState extends State<MineContacts> {
     setState(() {});
   }
 
-  void _tapAdds(ContactAddress model) {}
+  void _tapAdds(ContactAddress model) {
+    ShowCustomAlert.showCustomBottomSheet(
+        context,
+        Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            GestureDetector(
+              behavior: HitTestBehavior.opaque,
+              onTap: () {
+                Routers.goBack(context);
+                model.address.copy();
+              },
+              child: Container(
+                alignment: Alignment.center,
+                height: 54.width,
+                child: Text(
+                  "minepage_copyAdds".local(),
+                  style: TextStyle(
+                      fontWeight: FontWeightUtils.medium,
+                      fontSize: 16.font,
+                      color: ColorUtils.fromHex("#FF000000")),
+                ),
+              ),
+            ),
+            Container(
+              height: 0.5,
+              alignment: Alignment.center,
+              color: ColorUtils.lineColor,
+            ),
+            GestureDetector(
+              behavior: HitTestBehavior.opaque,
+              onTap: () {
+                Routers.goBack(context);
+                Routers.push(context, MineNewContacts(model:model)).then((value) => {
+                      _initData(),
+                    });
+              },
+              child: Container(
+                alignment: Alignment.center,
+                height: 54.width,
+                child: Text(
+                  "minepage_modifyAdds".local(),
+                  style: TextStyle(
+                      fontWeight: FontWeightUtils.medium,
+                      fontSize: 16.font,
+                      color: ColorUtils.fromHex("#FF000000")),
+                ),
+              ),
+            ),
+          ],
+        ),
+        180.width,
+        "walletssetting_modifycancel".local(),
+        btnbgc: Colors.white,
+        btnSttyle: TextStyle(
+            fontWeight: FontWeightUtils.medium,
+            fontSize: 16.font,
+            color: ColorUtils.blueColor));
+  }
 
   Widget _buildCell(ContactAddress model) {
     return GestureDetector(

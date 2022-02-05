@@ -1,13 +1,15 @@
 import 'dart:math';
 
 import 'package:cstoken/model/mnemonic/mnemonic.dart';
+import 'package:cstoken/utils/custom_toast.dart';
+import 'package:flutter/services.dart';
 import 'package:web3dart/credentials.dart';
 
 import '../public.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:easy_localization/src/public.dart' as ez;
 
-extension StringTranslateExtension on String {
+extension Stringextension on String {
   bool checkPassword() {
     //密码长度8位数以上，建议使用英文字母、数字和标点符号组成，不采用特殊字符。
     if (this.length < 8) {
@@ -112,6 +114,12 @@ extension StringTranslateExtension on String {
     }
     LogUtil.v("比对结果  0");
     return 0;
+  }
+
+  void copy() {
+    if (isEmpty) return;
+    Clipboard.setData(ClipboardData(text: this));
+    HWToast.showText(text: "copy_success".local());
   }
 }
 

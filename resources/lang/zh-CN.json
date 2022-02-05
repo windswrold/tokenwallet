@@ -108,5 +108,7 @@
     "minepage_save": "保存",
     "minepage_choosecoin": "请选择",
     "input_addressinvalid": "地址无效",
-    "wallet_inputok": "保存成功"
+    "wallet_inputok": "保存成功",
+    "minepage_copyAdds": "复制地址",
+    "minepage_modifyAdds": "编辑地址"
 }

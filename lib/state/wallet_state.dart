@@ -71,6 +71,7 @@ class CurrentChooseWalletState with ChangeNotifier {
     showModalBottomSheet(
         context: context,
         backgroundColor: Colors.transparent,
+        isScrollControlled: true,
         builder: (_) {
           return ChainListType(
             onTap: (KCoinType coinType) {
@@ -93,9 +94,7 @@ class CurrentChooseWalletState with ChangeNotifier {
                       rightButtonTitle: "dialog_copy".local(),
                       subtitleText: prv, confirmPressed: (result) {
                     String text = result["text"] ?? '';
-                    if (text.isEmpty) return;
-                    Clipboard.setData(ClipboardData(text: text));
-                    HWToast.showText(text: "copy_success".local());
+                    text.copy();
                   });
                 }
               });

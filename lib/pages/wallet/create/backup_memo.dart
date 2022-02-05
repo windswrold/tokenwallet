@@ -44,9 +44,7 @@ class _BackupMemoState extends State<BackupMemo> {
   }
 
   void _copyMemo() {
-    if (widget.memo.isEmpty) return;
-    Clipboard.setData(ClipboardData(text: widget.memo));
-    HWToast.showText(text: "copy_success".local());
+    widget.memo.copy();
   }
 
   @override

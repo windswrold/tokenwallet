@@ -1,5 +1,6 @@
 import 'package:cstoken/utils/extension.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/painting.dart';
 import 'package:flutter/widgets.dart';
 
 import '../../public.dart';
@@ -38,6 +39,60 @@ class ShowCustomAlert {
         );
       },
     );
+  }
+
+  static void showCustomBottomSheet(
+    BuildContext context,
+    Widget child,
+    double height,
+    String btnTitle, {
+    VoidCallback? onTap,
+    Color? btnbgc,
+    TextStyle? btnSttyle,
+  }) {
+    showModalBottomSheet(
+        context: context,
+        backgroundColor: Colors.transparent,
+        isScrollControlled: true,
+        builder: (_) {
+          return Container(
+            height: height,
+            decoration: const BoxDecoration(
+              color: Colors.transparent,
+            ),
+            margin: EdgeInsets.only(
+                left: 16.width, right: 16.width, bottom: 16.width),
+            child: Column(
+              children: [
+                Expanded(
+                  child: Container(
+                      margin: EdgeInsets.only(bottom: 16.width),
+                      alignment: Alignment.center,
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: child),
+                ),
+                NextButton(
+                    onPressed: () {
+                      Routers.goBack(context);
+                      if (onTap != null) {
+                        onTap();
+                      }
+                    },
+                    bgc: btnbgc ?? ColorUtils.blueColor,
+                    textStyle: btnSttyle ??
+                        TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeightUtils.regular,
+                          fontSize: 16.font,
+                        ),
+                    title: btnTitle)
+              ],
+            ),
+          );
+        });
   }
 }
 

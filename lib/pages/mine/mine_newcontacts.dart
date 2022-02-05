@@ -6,7 +6,8 @@ import 'package:cstoken/utils/custom_toast.dart';
 import '../../public.dart';
 
 class MineNewContacts extends StatefulWidget {
-  MineNewContacts({Key? key}) : super(key: key);
+  MineNewContacts({Key? key, this.model}) : super(key: key);
+  final ContactAddress? model;
 
   @override
   State<MineNewContacts> createState() => _MineNewContactsState();
@@ -16,6 +17,17 @@ class _MineNewContactsState extends State<MineNewContacts> {
   final TextEditingController _nameEC = TextEditingController();
   final TextEditingController _addsEC = TextEditingController();
   KCoinType? _chooseType;
+
+  @override
+  void initState() {
+    super.initState();
+
+    if (widget.model != null) {
+      _nameEC.text = widget.model!.name;
+      _addsEC.text = widget.model!.address;
+      _chooseType = widget.model!.coinType.geCoinType();
+    }
+  }
 
   void _tapNewAdds() async {
     String _name = _nameEC.text.trim();
@@ -45,6 +57,7 @@ class _MineNewContactsState extends State<MineNewContacts> {
     showModalBottomSheet(
         context: context,
         backgroundColor: Colors.transparent,
+        isScrollControlled: true,
         builder: (_) {
           return ChainListType(onTap: (KCoinType coinType) {
             setState(() {

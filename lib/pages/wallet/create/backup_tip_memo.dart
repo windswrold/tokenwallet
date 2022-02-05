@@ -20,6 +20,7 @@ class _BackupTipMemoState extends State<BackupTipMemo> {
     showModalBottomSheet(
         context: context,
         backgroundColor: Colors.transparent,
+        isScrollControlled: true,
         builder: (_) {
           return NoScreentshots(
             onTap: () {
