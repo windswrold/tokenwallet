@@ -1,6 +1,8 @@
 import 'package:cstoken/component/mine_list_cell.dart';
 import 'package:cstoken/model/contacts/contact_address.dart';
 import 'package:cstoken/pages/mine/mine_contacts.dart';
+import 'package:cstoken/pages/wallet/wallets/wallets_setting.dart';
+import 'package:cstoken/utils/custom_toast.dart';
 import 'package:cstoken/utils/sp_manager.dart';
 import 'package:package_info/package_info.dart';
 
@@ -50,7 +52,17 @@ class _MinePageState extends State<MinePage> {
           });
     }));
     _datas.add(MinePageData("mine/mine_anquan.png", safe, ""));
-    _datas.add(MinePageData("mine/mine_walletset.png", walletsetting, ""));
+    _datas.add(MinePageData("mine/mine_walletset.png", walletsetting, "",
+        onTap: () async {
+      TRWallet? trWallet =
+          await Provider.of<CurrentChooseWalletState>(context, listen: false)
+              .loadWallet();
+      if (trWallet == null) {
+        HWToast.showText(text: "minepage_pleasecreate".local());
+        return;
+      }
+      Routers.push(context, WalletsSetting(wallet: trWallet));
+    }));
 
     String currencyValue = SPManager.getAppCurrencyMode().value;
     _datas.add(MinePageData("mine/mine_currency.png", currency, currencyValue));

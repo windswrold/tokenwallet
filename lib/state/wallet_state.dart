@@ -10,10 +10,11 @@ import '../public.dart';
 class CurrentChooseWalletState with ChangeNotifier {
   TRWallet? _currentWallet;
   KCurrencyType? _currencyType;
-  void loadWallet() async {
+  Future<TRWallet?> loadWallet() async {
     _currentWallet = await TRWallet.queryChooseWallet();
     _currencyType = SPManager.getAppCurrencyMode();
     notifyListeners();
+    return _currentWallet;
   }
 
   void updateCurrencyType(KCurrencyType kCurrencyType) {
