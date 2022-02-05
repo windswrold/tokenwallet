@@ -14,10 +14,6 @@ class SPManager {
   static const String _languageSET = 'LANGUAGE_SET';
   static const String _aMOUNT_SET = "AMOUNT_SET";
 
-  static String getAppLanguage() {
-    return _sp!.getString(_languageSET) ?? KAppLanguage.zh_cn.value;
-  }
-
   static KAppLanguage getAppLanguageMode() {
     final String mode = getAppLanguage();
     switch (mode) {
@@ -30,12 +26,22 @@ class SPManager {
     }
   }
 
+  static String getAppLanguage() {
+    int value = _sp!.getInt(_languageSET) ?? KAppLanguage.zh_cn.index;
+    return value.getAppLanguageType().value;
+  }
+
   static void setAppLanguage(KAppLanguage value) {
-    _sp!.setString(_languageSET, value.value);
+    _sp!.setInt(_languageSET, value.index);
   }
 
   static String getAppCurrency() {
-    return _sp!.getString(_aMOUNT_SET) ?? KCurrencyType.CNY.value;
+    int value = _sp!.getInt(_aMOUNT_SET) ?? KCurrencyType.CNY.index;
+    return value.getCurrencyType().value;
+  }
+
+  static void setAppCurrency(KCurrencyType value) {
+    _sp!.setInt(_aMOUNT_SET, value.index);
   }
 
   static KCurrencyType getAppCurrencyMode() {
@@ -48,9 +54,5 @@ class SPManager {
       default:
         return KCurrencyType.CNY;
     }
-  }
-
-  static void setAppCurrency(KCurrencyType value) {
-    _sp!.setString(_aMOUNT_SET, value.value);
   }
 }

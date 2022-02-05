@@ -4,9 +4,11 @@ import 'package:cstoken/pages/mine/mine_contacts.dart';
 import 'package:cstoken/pages/wallet/wallets/wallets_setting.dart';
 import 'package:cstoken/utils/custom_toast.dart';
 import 'package:cstoken/utils/sp_manager.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:package_info/package_info.dart';
 
 import '../../public.dart';
+import 'mine_modifysetting.dart';
 
 class MinePageData {
   final String imgName;
@@ -65,10 +67,20 @@ class _MinePageState extends State<MinePage> {
     }));
 
     String currencyValue = SPManager.getAppCurrencyMode().value;
-    _datas.add(MinePageData("mine/mine_currency.png", currency, currencyValue));
+    _datas.add(MinePageData("mine/mine_currency.png", currency, currencyValue,
+        onTap: () {
+      Routers.push(context, MineModifySetting(setType: 0)).then((value) => {
+            _initData(),
+          });
+    }));
 
     String lanValue = SPManager.getAppLanguage();
-    _datas.add(MinePageData("mine/mine_language.png", language, lanValue));
+    _datas.add(
+        MinePageData("mine/mine_language.png", language, lanValue, onTap: () {
+      Routers.push(context, MineModifySetting(setType: 1)).then((value) => {
+            _initData(),
+          });
+    }));
     _datas.add(MinePageData("mine/mine_feedback.png", feedback, ""));
     final PackageInfo appInfo = await PackageInfo.fromPlatform();
     String appversion = appInfo.version;
@@ -78,6 +90,7 @@ class _MinePageState extends State<MinePage> {
 
   @override
   Widget build(BuildContext context) {
+    EasyLocalization.of(context);
     return CustomPageView(
       hiddenLeading: true,
       title: CustomPageView.getTitle(title: "minepage_minetitle".local()),

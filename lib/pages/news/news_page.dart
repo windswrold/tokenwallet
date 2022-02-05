@@ -1,4 +1,5 @@
 import 'package:cstoken/component/custom_underline.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 
 import '../../public.dart';
@@ -29,6 +30,7 @@ class _NewsPageState extends State<NewsPage> {
 
   @override
   Widget build(BuildContext context) {
+     EasyLocalization.of(context);
     return DefaultTabController(
       length: _myTabs.length,
       child: CustomPageView(

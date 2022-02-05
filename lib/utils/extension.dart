@@ -151,6 +151,26 @@ extension Numextension on num {
     }
     return KCoinType.ETH;
   }
+
+  KCurrencyType getCurrencyType() {
+    List<KCurrencyType> datas = KCurrencyType.values;
+    for (var item in datas) {
+      if (item.index == this) {
+        return item;
+      }
+    }
+    return KCurrencyType.CNY;
+  }
+
+  KAppLanguage getAppLanguageType() {
+    List<KAppLanguage> datas = KAppLanguage.values;
+    for (var item in datas) {
+      if (item.index == this) {
+        return item;
+      }
+    }
+    return KAppLanguage.zh_cn;
+  }
 }
 
 extension CoinTypeString on KCoinType {

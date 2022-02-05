@@ -5,6 +5,7 @@ import 'package:cstoken/pages/home/home_page.dart';
 import 'package:cstoken/pages/mine/mine_page.dart';
 import 'package:cstoken/pages/news/news_page.dart';
 import 'package:cstoken/pages/wallet/wallet_page.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 
 import '../../public.dart';
@@ -65,6 +66,7 @@ class HomeTabbarState extends State<HomeTabbar> {
 
   @override
   Widget build(BuildContext context) {
+    EasyLocalization.of(context);
     return Scaffold(
         bottomNavigationBar: Theme(
             data: ThemeData(

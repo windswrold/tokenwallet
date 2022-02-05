@@ -1,9 +1,12 @@
 import 'package:cstoken/pages/tabbar/tabbar.dart';
+import 'package:cstoken/public.dart';
 import 'package:cstoken/state/wallet_state.dart';
+import 'package:cstoken/utils/sp_manager.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 import 'component/custom_app.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 class MyApp extends StatefulWidget {
   //launch
@@ -18,10 +21,24 @@ class _MyAppState extends State<MyApp> {
   void initState() {
     super.initState();
     getSkip();
+    _getLanguage();
   }
 
   void getSkip() async {
     _walletState.loadWallet();
+  }
+
+  void _getLanguage() {
+    WidgetsBinding.instance!.addPostFrameCallback((timeStamp) async {
+      if (SPManager.getAppLanguageMode() == KAppLanguage.system) {
+        Locale first = context.deviceLocale;
+        for (var element in context.supportedLocales) {
+          if (element.languageCode.contains(first.languageCode)) {
+            context.setLocale(element);
+          }
+        }
+      }
+    });
   }
 
   @override

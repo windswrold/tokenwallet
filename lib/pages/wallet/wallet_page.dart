@@ -1,6 +1,7 @@
 import 'package:cstoken/model/wallet/tr_wallet.dart';
 import 'package:cstoken/pages/wallet/wallets/wallets_manager.dart';
 import 'package:cstoken/state/wallet_state.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 
 import '../../public.dart';
@@ -40,6 +41,7 @@ class _WalletPageState extends State<WalletPage> {
 
   @override
   Widget build(BuildContext context) {
+    EasyLocalization.of(context);
     TRWallet? wallet =
         Provider.of<CurrentChooseWalletState>(context).currentWallet;
     return wallet != null
