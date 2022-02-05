@@ -69,6 +69,70 @@ class CustomPageView extends StatelessWidget {
     );
   }
 
+  static Widget getAdd(VoidCallback onTap) {
+    return GestureDetector(
+      behavior: HitTestBehavior.opaque,
+      onTap: onTap,
+      child: Container(
+        padding: EdgeInsets.only(right: 16.width),
+        child: Center(
+          child: Image.asset(
+            ASSETS_IMG + "icons/icon_add.png",
+            width: 24,
+            height: 24,
+          ),
+        ),
+      ),
+    );
+  }
+
+  static Widget getScan(VoidCallback onTap) {
+    return GestureDetector(
+      onTap: onTap,
+      behavior: HitTestBehavior.opaque,
+      child: Container(
+        padding: EdgeInsets.only(right: 16.width),
+        child: Center(
+          child: Image.asset(
+            ASSETS_IMG + "icons/icon_scan.png",
+            width: 24,
+            height: 24,
+          ),
+        ),
+      ),
+    );
+  }
+
+  static Widget getMessage(VoidCallback onTap) {
+    return GestureDetector(
+      onTap: onTap,
+      behavior: HitTestBehavior.opaque,
+      child: Container(
+        padding: EdgeInsets.only(right: 16.width),
+        child: Center(
+          child: Image.asset(
+            ASSETS_IMG + "mine/mine_messages.png",
+            width: 24,
+            height: 24,
+          ),
+        ),
+      ),
+    );
+  }
+
+  static Widget getBack(VoidCallback onTap) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Center(
+        child: Image.asset(
+          ASSETS_IMG + "icons/icon_back_dark.png",
+          width: 24,
+          height: 24,
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     //全局拦截键盘处理
@@ -91,25 +155,13 @@ class CustomPageView extends StatelessWidget {
                     ? Text("")
                     : Routers.canGoPop(context) == true
                         ? leading ??
-                            GestureDetector(
-                              onTap: () => {
-                                if (leadBack != null)
-                                  {
-                                    leadBack!(),
-                                  }
-                                else
-                                  {
-                                    Routers.goBackWithParams(context, {}),
-                                  }
-                              },
-                              child: Center(
-                                child: Image.asset(
-                                  ASSETS_IMG + "icons/icon_back_dark.png",
-                                  width: 24,
-                                  height: 24,
-                                ),
-                              ),
-                            )
+                            getBack(() {
+                              if (leadBack != null) {
+                                leadBack!();
+                              } else {
+                                Routers.goBackWithParams(context, {});
+                              }
+                            })
                         : Text(""),
               ),
               backgroundColor: backgroundColor,

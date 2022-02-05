@@ -1,4 +1,5 @@
 import 'package:cstoken/component/mine_list_cell.dart';
+import 'package:cstoken/pages/mine/mine_contacts.dart';
 
 import '../../public.dart';
 
@@ -6,8 +7,9 @@ class MinePageData {
   final String imgName;
   final String leftContent;
   final String content;
+  final VoidCallback? onTap;
 
-  MinePageData(this.imgName, this.leftContent, this.content);
+  MinePageData(this.imgName, this.leftContent, this.content, {this.onTap});
 }
 
 class MinePage extends StatefulWidget {
@@ -36,7 +38,9 @@ class _MinePageState extends State<MinePage> {
     String feedback = "minepage_feedback".local();
     String version = "minepage_version".local();
 
-    _datas.add(MinePageData("mine/mine_contact.png", contract, ""));
+    _datas.add(MinePageData("mine/mine_contact.png", contract, "", onTap: () {
+      Routers.push(context, MineContacts());
+    }));
     _datas.add(MinePageData("mine/mine_anquan.png", safe, ""));
     _datas.add(MinePageData("mine/mine_walletset.png", walletsetting, ""));
     _datas.add(MinePageData("mine/mine_currency.png", currency, ""));
@@ -51,6 +55,9 @@ class _MinePageState extends State<MinePage> {
       hiddenLeading: true,
       title: CustomPageView.getTitle(title: "minepage_minetitle".local()),
       backgroundColor: ColorUtils.backgroudColor,
+      actions: [
+        CustomPageView.getMessage(() {}),
+      ],
       child: ListView.builder(
         padding: EdgeInsets.only(top: 8.width),
         itemCount: _datas.length,
@@ -60,6 +67,7 @@ class _MinePageState extends State<MinePage> {
             iconName: _mine.imgName,
             leftTitle: _mine.leftContent,
             content: _mine.content,
+            onTap: _mine.onTap,
           );
         },
       ),

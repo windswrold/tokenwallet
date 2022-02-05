@@ -8,7 +8,6 @@ export 'package:cstoken/component/custom_pageview.dart';
 export 'package:cstoken/utils/extension.dart';
 export 'package:cstoken/component/custom_image.dart';
 export 'package:cstoken/component/custom_pageview.dart';
-export 'package:element_ui/widgets.dart';
 export 'package:cstoken/component/next_button.dart';
 export 'package:cstoken/model/wallet/hd_wallet.dart';
 export 'package:cstoken/component/custom_textfield.dart';

@@ -3,14 +3,24 @@ import 'package:cstoken/model/wallet/tr_wallet.dart';
 import 'package:cstoken/pages/wallet/create/backup_tip_memo.dart';
 import 'package:cstoken/pages/wallet/create/create_wallet_page.dart';
 import 'package:cstoken/utils/custom_toast.dart';
+import 'package:cstoken/utils/sp_manager.dart';
 import 'package:flutter/services.dart';
 import '../public.dart';
 
 class CurrentChooseWalletState with ChangeNotifier {
   TRWallet? _currentWallet;
+  KCurrencyType? _currencyType;
   void loadWallet() async {
     _currentWallet = await TRWallet.queryChooseWallet();
+    _currencyType = SPManager.getAppCurrencyMode();
     notifyListeners();
+  }
+
+  void updateCurrencyType(KCurrencyType kCurrencyType) {
+    _currencyType = kCurrencyType;
+    SPManager.setAppCurrency(kCurrencyType);
+    LogUtil.v("updateCurrencyType $kCurrencyType");
+    requestAssets();
   }
 
   Future<bool> updateChoose(BuildContext context,
@@ -171,10 +181,6 @@ class CurrentChooseWalletState with ChangeNotifier {
 
   ///计算我的总资产
   void _calTotalAssets() {}
-
-  void updateWalletPwd(String oldPin, String newPin) {
-    notifyListeners();
-  }
 
   TRWallet? get currentWallet => _currentWallet;
 }
