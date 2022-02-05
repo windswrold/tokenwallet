@@ -70,7 +70,6 @@ class _MineVersionState extends State<MineVersion> {
             },
             child: Container(
               alignment: Alignment.center,
-              color: Colors.red,
               height: 50.width,
               margin: EdgeInsets.only(bottom: 20.width),
               child: Text(

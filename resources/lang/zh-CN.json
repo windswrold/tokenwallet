@@ -115,5 +115,7 @@
     "minepage_deladdwait": "我再想想",
     "minepage_pleasecreate": "请先创建钱包",
     "minepage_feedbacktip": "我们非常重视您的使用体验，请问您有什么好的意见或者建议？",
-    "minepage_share": "邀请好友"
+    "minepage_share": "邀请好友",
+    "minepage_systemmessage": "系统消息",
+    "minepage_transfermessage": "转账信息"
 }

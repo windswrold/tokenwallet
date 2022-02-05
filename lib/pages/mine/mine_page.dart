@@ -2,6 +2,7 @@ import 'package:cstoken/component/mine_list_cell.dart';
 import 'package:cstoken/model/contacts/contact_address.dart';
 import 'package:cstoken/pages/mine/mine_contacts.dart';
 import 'package:cstoken/pages/mine/mine_feeback.dart';
+import 'package:cstoken/pages/mine/mine_message.dart';
 import 'package:cstoken/pages/mine/mine_version.dart';
 import 'package:cstoken/pages/wallet/wallets/wallets_setting.dart';
 import 'package:cstoken/utils/custom_toast.dart';
@@ -103,7 +104,9 @@ class _MinePageState extends State<MinePage> {
       title: CustomPageView.getTitle(title: "minepage_minetitle".local()),
       backgroundColor: ColorUtils.backgroudColor,
       actions: [
-        CustomPageView.getMessage(() {}),
+        CustomPageView.getMessage(() {
+          Routers.push(context, MineMessagePage());
+        }),
       ],
       child: ListView.builder(
         padding: EdgeInsets.only(top: 8.width),
