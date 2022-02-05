@@ -1,4 +1,5 @@
 import 'package:cstoken/component/custom_underline.dart';
+import 'package:cstoken/component/news_cell.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 
@@ -17,50 +18,61 @@ class _NewsPageState extends State<NewsPage> {
   @override
   void initState() {
     super.initState();
-    _myTabs.add(Tab(text: 'import_prv'.local()));
-    _myTabs.add(Tab(text: 'import_memo'.local()));
+    _myTabs.add(Tab(text: 'NFT'));
+    _myTabs.add(Tab(text: 'newspage_common'.local()));
   }
 
-  Widget _getPageViewWidget(int leadtype) {
-    return Container(
-      color: Colors.red,
-      alignment: Alignment.center,
+  Widget _getPageViewWidget(Tab leadtype) {
+    return ListView.builder(
+      itemCount: 5,
+      shrinkWrap: true,
+      // physics: NeverScrollableScrollPhysics(),
+      itemBuilder: (BuildContext context, int index) {
+        return NewsCell();
+      },
     );
   }
 
   @override
   Widget build(BuildContext context) {
-     EasyLocalization.of(context);
+    EasyLocalization.of(context);
     return DefaultTabController(
       length: _myTabs.length,
       child: CustomPageView(
         hiddenLeading: true,
-        bottom: PreferredSize(
-          preferredSize: Size.fromHeight(50.width),
-          child: Material(
-            color: Colors.transparent,
-            child: Theme(
-              data: ThemeData(
-                  splashColor: Color.fromRGBO(0, 0, 0, 0),
-                  highlightColor: Color.fromRGBO(0, 0, 0, 0)),
-              child: TabBar(
-                tabs: _myTabs,
-                // isScrollable: true,
-                // indicator: CustomUnderlineTabIndicator(),
-                indicatorWeight: 1,
-                indicatorSize: TabBarIndicatorSize.tab,
-                labelColor: Colors.black,
-                onTap: (value) {
-                  // _changeLeadType(value);
-                },
+        title: Material(
+          color: Colors.transparent,
+          child: Theme(
+            data: ThemeData(
+                splashColor: const Color.fromRGBO(0, 0, 0, 0),
+                highlightColor: const Color.fromRGBO(0, 0, 0, 0)),
+            child: TabBar(
+              tabs: _myTabs,
+              isScrollable: true,
+              indicator: const CustomUnderlineTabIndicator(
+                  gradientColor: [ColorUtils.blueColor, ColorUtils.blueColor]),
+              indicatorWeight: 4,
+              indicatorSize: TabBarIndicatorSize.tab,
+              labelColor: ColorUtils.fromHex("#FF000000"),
+              labelStyle: TextStyle(
+                fontSize: 18.font,
+                fontWeight: FontWeightUtils.semiBold,
               ),
+              unselectedLabelColor: ColorUtils.fromHex("#99000000"),
+              unselectedLabelStyle: TextStyle(
+                fontSize: 18.font,
+                fontWeight: FontWeightUtils.regular,
+              ),
+              onTap: (value) {
+                // _onTap(value);
+              },
             ),
           ),
         ),
         child: TabBarView(
-          physics: NeverScrollableScrollPhysics(), //禁止左右滑动
+          physics: const NeverScrollableScrollPhysics(), //禁止左右滑动
           children: _myTabs.map((Tab tab) {
-            return _getPageViewWidget(1);
+            return _getPageViewWidget(tab);
           }).toList(),
         ),
       ),
