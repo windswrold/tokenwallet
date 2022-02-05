@@ -25,7 +25,7 @@ dependencies:
   flutter_screenutil: ^5.1.0  
   scan: ^1.6.0
   qr_flutter: ^4.0.0 
-  # share_plus: ^3.0.4
+  share_plus: ^3.0.4
   # path_provider: ^2.0.8  
   provider: ^6.0.2    
   # json_annotation: ^4.4.0
@@ -38,6 +38,7 @@ dependencies:
   package_info: ^2.0.2
   auto_size_text: ^3.0.0
   flutter_swiper_null_safety: ^1.0.2
+  images_picker: ^1.2.10
   # cached_network_image: ^3.1.0
   flutter_inappwebview: ^5.3.2 
   flutter_swipe_action_cell: ^2.1.6

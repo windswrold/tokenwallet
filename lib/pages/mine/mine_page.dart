@@ -1,6 +1,8 @@
 import 'package:cstoken/component/mine_list_cell.dart';
 import 'package:cstoken/model/contacts/contact_address.dart';
 import 'package:cstoken/pages/mine/mine_contacts.dart';
+import 'package:cstoken/pages/mine/mine_feeback.dart';
+import 'package:cstoken/pages/mine/mine_version.dart';
 import 'package:cstoken/pages/wallet/wallets/wallets_setting.dart';
 import 'package:cstoken/utils/custom_toast.dart';
 import 'package:cstoken/utils/sp_manager.dart';
@@ -81,10 +83,15 @@ class _MinePageState extends State<MinePage> {
             _initData(),
           });
     }));
-    _datas.add(MinePageData("mine/mine_feedback.png", feedback, ""));
+    // _datas.add(MinePageData("mine/mine_feedback.png", feedback, "", onTap: () {
+    //   Routers.push(context, MineFeedBack());
+    // }));
     final PackageInfo appInfo = await PackageInfo.fromPlatform();
     String appversion = appInfo.version;
-    _datas.add(MinePageData("mine/mine_version.png", version, appversion));
+    _datas.add(
+        MinePageData("mine/mine_version.png", version, appversion, onTap: () {
+      Routers.push(context, MineVersion());
+    }));
     setState(() {});
   }
 
