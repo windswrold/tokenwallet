@@ -61,6 +61,7 @@ class CustomTextField extends StatefulWidget {
     this.keyboardType = TextInputType.text,
     this.inputFormatters,
     this.autofocus = false,
+    this.textAlign = TextAlign.start,
   }) : super(key: key);
 
   final EdgeInsetsGeometry? padding;
@@ -76,6 +77,7 @@ class CustomTextField extends StatefulWidget {
   final TextInputType keyboardType;
   final List<TextInputFormatter>? inputFormatters;
   final bool autofocus;
+  final TextAlign textAlign;
 
   static TextInputFormatter decimalInputFormatter(int? decimals) {
     String amount = '^[0-9]{0,}(\\.[0-9]{0,$decimals})?\$';
@@ -290,6 +292,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
         enabled: widget.enabled,
         keyboardType: widget.keyboardType,
         inputFormatters: widget.inputFormatters,
+        textAlign: widget.textAlign,
         decoration: widget.decoration != null ? widget.decoration : null,
       ),
     );

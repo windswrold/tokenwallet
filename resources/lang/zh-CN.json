@@ -99,5 +99,14 @@
     "minepage_language": "语言",
     "minepage_feedback": "反馈",
     "minepage_version": "版本",
-    "minepage_modifyadds":"编辑地址"
+    "minepage_adds": "地址",
+    "minepage_addname": "名称",
+    "minepage_modifyadds": "编辑地址",
+    "minepage_inputadds": "请输入地址",
+    "minepage_inputname": "请输入名称",
+    "minepage_chain": "主链",
+    "minepage_save": "保存",
+    "minepage_choosecoin": "请选择",
+    "input_addressinvalid": "地址无效",
+    "wallet_inputok": "保存成功"
 }

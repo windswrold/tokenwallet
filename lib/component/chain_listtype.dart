@@ -31,25 +31,34 @@ class ChainListType extends StatelessWidget {
                     onTap(type);
                   },
                   child: Container(
-                    height: 45.width,
-                    alignment: Alignment.centerLeft,
-                    decoration: const BoxDecoration(
-                      border: Border(
-                        bottom: BorderSide(
-                          width: 0.5,
-                          color: ColorUtils.lineColor,
+                      height: 45.width,
+                      alignment: Alignment.centerLeft,
+                      decoration: const BoxDecoration(
+                        border: Border(
+                          bottom: BorderSide(
+                            width: 0.5,
+                            color: ColorUtils.lineColor,
+                          ),
                         ),
                       ),
-                    ),
-                    child: Text(
-                      type.coinTypeString(),
-                      style: TextStyle(
-                        color: ColorUtils.fromHex("#FF000000"),
-                        fontSize: 18.font,
-                        fontWeight: FontWeightUtils.medium,
-                      ),
-                    ),
-                  ),
+                      child: Row(
+                        children: [
+                          LoadAssetsImage(
+                            "tokens/${type.coinTypeString()}.png",
+                            width: 24,
+                            height: 24,
+                          ),
+                          8.rowWidget,
+                          Text(
+                            type.coinTypeString(),
+                            style: TextStyle(
+                              color: ColorUtils.fromHex("#FF000000"),
+                              fontSize: 14.font,
+                              fontWeight: FontWeightUtils.medium,
+                            ),
+                          ),
+                        ],
+                      )),
                 );
               },
             ),

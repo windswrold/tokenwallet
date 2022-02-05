@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:cstoken/model/mnemonic/mnemonic.dart';
+import 'package:web3dart/credentials.dart';
 
 import '../public.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -75,6 +76,17 @@ extension StringTranslateExtension on String {
     return contractAddress;
   }
 
+  bool checkAddress(KCoinType coinType) {
+    bool isValid = false;
+    try {
+      isValid =
+          EthereumAddress.fromHex(this).hexEip55.isNotEmpty ? true : false;
+    } catch (e) {
+      LogUtil.v("校验失败" + e.toString());
+    }
+    return isValid;
+  }
+
   int compare(String str1, String str2) {
     List<String> strInt1 = str1.trim().split(".");
     List<String> strInt2 = str2.trim().split(".");
@@ -103,7 +115,7 @@ extension StringTranslateExtension on String {
   }
 }
 
-extension offsetExtension on num {
+extension Numextension on num {
   Widget get rowWidget => SizedBox(width: w);
   Widget get columnWidget => SizedBox(height: h);
   double get width => w;
@@ -120,6 +132,16 @@ extension offsetExtension on num {
       }
     }
     return KLeadType.Prvkey;
+  }
+
+  KCoinType geCoinType() {
+    List<KCoinType> datas = KCoinType.values;
+    for (var item in datas) {
+      if (item.index == this) {
+        return item;
+      }
+    }
+    return KCoinType.ETH;
   }
 }
 

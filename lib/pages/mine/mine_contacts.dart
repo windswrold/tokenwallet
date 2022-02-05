@@ -13,10 +13,7 @@ class MineContacts extends StatefulWidget {
 }
 
 class _MineContactsState extends State<MineContacts> {
-  List<ContactAddress> _datas = [
-    ContactAddress("address", 1, "name"),
-    ContactAddress("address", 1, "name")
-  ];
+  List<ContactAddress> _datas = [];
 
   @override
   void initState() {
@@ -25,11 +22,9 @@ class _MineContactsState extends State<MineContacts> {
   }
 
   void _initData() async {
-    // _datas = await ContactAddress.queryAllAddress();
+    _datas = await ContactAddress.queryAllAddress();
     setState(() {});
   }
-
-  void _tapNewAdds() {}
 
   void _tapAdds(ContactAddress model) {}
 
@@ -56,7 +51,7 @@ class _MineContactsState extends State<MineContacts> {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               LoadAssetsImage(
-                "tokens/ETH.png",
+                "tokens/${model.coinType.geCoinType().coinTypeString()}.png",
                 width: 32,
                 height: 32,
               ),
@@ -68,7 +63,7 @@ class _MineContactsState extends State<MineContacts> {
                   Container(
                     width: 300.width,
                     child: Text(
-                      "TextStyleTextStyleTextStyleTextStyleTextStyleTextStyleTextStyleTextStyleTextStyle",
+                      model.name,
                       overflow: TextOverflow.ellipsis,
                       style: TextStyle(
                           color: ColorUtils.fromHex("#FF000000"),
@@ -79,7 +74,7 @@ class _MineContactsState extends State<MineContacts> {
                   Container(
                     width: 300.width,
                     child: Text(
-                      "model.nameTextStyleTextStyleTextStyleTextStyleTextStyleTextStylenameTextStyleTextStyleTextStyleTextStyleTextStyleTextStyle",
+                      model.address,
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
                       style: TextStyle(
@@ -102,8 +97,10 @@ class _MineContactsState extends State<MineContacts> {
     return CustomPageView(
       title: CustomPageView.getTitle(title: "minepage_contactadds".local()),
       actions: [
-        CustomPageView.getAdd(() {
-          Routers.push(context, MineNewContacts());
+        CustomPageView.getAdd(() async {
+          Routers.push(context, MineNewContacts()).then((value) => {
+                _initData(),
+              });
         }),
       ],
       backgroundColor: ColorUtils.backgroudColor,
