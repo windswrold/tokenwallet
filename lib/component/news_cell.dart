@@ -1,3 +1,4 @@
+import 'package:cstoken/model/news/news_model.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
@@ -8,9 +9,11 @@ import 'package:share_plus/share_plus.dart';
 import '../public.dart';
 
 class NewsCell extends StatelessWidget {
-  const NewsCell({Key? key}) : super(key: key);
+  const NewsCell({Key? key, required this.model}) : super(key: key);
+  final NewsModel model;
 
   Widget _buildTime() {
+    String date = model.createTime ?? "";
     return Container(
       child: Stack(
         children: [
@@ -32,7 +35,7 @@ class NewsCell extends StatelessWidget {
           Container(
             padding: EdgeInsets.only(left: 15.width),
             child: Text(
-              "21:12",
+              date,
               style: TextStyle(
                 color: ColorUtils.fromHex("#FF000000"),
                 fontSize: 12.font,
@@ -46,6 +49,7 @@ class NewsCell extends StatelessWidget {
   }
 
   Widget _builTitle() {
+    String title = model.title ?? "";
     return Container(
       padding: EdgeInsets.only(top: 8.width, left: 12.width),
       margin: EdgeInsets.only(left: 3),
@@ -56,7 +60,7 @@ class NewsCell extends StatelessWidget {
         color: ColorUtils.lineColor,
       ))),
       child: Text(
-        "SumSwap模拟Staking奖励将于2021年6月9日增长至3倍",
+        title,
         style: TextStyle(
           color: ColorUtils.fromHex("#FF000000"),
           fontSize: 16.font,
@@ -67,6 +71,7 @@ class NewsCell extends StatelessWidget {
   }
 
   Widget _builContent() {
+    String content = model.content ?? "";
     return Container(
       padding: EdgeInsets.only(top: 16.width, left: 12.width),
       margin: EdgeInsets.only(left: 3),
@@ -77,7 +82,7 @@ class NewsCell extends StatelessWidget {
         color: ColorUtils.lineColor,
       ))),
       child: Text(
-        "据官方消息，SumSwap模拟Staking奖励将于6月9日由原来每天产出512枚SUM增长至3倍，即每日产出1536枚SUM。模拟Staking是SumSwap为了让用户理解正式Staking的精妙设计而对正式Staking的而对正式Staking的",
+        content,
         style: TextStyle(
           color: ColorUtils.fromHex("#99000000"),
           fontSize: 14.font,
@@ -88,8 +93,10 @@ class NewsCell extends StatelessWidget {
   }
 
   Widget _builfromTypeAndShare() {
+    String source = model.source ?? "";
+    String share = model.content ?? "";
     return Container(
-      padding: EdgeInsets.only(top: 16.width, left: 12.width,bottom: 25.width),
+      padding: EdgeInsets.only(top: 16.width, left: 12.width, bottom: 25.width),
       margin: EdgeInsets.only(left: 3),
       decoration: BoxDecoration(
           border: Border(
@@ -110,7 +117,7 @@ class NewsCell extends StatelessWidget {
                   width: 0.5,
                 )),
             child: Text(
-              "星球日报",
+              source,
               style: TextStyle(
                 color: ColorUtils.fromHex("#FF909DB2"),
                 fontSize: 12.font,
@@ -121,7 +128,7 @@ class NewsCell extends StatelessWidget {
           GestureDetector(
             behavior: HitTestBehavior.opaque,
             onTap: () {
-              Share.share("text");
+              Share.share(share);
             },
             child: SizedBox(
               width: 30,

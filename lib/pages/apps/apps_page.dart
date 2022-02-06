@@ -109,16 +109,22 @@ class _AppsPageState extends State<AppsPage> {
                                               _kdataState.dappListData.length,
                                           itemBuilder:
                                               (BuildContext tx, int index) {
-                                            DAppRecordsDBModel mdoel =
-                                                _kdataState.dappListData[index];
-                                            return DAppListCell(
-                                              model: mdoel,
-                                              onTap: (DAppRecordsDBModel
-                                                  tapModel) {
-                                                _kdataState.dappTap(
-                                                    context, tapModel);
-                                              },
-                                            );
+                                            DAppRecordsDBModel? mdoel;
+                                            try {
+                                              mdoel = _kdataState.dappListData
+                                                  .elementAt(index);
+                                            } catch (e) {}
+
+                                            return mdoel == null
+                                                ? EmptyDataPage()
+                                                : DAppListCell(
+                                                    model: mdoel,
+                                                    onTap: (DAppRecordsDBModel
+                                                        tapModel) {
+                                                      _kdataState.dappTap(
+                                                          context, tapModel);
+                                                    },
+                                                  );
                                           },
                                         );
                                 }).toList(),

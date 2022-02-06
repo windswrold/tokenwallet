@@ -16,6 +16,7 @@ class DappDataState extends ChangeNotifier {
 
   List<DAppRecordsDBModel> _dappListData = [];
   List<DAppRecordsDBModel> get dappListData => _dappListData;
+  int _currentPageIndex = 0;
 
   void getBannerData() async {
     _bannerData = await WalletServices.getdappbannerInfo();
@@ -25,13 +26,16 @@ class DappDataState extends ChangeNotifier {
   void getdappType() async {
     _myTabs = await WalletServices.getdappType();
     if (_myTabs.isNotEmpty) {
-      getdappListData(0);
+      getdappListData(_currentPageIndex);
     }
     notifyListeners();
   }
 
   void getdappListData(int index) async {
     LogUtil.v("getdappListData  $index");
+    _currentPageIndex = index;
+    _dappListData = [];
+    notifyListeners();
     final dAppType = _myTabs[index]["dAppType"] ?? "1";
     List result = await WalletServices.getdapptypeList(dAppType.toString());
     //"title": "SWFT闪兑",
