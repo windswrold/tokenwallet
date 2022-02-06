@@ -12,15 +12,16 @@ class NewsCell extends StatelessWidget {
 
   Widget _buildTime() {
     return Container(
-      // padding: EdgeInsets.only(top: 25.width),
-      // decoration: BoxDecoration(
-      //     border: Border(
-      //         left: BorderSide(
-      //   width: 0.5,
-      //   color: ColorUtils.lineColor,
-      // ))),
       child: Stack(
         children: [
+          Positioned(
+            left: 3,
+            child: Container(
+              width: 0.5,
+              height: 100,
+              color: ColorUtils.lineColor,
+            ),
+          ),
           ClipOval(
             child: Container(
               width: 6.5,
@@ -28,31 +29,17 @@ class NewsCell extends StatelessWidget {
               color: ColorUtils.blueColor,
             ),
           ),
-          Positioned(
-            left: 3,
-            child: Container(
-              width: 0.5,
-              height: 100,
-              color: ColorUtils.redColor,
+          Container(
+            padding: EdgeInsets.only(left: 15.width),
+            child: Text(
+              "21:12",
+              style: TextStyle(
+                color: ColorUtils.fromHex("#FF000000"),
+                fontSize: 12.font,
+                fontWeight: FontWeightUtils.regular,
+              ),
             ),
           ),
-
-          Text(
-            "21:12",
-            style: TextStyle(
-              color: ColorUtils.fromHex("#FF000000"),
-              fontSize: 12.font,
-              fontWeight: FontWeightUtils.regular,
-            ),
-          ),
-          // Text(
-          //   "21:123",
-          //   style: TextStyle(
-          //     color: ColorUtils.fromHex("#FF000000"),
-          //     fontSize: 12.font,
-          //     fontWeight: FontWeightUtils.regular,
-          //   ),
-          // ),
         ],
       ),
     );
@@ -102,7 +89,7 @@ class NewsCell extends StatelessWidget {
 
   Widget _builfromTypeAndShare() {
     return Container(
-      padding: EdgeInsets.only(top: 16.width, left: 12.width),
+      padding: EdgeInsets.only(top: 16.width, left: 12.width,bottom: 25.width),
       margin: EdgeInsets.only(left: 3),
       decoration: BoxDecoration(
           border: Border(
