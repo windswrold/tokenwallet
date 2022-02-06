@@ -98,16 +98,31 @@ class _AppsPageState extends State<AppsPage> {
                               ),
                             ),
                             Expanded(
-                              child: _kdataState.myTabs.isEmpty
-                                  ? const EmptyDataPage()
-                                  : TabBarView(
-                                      physics:
-                                          const NeverScrollableScrollPhysics(), //禁止左右滑动
-                                      children:
-                                          _kdataState.myTabs.map((Tab tab) {
-                                        return _getPageWidget(tab);
-                                      }).toList(),
-                                    ),
+                              child: TabBarView(
+                                physics:
+                                    const NeverScrollableScrollPhysics(), //禁止左右滑动
+                                children: _kdataState.myTabs.map((Tab tab) {
+                                  return _kdataState.dappListData.isEmpty
+                                      ? EmptyDataPage()
+                                      : ListView.builder(
+                                          itemCount:
+                                              _kdataState.dappListData.length,
+                                          itemBuilder:
+                                              (BuildContext tx, int index) {
+                                            DAppRecordsDBModel mdoel =
+                                                _kdataState.dappListData[index];
+                                            return DAppListCell(
+                                              model: mdoel,
+                                              onTap: (DAppRecordsDBModel
+                                                  tapModel) {
+                                                _kdataState.dappTap(
+                                                    context, tapModel);
+                                              },
+                                            );
+                                          },
+                                        );
+                                }).toList(),
+                              ),
                             ),
                           ],
                         ),
@@ -117,15 +132,6 @@ class _AppsPageState extends State<AppsPage> {
           ),
         ],
       ),
-    );
-  }
-
-  Widget _getPageWidget(Tab tab) {
-    return ListView.builder(
-      itemCount: 10,
-      itemBuilder: (BuildContext context, int index) {
-        return DAppListCell(model: DAppRecordsDBModel());
-      },
     );
   }
 }

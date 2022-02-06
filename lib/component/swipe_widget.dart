@@ -19,7 +19,7 @@ class CustomSwipe extends StatelessWidget {
               : Swiper(
                   loop: true,
                   autoplay: true,
-                  itemBuilder: (BuildContext context, int index) {
+                  itemBuilder: (BuildContext tx, int index) {
                     return ClipRRect(
                         borderRadius: BorderRadius.circular(8),
                         child: CachedNetworkImage(
@@ -36,7 +36,7 @@ class CustomSwipe extends StatelessWidget {
                   onTap: (index) {
                     String jumpLinks =
                         kprovider.bannerData[index]["jumpLinks"] ?? '';
-                    kprovider.bannerTap(jumpLinks);
+                    kprovider.bannerTap(context, jumpLinks);
                   },
                 );
         }));

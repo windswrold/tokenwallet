@@ -1,3 +1,5 @@
+import 'package:cstoken/model/dapps_record/dapps_record.dart';
+
 import '../../public.dart';
 import 'dapp_records_cell.dart';
 
@@ -28,7 +30,13 @@ class DAppRecordList extends StatelessWidget {
                 shrinkWrap: true,
                 itemCount: recordList.length,
                 itemBuilder: (BuildContext context, int index) {
-                  return DAppListCell(model: recordList[index]);
+                  return DAppListCell(
+                    model: recordList[index],
+                    onTap: (DAppRecordsDBModel model) {
+
+                      
+                    },
+                  );
                 }),
           ),
         ],

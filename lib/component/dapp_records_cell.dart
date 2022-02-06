@@ -5,26 +5,31 @@ import '../../public.dart';
 
 class DAppListCell extends StatelessWidget {
   final DAppRecordsDBModel model;
-  const DAppListCell({Key? key, required this.model}) : super(key: key);
+  const DAppListCell({Key? key, required this.model, required this.onTap})
+      : super(key: key);
 
-  void _jumpWeb(BuildContext context, String openUrl) {
-    // DAppRecordsDBModel.insertRecords(model);
-    // Routers.pushWidget(context, DappBrowser(url: openUrl));
+  final Function(DAppRecordsDBModel model) onTap;
+
+  void _jumpWeb() {
+    onTap(model);
   }
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      height: 72.width,
-      color: Colors.white,
-      padding: EdgeInsets.symmetric(horizontal: 16.width),
-      child: Row(
-        children: [
-          _cellImageView(context),
-          8.rowWidget,
-          Expanded(
-            child: Container(
-              alignment: Alignment.center,
+    return GestureDetector(
+      behavior: HitTestBehavior.opaque,
+      onTap: () {
+        _jumpWeb();
+      },
+      child: Container(
+        height: 72.width,
+        color: Colors.white,
+        padding: EdgeInsets.symmetric(horizontal: 16.width),
+        child: Row(
+          children: [
+            _cellImageView(context),
+            8.rowWidget,
+            Expanded(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
@@ -44,8 +49,8 @@ class DAppListCell extends StatelessWidget {
                 ],
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
@@ -124,9 +129,10 @@ class DAppListCell extends StatelessWidget {
   }
 
   Widget _goButton(BuildContext context) {
-    return Container(
+    return Visibility(
+      visible: model.date == null ? false : true,
       child: Text(
-        "ssss",
+        model.date ?? "",
         style: TextStyle(
           fontSize: 12.font,
           fontWeight: FontWeightUtils.regular,

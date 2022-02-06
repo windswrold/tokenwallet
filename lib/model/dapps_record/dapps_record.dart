@@ -13,14 +13,15 @@ class DAppRecordsDBModel {
   final String? imageUrl;
   final String? description;
   final String? marketId;
+  final String? date;
 
-  DAppRecordsDBModel({
-    this.url,
-    this.name,
-    this.imageUrl,
-    this.description,
-    this.marketId,
-  });
+  DAppRecordsDBModel(
+      {this.url,
+      this.name,
+      this.imageUrl,
+      this.description,
+      this.marketId,
+      this.date});
 
   static Future<List<DAppRecordsDBModel>> finaAllRecords() async {
     try {
