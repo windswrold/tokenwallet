@@ -94,7 +94,7 @@ class _$FlutterDatabase extends FlutterDatabase {
         await database.execute(
             'CREATE TABLE IF NOT EXISTS `contacts_table` (`address` TEXT NOT NULL, `coinType` INTEGER NOT NULL, `name` TEXT NOT NULL, PRIMARY KEY (`address`))');
         await database.execute(
-            'CREATE TABLE IF NOT EXISTS `dapp_records` (`url` TEXT, `name` TEXT, `imageUrl` TEXT, `description` TEXT, PRIMARY KEY (`url`))');
+            'CREATE TABLE IF NOT EXISTS `dapp_records` (`url` TEXT, `name` TEXT, `imageUrl` TEXT, `description` TEXT, `marketId` TEXT, PRIMARY KEY (`url`))');
 
         await callback?.onCreate?.call(database, version);
       },
@@ -468,7 +468,8 @@ class _$DAppRecordsDao extends DAppRecordsDao {
                   'url': item.url,
                   'name': item.name,
                   'imageUrl': item.imageUrl,
-                  'description': item.description
+                  'description': item.description,
+                  'marketId': item.marketId
                 }),
         _dAppRecordsDBModelDeletionAdapter = DeletionAdapter(
             database,
@@ -478,7 +479,8 @@ class _$DAppRecordsDao extends DAppRecordsDao {
                   'url': item.url,
                   'name': item.name,
                   'imageUrl': item.imageUrl,
-                  'description': item.description
+                  'description': item.description,
+                  'marketId': item.marketId
                 });
 
   final sqflite.DatabaseExecutor database;
@@ -499,7 +501,8 @@ class _$DAppRecordsDao extends DAppRecordsDao {
             url: row['url'] as String?,
             name: row['name'] as String?,
             imageUrl: row['imageUrl'] as String?,
-            description: row['description'] as String?));
+            description: row['description'] as String?,
+            marketId: row['marketId'] as String?));
   }
 
   @override

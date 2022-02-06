@@ -29,7 +29,7 @@ class RequestURLS {
   ///首页应用
   static const String getindexnftInfo = _host + "/app/index/nftInfo";
 
-  ///获取用户地址持有NFT数量
+  ///获取dapp类型
   static const String getdappType = _host + "/app/dapp/dappType";
 
   ///Dapp banner

@@ -3,9 +3,9 @@ import 'package:cstoken/model/dapps_record/dapps_record.dart';
 
 import '../../public.dart';
 
-class DAppRecordCell extends StatelessWidget {
+class DAppListCell extends StatelessWidget {
   final DAppRecordsDBModel model;
-  const DAppRecordCell({Key? key, required this.model}) : super(key: key);
+  const DAppListCell({Key? key, required this.model}) : super(key: key);
 
   void _jumpWeb(BuildContext context, String openUrl) {
     // DAppRecordsDBModel.insertRecords(model);
