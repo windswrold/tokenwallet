@@ -5,6 +5,7 @@ import 'package:cstoken/component/empty_data.dart';
 import 'package:cstoken/component/swipe_widget.dart';
 import 'package:cstoken/component/top_search_widget.dart';
 import 'package:cstoken/model/dapps_record/dapps_record.dart';
+import 'package:cstoken/pages/apps/apps_content.dart';
 import 'package:cstoken/state/dapp/dapp_state.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
@@ -102,31 +103,30 @@ class _AppsPageState extends State<AppsPage> {
                                 physics:
                                     const NeverScrollableScrollPhysics(), //禁止左右滑动
                                 children: _kdataState.myTabs.map((Tab tab) {
-                                  return _kdataState.dappListData.isEmpty
-                                      ? EmptyDataPage()
-                                      : ListView.builder(
-                                          itemCount:
-                                              _kdataState.dappListData.length,
-                                          itemBuilder:
-                                              (BuildContext tx, int index) {
-                                            DAppRecordsDBModel? mdoel;
-                                            try {
-                                              mdoel = _kdataState.dappListData
-                                                  .elementAt(index);
-                                            } catch (e) {}
+                                  return AppsContentPage(
+                                    datas: _kdataState.dappListData,
+                                  );
+                                  // ListView.builder(
+                                  //   itemCount: _kdataState.dappListData.length,
+                                  //   itemBuilder: (BuildContext tx, int index) {
+                                  //     DAppRecordsDBModel? mdoel;
+                                  //     try {
+                                  //       mdoel = _kdataState.dappListData
+                                  //           .elementAt(index);
+                                  //     } catch (e) {}
 
-                                            return mdoel == null
-                                                ? EmptyDataPage()
-                                                : DAppListCell(
-                                                    model: mdoel,
-                                                    onTap: (DAppRecordsDBModel
-                                                        tapModel) {
-                                                      _kdataState.dappTap(
-                                                          context, tapModel);
-                                                    },
-                                                  );
-                                          },
-                                        );
+                                  //     return mdoel == null
+                                  //         ? EmptyDataPage()
+                                  //         : DAppListCell(
+                                  //             model: mdoel,
+                                  //             onTap: (DAppRecordsDBModel
+                                  //                 tapModel) {
+                                  //               _kdataState.dappTap(
+                                  //                   context, tapModel);
+                                  //             },
+                                  //           );
+                                  //   },
+                                  // );
                                 }).toList(),
                               ),
                             ),

@@ -59,7 +59,9 @@ class DappDataState extends ChangeNotifier {
       _datas.add(mdoel);
     }
     _dappListData = _datas;
-    notifyListeners();
+    Future.delayed(Duration(seconds: 1)).then((value) => {
+          notifyListeners(),
+        });
   }
 
   void bannerTap(BuildContext context, String jumpLinks) {
