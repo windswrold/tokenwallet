@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 // import 'dart:isolate';
+import 'package:cstoken/utils/sp_manager.dart';
 import 'package:dio/adapter.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
@@ -33,7 +34,7 @@ class RequestMethod {
     return _manager;
   }
 
-  var _options = BaseOptions(
+  final _options = BaseOptions(
     connectTimeout: _connectTimeout,
     receiveTimeout: _receiveTimeout,
     sendTimeout: _sendTimeout,
@@ -49,30 +50,36 @@ class RequestMethod {
     }
   }
 
-  Future<dynamic> futureRequestData<T>(
+  Future<dynamic> requestData<T>(
     Method method,
-    String url,
-    complationBlock? complationBlock, {
+    String url, {
     Map<String, dynamic>? queryParameters,
     dynamic data,
     Map<String, dynamic>? header,
+    complationBlock? complationBlock,
   }) async {
-    String m = RequestMethod._getRequestMethod(method);
     CancelToken cancelToken = RequestMethod._getCancelToken(url);
-    Options option = Options();
-    option.method = m;
-    if (header != null) {
-      option.headers = header;
-    }
-    dynamic result;
+    Response response;
 
+    //按照plat统一传adr，苹果ios，语言英文en_us,繁体：zh_TW
+    KAppLanguage langu = SPManager.getAppLanguageMode();
+    Map<String, dynamic> _commonParams = {
+      "plat": isIOS ? "ios" : "adr",
+      "lang": langu == KAppLanguage.zh_cn ? "zh_TW" : "en_us",
+    };
+    queryParameters ??= {};
+    queryParameters.addAll(_commonParams);
     try {
-      Response response = await _dio!.request(url,
-          data: data,
-          queryParameters: queryParameters,
-          options: option,
-          cancelToken: cancelToken);
-      result = response.data;
+      if (Method.GET == method) {
+        response = await _dio!.get(url,
+            queryParameters: queryParameters, cancelToken: cancelToken);
+      } else {
+        response = await _dio!.post(url,
+            data: data,
+            queryParameters: queryParameters,
+            cancelToken: cancelToken);
+      }
+      dynamic result = response.data;
       if (response.statusCode == 200) {
         LogUtil.v("完整地址 " + response.realUri.toString());
         if (complationBlock != null) {
@@ -159,7 +166,7 @@ class RequestMethod {
     (dio.httpClientAdapter as DefaultHttpClientAdapter).onHttpClientCreate =
         (HttpClient client) {
       client.findProxy = (uri) {
-        return "PROXY 192.168.0.103:8888";
+        return "PROXY 192.168.0.104:8888";
       };
       client.badCertificateCallback =
           (X509Certificate cert, String host, int port) {

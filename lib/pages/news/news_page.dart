@@ -23,8 +23,7 @@ class _NewsPageState extends State<NewsPage> {
   }
 
   Widget _getPageViewWidget(Tab leadtype) {
-    return 
-    ListView.builder(
+    return ListView.builder(
       itemCount: 5,
       shrinkWrap: true,
       itemBuilder: (BuildContext context, int index) {

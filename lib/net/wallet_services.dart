@@ -8,7 +8,11 @@ class WalletServices {
       "pageNum": page.toString(),
       "pageSize": pagesize.toString(),
     };
+  }
 
-    RequestMethod.init().futureRequestData(Method.GET, url, (result, code) {});
+  static getdappbannerInfo() {
+    final url = RequestURLS.getdappbannerInfo;
+
+    RequestMethod.manager!.requestData(Method.GET, url);
   }
 }

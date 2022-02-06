@@ -13,6 +13,7 @@ class TopSearchView extends StatelessWidget {
     return Container(
       height: 44,
       alignment: Alignment.center,
+      
       child: Container(
         padding: EdgeInsets.only(left: 16.width),
         height: 32.width,
