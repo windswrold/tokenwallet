@@ -118,5 +118,8 @@
     "minepage_share": "邀请好友",
     "minepage_systemmessage": "系统消息",
     "minepage_transfermessage": "转账信息",
-    "newspage_common":"综合"
+    "newspage_common": "综合",
+    "dApp_top_search": "搜索项目或访问网址",
+    "dApp_searchbtn": "搜索",
+    "dApp_popularsearch": "热门搜索"
 }

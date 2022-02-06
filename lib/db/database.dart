@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:cstoken/model/contacts/contact_address.dart';
+import 'package:cstoken/model/dapps_record/dapps_record.dart';
 import 'package:cstoken/model/wallet/tr_wallet.dart';
 import 'package:cstoken/model/wallet/tr_wallet_info.dart';
 import 'package:floor/floor.dart';
@@ -11,9 +12,10 @@ const int dbCurrentVersion = 1;
 
 @Database(
     version: dbCurrentVersion,
-    entities: [TRWallet, TRWalletInfo, ContactAddress])
+    entities: [TRWallet, TRWalletInfo, ContactAddress, DAppRecordsDBModel])
 abstract class FlutterDatabase extends FloorDatabase {
   WalletDao get walletDao;
   WalletInfoDao get walletInfoDao;
   ContactAddressDao get addressDao;
+  DAppRecordsDao get dAppRecordsDao;
 }

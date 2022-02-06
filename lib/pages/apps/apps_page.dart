@@ -1,5 +1,5 @@
 import 'package:cstoken/component/custom_refresher.dart';
-import 'package:cstoken/pages/apps/top_search_widget.dart';
+import 'package:cstoken/component/top_search_widget.dart';
 import 'package:easy_localization/easy_localization.dart';
 import '../../public.dart';
 
@@ -19,7 +19,7 @@ class _AppsPageState extends State<AppsPage> {
       hiddenLeading: true,
       child: Column(
         children: [
-          TopSearchView(),
+          const TopSearchView(),
           15.columnWidget,
           // Expanded(child: _bodyListView()),
         ],

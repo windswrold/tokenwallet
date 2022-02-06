@@ -16,6 +16,8 @@ PODS:
   - OrderedSet (5.0.0)
   - package_info (0.0.1):
     - Flutter
+  - path_provider_ios (0.0.1):
+    - Flutter
   - scan (0.0.1):
     - Flutter
   - share_plus (0.0.1):
@@ -36,6 +38,7 @@ DEPENDENCIES:
   - flutter_inappwebview (from `.symlinks/plugins/flutter_inappwebview/ios`)
   - images_picker (from `.symlinks/plugins/images_picker/ios`)
   - package_info (from `.symlinks/plugins/package_info/ios`)
+  - path_provider_ios (from `.symlinks/plugins/path_provider_ios/ios`)
   - scan (from `.symlinks/plugins/scan/ios`)
   - share_plus (from `.symlinks/plugins/share_plus/ios`)
   - shared_preferences_ios (from `.symlinks/plugins/shared_preferences_ios/ios`)
@@ -57,6 +60,8 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/images_picker/ios"
   package_info:
     :path: ".symlinks/plugins/package_info/ios"
+  path_provider_ios:
+    :path: ".symlinks/plugins/path_provider_ios/ios"
   scan:
     :path: ".symlinks/plugins/scan/ios"
   share_plus:
@@ -75,6 +80,7 @@ SPEC CHECKSUMS:
   images_picker: 8508f4097cec731ab87d47564ed964aa3fe942c7
   OrderedSet: aaeb196f7fef5a9edf55d89760da9176ad40b93c
   package_info: 873975fc26034f0b863a300ad47e7f1ac6c7ec62
+  path_provider_ios: 7d7ce634493af4477d156294792024ec3485acd5
   scan: aea35bb4aa59ccc8839c576a18cd57c7d492cc86
   share_plus: 056a1e8ac890df3e33cb503afffaf1e9b4fbae68
   shared_preferences_ios: aef470a42dc4675a1cdd50e3158b42e3d1232b32
