@@ -105,28 +105,10 @@ class _AppsPageState extends State<AppsPage> {
                                 children: _kdataState.myTabs.map((Tab tab) {
                                   return AppsContentPage(
                                     datas: _kdataState.dappListData,
+                                    dappTap: (DAppRecordsDBModel model) {
+                                      _kdataState.dappTap(context, model);
+                                    },
                                   );
-                                  // ListView.builder(
-                                  //   itemCount: _kdataState.dappListData.length,
-                                  //   itemBuilder: (BuildContext tx, int index) {
-                                  //     DAppRecordsDBModel? mdoel;
-                                  //     try {
-                                  //       mdoel = _kdataState.dappListData
-                                  //           .elementAt(index);
-                                  //     } catch (e) {}
-
-                                  //     return mdoel == null
-                                  //         ? EmptyDataPage()
-                                  //         : DAppListCell(
-                                  //             model: mdoel,
-                                  //             onTap: (DAppRecordsDBModel
-                                  //                 tapModel) {
-                                  //               _kdataState.dappTap(
-                                  //                   context, tapModel);
-                                  //             },
-                                  //           );
-                                  //   },
-                                  // );
                                 }).toList(),
                               ),
                             ),
