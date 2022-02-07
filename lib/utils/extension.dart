@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:cstoken/model/mnemonic/mnemonic.dart';
 import 'package:cstoken/utils/custom_toast.dart';
+import 'package:decimal/decimal.dart';
 import 'package:flutter/services.dart';
 import 'package:web3dart/credentials.dart';
 
@@ -9,7 +10,7 @@ import '../public.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:easy_localization/src/public.dart' as ez;
 
-extension Stringextension on String {
+extension StringUtil on String {
   bool checkPassword() {
     //密码长度8位数以上，建议使用英文字母、数字和标点符号组成，不采用特殊字符。
     if (this.length < 8) {
@@ -120,6 +121,23 @@ extension Stringextension on String {
     if (isEmpty) return;
     Clipboard.setData(ClipboardData(text: this));
     HWToast.showText(text: "copy_success".local());
+  }
+
+  static String dataFormat(double number, int decimalPlaces) {
+    if (number == 0) {
+      return '0.0000';
+    }
+    String balance = Decimal.parse(number.toString()).toString();
+    if (balance.contains('.')) {
+      String b = balance.split('.')[1];
+      if (b.length > decimalPlaces) {
+        balance =
+            balance.substring(0, balance.indexOf(".") + decimalPlaces + 1);
+      }
+    } else {
+      balance = balance + '.0';
+    }
+    return balance;
   }
 }
 

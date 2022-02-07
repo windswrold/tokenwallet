@@ -7,15 +7,15 @@ import '../../public.dart';
 
 const String tableName = "tokens_table";
 
-@JsonSerializable()
 @Entity(tableName: tableName, primaryKeys: ["owner", "contract", "chainid"])
 class MCollectionTokens {
   @primaryKey
-  String? owner;
-  String? contract;
-  String? token;
-  String? coinType;
-  int? state;
+  String? owner; //walletID
+  String? contract; //合约地址
+  String? token; //符号
+  String? coinType; //主币符号
+  int? state; //是否加入收藏
+  int? isHidden; //是否本地隐藏
   int? decimals;
   double? price;
   double? balance;
@@ -33,102 +33,102 @@ class MCollectionTokens {
     this.balance,
     this.digits,
     this.chainid,
+    this.isHidden,
   });
 
-  
-  static Future<List<MCollectionTokens>> findTokens(
-      String owner, int chainID) async {
-    try {
-      FlutterDatabase? database = await (BaseModel.getDataBae());
-      List<MCollectionTokens>? datas =
-          await database?.tokensDao.findTokens(owner, chainID);
-      return datas ?? [];
-    } catch (e) {
-      LogUtil.v("失败" + e.toString());
-      return [];
-    }
-  }
+  // static Future<List<MCollectionTokens>> findTokens(
+  //     String owner, int chainID) async {
+  //   try {
+  //     FlutterDatabase? database = await (BaseModel.getDataBae());
+  //     List<MCollectionTokens>? datas =
+  //         await database?.tokensDao.findTokens(owner, chainID);
+  //     return datas ?? [];
+  //   } catch (e) {
+  //     LogUtil.v("失败" + e.toString());
+  //     return [];
+  //   }
+  // }
 
-  static Future<void> updateTokenPrice(double price, String token) async {
-    try {
-      FlutterDatabase? database = await (BaseModel.getDataBae());
-      database?.tokensDao.updateTokenPrice(price, token);
-    } catch (e) {
-      LogUtil.v("失败" + e.toString());
-      return;
-    }
-  }
+  // static Future<void> updateTokenPrice(double price, String token) async {
+  //   try {
+  //     FlutterDatabase? database = await (BaseModel.getDataBae());
+  //     database?.tokensDao.updateTokenPrice(price, token);
+  //   } catch (e) {
+  //     LogUtil.v("失败" + e.toString());
+  //     return;
+  //   }
+  // }
 
-  static Future<List<MCollectionTokens>> findStateTokens(
-      String s, int i, int chainID) async {
-    try {
-      FlutterDatabase? database = await (BaseModel.getDataBae());
-      List<MCollectionTokens>? datas =
-          await database?.tokensDao.findStateTokens(s, i, chainID);
-      datas ??= [];
-      for (var item in datas) {
-        if (item.token == "ETH") {
-          datas.remove(item);
-          datas.insert(0, item);
-        }
-        if (item.token == "ZKTR") {
-          datas.remove(item);
-          datas.insert(1, item);
-        }
-      }
-      return datas;
-    } catch (e) {
-      LogUtil.v("失败" + e.toString());
-      return [];
-    }
-  }
+  // static Future<List<MCollectionTokens>> findStateTokens(
+  //     String s, int i, int chainID) async {
+  //   try {
+  //     FlutterDatabase? database = await (BaseModel.getDataBae());
+  //     List<MCollectionTokens>? datas =
+  //         await database?.tokensDao.findStateTokens(s, i, chainID);
+  //     datas ??= [];
+  //     for (var item in datas) {
+  //       if (item.token == "ETH") {
+  //         datas.remove(item);
+  //         datas.insert(0, item);
+  //       }
+  //       if (item.token == "ZKTR") {
+  //         datas.remove(item);
+  //         datas.insert(1, item);
+  //       }
+  //     }
+  //     return datas;
+  //   } catch (e) {
+  //     LogUtil.v("失败" + e.toString());
+  //     return [];
+  //   }
+  // }
 
-  static void insertToken(MCollectionTokens model) async {
-    try {
-      model.contract = model.contract?.toLowerCase();
-      FlutterDatabase? database = await (BaseModel.getDataBae());
-      await database?.tokensDao.insertToken(model);
-    } catch (e) {
-      LogUtil.v("失败" + e.toString());
-    }
-  }
+  // static void insertToken(MCollectionTokens model) async {
+  //   try {
+  //     model.contract = model.contract?.toLowerCase();
+  //     FlutterDatabase? database = await (BaseModel.getDataBae());
+  //     await database?.tokensDao.insertToken(model);
+  //   } catch (e) {
+  //     LogUtil.v("失败" + e.toString());
+  //   }
+  // }
 
-  static void insertTokens(List<MCollectionTokens> models) async {
-    try {
-      FlutterDatabase? database = await (BaseModel.getDataBae());
-      await database?.tokensDao.insertTokens(models);
-    } catch (e) {
-      LogUtil.v("失败" + e.toString());
-    }
-  }
+  // static void insertTokens(List<MCollectionTokens> models) async {
+  //   try {
+  //     FlutterDatabase? database = await (BaseModel.getDataBae());
+  //     await database?.tokensDao.insertTokens(models);
+  //   } catch (e) {
+  //     LogUtil.v("失败" + e.toString());
+  //   }
+  // }
 
-  static void deleteTokens(MCollectionTokens model) async {
-    try {
-      FlutterDatabase? database = await (BaseModel.getDataBae());
+  // static void deleteTokens(MCollectionTokens model) async {
+  //   try {
+  //     FlutterDatabase? database = await (BaseModel.getDataBae());
 
-      await database?.tokensDao.deleteTokens(model);
-    } catch (e) {
-      LogUtil.v("失败" + e.toString());
-    }
-  }
+  //     await database?.tokensDao.deleteTokens(model);
+  //   } catch (e) {
+  //     LogUtil.v("失败" + e.toString());
+  //   }
+  // }
 
-  static void updateTokens(MCollectionTokens model) async {
-    try {
-      FlutterDatabase? database = await (BaseModel.getDataBae());
-      await database?.tokensDao.updateTokens(model);
-    } catch (e) {
-      LogUtil.v("失败" + e.toString());
-    }
-  }
+  // static void updateTokens(MCollectionTokens model) async {
+  //   try {
+  //     FlutterDatabase? database = await (BaseModel.getDataBae());
+  //     await database?.tokensDao.updateTokens(model);
+  //   } catch (e) {
+  //     LogUtil.v("失败" + e.toString());
+  //   }
+  // }
 
-  static void updateTokenData(String sql) async {
-    try {
-      FlutterDatabase? database = await (BaseModel.getDataBae());
-      await database?.tokensDao.updateTokenData(sql);
-    } catch (e) {
-      LogUtil.v("失败" + e.toString());
-    }
-  }
+  // static void updateTokenData(String sql) async {
+  //   try {
+  //     FlutterDatabase? database = await (BaseModel.getDataBae());
+  //     await database?.tokensDao.updateTokenData(sql);
+  //   } catch (e) {
+  //     LogUtil.v("失败" + e.toString());
+  //   }
+  // }
 
   String get assets =>
       StringUtil.dataFormat(((price ??= 0) * (balance ??= 0)), 2);
@@ -152,9 +152,6 @@ abstract class MCollectionTokenDao {
       ' WHERE owner = :owner and state = :state and chainid=:chainid')
   Future<List<MCollectionTokens>> findStateTokens(
       String owner, int state, int chainid);
-
-  @Query("UPDATE " + tableName + " SET price=:price WHERE token = :token")
-  Future<void> updateTokenPrice(double price, String token);
 
   @Insert(onConflict: OnConflictStrategy.replace)
   Future<void> insertToken(MCollectionTokens model);

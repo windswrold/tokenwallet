@@ -69,6 +69,10 @@ class _$FlutterDatabase extends FlutterDatabase {
 
   DAppRecordsDao? _dAppRecordsDaoInstance;
 
+  TokenPriceDao? _tokenPriceDaoInstance;
+
+  MCollectionTokenDao? _tokensDaoInstance;
+
   Future<sqflite.Database> open(String path, List<Migration> migrations,
       [Callback? callback]) async {
     final databaseOptions = sqflite.OpenDatabaseOptions(
@@ -94,7 +98,11 @@ class _$FlutterDatabase extends FlutterDatabase {
         await database.execute(
             'CREATE TABLE IF NOT EXISTS `contacts_table` (`address` TEXT NOT NULL, `coinType` INTEGER NOT NULL, `name` TEXT NOT NULL, PRIMARY KEY (`address`))');
         await database.execute(
-            'CREATE TABLE IF NOT EXISTS `dapp_records` (`url` TEXT, `name` TEXT, `imageUrl` TEXT, `description` TEXT, `marketId` TEXT, PRIMARY KEY (`url`))');
+            'CREATE TABLE IF NOT EXISTS `dapp_records` (`url` TEXT, `name` TEXT, `imageUrl` TEXT, `description` TEXT, `marketId` TEXT, `date` TEXT, PRIMARY KEY (`url`))');
+        await database.execute(
+            'CREATE TABLE IF NOT EXISTS `tokenPrice_table` (`contract` TEXT, `source` TEXT, `target` TEXT, `rate` TEXT, PRIMARY KEY (`contract`, `source`, `target`))');
+        await database.execute(
+            'CREATE TABLE IF NOT EXISTS `tokens_table` (`owner` TEXT, `contract` TEXT, `token` TEXT, `coinType` TEXT, `state` INTEGER, `isHidden` INTEGER, `decimals` INTEGER, `price` REAL, `balance` REAL, `digits` INTEGER, `chainid` INTEGER, PRIMARY KEY (`owner`, `contract`, `chainid`))');
 
         await callback?.onCreate?.call(database, version);
       },
@@ -122,6 +130,17 @@ class _$FlutterDatabase extends FlutterDatabase {
   DAppRecordsDao get dAppRecordsDao {
     return _dAppRecordsDaoInstance ??=
         _$DAppRecordsDao(database, changeListener);
+  }
+
+  @override
+  TokenPriceDao get tokenPriceDao {
+    return _tokenPriceDaoInstance ??= _$TokenPriceDao(database, changeListener);
+  }
+
+  @override
+  MCollectionTokenDao get tokensDao {
+    return _tokensDaoInstance ??=
+        _$MCollectionTokenDao(database, changeListener);
   }
 }
 
@@ -469,7 +488,8 @@ class _$DAppRecordsDao extends DAppRecordsDao {
                   'name': item.name,
                   'imageUrl': item.imageUrl,
                   'description': item.description,
-                  'marketId': item.marketId
+                  'marketId': item.marketId,
+                  'date': item.date
                 }),
         _dAppRecordsDBModelDeletionAdapter = DeletionAdapter(
             database,
@@ -480,7 +500,8 @@ class _$DAppRecordsDao extends DAppRecordsDao {
                   'name': item.name,
                   'imageUrl': item.imageUrl,
                   'description': item.description,
-                  'marketId': item.marketId
+                  'marketId': item.marketId,
+                  'date': item.date
                 });
 
   final sqflite.DatabaseExecutor database;
@@ -502,7 +523,8 @@ class _$DAppRecordsDao extends DAppRecordsDao {
             name: row['name'] as String?,
             imageUrl: row['imageUrl'] as String?,
             description: row['description'] as String?,
-            marketId: row['marketId'] as String?));
+            marketId: row['marketId'] as String?,
+            date: row['date'] as String?));
   }
 
   @override
@@ -519,5 +541,182 @@ class _$DAppRecordsDao extends DAppRecordsDao {
   @override
   Future<void> deleteRecords(List<DAppRecordsDBModel> model) async {
     await _dAppRecordsDBModelDeletionAdapter.deleteList(model);
+  }
+}
+
+class _$TokenPriceDao extends TokenPriceDao {
+  _$TokenPriceDao(this.database, this.changeListener)
+      : _queryAdapter = QueryAdapter(database),
+        _tokenPriceInsertionAdapter = InsertionAdapter(
+            database,
+            'tokenPrice_table',
+            (TokenPrice item) => <String, Object?>{
+                  'contract': item.contract,
+                  'source': item.source,
+                  'target': item.target,
+                  'rate': item.rate
+                });
+
+  final sqflite.DatabaseExecutor database;
+
+  final StreamController<String> changeListener;
+
+  final QueryAdapter _queryAdapter;
+
+  final InsertionAdapter<TokenPrice> _tokenPriceInsertionAdapter;
+
+  @override
+  Future<List<TokenPrice>> queryTokenPrices(
+      String contract, String target) async {
+    return _queryAdapter.queryList(
+        'SELECT * FROM tokenPrice_table WHERE contract = ?1 and target=?2',
+        mapper: (Map<String, Object?> row) => TokenPrice(
+            contract: row['contract'] as String?,
+            source: row['source'] as String?,
+            target: row['target'] as String?,
+            rate: row['rate'] as String?),
+        arguments: [contract, target]);
+  }
+
+  @override
+  Future<void> insertTokenPrice(TokenPrice model) async {
+    await _tokenPriceInsertionAdapter.insert(model, OnConflictStrategy.replace);
+  }
+
+  @override
+  Future<void> insertTokensPrice(List<TokenPrice> models) async {
+    await _tokenPriceInsertionAdapter.insertList(
+        models, OnConflictStrategy.replace);
+  }
+}
+
+class _$MCollectionTokenDao extends MCollectionTokenDao {
+  _$MCollectionTokenDao(this.database, this.changeListener)
+      : _queryAdapter = QueryAdapter(database),
+        _mCollectionTokensInsertionAdapter = InsertionAdapter(
+            database,
+            'tokens_table',
+            (MCollectionTokens item) => <String, Object?>{
+                  'owner': item.owner,
+                  'contract': item.contract,
+                  'token': item.token,
+                  'coinType': item.coinType,
+                  'state': item.state,
+                  'isHidden': item.isHidden,
+                  'decimals': item.decimals,
+                  'price': item.price,
+                  'balance': item.balance,
+                  'digits': item.digits,
+                  'chainid': item.chainid
+                }),
+        _mCollectionTokensUpdateAdapter = UpdateAdapter(
+            database,
+            'tokens_table',
+            ['owner', 'contract', 'chainid'],
+            (MCollectionTokens item) => <String, Object?>{
+                  'owner': item.owner,
+                  'contract': item.contract,
+                  'token': item.token,
+                  'coinType': item.coinType,
+                  'state': item.state,
+                  'isHidden': item.isHidden,
+                  'decimals': item.decimals,
+                  'price': item.price,
+                  'balance': item.balance,
+                  'digits': item.digits,
+                  'chainid': item.chainid
+                }),
+        _mCollectionTokensDeletionAdapter = DeletionAdapter(
+            database,
+            'tokens_table',
+            ['owner', 'contract', 'chainid'],
+            (MCollectionTokens item) => <String, Object?>{
+                  'owner': item.owner,
+                  'contract': item.contract,
+                  'token': item.token,
+                  'coinType': item.coinType,
+                  'state': item.state,
+                  'isHidden': item.isHidden,
+                  'decimals': item.decimals,
+                  'price': item.price,
+                  'balance': item.balance,
+                  'digits': item.digits,
+                  'chainid': item.chainid
+                });
+
+  final sqflite.DatabaseExecutor database;
+
+  final StreamController<String> changeListener;
+
+  final QueryAdapter _queryAdapter;
+
+  final InsertionAdapter<MCollectionTokens> _mCollectionTokensInsertionAdapter;
+
+  final UpdateAdapter<MCollectionTokens> _mCollectionTokensUpdateAdapter;
+
+  final DeletionAdapter<MCollectionTokens> _mCollectionTokensDeletionAdapter;
+
+  @override
+  Future<List<MCollectionTokens>> findTokens(String owner, int chainid) async {
+    return _queryAdapter.queryList(
+        'SELECT * FROM tokens_table WHERE owner = ?1 and chainid=?2',
+        mapper: (Map<String, Object?> row) => MCollectionTokens(
+            owner: row['owner'] as String?,
+            contract: row['contract'] as String?,
+            token: row['token'] as String?,
+            coinType: row['coinType'] as String?,
+            state: row['state'] as int?,
+            decimals: row['decimals'] as int?,
+            price: row['price'] as double?,
+            balance: row['balance'] as double?,
+            digits: row['digits'] as int?,
+            chainid: row['chainid'] as int?,
+            isHidden: row['isHidden'] as int?),
+        arguments: [owner, chainid]);
+  }
+
+  @override
+  Future<List<MCollectionTokens>> findStateTokens(
+      String owner, int state, int chainid) async {
+    return _queryAdapter.queryList(
+        'SELECT * FROM tokens_table WHERE owner = ?1 and state = ?2 and chainid=?3',
+        mapper: (Map<String, Object?> row) => MCollectionTokens(owner: row['owner'] as String?, contract: row['contract'] as String?, token: row['token'] as String?, coinType: row['coinType'] as String?, state: row['state'] as int?, decimals: row['decimals'] as int?, price: row['price'] as double?, balance: row['balance'] as double?, digits: row['digits'] as int?, chainid: row['chainid'] as int?, isHidden: row['isHidden'] as int?),
+        arguments: [owner, state, chainid]);
+  }
+
+  @override
+  Future<void> updateTokenPrice(double price, String token) async {
+    await _queryAdapter.queryNoReturn(
+        'UPDATE tokens_table SET price=?1 WHERE token = ?2',
+        arguments: [price, token]);
+  }
+
+  @override
+  Future<void> updateTokenData(String sql) async {
+    await _queryAdapter
+        .queryNoReturn('UPDATE tokens_table SET ?1', arguments: [sql]);
+  }
+
+  @override
+  Future<void> insertToken(MCollectionTokens model) async {
+    await _mCollectionTokensInsertionAdapter.insert(
+        model, OnConflictStrategy.replace);
+  }
+
+  @override
+  Future<void> insertTokens(List<MCollectionTokens> models) async {
+    await _mCollectionTokensInsertionAdapter.insertList(
+        models, OnConflictStrategy.replace);
+  }
+
+  @override
+  Future<void> updateTokens(MCollectionTokens model) async {
+    await _mCollectionTokensUpdateAdapter.update(
+        model, OnConflictStrategy.abort);
+  }
+
+  @override
+  Future<void> deleteTokens(MCollectionTokens model) async {
+    await _mCollectionTokensDeletionAdapter.delete(model);
   }
 }
