@@ -132,5 +132,16 @@
     "transferetype_other": "其他",
     "transferetype_transfer": "付款",
     "transferetype_receive": "收款",
-    "transferetype_receiveaddress": "收款地址"
+    "transferetype_receiveaddress": "收款地址",
+    "transferetype_transdetail": "流水明细",
+    "transferetype_addcontaca": "添加到地址簿",
+    "transferetype_speedup": "交易加速",
+    "transferetype_cancel": "取消交易",
+    "transferetype_chain": "交易网格",
+    "transferetype_bl": "区块高度",
+    "transferetype_trx": "交易Hash",
+    "transferetype_from": "付款地址",
+    "transferetype_to": "收款地址",
+    "transferetype_fee": "矿工费用",
+    "transferetype_remark": "备注"
 }

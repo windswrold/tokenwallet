@@ -1,3 +1,5 @@
+import 'package:cstoken/pages/wallet/transfer/transdetail_page.dart';
+
 import '../public.dart';
 
 class TransferListCell extends StatelessWidget {
@@ -12,77 +14,83 @@ class TransferListCell extends StatelessWidget {
     String value = "-123.0134 USDT";
     String state = "确认中";
     bool isSpeed = false;
-    return Container(
-        height: 71.width,
-        padding: EdgeInsets.fromLTRB(16.width, 16.width, 16.width, 0),
-        decoration: const BoxDecoration(
-          color: Colors.white,
-          border: Border(
-              bottom: BorderSide(
-            width: 0.5,
-            color: ColorUtils.lineColor,
-          )),
-        ),
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                LoadAssetsImage(
-                  imgName,
-                  width: 24,
-                  height: 24,
-                ),
-                8.rowWidget,
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      address,
-                      style: TextStyle(
-                        color: ColorUtils.fromHex("#FF000000"),
-                        fontSize: 14.font,
-                        fontWeight: FontWeightUtils.regular,
-                      ),
-                    ),
-                    2.columnWidget,
-                    Text(
-                      time,
-                      style: TextStyle(
-                        color: ColorUtils.fromHex("#99000000"),
-                        fontSize: 12.font,
-                        fontWeight: FontWeightUtils.regular,
-                      ),
-                    ),
-                  ],
-                ),
-              ],
-            ),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.end,
-              children: [
-                Text(
-                  value,
-                  style: TextStyle(
-                    color: ColorUtils.fromHex("#FF000000"),
-                    fontSize: 14.font,
-                    fontWeight: FontWeightUtils.semiBold,
+    return GestureDetector(
+        behavior: HitTestBehavior.opaque,
+        onTap: () {
+          Routers.push(context, TransDetailPage());
+        },
+        child: Container(
+          height: 71.width,
+          padding: EdgeInsets.fromLTRB(16.width, 16.width, 16.width, 0),
+          decoration: const BoxDecoration(
+            color: Colors.white,
+            border: Border(
+                bottom: BorderSide(
+              width: 0.5,
+              color: ColorUtils.lineColor,
+            )),
+          ),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  LoadAssetsImage(
+                    imgName,
+                    width: 24,
+                    height: 24,
                   ),
-                ),
-                2.columnWidget,
-                Text(
-                  state,
-                  style: TextStyle(
-                    color: ColorUtils.fromHex("#99000000"),
-                    fontSize: 12.font,
-                    fontWeight: FontWeightUtils.regular,
+                  8.rowWidget,
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        address,
+                        style: TextStyle(
+                          color: ColorUtils.fromHex("#FF000000"),
+                          fontSize: 14.font,
+                          fontWeight: FontWeightUtils.regular,
+                        ),
+                      ),
+                      2.columnWidget,
+                      Text(
+                        time,
+                        style: TextStyle(
+                          color: ColorUtils.fromHex("#99000000"),
+                          fontSize: 12.font,
+                          fontWeight: FontWeightUtils.regular,
+                        ),
+                      ),
+                    ],
                   ),
-                ),
-              ],
-            ),
-          ],
+                ],
+              ),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
+                  Text(
+                    value,
+                    style: TextStyle(
+                      color: ColorUtils.fromHex("#FF000000"),
+                      fontSize: 14.font,
+                      fontWeight: FontWeightUtils.semiBold,
+                    ),
+                  ),
+                  2.columnWidget,
+                  Text(
+                    state,
+                    style: TextStyle(
+                      color: ColorUtils.fromHex("#99000000"),
+                      fontSize: 12.font,
+                      fontWeight: FontWeightUtils.regular,
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
         ));
     ;
   }

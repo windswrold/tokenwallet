@@ -133,6 +133,19 @@ class CustomPageView extends StatelessWidget {
     );
   }
 
+  static Widget getCustomIcon(String iconName, VoidCallback onTap) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Center(
+        child: Image.asset(
+          ASSETS_IMG + iconName,
+          width: 24,
+          height: 24,
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     //全局拦截键盘处理
