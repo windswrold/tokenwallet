@@ -63,9 +63,7 @@ enum KAlertType {
   edit_name, //nodeUrl
 }
 
-enum KChainID { Mainnet, Ropsten, Rinkeby, Localhost }
-
-
+enum KNetType { Mainnet, Testnet }
 
 final bool inProduction = kReleaseMode;
 final bool isAndroid = Platform.isAndroid;

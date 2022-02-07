@@ -26,6 +26,11 @@ class _AppsPageState extends State<AppsPage> {
   void initState() {
     // TODO: implement initState
     super.initState();
+    _initData();
+  }
+
+  void _initData() {
+    _kdataState.getDataOnRefresh();
   }
 
   @override
@@ -46,80 +51,73 @@ class _AppsPageState extends State<AppsPage> {
     );
   }
 
+  List<Widget> _getChildren(List<Tab> tabs) {
+    List<Widget> datass = [];
+    for (var i = 0; i < tabs.length; i++) {
+      datass.add(AppsContentPage(
+          dappTap: (DAppRecordsDBModel model) {
+            _kdataState.dappTap(context, model);
+          },
+          type: i));
+    }
+    return datass;
+  }
+
   Widget _bodyListView() {
-    return CustomRefresher(
-      refreshController: _kdataState.refreshController,
-      onRefresh: () {
-        _kdataState.getDataOnRefresh();
-      },
-      onLoading: () {
-        _kdataState.getDataOnLoading();
-      },
-      child: Column(
-        children: [
-          CustomSwipe(),
-          Consumer<DappDataState>(
-            builder: (_, kprovider, child) {
-              return Expanded(
-                child: _kdataState.myTabs.isEmpty
-                    ? EmptyDataPage()
-                    : DefaultTabController(
-                        length: _kdataState.myTabs.length,
-                        child: Column(
-                          children: [
-                            Material(
-                              color: Colors.transparent,
-                              child: Theme(
-                                data: ThemeData(
-                                    splashColor:
-                                        const Color.fromRGBO(0, 0, 0, 0),
-                                    highlightColor:
-                                        const Color.fromRGBO(0, 0, 0, 0)),
-                                child: TabBar(
-                                  tabs: _kdataState.myTabs,
-                                  isScrollable: true,
-                                  indicatorColor: ColorUtils.blueColor,
-                                  indicatorWeight: 2,
-                                  indicatorSize: TabBarIndicatorSize.tab,
-                                  labelColor: ColorUtils.fromHex("#FF000000"),
-                                  labelStyle: TextStyle(
-                                    fontSize: 14.font,
-                                    fontWeight: FontWeightUtils.semiBold,
-                                  ),
-                                  unselectedLabelColor:
-                                      ColorUtils.fromHex("#99000000"),
-                                  unselectedLabelStyle: TextStyle(
-                                    fontSize: 14.font,
-                                    fontWeight: FontWeightUtils.regular,
-                                  ),
-                                  onTap: (value) {
-                                    _kdataState.getdappListData(value);
-                                  },
+    return Column(
+      children: [
+        CustomSwipe(),
+        Consumer<DappDataState>(
+          builder: (_, kprovider, child) {
+            return Expanded(
+              child: _kdataState.myTabs.isEmpty
+                  ? EmptyDataPage()
+                  : DefaultTabController(
+                      length: _kdataState.myTabs.length,
+                      child: Column(
+                        children: [
+                          Material(
+                            color: Colors.transparent,
+                            child: Theme(
+                              data: ThemeData(
+                                  splashColor: const Color.fromRGBO(0, 0, 0, 0),
+                                  highlightColor:
+                                      const Color.fromRGBO(0, 0, 0, 0)),
+                              child: TabBar(
+                                tabs: _kdataState.myTabs,
+                                isScrollable: true,
+                                indicatorColor: ColorUtils.blueColor,
+                                indicatorWeight: 2,
+                                indicatorSize: TabBarIndicatorSize.tab,
+                                labelColor: ColorUtils.fromHex("#FF000000"),
+                                labelStyle: TextStyle(
+                                  fontSize: 14.font,
+                                  fontWeight: FontWeightUtils.semiBold,
                                 ),
+                                unselectedLabelColor:
+                                    ColorUtils.fromHex("#99000000"),
+                                unselectedLabelStyle: TextStyle(
+                                  fontSize: 14.font,
+                                  fontWeight: FontWeightUtils.regular,
+                                ),
+                                onTap: (value) {},
                               ),
                             ),
-                            Expanded(
-                              child: TabBarView(
-                                physics:
-                                    const NeverScrollableScrollPhysics(), //禁止左右滑动
-                                children: _kdataState.myTabs.map((Tab tab) {
-                                  return AppsContentPage(
-                                    datas: _kdataState.dappListData,
-                                    dappTap: (DAppRecordsDBModel model) {
-                                      _kdataState.dappTap(context, model);
-                                    },
-                                  );
-                                }).toList(),
-                              ),
+                          ),
+                          Expanded(
+                            child: TabBarView(
+                              physics:
+                                  const NeverScrollableScrollPhysics(), //禁止左右滑动
+                              children: _getChildren(_kdataState.myTabs),
                             ),
-                          ],
-                        ),
+                          ),
+                        ],
                       ),
-              );
-            },
-          ),
-        ],
-      ),
+                    ),
+            );
+          },
+        ),
+      ],
     );
   }
 }

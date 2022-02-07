@@ -31,8 +31,10 @@ class CurrentChooseWalletState with ChangeNotifier {
       item.isChoose = false;
       if (wallet.walletID == item.walletID) {
         item.isChoose = true;
+        _currentWallet = item;
       }
     }
+    notifyListeners();
     return TRWallet.updateWallets(wallets);
   }
 
@@ -60,10 +62,10 @@ class CurrentChooseWalletState with ChangeNotifier {
                   Routers.goBackWithParams(context, {}),
                 });
           } else {
+            _currentWallet = null;
+            notifyListeners();
             HWToast.showText(text: "wallet_delwallet".local());
-            Future.delayed(Duration(seconds: 2)).then((value) => {
-                  Routers.push(context, CreateWalletPage()),
-                });
+            Routers.goBack(context);
           }
         }
       }

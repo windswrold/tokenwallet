@@ -1,4 +1,6 @@
+import 'package:cstoken/component/top_search_widget.dart';
 import 'package:cstoken/model/wallet/tr_wallet.dart';
+import 'package:cstoken/pages/scan/scan.dart';
 import 'package:cstoken/pages/wallet/wallets/wallets_manager.dart';
 import 'package:cstoken/state/wallet_state.dart';
 import 'package:easy_localization/easy_localization.dart';
@@ -39,13 +41,75 @@ class _WalletPageState extends State<WalletPage> {
     Routers.push(context, RestoreWalletPage());
   }
 
+  Widget _topView(TRWallet wallet) {
+    final name = wallet.walletName;
+    return Container(
+      height: 44,
+      alignment: Alignment.center,
+      child: Container(
+        padding: EdgeInsets.only(left: 16.width),
+        height: 32.width,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            GestureDetector(
+              behavior: HitTestBehavior.opaque,
+              onTap: () async {
+                Routers.push(context, WalletsManager());
+              },
+              child: Container(
+                width: 112.width,
+                height: 32.width,
+                padding: EdgeInsets.only(left: 8.width),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(16),
+                  color: ColorUtils.blueColor,
+                ),
+                child: Row(children: [
+                  LoadAssetsImage(
+                    "icons/icon_white_wallet.png",
+                    width: 24,
+                    height: 24,
+                  ),
+                  2.rowWidget,
+                  Expanded(
+                      child: Text(
+                    name ?? "",
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(
+                      color: ColorUtils.fromHex("#FFFFFFFF"),
+                      fontSize: 14.font,
+                      fontWeight: FontWeightUtils.semiBold,
+                    ),
+                  ))
+                ]),
+              ),
+            ),
+            CustomPageView.getScan(() async {
+              Map? params = await Routers.push(context, ScanCodePage());
+              String? result = params?["data"];
+            }),
+          ],
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     EasyLocalization.of(context);
     TRWallet? wallet =
         Provider.of<CurrentChooseWalletState>(context).currentWallet;
     return wallet != null
-        ? WalletsManager()
+        ? CustomPageView(
+            hiddenAppBar: true,
+            hiddenLeading: true,
+            child: Column(
+              children: [
+                _topView(wallet),
+                
+              ],
+            ))
         : CustomPageView(
             hiddenAppBar: true,
             hiddenLeading: true,

@@ -12,12 +12,6 @@ class DappDataState extends ChangeNotifier {
   List<Tab> get myTabs =>
       _myTabs.map((e) => Tab(text: e["dAppTypeName"] ?? '')).toList();
 
-  RefreshController refreshController = RefreshController(initialRefresh: true);
-
-  List<DAppRecordsDBModel> _dappListData = [];
-  List<DAppRecordsDBModel> get dappListData => _dappListData;
-  int _currentPageIndex = 0;
-
   void getBannerData() async {
     _bannerData = await WalletServices.getdappbannerInfo();
     notifyListeners();
@@ -25,17 +19,15 @@ class DappDataState extends ChangeNotifier {
 
   void getdappType() async {
     _myTabs = await WalletServices.getdappType();
-    if (_myTabs.isNotEmpty) {
-      getdappListData(_currentPageIndex);
-    }
+
     notifyListeners();
   }
 
-  void getdappListData(int index) async {
+  Future<List<DAppRecordsDBModel>> getdappListData(int index) async {
     LogUtil.v("getdappListData  $index");
-    _currentPageIndex = index;
-    _dappListData = [];
-    notifyListeners();
+    if (index < 0) {
+      return [];
+    }
     final dAppType = _myTabs[index]["dAppType"] ?? "1";
     List result = await WalletServices.getdapptypeList(dAppType.toString());
     //"title": "SWFT闪兑",
@@ -58,10 +50,10 @@ class DappDataState extends ChangeNotifier {
           marketId: marketId.toString());
       _datas.add(mdoel);
     }
-    _dappListData = _datas;
-    Future.delayed(Duration(seconds: 1)).then((value) => {
-          notifyListeners(),
-        });
+    return _datas;
+    // Future.delayed(Duration(seconds: 1)).then((value) => {
+    //       notifyListeners(),
+    //     });
   }
 
   void bannerTap(BuildContext context, String jumpLinks) {
@@ -79,12 +71,7 @@ class DappDataState extends ChangeNotifier {
   void getDataOnRefresh() {
     getBannerData();
     getdappType();
-    refreshController.loadComplete();
-    refreshController.refreshCompleted(resetFooterState: true);
   }
 
-  void getDataOnLoading() {
-    refreshController.loadComplete();
-    refreshController.refreshCompleted(resetFooterState: true);
-  }
+  void getDataOnLoading() {}
 }

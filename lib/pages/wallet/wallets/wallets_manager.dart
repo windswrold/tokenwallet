@@ -26,9 +26,11 @@ class _WalletsManagerState extends State<WalletsManager> {
 
   void _initData() async {
     List<TRWallet> caches = await TRWallet.queryAllWallets();
-    setState(() {
-      _datas = caches;
-    });
+    if (mounted) {
+      setState(() {
+        _datas = caches;
+      });
+    }
   }
 
   void _create() async {
@@ -53,6 +55,7 @@ class _WalletsManagerState extends State<WalletsManager> {
   Widget build(BuildContext context) {
     return CustomPageView(
       backgroundColor: ColorUtils.backgroudColor,
+      title: CustomPageView.getTitle(title: "walletmanager_title".local()),
       child: Container(
         child: Column(
           children: [
@@ -77,9 +80,10 @@ class _WalletsManagerState extends State<WalletsManager> {
                       await Provider.of<CurrentChooseWalletState>(context,
                               listen: false)
                           .updateChoose(context, wallet: walet);
-                      Routers.push(context, WalletsSetting(wallet: walet)).then((value) => {
-                        _initData(),
-                      });
+                      Routers.push(context, WalletsSetting(wallet: walet))
+                          .then((value) => {
+                                _initData(),
+                              });
                       _initData();
                     },
                   );

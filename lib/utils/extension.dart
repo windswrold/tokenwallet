@@ -204,23 +204,6 @@ extension KAppLanguageString on KAppLanguage {
   String get value => <String>['跟随系统', '简体中文', 'English'][index];
 }
 
-extension ChainIdNum on KChainID {
-  int getChainId() {
-    switch (this) {
-      case KChainID.Mainnet:
-        return 1;
-      case KChainID.Ropsten:
-        return 3;
-      case KChainID.Rinkeby:
-        return 4;
-      case KChainID.Localhost:
-        return 9;
-      default:
-        return -1;
-    }
-  }
-}
-
 class FontWeightUtils {
   ///400
   static const FontWeight regular = FontWeight.w400;
