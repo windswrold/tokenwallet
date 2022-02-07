@@ -17,7 +17,8 @@ class NextButton extends StatelessWidget {
       this.textStyle,
       this.enableColor = Colors.black,
       this.bgImg,
-      this.width})
+      this.width,
+      this.child})
       : super(key: key);
 
   final NextButtonCallback onPressed;
@@ -36,6 +37,7 @@ class NextButton extends StatelessWidget {
   final BoxBorder? border;
   final TextStyle? textStyle;
   final Color? enableColor;
+  final Widget? child;
 
   ///Constant.ASSETS_IMG + "icons/buttongradient.png",
   final String? bgImg;
@@ -60,20 +62,13 @@ class NextButton extends StatelessWidget {
                   fit: BoxFit.contain,
                   image: AssetImage(bgImg!),
                 ),
-          // gradient: bgc == null
-          //     ? LinearGradient(
-          //         begin: Alignment.centerLeft,
-          //         end: Alignment.centerRight,
-          //         colors: enabled
-          //             ? ColorUtils.gradientColors
-          //             : ColorUtils.enabledGradientColors,
-          //       )
-          //     : null,
         ),
-        child: Text(
-          title,
-          style: textStyle,
-        ),
+        child: child ??
+            Text(
+              title,
+              textAlign: TextAlign.center,
+              style: textStyle,
+            ),
       ),
     );
   }

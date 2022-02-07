@@ -10,6 +10,11 @@ import '../public.dart';
 class CurrentChooseWalletState with ChangeNotifier {
   TRWallet? _currentWallet;
   KCurrencyType? _currencyType;
+  TRWallet? get currentWallet => _currentWallet;
+  KCurrencyType? get currencyType => _currencyType;
+  String get currencySymbolStr =>
+      _currencyType == KCurrencyType.CNY ? "￥" : "\$";
+
   Future<TRWallet?> loadWallet() async {
     _currentWallet = await TRWallet.queryChooseWallet();
     _currencyType = SPManager.getAppCurrencyMode();
@@ -191,7 +196,4 @@ class CurrentChooseWalletState with ChangeNotifier {
 
   ///计算我的总资产
   void _calTotalAssets() {}
-
-  TRWallet? get currentWallet => _currentWallet;
-  KCurrencyType? get currencyType => _currencyType;
 }

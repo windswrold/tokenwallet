@@ -41,13 +41,13 @@ class _MinePageState extends State<MinePage> {
 
   void _initData() async {
     _datas.clear();
-    String contract = "minepage_contactadds".local();
-    String safe = "minepage_safetysetting".local();
-    String walletsetting = "minepage_walletssetting".local();
-    String currency = "minepage_currency".local();
-    String language = "minepage_language".local();
-    String feedback = "minepage_feedback".local();
-    String version = "minepage_version".local();
+    String contract = "minepage_contactadds".local(context: context);
+    String safe = "minepage_safetysetting".local(context: context);
+    String walletsetting = "minepage_walletssetting".local(context: context);
+    String currency = "minepage_currency".local(context: context);
+    String language = "minepage_language".local(context: context);
+    String feedback = "minepage_feedback".local(context: context);
+    String version = "minepage_version".local(context: context);
 
     List<ContactAddress> datas = await ContactAddress.queryAllAddress();
     _datas.add(MinePageData(

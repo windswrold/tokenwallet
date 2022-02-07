@@ -124,5 +124,13 @@
     "dApp_popularsearch": "热门搜索",
     "empay_datano": "暂无数据",
     "dapppage_collect": "收藏",
-    "walletmanager_title": "钱包管理"
+    "walletmanager_title": "钱包管理",
+    "walletmanager_asset_all": "全部",
+    "transferetype_all": "全部",
+    "transferetype_in": "转入",
+    "transferetype_out": "转出",
+    "transferetype_other": "其他",
+    "transferetype_transfer": "付款",
+    "transferetype_receive": "收款",
+    "transferetype_receiveaddress": "收款地址"
 }

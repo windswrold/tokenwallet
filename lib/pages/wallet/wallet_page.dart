@@ -1,4 +1,6 @@
 import 'package:cstoken/component/top_search_widget.dart';
+import 'package:cstoken/component/wallet_swipe.dart';
+import 'package:cstoken/component/wallets_tab_cell.dart';
 import 'package:cstoken/model/wallet/tr_wallet.dart';
 import 'package:cstoken/pages/scan/scan.dart';
 import 'package:cstoken/pages/wallet/wallets/wallets_manager.dart';
@@ -41,14 +43,19 @@ class _WalletPageState extends State<WalletPage> {
     Routers.push(context, RestoreWalletPage());
   }
 
+  void _tapHelper() {
+    LogUtil.v("_tapHelper");
+  }
+
   Widget _topView(TRWallet wallet) {
     final name = wallet.walletName;
     return Container(
       height: 44,
       alignment: Alignment.center,
+      color: Colors.white,
       child: Container(
         padding: EdgeInsets.only(left: 16.width),
-        height: 32.width,
+        // height: 32.width,
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
@@ -95,6 +102,48 @@ class _WalletPageState extends State<WalletPage> {
     );
   }
 
+  Widget _helperView() {
+    return Container(
+      height: 45.width,
+      color: ColorUtils.backgroudColor,
+      padding: EdgeInsets.only(left: 16.width, right: 16.width),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          GestureDetector(
+            behavior: HitTestBehavior.opaque,
+            onTap: () {
+              _tapHelper();
+            },
+            child: Row(
+              children: [
+                Text(
+                  "walletmanager_asset_all".local(),
+                  style: TextStyle(
+                    fontWeight: FontWeightUtils.regular,
+                    fontSize: 16.font,
+                    color: ColorUtils.fromHex("#FF000000"),
+                  ),
+                ),
+                4.rowWidget,
+                LoadAssetsImage(
+                  "icons/icon_arrow_down.png",
+                  width: 16,
+                  height: 16,
+                ),
+              ],
+            ),
+          ),
+          LoadAssetsImage(
+            "icons/icon_asset_add.png",
+            width: 16,
+            height: 16,
+          ),
+        ],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     EasyLocalization.of(context);
@@ -104,10 +153,13 @@ class _WalletPageState extends State<WalletPage> {
         ? CustomPageView(
             hiddenAppBar: true,
             hiddenLeading: true,
+            backgroundColor: ColorUtils.fromHex("#FFFFFCFA"),
             child: Column(
               children: [
                 _topView(wallet),
-                
+                WalletSwipe(),
+                _helperView(),
+                WalletsTabCell(),
               ],
             ))
         : CustomPageView(
