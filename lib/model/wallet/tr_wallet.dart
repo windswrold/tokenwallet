@@ -30,22 +30,22 @@ class TRWallet {
   bool? isChoose; //当前选中
   int? leadType; //导入类型 Prvkey 助记词 keystore
   String? pinTip; // 密码提示
-  
+  bool? hiddenAssets; //是否隐藏资产
 
   @ignore
   List<TRWalletInfo>? walletsInfo;
 
-  TRWallet({
-    this.walletID,
-    this.walletName,
-    this.pin,
-    this.chainType,
-    this.accountState,
-    this.encContent,
-    this.isChoose,
-    this.leadType,
-    this.pinTip,
-  });
+  TRWallet(
+      {this.walletID,
+      this.walletName,
+      this.pin,
+      this.chainType,
+      this.accountState,
+      this.encContent,
+      this.isChoose,
+      this.leadType,
+      this.pinTip,
+      this.hiddenAssets});
 
   String getChainType() {
     if (chainType == KChainType.HD.index) {

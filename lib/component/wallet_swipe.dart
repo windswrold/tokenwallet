@@ -50,17 +50,22 @@ class WalletSwipe extends StatelessWidget {
                                 listen: false)
                             .assetsHidden(context);
                       },
-                      child: Container(
-                        width: 45,
-                        height: 45,
-                        child: Center(
-                          child: LoadAssetsImage(
-                            "icons/icon_wallet_eye_open.png",
-                            width: 16,
-                            height: 16,
+                      child: Consumer<CurrentChooseWalletState>(
+                          builder: (_, kprovider, child) {
+                        return Container(
+                          width: 45,
+                          height: 45,
+                          child: Center(
+                            child: LoadAssetsImage(
+                              kprovider.currentWallet?.hiddenAssets == true
+                                  ? "icons/icon_wallet_eye_close.png"
+                                  : "icons/icon_wallet_eye_open.png",
+                              width: 16,
+                              height: 16,
+                            ),
                           ),
-                        ),
-                      ),
+                        );
+                      }),
                     ),
                   ],
                 ),
@@ -102,7 +107,7 @@ class WalletSwipe extends StatelessWidget {
                   ),
                   children: [
                     TextSpan(
-                      text: kprovider.totalAssets,
+                      text: kprovider.totalAssets(),
                       style: TextStyle(
                         fontSize: 32.font,
                         fontWeight: FontWeightUtils.bold,

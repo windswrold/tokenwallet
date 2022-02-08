@@ -24,9 +24,15 @@ class CurrentChooseWalletState with ChangeNotifier {
   Map? get nftIndexInfo =>
       _currentWallet == null ? null : _nftIndexInfo[_currentWallet?.walletID];
   Map<String?, String> _totalAssets = {}; //总资产数额
-  String? get totalAssets => _currentWallet == null
-      ? "0.00"
-      : _totalAssets[_currentWallet?.walletID] ?? "0.00";
+  String? totalAssets() {
+    if (_currentWallet == null) {
+      return "0.00";
+    }
+    if (_currentWallet!.hiddenAssets == true) {
+      return "****";
+    }
+    return _totalAssets[_currentWallet?.walletID] ?? "0.00";
+  }
 
   Future<TRWallet?> loadWallet() async {
     _currentWallet = await TRWallet.queryChooseWallet();
@@ -74,8 +80,19 @@ class CurrentChooseWalletState with ChangeNotifier {
         context, DappBrowser(model: DAppRecordsDBModel(url: jumpLinks)));
   }
 
-  void assetsHidden(BuildContext context) {
+  void assetsHidden(BuildContext context) async {
     LogUtil.v("assetsHidden");
+    if (_currentWallet == null) {
+      return;
+    }
+    _currentWallet =
+        await TRWallet.queryWalletByWalletID(_currentWallet!.walletID!);
+    _currentWallet!.hiddenAssets = (_currentWallet!.hiddenAssets == null ||
+            _currentWallet!.hiddenAssets == false)
+        ? true
+        : false;
+    TRWallet.updateWallet(_currentWallet!);
+    notifyListeners();
   }
 
   void tapWalletSetting(BuildContext context) {
