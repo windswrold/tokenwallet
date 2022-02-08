@@ -110,10 +110,16 @@ class _WalletPageState extends State<WalletPage> {
           GestureDetector(
             behavior: HitTestBehavior.opaque,
             onTap: _tapAssets,
-            child: LoadAssetsImage(
-              "icons/icon_asset_add.png",
-              width: 16,
-              height: 16,
+            child: Container(
+              width: 45,
+              height: 45,
+              child: Center(
+                child: LoadAssetsImage(
+                  "icons/icon_asset_add.png",
+                  width: 16,
+                  height: 16,
+                ),
+              ),
             ),
           ),
         ],

@@ -23,15 +23,8 @@ class TopSearchView extends StatelessWidget {
               child: GestureDetector(
                 behavior: HitTestBehavior.opaque,
                 onTap: () async {
-                  TRWallet? trWallet =
-                      await Provider.of<CurrentChooseWalletState>(context,
-                              listen: false)
-                          .loadWallet();
-                  if (trWallet == null) {
-                    HWToast.showText(text: "minepage_pleasecreate".local());
-                    return;
-                  }
-                  Routers.push(context, WalletsManager());
+                  Provider.of<CurrentChooseWalletState>(context, listen: false)
+                      .tapWalletSetting(context);
                 },
                 child: Container(
                   width: 32,

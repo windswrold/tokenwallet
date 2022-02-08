@@ -160,6 +160,7 @@
     "tokensetting_longpresssort": "长按拖动排序",
     "tokensetting_tokensmanager": "资产管理",
     "homepage_nft": "藏品",
-    "homepage_number":"枚",
-    "homepage_hot":"热门项目"
+    "homepage_number": "枚",
+    "homepage_hot": "热门项目",
+    "walletpage_assets": "资产"
 }

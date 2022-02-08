@@ -6,6 +6,7 @@ import 'package:cstoken/net/wallet_services.dart';
 import 'package:cstoken/pages/browser/dapp_browser.dart';
 import 'package:cstoken/pages/wallet/create/backup_tip_memo.dart';
 import 'package:cstoken/pages/wallet/create/create_wallet_page.dart';
+import 'package:cstoken/pages/wallet/wallets/wallets_setting.dart';
 import 'package:cstoken/utils/custom_toast.dart';
 import 'package:cstoken/utils/sp_manager.dart';
 import 'package:flutter/services.dart';
@@ -22,6 +23,10 @@ class CurrentChooseWalletState with ChangeNotifier {
   Map<String, Map> _nftIndexInfo = {};
   Map? get nftIndexInfo =>
       _currentWallet == null ? null : _nftIndexInfo[_currentWallet?.walletID];
+  Map<String?, String> _totalAssets = {}; //总资产数额
+  String? get totalAssets => _currentWallet == null
+      ? "0.00"
+      : _totalAssets[_currentWallet?.walletID] ?? "0.00";
 
   Future<TRWallet?> loadWallet() async {
     _currentWallet = await TRWallet.queryChooseWallet();
@@ -62,8 +67,24 @@ class CurrentChooseWalletState with ChangeNotifier {
 
   void bannerTap(BuildContext context, String jumpLinks) {
     LogUtil.v("bannerTap  $jumpLinks");
+    if (jumpLinks.isEmpty) {
+      return;
+    }
     Routers.push(
         context, DappBrowser(model: DAppRecordsDBModel(url: jumpLinks)));
+  }
+
+  void assetsHidden(BuildContext context) {
+    LogUtil.v("assetsHidden");
+  }
+
+  void tapWalletSetting(BuildContext context) {
+    LogUtil.v("assetsHidden");
+    if (_currentWallet == null) {
+      HWToast.showText(text: "minepage_pleasecreate".local());
+      return;
+    }
+    Routers.push(context, WalletsSetting(wallet: _currentWallet!));
   }
 
   Future<bool> updateChoose(BuildContext context,
@@ -172,14 +193,12 @@ class CurrentChooseWalletState with ChangeNotifier {
     });
   }
 
-  void modifyPwd(
-    BuildContext context, {
-    required TRWallet wallet,
-    required String oldPin,
-    required String newPin,
-    required String againPin,
-    required String pinTip,
-  }) {
+  void modifyPwd(BuildContext context,
+      {required TRWallet wallet,
+      required String oldPin,
+      required String newPin,
+      required String againPin,
+      required String pinTip}) {
     if (oldPin.length == 0 || newPin.length == 0 || againPin.length == 0) {
       HWToast.showText(text: "input_pwd".local());
       return;

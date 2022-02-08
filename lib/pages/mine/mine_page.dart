@@ -59,14 +59,8 @@ class _MinePageState extends State<MinePage> {
     _datas.add(MinePageData("mine/mine_anquan.png", safe, ""));
     _datas.add(MinePageData("mine/mine_walletset.png", walletsetting, "",
         onTap: () async {
-      TRWallet? trWallet =
-          await Provider.of<CurrentChooseWalletState>(context, listen: false)
-              .loadWallet();
-      if (trWallet == null) {
-        HWToast.showText(text: "minepage_pleasecreate".local());
-        return;
-      }
-      Routers.push(context, WalletsSetting(wallet: trWallet));
+      Provider.of<CurrentChooseWalletState>(context, listen: false)
+          .tapWalletSetting(context);
     }));
 
     String currencyValue = SPManager.getAppCurrencyMode().value;

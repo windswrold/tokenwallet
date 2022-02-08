@@ -38,8 +38,10 @@ class _HomePageState extends State<HomePage> {
     _initApp();
     _initBanner();
     _initHotDatas();
-    _refreshController.loadComplete();
-    _refreshController.refreshCompleted();
+    Future.delayed(Duration(seconds: 3)).then((value) => {
+          _refreshController.loadComplete(),
+          _refreshController.refreshCompleted(),
+        });
   }
 
   _initApp() async {

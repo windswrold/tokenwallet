@@ -30,6 +30,7 @@ class TRWallet {
   bool? isChoose; //当前选中
   int? leadType; //导入类型 Prvkey 助记词 keystore
   String? pinTip; // 密码提示
+  
 
   @ignore
   List<TRWalletInfo>? walletsInfo;
