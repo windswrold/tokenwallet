@@ -35,8 +35,6 @@
 	<string>CSToken needs your permission to add pictures to the album</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>CSToken needs your permission to access the album to identify the transfer QR code</string>
-	<key>UILaunchStoryboardName</key>
-	<string>LaunchScreen</string>
 	<key>UIMainStoryboardFile</key>
 	<string>Main</string>
 	<key>UISupportedInterfaceOrientations</key>
