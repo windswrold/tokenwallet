@@ -1,5 +1,6 @@
 import 'package:cstoken/model/transrecord/trans_record.dart';
 import 'package:cstoken/pages/wallet/transfer/receive_page.dart';
+import 'package:cstoken/pages/wallet/transfer/transfer_payment.dart';
 import 'package:cstoken/utils/timer_util.dart';
 import '../public.dart';
 
@@ -32,9 +33,9 @@ class KTransListState with ChangeNotifier {
     Routers.push(context, RecervePaymentPage());
   }
 
-  
-
-  void paymentClick(BuildContext context) {}
+  void paymentClick(BuildContext context) {
+    Routers.push(context, TransferPayment());
+  }
 
   void cellContentSelectRowAt(BuildContext context, int index) {}
 

@@ -9,7 +9,9 @@ import 'package:flutter_swipe_action_cell/flutter_swipe_action_cell.dart';
 import '../../public.dart';
 
 class MineContacts extends StatefulWidget {
-  MineContacts({Key? key}) : super(key: key);
+  MineContacts({Key? key, this.type}) : super(key: key);
+
+  final int? type;
 
   @override
   State<MineContacts> createState() => _MineContactsState();
@@ -30,6 +32,11 @@ class _MineContactsState extends State<MineContacts> {
   }
 
   void _tapAdds(ContactAddress model) {
+    if (widget.type == 0) {
+      Routers.goBackWithParams(context, {"text": model.address});
+      return;
+    }
+
     ShowCustomAlert.showCustomBottomSheet(
         context,
         Column(

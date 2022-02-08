@@ -143,5 +143,15 @@
     "transferetype_from": "付款地址",
     "transferetype_to": "收款地址",
     "transferetype_fee": "矿工费用",
-    "transferetype_remark": "备注"
+    "transferetype_remark": "备注",
+    "transferetype_goon": "继续",
+    "transferetype_value": "付款金额",
+    "transferetype_gas": "矿工费",
+    "transferetype_gassetting": "Gas Price 设置",
+    "transferetype_gastime": "预计确认时间",
+    "transferetype_fastest": "最快",
+    "transferetype_fast": "快速",
+    "transferetype_normal": "标准",
+    "transferetype_minute":"分钟",
+    "transferetype_customfee":"自定义"
 }

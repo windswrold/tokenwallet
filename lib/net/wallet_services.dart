@@ -1,6 +1,7 @@
 import 'package:cstoken/model/news/news_model.dart';
 import 'package:cstoken/net/request_method.dart';
 import 'package:cstoken/net/url.dart';
+import 'package:cstoken/public.dart';
 
 class WalletServices {
   static Future<List> getdappbannerInfo() async {
@@ -98,5 +99,20 @@ class WalletServices {
       return results;
     }
     return [];
+  }
+
+  static Future ethGasStation({KCoinType? coinType}) async {
+    final url = "https://ethgasstation.info/json/ethgasAPI.json";
+    dynamic result = await RequestMethod.manager!.requestData(Method.GET, url);
+    if (result != null) {
+      int _fastest = ((result['fastest'] / 10).toInt());
+      int _faster = ((result['fast'] / 10).toInt());
+      int _average = ((result['average'] / 10).toInt());
+      return {
+        "fastestgas": _fastest.toString(),
+        "fastgas": _faster.toString(),
+        "average": _average.toString(),
+      };
+    }
   }
 }

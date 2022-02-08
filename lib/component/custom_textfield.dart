@@ -147,20 +147,21 @@ class CustomTextField extends StatefulWidget {
   static InputDecoration getBorderLineDecoration({
     required BuildContext context,
     Color borderColor = Colors.transparent,
+    Color focusedBorderColor = Colors.transparent,
     String? hintText,
     String? helperText,
     TextStyle? helperStyle,
     TextStyle? hintStyle,
-    EdgeInsetsGeometry contentPadding = const EdgeInsets.fromLTRB(18, 0, 18, 0),
-    double borderRadius = 8,
+    EdgeInsetsGeometry contentPadding = const EdgeInsets.fromLTRB(8, 8, 8, 8),
+    double borderRadius = 4,
     Widget? prefixIcon,
     Widget? suffixIcon,
     String? counterText,
     TextStyle? counterStyle,
     BoxConstraints suffixIconConstraints =
-        const BoxConstraints(maxWidth: 100, maxHeight: double.infinity),
+        const BoxConstraints(maxWidth: 50, maxHeight: double.infinity),
     BoxConstraints prefixIconConstraints =
-        const BoxConstraints(minWidth: 80, maxHeight: double.infinity),
+        const BoxConstraints(minWidth: 50, maxHeight: double.infinity),
     Color? fillColor,
   }) {
     return InputDecoration(
@@ -174,7 +175,7 @@ class CustomTextField extends StatefulWidget {
       ),
       focusedBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(borderRadius),
-        borderSide: BorderSide(color: borderColor),
+        borderSide: BorderSide(color: focusedBorderColor),
       ),
       hintText: hintText,
       hintStyle: hintStyle,

@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 // import 'dart:isolate';
+import 'package:cstoken/net/url.dart';
 import 'package:cstoken/utils/sp_manager.dart';
 import 'package:dio/adapter.dart';
 import 'package:dio/dio.dart';
@@ -61,14 +62,17 @@ class RequestMethod {
     CancelToken cancelToken = RequestMethod._getCancelToken(url);
     Response response;
 
-    //按照plat统一传adr，苹果ios，语言英文en_us,繁体：zh_TW
-    KAppLanguage langu = SPManager.getAppLanguageMode();
-    Map<String, dynamic> _commonParams = {
-      "plat": isIOS ? "ios" : "adr",
-      "lang": langu == KAppLanguage.zh_cn ? "zh_TW" : "en_us",
-    };
-    queryParameters ??= {};
-    queryParameters.addAll(_commonParams);
+    if (url.contains(RequestURLS.host) == true) {
+      //按照plat统一传adr，苹果ios，语言英文en_us,繁体：zh_TW
+      KAppLanguage langu = SPManager.getAppLanguageMode();
+      Map<String, dynamic> _commonParams = {
+        "plat": isIOS ? "ios" : "adr",
+        "lang": langu == KAppLanguage.zh_cn ? "zh_TW" : "en_us",
+      };
+      queryParameters ??= {};
+      queryParameters.addAll(_commonParams);
+    }
+
     try {
       if (Method.GET == method) {
         response = await _dio!.get(url,
