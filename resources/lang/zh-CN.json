@@ -152,6 +152,11 @@
     "transferetype_fastest": "最快",
     "transferetype_fast": "快速",
     "transferetype_normal": "标准",
-    "transferetype_minute":"分钟",
-    "transferetype_customfee":"自定义"
+    "transferetype_minute": "分钟",
+    "transferetype_customfee": "自定义",
+    "tokensetting_addassets": "添加资产",
+    "tokensetting_searchtip":"输入Token名称或合约地址",
+    "tokensetting_sortindex":"钱包按以下顺序展示资产",
+    "tokensetting_longpresssort":"长按拖动排序",
+    "tokensetting_tokensmanager":"资产管理"
 }

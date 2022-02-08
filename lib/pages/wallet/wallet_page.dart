@@ -3,6 +3,7 @@ import 'package:cstoken/component/wallet_swipe.dart';
 import 'package:cstoken/component/wallets_tab_cell.dart';
 import 'package:cstoken/model/wallet/tr_wallet.dart';
 import 'package:cstoken/pages/scan/scan.dart';
+import 'package:cstoken/pages/wallet/wallets/search_addtoken.dart';
 import 'package:cstoken/pages/wallet/wallets/wallets_manager.dart';
 import 'package:cstoken/state/wallet_state.dart';
 import 'package:easy_localization/easy_localization.dart';
@@ -45,6 +46,10 @@ class _WalletPageState extends State<WalletPage> {
 
   void _tapHelper() {
     LogUtil.v("_tapHelper");
+  }
+
+  void _tapAssets() {
+    Routers.push(context, SearchAddToken());
   }
 
   Widget _topView(TRWallet wallet) {
@@ -134,10 +139,14 @@ class _WalletPageState extends State<WalletPage> {
               ],
             ),
           ),
-          LoadAssetsImage(
-            "icons/icon_asset_add.png",
-            width: 16,
-            height: 16,
+          GestureDetector(
+            behavior: HitTestBehavior.opaque,
+            onTap: _tapAssets,
+            child: LoadAssetsImage(
+              "icons/icon_asset_add.png",
+              width: 16,
+              height: 16,
+            ),
           ),
         ],
       ),

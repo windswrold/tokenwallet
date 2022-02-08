@@ -167,7 +167,7 @@ class _DAppSearchState extends State<DAppSearch> {
             fontSize: 14.font,
             fontWeight: FontWeightUtils.regular,
           ),
-          borderColor: ColorUtils.blueColor,
+          focusedBorderColor: ColorUtils.blueColor,
           borderRadius: 22,
           fillColor: ColorUtils.fromHex("#FFF6F8FF")),
     );

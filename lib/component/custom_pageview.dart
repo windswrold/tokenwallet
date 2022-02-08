@@ -45,7 +45,7 @@ class CustomPageView extends StatelessWidget {
   final bool safeAreaRight;
 
   static Widget getTitle(
-      {String title = "",
+      {required String title,
       double fontSize = 18,
       int color = 0xFF000000,
       FontWeight fontWeight = FontWeightUtils.semiBold}) {
