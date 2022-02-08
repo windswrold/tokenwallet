@@ -69,3 +69,4 @@ final bool inProduction = kReleaseMode;
 final bool isAndroid = Platform.isAndroid;
 final bool isIOS = Platform.isIOS;
 final String ASSETS_IMG = './assets/images/';
+

@@ -7,22 +7,26 @@ import '../../public.dart';
 
 const String tableName = "tokens_table";
 
-@Entity(tableName: tableName, primaryKeys: ["owner", "contract", "chainid"])
+@Entity(tableName: tableName)
 class MCollectionTokens {
   @primaryKey
+  String? tokenID; //token唯一id
   String? owner; //walletID
   String? contract; //合约地址
   String? token; //符号
   String? coinType; //主币符号
-  int? state; //是否加入收藏
-  int? isHidden; //是否本地隐藏
+  int? chainType; //哪条链
+  int? state; //是否显示
+  String? iconPath; //图片地址
   int? decimals;
   double? price;
   double? balance;
   int? digits;
-  int? chainid; //哪条链
+  int? chainid; //用来区分测试网主网
+  int? index; //排序
 
   MCollectionTokens({
+    this.tokenID,
     this.owner,
     this.contract,
     this.token,
@@ -33,8 +37,52 @@ class MCollectionTokens {
     this.balance,
     this.digits,
     this.chainid,
-    this.isHidden,
+    this.iconPath,
+    this.chainType,
+    this.index,
   });
+
+  // static Future<bool> moveItem(
+  //     String walletID, int oldIndex, int newIndex) async {
+  //   try {
+  //     FlutterDatabase database = await BaseModel.getDataBae();
+  //     List<MHWallet> datas = [];
+  //     MHWallet wallet = await MHWallet.findWalletByWalletID(walletID);
+  //     wallet.index = double.maxFinite.toInt();
+  //     database.walletDao.updateWallet(wallet);
+  //     String sql = "";
+  //     if (oldIndex < newIndex) {
+  //       //  (oldIndex  < index <= newIndex)  -1
+  //       sql = '"index" > $oldIndex and "index" <= $newIndex ';
+  //       datas = await database.walletDao.findWalletsBySQL(sql);
+  //       datas.forEach((element) {
+  //         element.index -= 1;
+  //       });
+  //     } else if (oldIndex > newIndex) {
+  //       // newIndex < index <= oldIndex  + 1
+  //       sql = '"index" >= $newIndex and "index" < $oldIndex ';
+  //       datas = await database.walletDao.findWalletsBySQL(sql);
+  //       datas.forEach((element) {
+  //         element.index += 1;
+  //       });
+  //     }
+  //     if (datas.length > 0) {
+  //       wallet.index = newIndex;
+  //       datas.add(wallet);
+  //       datas.forEach((element) {
+  //         print("444444444  " +
+  //             element.walletAaddress +
+  //             "  index " +
+  //             element.index.toString());
+  //       });
+  //       database.walletDao.updateWallets(datas);
+  //     }
+  //     return true;
+  //   } catch (e) {
+  //     LogUtil.v("失败" + e.toString());
+  //     return false;
+  //   }
+  // }
 
   // static Future<List<MCollectionTokens>> findTokens(
   //     String owner, int chainID) async {
@@ -144,14 +192,26 @@ class MCollectionTokens {
 abstract class MCollectionTokenDao {
   @Query('SELECT * FROM ' +
       tableName +
-      ' WHERE owner = :owner and chainid=:chainid')
+      ' WHERE owner = :owner and chainid=:chainid ORDER BY "index"')
   Future<List<MCollectionTokens>> findTokens(String owner, int chainid);
 
   @Query('SELECT * FROM ' +
       tableName +
-      ' WHERE owner = :owner and state = :state and chainid=:chainid')
+      ' WHERE owner = :owner and chainid=:chainid and chainType=:chainType ORDER BY "index"')
+  Future<List<MCollectionTokens>> findChainTokens(
+      String owner, int chainid, int chainType);
+
+  @Query('SELECT * FROM ' +
+      tableName +
+      ' WHERE owner = :owner and state = :state and chainid=:chainid ORDER BY "index"')
   Future<List<MCollectionTokens>> findStateTokens(
       String owner, int state, int chainid);
+
+  @Query('SELECT * FROM ' +
+      tableName +
+      ' WHERE owner = :owner and state = :state and chainid=:chainid and chainType =:chainType ORDER BY "index"')
+  Future<List<MCollectionTokens>> findStateChainTokens(
+      String owner, int state, int chainid, int chainType);
 
   @Insert(onConflict: OnConflictStrategy.replace)
   Future<void> insertToken(MCollectionTokens model);

@@ -20,7 +20,7 @@ class NodeModel {
       this.chainID}); //ID
 
   static void configNodeData() async {
-    // List<NodeModel>? nodes = await NodeModel.queryNodeByIsChoose(true);
+    // List<NodeModel>? nodes = await NodeModel.;
     // if (nodes == null || nodes.length == 0) {
     //   nodes = [];
     //   NodeModel _nodeModel = NodeModel(
@@ -144,6 +144,9 @@ abstract class NodeDao {
 
   @Insert(onConflict: OnConflictStrategy.replace)
   Future<void> insertNodeData(NodeModel model);
+
+  @Query('SELECT * FROM $tableName WHERE  isChoose = :isChoose')
+  Future<List<NodeModel>> queryChooseNode(bool isChoose);
 
   @Query(
       'SELECT * FROM $tableName WHERE chainType = :chainType and isChoose = :isChoose')

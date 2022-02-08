@@ -92,7 +92,7 @@ class _$FlutterDatabase extends FlutterDatabase {
       },
       onCreate: (database, version) async {
         await database.execute(
-            'CREATE TABLE IF NOT EXISTS `wallet_table` (`walletID` TEXT, `walletName` TEXT, `pin` TEXT, `chainType` INTEGER, `accountState` INTEGER, `encContent` TEXT, `isChoose` INTEGER, `leadType` INTEGER, `pinTip` TEXT, PRIMARY KEY (`walletID`))');
+            'CREATE TABLE IF NOT EXISTS `wallet_table` (`walletID` TEXT, `walletName` TEXT, `pin` TEXT, `chainType` INTEGER, `accountState` INTEGER, `encContent` TEXT, `isChoose` INTEGER, `leadType` INTEGER, `pinTip` TEXT, `hiddenAssets` INTEGER, PRIMARY KEY (`walletID`))');
         await database.execute(
             'CREATE TABLE IF NOT EXISTS `wallet_info_table` (`key` TEXT NOT NULL, `walletID` TEXT, `walletAaddress` TEXT, `coinType` INTEGER, `pubKey` TEXT, PRIMARY KEY (`key`))');
         await database.execute(
@@ -102,7 +102,7 @@ class _$FlutterDatabase extends FlutterDatabase {
         await database.execute(
             'CREATE TABLE IF NOT EXISTS `tokenPrice_table` (`contract` TEXT, `source` TEXT, `target` TEXT, `rate` TEXT, PRIMARY KEY (`contract`, `source`, `target`))');
         await database.execute(
-            'CREATE TABLE IF NOT EXISTS `tokens_table` (`owner` TEXT, `contract` TEXT, `token` TEXT, `coinType` TEXT, `state` INTEGER, `isHidden` INTEGER, `decimals` INTEGER, `price` REAL, `balance` REAL, `digits` INTEGER, `chainid` INTEGER, PRIMARY KEY (`owner`, `contract`, `chainid`))');
+            'CREATE TABLE IF NOT EXISTS `tokens_table` (`tokenID` TEXT, `owner` TEXT, `contract` TEXT, `token` TEXT, `coinType` TEXT, `chainType` INTEGER, `state` INTEGER, `iconPath` TEXT, `decimals` INTEGER, `price` REAL, `balance` REAL, `digits` INTEGER, `chainid` INTEGER, `index` INTEGER, PRIMARY KEY (`tokenID`))');
 
         await callback?.onCreate?.call(database, version);
       },
@@ -160,7 +160,10 @@ class _$WalletDao extends WalletDao {
                   'isChoose':
                       item.isChoose == null ? null : (item.isChoose! ? 1 : 0),
                   'leadType': item.leadType,
-                  'pinTip': item.pinTip
+                  'pinTip': item.pinTip,
+                  'hiddenAssets': item.hiddenAssets == null
+                      ? null
+                      : (item.hiddenAssets! ? 1 : 0)
                 }),
         _tRWalletUpdateAdapter = UpdateAdapter(
             database,
@@ -176,7 +179,10 @@ class _$WalletDao extends WalletDao {
                   'isChoose':
                       item.isChoose == null ? null : (item.isChoose! ? 1 : 0),
                   'leadType': item.leadType,
-                  'pinTip': item.pinTip
+                  'pinTip': item.pinTip,
+                  'hiddenAssets': item.hiddenAssets == null
+                      ? null
+                      : (item.hiddenAssets! ? 1 : 0)
                 }),
         _tRWalletDeletionAdapter = DeletionAdapter(
             database,
@@ -192,7 +198,10 @@ class _$WalletDao extends WalletDao {
                   'isChoose':
                       item.isChoose == null ? null : (item.isChoose! ? 1 : 0),
                   'leadType': item.leadType,
-                  'pinTip': item.pinTip
+                  'pinTip': item.pinTip,
+                  'hiddenAssets': item.hiddenAssets == null
+                      ? null
+                      : (item.hiddenAssets! ? 1 : 0)
                 });
 
   final sqflite.DatabaseExecutor database;
@@ -220,7 +229,10 @@ class _$WalletDao extends WalletDao {
             isChoose:
                 row['isChoose'] == null ? null : (row['isChoose'] as int) != 0,
             leadType: row['leadType'] as int?,
-            pinTip: row['pinTip'] as String?),
+            pinTip: row['pinTip'] as String?,
+            hiddenAssets: row['hiddenAssets'] == null
+                ? null
+                : (row['hiddenAssets'] as int) != 0),
         arguments: [walletID]);
   }
 
@@ -237,7 +249,10 @@ class _$WalletDao extends WalletDao {
             isChoose:
                 row['isChoose'] == null ? null : (row['isChoose'] as int) != 0,
             leadType: row['leadType'] as int?,
-            pinTip: row['pinTip'] as String?));
+            pinTip: row['pinTip'] as String?,
+            hiddenAssets: row['hiddenAssets'] == null
+                ? null
+                : (row['hiddenAssets'] as int) != 0));
   }
 
   @override
@@ -253,7 +268,10 @@ class _$WalletDao extends WalletDao {
             isChoose:
                 row['isChoose'] == null ? null : (row['isChoose'] as int) != 0,
             leadType: row['leadType'] as int?,
-            pinTip: row['pinTip'] as String?));
+            pinTip: row['pinTip'] as String?,
+            hiddenAssets: row['hiddenAssets'] == null
+                ? null
+                : (row['hiddenAssets'] as int) != 0));
   }
 
   @override
@@ -597,51 +615,60 @@ class _$MCollectionTokenDao extends MCollectionTokenDao {
             database,
             'tokens_table',
             (MCollectionTokens item) => <String, Object?>{
+                  'tokenID': item.tokenID,
                   'owner': item.owner,
                   'contract': item.contract,
                   'token': item.token,
                   'coinType': item.coinType,
+                  'chainType': item.chainType,
                   'state': item.state,
-                  'isHidden': item.isHidden,
+                  'iconPath': item.iconPath,
                   'decimals': item.decimals,
                   'price': item.price,
                   'balance': item.balance,
                   'digits': item.digits,
-                  'chainid': item.chainid
+                  'chainid': item.chainid,
+                  'index': item.index
                 }),
         _mCollectionTokensUpdateAdapter = UpdateAdapter(
             database,
             'tokens_table',
-            ['owner', 'contract', 'chainid'],
+            ['tokenID'],
             (MCollectionTokens item) => <String, Object?>{
+                  'tokenID': item.tokenID,
                   'owner': item.owner,
                   'contract': item.contract,
                   'token': item.token,
                   'coinType': item.coinType,
+                  'chainType': item.chainType,
                   'state': item.state,
-                  'isHidden': item.isHidden,
+                  'iconPath': item.iconPath,
                   'decimals': item.decimals,
                   'price': item.price,
                   'balance': item.balance,
                   'digits': item.digits,
-                  'chainid': item.chainid
+                  'chainid': item.chainid,
+                  'index': item.index
                 }),
         _mCollectionTokensDeletionAdapter = DeletionAdapter(
             database,
             'tokens_table',
-            ['owner', 'contract', 'chainid'],
+            ['tokenID'],
             (MCollectionTokens item) => <String, Object?>{
+                  'tokenID': item.tokenID,
                   'owner': item.owner,
                   'contract': item.contract,
                   'token': item.token,
                   'coinType': item.coinType,
+                  'chainType': item.chainType,
                   'state': item.state,
-                  'isHidden': item.isHidden,
+                  'iconPath': item.iconPath,
                   'decimals': item.decimals,
                   'price': item.price,
                   'balance': item.balance,
                   'digits': item.digits,
-                  'chainid': item.chainid
+                  'chainid': item.chainid,
+                  'index': item.index
                 });
 
   final sqflite.DatabaseExecutor database;
@@ -659,36 +686,36 @@ class _$MCollectionTokenDao extends MCollectionTokenDao {
   @override
   Future<List<MCollectionTokens>> findTokens(String owner, int chainid) async {
     return _queryAdapter.queryList(
-        'SELECT * FROM tokens_table WHERE owner = ?1 and chainid=?2',
-        mapper: (Map<String, Object?> row) => MCollectionTokens(
-            owner: row['owner'] as String?,
-            contract: row['contract'] as String?,
-            token: row['token'] as String?,
-            coinType: row['coinType'] as String?,
-            state: row['state'] as int?,
-            decimals: row['decimals'] as int?,
-            price: row['price'] as double?,
-            balance: row['balance'] as double?,
-            digits: row['digits'] as int?,
-            chainid: row['chainid'] as int?,
-            isHidden: row['isHidden'] as int?),
+        'SELECT * FROM tokens_table WHERE owner = ?1 and chainid=?2 ORDER BY \"index\"',
+        mapper: (Map<String, Object?> row) => MCollectionTokens(tokenID: row['tokenID'] as String?, owner: row['owner'] as String?, contract: row['contract'] as String?, token: row['token'] as String?, coinType: row['coinType'] as String?, state: row['state'] as int?, decimals: row['decimals'] as int?, price: row['price'] as double?, balance: row['balance'] as double?, digits: row['digits'] as int?, chainid: row['chainid'] as int?, iconPath: row['iconPath'] as String?, chainType: row['chainType'] as int?, index: row['index'] as int?),
         arguments: [owner, chainid]);
+  }
+
+  @override
+  Future<List<MCollectionTokens>> findChainTokens(
+      String owner, int chainid, int chainType) async {
+    return _queryAdapter.queryList(
+        'SELECT * FROM tokens_table WHERE owner = ?1 and chainid=?2 and chainType=?3 ORDER BY \"index\"',
+        mapper: (Map<String, Object?> row) => MCollectionTokens(tokenID: row['tokenID'] as String?, owner: row['owner'] as String?, contract: row['contract'] as String?, token: row['token'] as String?, coinType: row['coinType'] as String?, state: row['state'] as int?, decimals: row['decimals'] as int?, price: row['price'] as double?, balance: row['balance'] as double?, digits: row['digits'] as int?, chainid: row['chainid'] as int?, iconPath: row['iconPath'] as String?, chainType: row['chainType'] as int?, index: row['index'] as int?),
+        arguments: [owner, chainid, chainType]);
   }
 
   @override
   Future<List<MCollectionTokens>> findStateTokens(
       String owner, int state, int chainid) async {
     return _queryAdapter.queryList(
-        'SELECT * FROM tokens_table WHERE owner = ?1 and state = ?2 and chainid=?3',
-        mapper: (Map<String, Object?> row) => MCollectionTokens(owner: row['owner'] as String?, contract: row['contract'] as String?, token: row['token'] as String?, coinType: row['coinType'] as String?, state: row['state'] as int?, decimals: row['decimals'] as int?, price: row['price'] as double?, balance: row['balance'] as double?, digits: row['digits'] as int?, chainid: row['chainid'] as int?, isHidden: row['isHidden'] as int?),
+        'SELECT * FROM tokens_table WHERE owner = ?1 and state = ?2 and chainid=?3 ORDER BY \"index\"',
+        mapper: (Map<String, Object?> row) => MCollectionTokens(tokenID: row['tokenID'] as String?, owner: row['owner'] as String?, contract: row['contract'] as String?, token: row['token'] as String?, coinType: row['coinType'] as String?, state: row['state'] as int?, decimals: row['decimals'] as int?, price: row['price'] as double?, balance: row['balance'] as double?, digits: row['digits'] as int?, chainid: row['chainid'] as int?, iconPath: row['iconPath'] as String?, chainType: row['chainType'] as int?, index: row['index'] as int?),
         arguments: [owner, state, chainid]);
   }
 
   @override
-  Future<void> updateTokenPrice(double price, String token) async {
-    await _queryAdapter.queryNoReturn(
-        'UPDATE tokens_table SET price=?1 WHERE token = ?2',
-        arguments: [price, token]);
+  Future<List<MCollectionTokens>> findStateChainTokens(
+      String owner, int state, int chainid, int chainType) async {
+    return _queryAdapter.queryList(
+        'SELECT * FROM tokens_table WHERE owner = ?1 and state = ?2 and chainid=?3 and chainType =?4 ORDER BY \"index\"',
+        mapper: (Map<String, Object?> row) => MCollectionTokens(tokenID: row['tokenID'] as String?, owner: row['owner'] as String?, contract: row['contract'] as String?, token: row['token'] as String?, coinType: row['coinType'] as String?, state: row['state'] as int?, decimals: row['decimals'] as int?, price: row['price'] as double?, balance: row['balance'] as double?, digits: row['digits'] as int?, chainid: row['chainid'] as int?, iconPath: row['iconPath'] as String?, chainType: row['chainType'] as int?, index: row['index'] as int?),
+        arguments: [owner, state, chainid, chainType]);
   }
 
   @override

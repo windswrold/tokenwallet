@@ -65,10 +65,10 @@ class _WalletPageState extends State<WalletPage> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             WalletCard(wallet: wallet),
-            CustomPageView.getScan(() async {
-              Map? params = await Routers.push(context, ScanCodePage());
-              String? result = params?["data"];
-            }),
+            // CustomPageView.getScan(() async {
+            //   Map? params = await Routers.push(context, ScanCodePage());
+            //   String? result = params?["data"];
+            // }),
           ],
         ),
       ),
