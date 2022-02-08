@@ -55,23 +55,6 @@ class TRWallet {
     return "";
   }
 
-  // TRWallet.instance(HDWallet object) {
-  //   walletID = TREncode.SHA256(object.content!.replaceAll(" ", "") + "CSTOKEM");
-  //   pin = TREncode.SHA256(object.pin!);
-  //   accountState = object.leadType == KLeadType.Memo
-  //       ? KAccountState.init.index
-  //       : KAccountState.noauthed.index;
-  //   encContent = TREncode.encrypt(object.content!, object.pin!);
-  //   leadType = object.leadType!.index;
-  //   TRWallet(
-  //       walletID: walletID,
-  //       pin: pin,
-  //       pinTip: pinTip,
-  //       accountState: accountState,
-  //       encContent: encContent,
-  //       leadType: leadType);
-  // }
-
   static String randomWalletName() {
     int random = Random().nextInt(9999);
     return "钱包#" + random.toString();
@@ -218,8 +201,6 @@ class TRWallet {
       FlutterDatabase? database = await DataBaseConfig.openDataBase();
       TRWallet? wallet =
           await database?.walletDao.queryWalletByWalletID(walletID);
-      wallet?.walletsInfo =
-          await database?.walletInfoDao.queryWalletInfosByWalletID(walletID);
       return wallet;
     } catch (e) {
       rethrow;
@@ -230,11 +211,26 @@ class TRWallet {
     try {
       FlutterDatabase? database = await DataBaseConfig.openDataBase();
       List<TRWallet>? wallet = await database?.walletDao.queryAllWallets();
-      // wallet?.forEach((element) async {
-      //   element.walletsInfo = await database?.walletInfoDao
-      //       .queryWalletInfosByWalletID(element.walletID ?? "");
-      // });
       return wallet ??= [];
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  Future<List<TRWalletInfo>> queryWalletInfos({KCoinType? coinType}) async {
+    try {
+      List<TRWalletInfo> wallet = [];
+      FlutterDatabase? database = await DataBaseConfig.openDataBase();
+      if (coinType == null) {
+        wallet = (await database?.walletInfoDao
+                .queryWalletInfosByWalletID(walletID!)) ??
+            [];
+      } else {
+        wallet = (await database?.walletInfoDao
+                .queryWalletInfo(walletID!, coinType.index)) ??
+            [];
+      }
+      return wallet;
     } catch (e) {
       rethrow;
     }
@@ -244,8 +240,6 @@ class TRWallet {
     try {
       FlutterDatabase? database = await DataBaseConfig.openDataBase();
       TRWallet? wallet = await database?.walletDao.queryChooseWallet();
-      wallet?.walletsInfo = (await database?.walletInfoDao
-          .queryWalletInfosByWalletID(wallet.walletID ?? ''));
       return wallet;
     } catch (e) {
       rethrow;

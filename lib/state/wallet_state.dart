@@ -1,5 +1,9 @@
 import 'package:cstoken/component/chain_listtype.dart';
+import 'package:cstoken/model/dapps_record/dapps_record.dart';
 import 'package:cstoken/model/wallet/tr_wallet.dart';
+import 'package:cstoken/model/wallet/tr_wallet_info.dart';
+import 'package:cstoken/net/wallet_services.dart';
+import 'package:cstoken/pages/browser/dapp_browser.dart';
 import 'package:cstoken/pages/wallet/create/backup_tip_memo.dart';
 import 'package:cstoken/pages/wallet/create/create_wallet_page.dart';
 import 'package:cstoken/utils/custom_toast.dart';
@@ -15,11 +19,38 @@ class CurrentChooseWalletState with ChangeNotifier {
   String get currencySymbolStr =>
       _currencyType == KCurrencyType.CNY ? "￥" : "\$";
 
+  Map<String, Map> _nftIndexInfo = {};
+  Map? get nftIndexInfo =>
+      _currentWallet == null ? null : _nftIndexInfo[_currentWallet?.walletID];
+
   Future<TRWallet?> loadWallet() async {
     _currentWallet = await TRWallet.queryChooseWallet();
     _currencyType = SPManager.getAppCurrencyMode();
+    initNFTIndex();
     notifyListeners();
     return _currentWallet;
+  }
+
+  void initNFTIndex() async {
+    if (_currentWallet == null) {
+      return;
+    }
+    String? ethAdress;
+    List<TRWalletInfo> infos =
+        await _currentWallet!.queryWalletInfos(coinType: KCoinType.ETH);
+    if (infos.isEmpty) {
+      return;
+    }
+    ethAdress = infos.first.walletAaddress;
+    if (ethAdress == null) {
+      return;
+    }
+    Map? result = await WalletServices.getindexnftInfo(ethAdress);
+    if (result == null) {
+      return;
+    }
+    _nftIndexInfo[_currentWallet!.walletID!] = result;
+    notifyListeners();
   }
 
   void updateCurrencyType(KCurrencyType kCurrencyType) {
@@ -27,6 +58,12 @@ class CurrentChooseWalletState with ChangeNotifier {
     SPManager.setAppCurrency(kCurrencyType);
     LogUtil.v("updateCurrencyType $kCurrencyType");
     requestAssets();
+  }
+
+  void bannerTap(BuildContext context, String jumpLinks) {
+    LogUtil.v("bannerTap  $jumpLinks");
+    Routers.push(
+        context, DappBrowser(model: DAppRecordsDBModel(url: jumpLinks)));
   }
 
   Future<bool> updateChoose(BuildContext context,
@@ -39,7 +76,9 @@ class CurrentChooseWalletState with ChangeNotifier {
         _currentWallet = item;
       }
     }
+    initNFTIndex();
     notifyListeners();
+
     return TRWallet.updateWallets(wallets);
   }
 

@@ -26,7 +26,7 @@ class RequestURLS {
   static const String getindexapplicationInfo =
       host + "/app/index/applicationInfo";
 
-  ///首页应用
+  ///获取用户地址持有NFT数量 address
   static const String getindexnftInfo = host + "/app/index/nftInfo";
 
   ///获取dapp类型

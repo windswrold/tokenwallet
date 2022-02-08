@@ -102,7 +102,7 @@ class WalletServices {
   }
 
   static Future ethGasStation({KCoinType? coinType}) async {
-    final url = "https://ethgasstation.info/json/ethgasAPI.json";
+    const url = "https://ethgasstation.info/json/ethgasAPI.json";
     dynamic result = await RequestMethod.manager!.requestData(Method.GET, url);
     if (result != null) {
       int _fastest = ((result['fastest'] / 10).toInt());
@@ -114,5 +114,46 @@ class WalletServices {
         "average": _average.toString(),
       };
     }
+  }
+
+  static Future<Map?> getindexnftInfo(String address) async {
+    const url = RequestURLS.getindexnftInfo;
+    Map<String, dynamic> params = {"address": address.toString()};
+    dynamic result = await RequestMethod.manager!
+        .requestData(Method.GET, url, queryParameters: params);
+    if (result != null && result["code"] == 200) {
+      Map? data = result["result"];
+      return data;
+    }
+  }
+
+  static Future<List> getindexapplicationInfo() async {
+    const url = RequestURLS.getindexapplicationInfo;
+    dynamic result = await RequestMethod.manager!.requestData(Method.GET, url);
+    if (result != null && result["code"] == 200) {
+      List data = result["result"]["page"] ?? [];
+      return data;
+    }
+    return [];
+  }
+
+  static Future<List> getbannerInfo() async {
+    const url = RequestURLS.getbannerInfo;
+    dynamic result = await RequestMethod.manager!.requestData(Method.GET, url);
+    if (result != null && result["code"] == 200) {
+      List data = result["result"]["page"] ?? [];
+      return data;
+    }
+    return [];
+  }
+
+  static Future<List> getindexpopularItem() async {
+    const url = RequestURLS.getindexpopularItem;
+    dynamic result = await RequestMethod.manager!.requestData(Method.GET, url);
+    if (result != null && result["code"] == 200) {
+      List data = result["result"]["page"] ?? [];
+      return data;
+    }
+    return [];
   }
 }
