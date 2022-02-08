@@ -1,4 +1,5 @@
 import 'package:cstoken/component/top_search_widget.dart';
+import 'package:cstoken/component/wallet_card.dart';
 import 'package:cstoken/component/wallet_swipe.dart';
 import 'package:cstoken/component/wallets_tab_cell.dart';
 import 'package:cstoken/model/wallet/tr_wallet.dart';
@@ -60,43 +61,10 @@ class _WalletPageState extends State<WalletPage> {
       color: Colors.white,
       child: Container(
         padding: EdgeInsets.only(left: 16.width),
-        // height: 32.width,
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            GestureDetector(
-              behavior: HitTestBehavior.opaque,
-              onTap: () async {
-                Routers.push(context, WalletsManager());
-              },
-              child: Container(
-                width: 112.width,
-                height: 32.width,
-                padding: EdgeInsets.only(left: 8.width),
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(16),
-                  color: ColorUtils.blueColor,
-                ),
-                child: Row(children: [
-                  LoadAssetsImage(
-                    "icons/icon_white_wallet.png",
-                    width: 24,
-                    height: 24,
-                  ),
-                  2.rowWidget,
-                  Expanded(
-                      child: Text(
-                    name ?? "",
-                    overflow: TextOverflow.ellipsis,
-                    style: TextStyle(
-                      color: ColorUtils.fromHex("#FFFFFFFF"),
-                      fontSize: 14.font,
-                      fontWeight: FontWeightUtils.semiBold,
-                    ),
-                  ))
-                ]),
-              ),
-            ),
+            WalletCard(wallet: wallet),
             CustomPageView.getScan(() async {
               Map? params = await Routers.push(context, ScanCodePage());
               String? result = params?["data"];
