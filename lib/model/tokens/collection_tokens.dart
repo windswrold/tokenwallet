@@ -56,6 +56,14 @@ class MCollectionTokens {
     );
   }
 
+  String get assets =>
+      StringUtil.dataFormat(((price ??= 0) * (balance ??= 0)), 2);
+
+  String get priceString => StringUtil.dataFormat(price ??= 0, 2);
+
+  String get balanceString =>
+      StringUtil.dataFormat(this.balance ?? 0.0, this.digits!);
+
   // static Future<bool> moveItem(
   //     String walletID, int oldIndex, int newIndex) async {
   //   try {
@@ -97,15 +105,6 @@ class MCollectionTokens {
   //     return false;
   //   }
   // }
-
-  String get assets =>
-      StringUtil.dataFormat(((price ??= 0) * (balance ??= 0)), 2);
-
-  bool get isToken =>
-      coinType?.toLowerCase() == token?.toLowerCase() ? false : true;
-
-  String get balanceString =>
-      StringUtil.dataFormat(this.balance ?? 0.0, this.digits!);
 
   ///查询当前钱包下当前节点的所有
   static Future<List<MCollectionTokens>> findTokens(

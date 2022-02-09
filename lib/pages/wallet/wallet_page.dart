@@ -47,6 +47,8 @@ class _WalletPageState extends State<WalletPage> {
 
   void _tapHelper() {
     LogUtil.v("_tapHelper");
+    Provider.of<CurrentChooseWalletState>(context, listen: false)
+        .tapHelper(context);
   }
 
   void _tapAssets() {
@@ -65,10 +67,6 @@ class _WalletPageState extends State<WalletPage> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             WalletCard(wallet: wallet),
-            // CustomPageView.getScan(() async {
-            //   Map? params = await Routers.push(context, ScanCodePage());
-            //   String? result = params?["data"];
-            // }),
           ],
         ),
       ),
@@ -90,14 +88,17 @@ class _WalletPageState extends State<WalletPage> {
             },
             child: Row(
               children: [
-                Text(
-                  "walletmanager_asset_all".local(),
-                  style: TextStyle(
-                    fontWeight: FontWeightUtils.regular,
-                    fontSize: 16.font,
-                    color: ColorUtils.fromHex("#FF000000"),
-                  ),
-                ),
+                Consumer<CurrentChooseWalletState>(
+                    builder: (_, provider, child) {
+                  return Text(
+                    provider.chooseChain,
+                    style: TextStyle(
+                      fontWeight: FontWeightUtils.regular,
+                      fontSize: 16.font,
+                      color: ColorUtils.fromHex("#FF000000"),
+                    ),
+                  );
+                }),
                 4.rowWidget,
                 LoadAssetsImage(
                   "icons/icon_arrow_down.png",
@@ -163,7 +164,7 @@ class _WalletPageState extends State<WalletPage> {
                       Container(
                         margin: EdgeInsets.only(top: 16.width),
                         child: Text(
-                          'Aggregation of NFT',
+                          SLOGAN,
                           style: TextStyle(
                             fontWeight: FontWeightUtils.medium,
                             fontSize: 18.font,

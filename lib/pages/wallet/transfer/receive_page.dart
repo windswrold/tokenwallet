@@ -2,6 +2,7 @@ import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:cstoken/component/share_default.dart';
+import 'package:cstoken/model/wallet/tr_wallet_info.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
@@ -28,7 +29,7 @@ class RecervePaymentPage extends StatefulWidget {
 
 class _RecervePaymentPageState extends State<RecervePaymentPage> {
   String qrCodeStr = "";
-  String walletName = "walletName";
+  String walletName = "";
   bool _isShare = false;
   final _repaintKey = GlobalKey();
 
@@ -37,14 +38,14 @@ class _RecervePaymentPageState extends State<RecervePaymentPage> {
     // TODO: implement initState
     super.initState();
 
-    buildRecerveStr();
-  }
-
-  void buildRecerveStr() async {
-    setState(() {
-      qrCodeStr =
-          "valuevaluevaluevaluevaluevaluevaluevaluevaluevaluevaluevaluevaluevaluevaluevalue";
-    });
+    TRWallet wallet =
+        Provider.of<CurrentChooseWalletState>(context, listen: false)
+            .currentWallet!;
+    TRWalletInfo info =
+        Provider.of<CurrentChooseWalletState>(context, listen: false)
+            .walletinfo!;
+    qrCodeStr = info.walletAaddress!;
+    walletName = wallet.walletName!;
   }
 
   void _shareImage() async {

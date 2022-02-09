@@ -1,14 +1,19 @@
+import 'dart:async';
+
 import 'package:cstoken/component/chain_listtype.dart';
 import 'package:cstoken/model/dapps_record/dapps_record.dart';
+import 'package:cstoken/model/tokens/collection_tokens.dart';
 import 'package:cstoken/model/wallet/tr_wallet.dart';
 import 'package:cstoken/model/wallet/tr_wallet_info.dart';
 import 'package:cstoken/net/wallet_services.dart';
 import 'package:cstoken/pages/browser/dapp_browser.dart';
 import 'package:cstoken/pages/wallet/create/backup_tip_memo.dart';
 import 'package:cstoken/pages/wallet/create/create_wallet_page.dart';
+import 'package:cstoken/pages/wallet/transfer/transfer_list.dart';
 import 'package:cstoken/pages/wallet/wallets/wallets_setting.dart';
 import 'package:cstoken/utils/custom_toast.dart';
 import 'package:cstoken/utils/sp_manager.dart';
+import 'package:cstoken/utils/timer_util.dart';
 import 'package:flutter/services.dart';
 import '../public.dart';
 
@@ -24,6 +29,30 @@ class CurrentChooseWalletState with ChangeNotifier {
   Map? get nftIndexInfo =>
       _currentWallet == null ? null : _nftIndexInfo[_currentWallet?.walletID];
   Map<String?, String> _totalAssets = {}; //总资产数额
+
+  Map<String?, List<MCollectionTokens>> _tokens = {};
+  List<MCollectionTokens> get tokens =>
+      _currentWallet == null ? [] : _tokens[_currentWallet?.walletID] ?? [];
+  KCoinType? _chooseChainType;
+  String get chooseChain => _chooseChainType == null
+      ? "walletmanager_asset_all".local()
+      : _chooseChainType!.coinTypeString();
+
+  TimerUtil? _timer;
+  int _tokenIndex = 0;
+  TRWalletInfo? _walletinfo;
+  TRWalletInfo? get walletinfo => _walletinfo;
+
+  MCollectionTokens? chooseTokens() {
+    if (tokens.length > _tokenIndex) {
+      return tokens[_tokenIndex];
+    } else {
+      LogUtil.v("chooseTokens越界");
+      assert(false, "chooseTokens越界");
+      return null;
+    }
+  }
+
   String? totalAssets() {
     if (_currentWallet == null) {
       return "0.00";
@@ -34,10 +63,19 @@ class CurrentChooseWalletState with ChangeNotifier {
     return _totalAssets[_currentWallet?.walletID] ?? "0.00";
   }
 
+  @override
+  void dispose() {
+    _timer?.cancel();
+    _timer = null;
+    super.dispose();
+  }
+
   Future<TRWallet?> loadWallet() async {
     _currentWallet = await TRWallet.queryChooseWallet();
     _currencyType = SPManager.getAppCurrencyMode();
     initNFTIndex();
+    requestAssets();
+    // _configTimerRequest();
     notifyListeners();
     return _currentWallet;
   }
@@ -95,6 +133,23 @@ class CurrentChooseWalletState with ChangeNotifier {
     notifyListeners();
   }
 
+  void tapHelper(BuildContext context) {
+    LogUtil.v("_tapHelper");
+    if (_currentWallet == null) {
+      return;
+    }
+    showModalBottomSheet(
+        context: context,
+        backgroundColor: Colors.transparent,
+        isScrollControlled: true,
+        builder: (_) {
+          return ChainListType(onTap: (KCoinType coinType) async {
+            _chooseChainType = coinType;
+            queryMyCollectionTokens();
+          });
+        });
+  }
+
   void tapWalletSetting(BuildContext context) {
     LogUtil.v("assetsHidden");
     if (_currentWallet == null) {
@@ -114,10 +169,25 @@ class CurrentChooseWalletState with ChangeNotifier {
         _currentWallet = item;
       }
     }
+    _chooseChainType = null;
+    _tokenIndex = 0;
     initNFTIndex();
+    requestAssets();
     notifyListeners();
-
     return TRWallet.updateWallets(wallets);
+  }
+
+  void updateTokenChoose(BuildContext context, int index) async {
+    _tokenIndex = index;
+
+    final String walletID = _currentWallet!.walletID!;
+    TRWalletInfo infos = (await TRWalletInfo.queryWalletInfo(
+            walletID, chooseTokens()!.chainType!))
+        .first;
+    _walletinfo = infos;
+    LogUtil.v("updateTokenChoose infos " + infos.walletAaddress!);
+    Routers.push(context, TransferListPage());
+    // LogUtil.v("updateTokenChoose _tokenIndex $_tokenIndex ");
   }
 
   void deleteWallet(BuildContext context, {required TRWallet wallet}) {
@@ -248,26 +318,85 @@ class CurrentChooseWalletState with ChangeNotifier {
         });
   }
 
-  @override
-  void dispose() {
-    // TODO: implement dispose
-    super.dispose();
-  }
-
   void requestAssets() async {
+    queryMyCollectionTokens();
     _requestMyCollectionTokenAssets();
   }
 
   void queryMyCollectionTokens() async {
+    _currentWallet = await TRWallet.queryChooseWallet();
+    if (_currentWallet == null) {
+      return;
+    }
+    final String walletID = _currentWallet!.walletID!;
+    List<MCollectionTokens> datas = [];
+    KNetType netType = KNetType.Mainnet;
+    if (_chooseChainType == null) {
+      datas =
+          await MCollectionTokens.findStateTokens(walletID, 1, netType.index);
+    } else {
+      datas = await MCollectionTokens.findStateChainTokens(
+          walletID, 1, netType.index, _chooseChainType!.index);
+    }
+    _tokens[walletID] = datas;
     notifyListeners();
   }
 
   void _requestMyCollectionTokenAssets() async {
+    _currentWallet = await TRWallet.queryChooseWallet();
+    if (_currentWallet == null) {
+      return;
+    }
+    // final String walletID = _currentWallet!.walletID!;
+    // List<Map> rpcList = [];
+    // int i = 0;
+    // for (i = 0; i < tokens.length; i++) {
+    //   MCollectionTokens map = tokens[i];
+    //   Map params = {};
+    //   if (map.token == "ETH") {
+    //     params["jsonrpc"] = "2.0";
+    //     params["method"] = "eth_getBalance";
+    //     params["params"] = [_mhWallet!.walletAaddress!, "latest"];
+    //     params["id"] = "1";
+    //   } else {
+    //     String owner = map.owner ?? "";
+    //     String data =
+    //         "0x70a08231000000000000000000000000" + owner.replaceAll("0x", "");
+    //     params["jsonrpc"] = "2.0";
+    //     params["method"] = "eth_call";
+    //     params["params"] = [
+    //       {"to": map.contract, "data": data},
+    //       "latest"
+    //     ];
+    //     params["id"] = map.contract;
+    //   }
+    //   rpcList.add(params);
+    // }
+
     notifyListeners();
     _calTotalAssets();
   }
 
-  void _configTimerRequest() async {}
+  void _configTimerRequest() async {
+    if (_timer == null) {
+      _timer = TimerUtil(mInterval: 5000);
+      _timer!.setOnTimerTickCallback((millisUntilFinished) async {
+        if (_currentWallet == null) return;
+
+        // Set<String> token = Set();
+        // token.addAll(tokensL1.map((e) => e.token!).toList());
+        // token.addAll(tokensL2.map((e) => e.token!).toList());
+        // await WalletServices.requestPrices(
+        //     currency: currencyTypeStr, tokensStr: token.toList());
+        // _btcTokenPrice =
+        //     await TokenPrice.queryTokenPrices("BTC", currencyTypeStr);
+        requestAssets();
+      });
+    }
+    if (_timer!.isActive() == false) {
+      _timer!.startTimer();
+    }
+  }
 
   ///计算我的总资产
   void _calTotalAssets() {}

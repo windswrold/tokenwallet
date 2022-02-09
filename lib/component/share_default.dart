@@ -18,17 +18,21 @@ class ShareDefaultWidget extends StatelessWidget {
         children: [
           Column(
             mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               LoadAssetsImage(
-                "bg/icon_applogo.png",
+                "bg/biglogo.png",
                 height: 33,
-                // width: 150,
+                width: 150,
               ),
               10.columnWidget,
               Container(
                 color: ColorUtils.fromHex("#1C7685A2"),
+                height: 20.width,
+                alignment: Alignment.center,
+                padding: EdgeInsets.symmetric(horizontal: 5),
                 child: Text(
-                  "CSToken",
+                  SLOGAN,
                   style: TextStyle(
                     color: ColorUtils.fromHex("#BA0B0D10"),
                     fontSize: 11.font,
@@ -39,7 +43,7 @@ class ShareDefaultWidget extends StatelessWidget {
             ],
           ),
           QrImage(
-            data: "aaaaa",
+            data: CSTOKEN_QR,
             size: 80.width,
           )
         ],

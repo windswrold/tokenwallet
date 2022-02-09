@@ -1,4 +1,5 @@
 import 'package:cstoken/component/custom_underline.dart';
+import 'package:cstoken/model/tokens/collection_tokens.dart';
 import 'package:cstoken/pages/wallet/transfer/transfer_listcontent.dart';
 import 'package:cstoken/state/translist_state.dart';
 import 'package:cstoken/utils/extension.dart';
@@ -38,11 +39,12 @@ class _TransferListPageState extends State<TransferListPage>
         child: Consumer<CurrentChooseWalletState>(
           builder: (context, kwallet, child) {
             String amountType = kwallet.currencySymbolStr;
+            MCollectionTokens tokens = kwallet.chooseTokens()!;
             final total = "≈" + amountType;
             String _imageName = "";
-            String _balance = "1111111";
-            String _assets = total + "222222";
-            String _address = "0xE5298fD436B9874f7FB87a5117fA269B2623Ca34";
+            String _balance = tokens.balanceString;
+            String _assets = total + tokens.assets;
+            String _address = kwallet.walletinfo!.walletAaddress!;
             return Column(
               children: [
                 Container(
@@ -208,12 +210,15 @@ class _TransferListPageState extends State<TransferListPage>
 
   @override
   Widget build(BuildContext context) {
+    MCollectionTokens tokens =
+        Provider.of<CurrentChooseWalletState>(context, listen: false)
+            .chooseTokens()!;
     return ChangeNotifierProvider(
       create: (_) => _kTransListState,
       child: DefaultTabController(
         length: _myTabs.length,
         child: CustomPageView(
-          title: CustomPageView.getTitle(title: "ssss"),
+          title: CustomPageView.getTitle(title: tokens.token ?? ""),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
