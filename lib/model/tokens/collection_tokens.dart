@@ -1,5 +1,7 @@
 import 'dart:async';
 
+import 'package:cstoken/db/database.dart';
+import 'package:cstoken/db/database_config.dart';
 import 'package:floor/floor.dart';
 import 'package:json_annotation/json_annotation.dart';
 
@@ -22,7 +24,7 @@ class MCollectionTokens {
   double? price;
   double? balance;
   int? digits;
-  int? chainid; //用来区分测试网主网
+  int? kNetType; //0 是主网 非0是测试网
   int? index; //排序
 
   MCollectionTokens({
@@ -36,11 +38,23 @@ class MCollectionTokens {
     this.price,
     this.balance,
     this.digits,
-    this.chainid,
     this.iconPath,
     this.chainType,
     this.index,
+    this.kNetType,
   });
+
+  static MCollectionTokens fromJson(Map<String, dynamic> json) {
+    return MCollectionTokens(
+      coinType: json['coinType'] as String?,
+      chainType: json['chainType'] as int?,
+      token: json['token'] as String?,
+      decimals: json['decimals'] as int?,
+      contract: json['contract'] as String?,
+      digits: json['digits'] as int?,
+      kNetType: json['kNetType'] as int?,
+    );
+  }
 
   // static Future<bool> moveItem(
   //     String walletID, int oldIndex, int newIndex) async {
@@ -84,100 +98,6 @@ class MCollectionTokens {
   //   }
   // }
 
-  // static Future<List<MCollectionTokens>> findTokens(
-  //     String owner, int chainID) async {
-  //   try {
-  //     FlutterDatabase? database = await (BaseModel.getDataBae());
-  //     List<MCollectionTokens>? datas =
-  //         await database?.tokensDao.findTokens(owner, chainID);
-  //     return datas ?? [];
-  //   } catch (e) {
-  //     LogUtil.v("失败" + e.toString());
-  //     return [];
-  //   }
-  // }
-
-  // static Future<void> updateTokenPrice(double price, String token) async {
-  //   try {
-  //     FlutterDatabase? database = await (BaseModel.getDataBae());
-  //     database?.tokensDao.updateTokenPrice(price, token);
-  //   } catch (e) {
-  //     LogUtil.v("失败" + e.toString());
-  //     return;
-  //   }
-  // }
-
-  // static Future<List<MCollectionTokens>> findStateTokens(
-  //     String s, int i, int chainID) async {
-  //   try {
-  //     FlutterDatabase? database = await (BaseModel.getDataBae());
-  //     List<MCollectionTokens>? datas =
-  //         await database?.tokensDao.findStateTokens(s, i, chainID);
-  //     datas ??= [];
-  //     for (var item in datas) {
-  //       if (item.token == "ETH") {
-  //         datas.remove(item);
-  //         datas.insert(0, item);
-  //       }
-  //       if (item.token == "ZKTR") {
-  //         datas.remove(item);
-  //         datas.insert(1, item);
-  //       }
-  //     }
-  //     return datas;
-  //   } catch (e) {
-  //     LogUtil.v("失败" + e.toString());
-  //     return [];
-  //   }
-  // }
-
-  // static void insertToken(MCollectionTokens model) async {
-  //   try {
-  //     model.contract = model.contract?.toLowerCase();
-  //     FlutterDatabase? database = await (BaseModel.getDataBae());
-  //     await database?.tokensDao.insertToken(model);
-  //   } catch (e) {
-  //     LogUtil.v("失败" + e.toString());
-  //   }
-  // }
-
-  // static void insertTokens(List<MCollectionTokens> models) async {
-  //   try {
-  //     FlutterDatabase? database = await (BaseModel.getDataBae());
-  //     await database?.tokensDao.insertTokens(models);
-  //   } catch (e) {
-  //     LogUtil.v("失败" + e.toString());
-  //   }
-  // }
-
-  // static void deleteTokens(MCollectionTokens model) async {
-  //   try {
-  //     FlutterDatabase? database = await (BaseModel.getDataBae());
-
-  //     await database?.tokensDao.deleteTokens(model);
-  //   } catch (e) {
-  //     LogUtil.v("失败" + e.toString());
-  //   }
-  // }
-
-  // static void updateTokens(MCollectionTokens model) async {
-  //   try {
-  //     FlutterDatabase? database = await (BaseModel.getDataBae());
-  //     await database?.tokensDao.updateTokens(model);
-  //   } catch (e) {
-  //     LogUtil.v("失败" + e.toString());
-  //   }
-  // }
-
-  // static void updateTokenData(String sql) async {
-  //   try {
-  //     FlutterDatabase? database = await (BaseModel.getDataBae());
-  //     await database?.tokensDao.updateTokenData(sql);
-  //   } catch (e) {
-  //     LogUtil.v("失败" + e.toString());
-  //   }
-  // }
-
   String get assets =>
       StringUtil.dataFormat(((price ??= 0) * (balance ??= 0)), 2);
 
@@ -186,32 +106,124 @@ class MCollectionTokens {
 
   String get balanceString =>
       StringUtil.dataFormat(this.balance ?? 0.0, this.digits!);
+
+  ///查询当前钱包下当前节点的所有
+  static Future<List<MCollectionTokens>> findTokens(
+      String owner, int kNetType) async {
+    try {
+      FlutterDatabase? database = await DataBaseConfig.openDataBase();
+      return (await database?.tokensDao.findTokens(owner, kNetType)) ?? [];
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  static Future<List<MCollectionTokens>> findChainTokens(
+      String owner, int kNetType, int chainType) async {
+    try {
+      FlutterDatabase? database = await DataBaseConfig.openDataBase();
+      return (await database?.tokensDao
+              .findChainTokens(owner, kNetType, chainType)) ??
+          [];
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  static Future<List<MCollectionTokens>> findStateTokens(
+      String owner, int state, int kNetType) async {
+    try {
+      FlutterDatabase? database = await DataBaseConfig.openDataBase();
+      return (await database?.tokensDao
+              .findStateTokens(owner, state, kNetType)) ??
+          [];
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  static Future<List<MCollectionTokens>> findStateChainTokens(
+      String owner, int state, int kNetType, int chainType) async {
+    try {
+      FlutterDatabase? database = await DataBaseConfig.openDataBase();
+      return (await database?.tokensDao
+              .findStateChainTokens(owner, state, kNetType, chainType)) ??
+          [];
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  static Future<void> insertTokens(List<MCollectionTokens> models) async {
+    try {
+      FlutterDatabase? database = await DataBaseConfig.openDataBase();
+      database?.tokensDao.insertTokens(models);
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  static Future<void> deleteTokens(MCollectionTokens model) async {
+    try {
+      FlutterDatabase? database = await DataBaseConfig.openDataBase();
+      database?.tokensDao.deleteTokens(model);
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  static Future<void> updateTokens(MCollectionTokens model) async {
+    try {
+      FlutterDatabase? database = await DataBaseConfig.openDataBase();
+      database?.tokensDao.updateTokens(model);
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  static Future<void> updateTokenData(String sql) async {
+    try {
+      FlutterDatabase? database = await DataBaseConfig.openDataBase();
+      database?.tokensDao.updateTokenData(sql);
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  static Future<int?> findMaxIndex(String owner, int kNetType) async {
+    try {
+      FlutterDatabase? database = await DataBaseConfig.openDataBase();
+      return database?.tokensDao.findMaxIndex(owner, kNetType);
+    } catch (e) {
+      rethrow;
+    }
+  }
 }
 
 @dao
 abstract class MCollectionTokenDao {
   @Query('SELECT * FROM ' +
       tableName +
-      ' WHERE owner = :owner and chainid=:chainid ORDER BY "index"')
-  Future<List<MCollectionTokens>> findTokens(String owner, int chainid);
+      ' WHERE owner = :owner and kNetType=:kNetType ORDER BY "index"')
+  Future<List<MCollectionTokens>> findTokens(String owner, int kNetType);
 
   @Query('SELECT * FROM ' +
       tableName +
-      ' WHERE owner = :owner and chainid=:chainid and chainType=:chainType ORDER BY "index"')
+      ' WHERE owner = :owner and kNetType=:kNetType and chainType=:chainType ORDER BY "index"')
   Future<List<MCollectionTokens>> findChainTokens(
-      String owner, int chainid, int chainType);
+      String owner, int kNetType, int chainType);
 
   @Query('SELECT * FROM ' +
       tableName +
-      ' WHERE owner = :owner and state = :state and chainid=:chainid ORDER BY "index"')
+      ' WHERE owner = :owner and state = :state and kNetType=:kNetType ORDER BY "index"')
   Future<List<MCollectionTokens>> findStateTokens(
-      String owner, int state, int chainid);
+      String owner, int state, int kNetType);
 
   @Query('SELECT * FROM ' +
       tableName +
-      ' WHERE owner = :owner and state = :state and chainid=:chainid and chainType =:chainType ORDER BY "index"')
+      ' WHERE owner = :owner and state = :state and kNetType=:kNetType and chainType =:chainType ORDER BY "index"')
   Future<List<MCollectionTokens>> findStateChainTokens(
-      String owner, int state, int chainid, int chainType);
+      String owner, int state, int kNetType, int chainType);
 
   @Insert(onConflict: OnConflictStrategy.replace)
   Future<void> insertToken(MCollectionTokens model);
@@ -227,4 +239,9 @@ abstract class MCollectionTokenDao {
 
   @Query("UPDATE " + tableName + " SET :sql")
   Future<void> updateTokenData(String sql);
+
+  @Query('SELECT MAX(index) FROM ' +
+      tableName +
+      "where owner = :owner and kNetType = :kNetType")
+  Future<int?> findMaxIndex(String owner, int kNetType);
 }

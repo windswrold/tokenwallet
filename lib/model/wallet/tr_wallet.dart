@@ -3,9 +3,11 @@ import 'dart:math';
 import 'package:cstoken/const/constant.dart';
 import 'package:cstoken/db/database.dart';
 import 'package:cstoken/db/database_config.dart';
+import 'package:cstoken/model/assets/currency_list.dart';
 import 'package:cstoken/model/chain/bsc.dart';
 import 'package:cstoken/model/chain/eth.dart';
 import 'package:cstoken/model/chain/heco.dart';
+import 'package:cstoken/model/tokens/collection_tokens.dart';
 import 'package:cstoken/model/wallet/tr_wallet_info.dart';
 import 'package:cstoken/pages/tabbar/tabbar.dart';
 import 'package:cstoken/pages/wallet/create/backup_tip_memo.dart';
@@ -129,6 +131,7 @@ class TRWallet {
       required String walletName,
       required KChainType kChainType,
       required KLeadType kLeadType}) async {
+    HWToast.showLoading();
     try {
       if (validImportValue(
               content: content,
@@ -141,7 +144,7 @@ class TRWallet {
           false) {
         return;
       }
-      HWToast.showLoading();
+
       final walletID = TREncode.SHA256(content.replaceAll(" ", "") + "CSTOKEM");
       TRWallet? oldWallets = await TRWallet.queryWalletByWalletID(walletID);
       if (oldWallets != null) {
@@ -181,6 +184,19 @@ class TRWallet {
         infos.coinType = object.coinType!.index;
         TRWalletInfo.insertWallets([infos]);
       }
+      int index = (await MCollectionTokens.findMaxIndex(
+              walletID, KNetType.Mainnet.index)) ??
+          0;
+      List<MCollectionTokens> tokens = [];
+      for (var item in currency_List) {
+        MCollectionTokens token = MCollectionTokens.fromJson(item);
+        token.owner = walletID;
+        token.state = 1;
+        token.tokenID = token.kNetType.toString() + "|" + token.contract!;
+        token.index = index++;
+        tokens.add(token);
+      }
+      MCollectionTokens.insertTokens(tokens);
       HWToast.hiddenAllToast();
       Provider.of<CurrentChooseWalletState>(context, listen: false)
           .loadWallet();

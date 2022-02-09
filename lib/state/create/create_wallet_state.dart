@@ -64,6 +64,7 @@ class CreateWalletProvider with ChangeNotifier {
   }
 
   void createWallet(BuildContext context, {required KChainType chainType}) {
+    HWToast.showLoading();
     String memo = "";
     if (_leadType == KLeadType.Memo) {
       memo = Mnemonic.generateMnemonic();

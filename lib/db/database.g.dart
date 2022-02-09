@@ -102,7 +102,7 @@ class _$FlutterDatabase extends FlutterDatabase {
         await database.execute(
             'CREATE TABLE IF NOT EXISTS `tokenPrice_table` (`contract` TEXT, `source` TEXT, `target` TEXT, `rate` TEXT, PRIMARY KEY (`contract`, `source`, `target`))');
         await database.execute(
-            'CREATE TABLE IF NOT EXISTS `tokens_table` (`tokenID` TEXT, `owner` TEXT, `contract` TEXT, `token` TEXT, `coinType` TEXT, `chainType` INTEGER, `state` INTEGER, `iconPath` TEXT, `decimals` INTEGER, `price` REAL, `balance` REAL, `digits` INTEGER, `chainid` INTEGER, `index` INTEGER, PRIMARY KEY (`tokenID`))');
+            'CREATE TABLE IF NOT EXISTS `tokens_table` (`tokenID` TEXT, `owner` TEXT, `contract` TEXT, `token` TEXT, `coinType` TEXT, `chainType` INTEGER, `state` INTEGER, `iconPath` TEXT, `decimals` INTEGER, `price` REAL, `balance` REAL, `digits` INTEGER, `kNetType` INTEGER, `index` INTEGER, PRIMARY KEY (`tokenID`))');
 
         await callback?.onCreate?.call(database, version);
       },
@@ -627,7 +627,7 @@ class _$MCollectionTokenDao extends MCollectionTokenDao {
                   'price': item.price,
                   'balance': item.balance,
                   'digits': item.digits,
-                  'chainid': item.chainid,
+                  'kNetType': item.kNetType,
                   'index': item.index
                 }),
         _mCollectionTokensUpdateAdapter = UpdateAdapter(
@@ -647,7 +647,7 @@ class _$MCollectionTokenDao extends MCollectionTokenDao {
                   'price': item.price,
                   'balance': item.balance,
                   'digits': item.digits,
-                  'chainid': item.chainid,
+                  'kNetType': item.kNetType,
                   'index': item.index
                 }),
         _mCollectionTokensDeletionAdapter = DeletionAdapter(
@@ -667,7 +667,7 @@ class _$MCollectionTokenDao extends MCollectionTokenDao {
                   'price': item.price,
                   'balance': item.balance,
                   'digits': item.digits,
-                  'chainid': item.chainid,
+                  'kNetType': item.kNetType,
                   'index': item.index
                 });
 
@@ -684,44 +684,51 @@ class _$MCollectionTokenDao extends MCollectionTokenDao {
   final DeletionAdapter<MCollectionTokens> _mCollectionTokensDeletionAdapter;
 
   @override
-  Future<List<MCollectionTokens>> findTokens(String owner, int chainid) async {
+  Future<List<MCollectionTokens>> findTokens(String owner, int kNetType) async {
     return _queryAdapter.queryList(
-        'SELECT * FROM tokens_table WHERE owner = ?1 and chainid=?2 ORDER BY \"index\"',
-        mapper: (Map<String, Object?> row) => MCollectionTokens(tokenID: row['tokenID'] as String?, owner: row['owner'] as String?, contract: row['contract'] as String?, token: row['token'] as String?, coinType: row['coinType'] as String?, state: row['state'] as int?, decimals: row['decimals'] as int?, price: row['price'] as double?, balance: row['balance'] as double?, digits: row['digits'] as int?, chainid: row['chainid'] as int?, iconPath: row['iconPath'] as String?, chainType: row['chainType'] as int?, index: row['index'] as int?),
-        arguments: [owner, chainid]);
+        'SELECT * FROM tokens_table WHERE owner = ?1 and kNetType=?2 ORDER BY \"index\"',
+        mapper: (Map<String, Object?> row) => MCollectionTokens(tokenID: row['tokenID'] as String?, owner: row['owner'] as String?, contract: row['contract'] as String?, token: row['token'] as String?, coinType: row['coinType'] as String?, state: row['state'] as int?, decimals: row['decimals'] as int?, price: row['price'] as double?, balance: row['balance'] as double?, digits: row['digits'] as int?, iconPath: row['iconPath'] as String?, chainType: row['chainType'] as int?, index: row['index'] as int?, kNetType: row['kNetType'] as int?),
+        arguments: [owner, kNetType]);
   }
 
   @override
   Future<List<MCollectionTokens>> findChainTokens(
-      String owner, int chainid, int chainType) async {
+      String owner, int kNetType, int chainType) async {
     return _queryAdapter.queryList(
-        'SELECT * FROM tokens_table WHERE owner = ?1 and chainid=?2 and chainType=?3 ORDER BY \"index\"',
-        mapper: (Map<String, Object?> row) => MCollectionTokens(tokenID: row['tokenID'] as String?, owner: row['owner'] as String?, contract: row['contract'] as String?, token: row['token'] as String?, coinType: row['coinType'] as String?, state: row['state'] as int?, decimals: row['decimals'] as int?, price: row['price'] as double?, balance: row['balance'] as double?, digits: row['digits'] as int?, chainid: row['chainid'] as int?, iconPath: row['iconPath'] as String?, chainType: row['chainType'] as int?, index: row['index'] as int?),
-        arguments: [owner, chainid, chainType]);
+        'SELECT * FROM tokens_table WHERE owner = ?1 and kNetType=?2 and chainType=?3 ORDER BY \"index\"',
+        mapper: (Map<String, Object?> row) => MCollectionTokens(tokenID: row['tokenID'] as String?, owner: row['owner'] as String?, contract: row['contract'] as String?, token: row['token'] as String?, coinType: row['coinType'] as String?, state: row['state'] as int?, decimals: row['decimals'] as int?, price: row['price'] as double?, balance: row['balance'] as double?, digits: row['digits'] as int?, iconPath: row['iconPath'] as String?, chainType: row['chainType'] as int?, index: row['index'] as int?, kNetType: row['kNetType'] as int?),
+        arguments: [owner, kNetType, chainType]);
   }
 
   @override
   Future<List<MCollectionTokens>> findStateTokens(
-      String owner, int state, int chainid) async {
+      String owner, int state, int kNetType) async {
     return _queryAdapter.queryList(
-        'SELECT * FROM tokens_table WHERE owner = ?1 and state = ?2 and chainid=?3 ORDER BY \"index\"',
-        mapper: (Map<String, Object?> row) => MCollectionTokens(tokenID: row['tokenID'] as String?, owner: row['owner'] as String?, contract: row['contract'] as String?, token: row['token'] as String?, coinType: row['coinType'] as String?, state: row['state'] as int?, decimals: row['decimals'] as int?, price: row['price'] as double?, balance: row['balance'] as double?, digits: row['digits'] as int?, chainid: row['chainid'] as int?, iconPath: row['iconPath'] as String?, chainType: row['chainType'] as int?, index: row['index'] as int?),
-        arguments: [owner, state, chainid]);
+        'SELECT * FROM tokens_table WHERE owner = ?1 and state = ?2 and kNetType=?3 ORDER BY \"index\"',
+        mapper: (Map<String, Object?> row) => MCollectionTokens(tokenID: row['tokenID'] as String?, owner: row['owner'] as String?, contract: row['contract'] as String?, token: row['token'] as String?, coinType: row['coinType'] as String?, state: row['state'] as int?, decimals: row['decimals'] as int?, price: row['price'] as double?, balance: row['balance'] as double?, digits: row['digits'] as int?, iconPath: row['iconPath'] as String?, chainType: row['chainType'] as int?, index: row['index'] as int?, kNetType: row['kNetType'] as int?),
+        arguments: [owner, state, kNetType]);
   }
 
   @override
   Future<List<MCollectionTokens>> findStateChainTokens(
-      String owner, int state, int chainid, int chainType) async {
+      String owner, int state, int kNetType, int chainType) async {
     return _queryAdapter.queryList(
-        'SELECT * FROM tokens_table WHERE owner = ?1 and state = ?2 and chainid=?3 and chainType =?4 ORDER BY \"index\"',
-        mapper: (Map<String, Object?> row) => MCollectionTokens(tokenID: row['tokenID'] as String?, owner: row['owner'] as String?, contract: row['contract'] as String?, token: row['token'] as String?, coinType: row['coinType'] as String?, state: row['state'] as int?, decimals: row['decimals'] as int?, price: row['price'] as double?, balance: row['balance'] as double?, digits: row['digits'] as int?, chainid: row['chainid'] as int?, iconPath: row['iconPath'] as String?, chainType: row['chainType'] as int?, index: row['index'] as int?),
-        arguments: [owner, state, chainid, chainType]);
+        'SELECT * FROM tokens_table WHERE owner = ?1 and state = ?2 and kNetType=?3 and chainType =?4 ORDER BY \"index\"',
+        mapper: (Map<String, Object?> row) => MCollectionTokens(tokenID: row['tokenID'] as String?, owner: row['owner'] as String?, contract: row['contract'] as String?, token: row['token'] as String?, coinType: row['coinType'] as String?, state: row['state'] as int?, decimals: row['decimals'] as int?, price: row['price'] as double?, balance: row['balance'] as double?, digits: row['digits'] as int?, iconPath: row['iconPath'] as String?, chainType: row['chainType'] as int?, index: row['index'] as int?, kNetType: row['kNetType'] as int?),
+        arguments: [owner, state, kNetType, chainType]);
   }
 
   @override
   Future<void> updateTokenData(String sql) async {
     await _queryAdapter
         .queryNoReturn('UPDATE tokens_table SET ?1', arguments: [sql]);
+  }
+
+  @override
+  Future<int?> findMaxIndex(String owner, int kNetType) async {
+    await _queryAdapter.queryNoReturn(
+        'SELECT MAX(index) FROM tokens_tablewhere owner = ?1 and kNetType = ?2',
+        arguments: [owner, kNetType]);
   }
 
   @override
