@@ -26,6 +26,7 @@ class MCollectionTokens {
   int? digits;
   int? kNetType; //0 是主网 非0是测试网
   int? index; //排序
+  int? tokenType;
 
   MCollectionTokens({
     this.tokenID,
@@ -42,18 +43,21 @@ class MCollectionTokens {
     this.chainType,
     this.index,
     this.kNetType,
+    this.tokenType,
   });
+
+  bool get isToken => tokenType == KTokenType.native.index ? false : true;
 
   static MCollectionTokens fromJson(Map<String, dynamic> json) {
     return MCollectionTokens(
-      coinType: json['coinType'] as String?,
-      chainType: json['chainType'] as int?,
-      token: json['token'] as String?,
-      decimals: json['decimals'] as int?,
-      contract: json['contract'] as String?,
-      digits: json['digits'] as int?,
-      kNetType: json['kNetType'] as int?,
-    );
+        coinType: json['coinType'] as String?,
+        chainType: json['chainType'] as int?,
+        token: json['token'] as String?,
+        decimals: json['decimals'] as int?,
+        contract: json['contract'] as String?,
+        digits: json['digits'] as int?,
+        kNetType: json['kNetType'] as int?,
+        tokenType: json["tokenType"] as int?);
   }
 
   String get assets =>

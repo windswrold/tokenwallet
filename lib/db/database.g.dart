@@ -102,7 +102,7 @@ class _$FlutterDatabase extends FlutterDatabase {
         await database.execute(
             'CREATE TABLE IF NOT EXISTS `tokenPrice_table` (`contract` TEXT, `source` TEXT, `target` TEXT, `rate` TEXT, PRIMARY KEY (`contract`, `source`, `target`))');
         await database.execute(
-            'CREATE TABLE IF NOT EXISTS `tokens_table` (`tokenID` TEXT, `owner` TEXT, `contract` TEXT, `token` TEXT, `coinType` TEXT, `chainType` INTEGER, `state` INTEGER, `iconPath` TEXT, `decimals` INTEGER, `price` REAL, `balance` REAL, `digits` INTEGER, `kNetType` INTEGER, `index` INTEGER, PRIMARY KEY (`tokenID`))');
+            'CREATE TABLE IF NOT EXISTS `tokens_table` (`tokenID` TEXT, `owner` TEXT, `contract` TEXT, `token` TEXT, `coinType` TEXT, `chainType` INTEGER, `state` INTEGER, `iconPath` TEXT, `decimals` INTEGER, `price` REAL, `balance` REAL, `digits` INTEGER, `kNetType` INTEGER, `index` INTEGER, `tokenType` INTEGER, PRIMARY KEY (`tokenID`))');
 
         await callback?.onCreate?.call(database, version);
       },
@@ -628,7 +628,8 @@ class _$MCollectionTokenDao extends MCollectionTokenDao {
                   'balance': item.balance,
                   'digits': item.digits,
                   'kNetType': item.kNetType,
-                  'index': item.index
+                  'index': item.index,
+                  'tokenType': item.tokenType
                 }),
         _mCollectionTokensUpdateAdapter = UpdateAdapter(
             database,
@@ -648,7 +649,8 @@ class _$MCollectionTokenDao extends MCollectionTokenDao {
                   'balance': item.balance,
                   'digits': item.digits,
                   'kNetType': item.kNetType,
-                  'index': item.index
+                  'index': item.index,
+                  'tokenType': item.tokenType
                 }),
         _mCollectionTokensDeletionAdapter = DeletionAdapter(
             database,
@@ -668,7 +670,8 @@ class _$MCollectionTokenDao extends MCollectionTokenDao {
                   'balance': item.balance,
                   'digits': item.digits,
                   'kNetType': item.kNetType,
-                  'index': item.index
+                  'index': item.index,
+                  'tokenType': item.tokenType
                 });
 
   final sqflite.DatabaseExecutor database;
@@ -687,7 +690,7 @@ class _$MCollectionTokenDao extends MCollectionTokenDao {
   Future<List<MCollectionTokens>> findTokens(String owner, int kNetType) async {
     return _queryAdapter.queryList(
         'SELECT * FROM tokens_table WHERE owner = ?1 and kNetType=?2 ORDER BY \"index\"',
-        mapper: (Map<String, Object?> row) => MCollectionTokens(tokenID: row['tokenID'] as String?, owner: row['owner'] as String?, contract: row['contract'] as String?, token: row['token'] as String?, coinType: row['coinType'] as String?, state: row['state'] as int?, decimals: row['decimals'] as int?, price: row['price'] as double?, balance: row['balance'] as double?, digits: row['digits'] as int?, iconPath: row['iconPath'] as String?, chainType: row['chainType'] as int?, index: row['index'] as int?, kNetType: row['kNetType'] as int?),
+        mapper: (Map<String, Object?> row) => MCollectionTokens(tokenID: row['tokenID'] as String?, owner: row['owner'] as String?, contract: row['contract'] as String?, token: row['token'] as String?, coinType: row['coinType'] as String?, state: row['state'] as int?, decimals: row['decimals'] as int?, price: row['price'] as double?, balance: row['balance'] as double?, digits: row['digits'] as int?, iconPath: row['iconPath'] as String?, chainType: row['chainType'] as int?, index: row['index'] as int?, kNetType: row['kNetType'] as int?, tokenType: row['tokenType'] as int?),
         arguments: [owner, kNetType]);
   }
 
@@ -696,7 +699,7 @@ class _$MCollectionTokenDao extends MCollectionTokenDao {
       String owner, int kNetType, int chainType) async {
     return _queryAdapter.queryList(
         'SELECT * FROM tokens_table WHERE owner = ?1 and kNetType=?2 and chainType=?3 ORDER BY \"index\"',
-        mapper: (Map<String, Object?> row) => MCollectionTokens(tokenID: row['tokenID'] as String?, owner: row['owner'] as String?, contract: row['contract'] as String?, token: row['token'] as String?, coinType: row['coinType'] as String?, state: row['state'] as int?, decimals: row['decimals'] as int?, price: row['price'] as double?, balance: row['balance'] as double?, digits: row['digits'] as int?, iconPath: row['iconPath'] as String?, chainType: row['chainType'] as int?, index: row['index'] as int?, kNetType: row['kNetType'] as int?),
+        mapper: (Map<String, Object?> row) => MCollectionTokens(tokenID: row['tokenID'] as String?, owner: row['owner'] as String?, contract: row['contract'] as String?, token: row['token'] as String?, coinType: row['coinType'] as String?, state: row['state'] as int?, decimals: row['decimals'] as int?, price: row['price'] as double?, balance: row['balance'] as double?, digits: row['digits'] as int?, iconPath: row['iconPath'] as String?, chainType: row['chainType'] as int?, index: row['index'] as int?, kNetType: row['kNetType'] as int?, tokenType: row['tokenType'] as int?),
         arguments: [owner, kNetType, chainType]);
   }
 
@@ -705,7 +708,7 @@ class _$MCollectionTokenDao extends MCollectionTokenDao {
       String owner, int state, int kNetType) async {
     return _queryAdapter.queryList(
         'SELECT * FROM tokens_table WHERE owner = ?1 and state = ?2 and kNetType=?3 ORDER BY \"index\"',
-        mapper: (Map<String, Object?> row) => MCollectionTokens(tokenID: row['tokenID'] as String?, owner: row['owner'] as String?, contract: row['contract'] as String?, token: row['token'] as String?, coinType: row['coinType'] as String?, state: row['state'] as int?, decimals: row['decimals'] as int?, price: row['price'] as double?, balance: row['balance'] as double?, digits: row['digits'] as int?, iconPath: row['iconPath'] as String?, chainType: row['chainType'] as int?, index: row['index'] as int?, kNetType: row['kNetType'] as int?),
+        mapper: (Map<String, Object?> row) => MCollectionTokens(tokenID: row['tokenID'] as String?, owner: row['owner'] as String?, contract: row['contract'] as String?, token: row['token'] as String?, coinType: row['coinType'] as String?, state: row['state'] as int?, decimals: row['decimals'] as int?, price: row['price'] as double?, balance: row['balance'] as double?, digits: row['digits'] as int?, iconPath: row['iconPath'] as String?, chainType: row['chainType'] as int?, index: row['index'] as int?, kNetType: row['kNetType'] as int?, tokenType: row['tokenType'] as int?),
         arguments: [owner, state, kNetType]);
   }
 
@@ -714,7 +717,7 @@ class _$MCollectionTokenDao extends MCollectionTokenDao {
       String owner, int state, int kNetType, int chainType) async {
     return _queryAdapter.queryList(
         'SELECT * FROM tokens_table WHERE owner = ?1 and state = ?2 and kNetType=?3 and chainType =?4 ORDER BY \"index\"',
-        mapper: (Map<String, Object?> row) => MCollectionTokens(tokenID: row['tokenID'] as String?, owner: row['owner'] as String?, contract: row['contract'] as String?, token: row['token'] as String?, coinType: row['coinType'] as String?, state: row['state'] as int?, decimals: row['decimals'] as int?, price: row['price'] as double?, balance: row['balance'] as double?, digits: row['digits'] as int?, iconPath: row['iconPath'] as String?, chainType: row['chainType'] as int?, index: row['index'] as int?, kNetType: row['kNetType'] as int?),
+        mapper: (Map<String, Object?> row) => MCollectionTokens(tokenID: row['tokenID'] as String?, owner: row['owner'] as String?, contract: row['contract'] as String?, token: row['token'] as String?, coinType: row['coinType'] as String?, state: row['state'] as int?, decimals: row['decimals'] as int?, price: row['price'] as double?, balance: row['balance'] as double?, digits: row['digits'] as int?, iconPath: row['iconPath'] as String?, chainType: row['chainType'] as int?, index: row['index'] as int?, kNetType: row['kNetType'] as int?, tokenType: row['tokenType'] as int?),
         arguments: [owner, state, kNetType, chainType]);
   }
 

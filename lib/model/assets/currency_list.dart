@@ -6,7 +6,8 @@ List<Map<String, dynamic>> currency_List = [
     "decimals": 18,
     "contract": "",
     "digits": 6,
-    "kNetType": 0
+    "kNetType": 0,
+    "tokenType": 0,
   },
   {
     "coinType": "ETH",
@@ -15,7 +16,8 @@ List<Map<String, dynamic>> currency_List = [
     "decimals": 18,
     "contract": "",
     "digits": 6,
-    "kNetType": 1
+    "kNetType": 1,
+    "tokenType": 0,
   },
   {
     "coinType": "BSC",
@@ -24,7 +26,8 @@ List<Map<String, dynamic>> currency_List = [
     "decimals": 18,
     "contract": "",
     "digits": 6,
-    "kNetType": 0
+    "kNetType": 0,
+    "tokenType": 0,
   },
   {
     "coinType": "BSC",
@@ -33,7 +36,8 @@ List<Map<String, dynamic>> currency_List = [
     "decimals": 18,
     "contract": "",
     "digits": 6,
-    "kNetType": 1
+    "kNetType": 1,
+    "tokenType": 0,
   },
   {
     "coinType": "HECO",
@@ -42,7 +46,8 @@ List<Map<String, dynamic>> currency_List = [
     "decimals": 18,
     "contract": "",
     "digits": 6,
-    "kNetType": 0
+    "kNetType": 0,
+    "tokenType": 0,
   },
   {
     "coinType": "HECO",
@@ -51,7 +56,8 @@ List<Map<String, dynamic>> currency_List = [
     "decimals": 18,
     "contract": "",
     "digits": 6,
-    "kNetType": 1
+    "kNetType": 1,
+    "tokenType": 0,
   },
   {
     "coinType": "OKChain",
@@ -60,7 +66,8 @@ List<Map<String, dynamic>> currency_List = [
     "decimals": 18,
     "contract": "",
     "digits": 6,
-    "kNetType": 0
+    "kNetType": 0,
+    "tokenType": 0,
   },
   {
     "coinType": "OKChain",
@@ -69,7 +76,8 @@ List<Map<String, dynamic>> currency_List = [
     "decimals": 18,
     "contract": "",
     "digits": 6,
-    "kNetType": 1
+    "kNetType": 1,
+    "tokenType": 0,
   },
   {
     "coinType": "Matic",
@@ -87,7 +95,8 @@ List<Map<String, dynamic>> currency_List = [
     "decimals": 18,
     "contract": "",
     "digits": 6,
-    "kNetType": 1
+    "kNetType": 1,
+    "tokenType": 0,
   },
   {
     "coinType": "AVAX",
@@ -96,7 +105,8 @@ List<Map<String, dynamic>> currency_List = [
     "decimals": 18,
     "contract": "",
     "digits": 6,
-    "kNetType": 0
+    "kNetType": 0,
+    "tokenType": 0,
   },
   {
     "coinType": "AVAX",
@@ -105,7 +115,8 @@ List<Map<String, dynamic>> currency_List = [
     "decimals": 18,
     "contract": "",
     "digits": 6,
-    "kNetType": 1
+    "kNetType": 1,
+    "tokenType": 0,
   },
   {
     "coinType": "Arbitrum",
@@ -114,7 +125,8 @@ List<Map<String, dynamic>> currency_List = [
     "decimals": 18,
     "contract": "",
     "digits": 6,
-    "kNetType": 0
+    "kNetType": 0,
+    "tokenType": 0,
   },
   {
     "coinType": "Arbitrum",
@@ -123,7 +135,8 @@ List<Map<String, dynamic>> currency_List = [
     "decimals": 18,
     "contract": "",
     "digits": 6,
-    "kNetType": 1
+    "kNetType": 1,
+    "tokenType": 0,
   },
   {
     "coinType": "ETH",
@@ -132,7 +145,8 @@ List<Map<String, dynamic>> currency_List = [
     "decimals": 6,
     "contract": "0xdac17f958d2ee523a2206206994597c13d831ec7",
     "digits": 4,
-    "kNetType": 0
+    "kNetType": 0,
+    "tokenType": 1,
   },
   {
     "coinType": "ETH",
@@ -141,7 +155,8 @@ List<Map<String, dynamic>> currency_List = [
     "decimals": 18,
     "contract": "0x0000000000085d4780B73119b644AE5ecd22b376",
     "digits": 4,
-    "kNetType": 0
+    "kNetType": 0,
+    "tokenType": 1,
   },
   {
     "coinType": "ETH",
@@ -150,6 +165,7 @@ List<Map<String, dynamic>> currency_List = [
     "decimals": 2,
     "contract": "0x056fd409e1d7a124bd7017459dfea2f387b6d5cd",
     "digits": 4,
-    "kNetType": 0
+    "kNetType": 0,
+    "tokenType": 1,
   }
 ];

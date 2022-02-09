@@ -63,6 +63,8 @@ enum KAlertType {
   edit_name, //nodeUrl
 }
 
+enum KTokenType { native, token }
+
 enum KNetType { Mainnet, Testnet }
 
 final bool inProduction = kReleaseMode;
