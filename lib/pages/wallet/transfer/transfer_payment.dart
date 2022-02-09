@@ -1,6 +1,8 @@
+import 'package:cstoken/net/wallet_services.dart';
 import 'package:cstoken/pages/scan/scan.dart';
 import 'package:cstoken/state/transfer_state.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 
 import '../../../public.dart';
@@ -14,6 +16,37 @@ class TransferPayment extends StatefulWidget {
 
 class _TransferPaymentState extends State<TransferPayment> {
   KTransferState _kTransferState = KTransferState();
+  String _paymentAssets = "--";
+  String _tokenprice = "";
+  String _gasLimit = '';
+  String _gasPrice = '';
+  String _feeValue = '';
+  bool _isCustomFee = false;
+
+  @override
+  void initState() {
+    super.initState();
+
+    if (inProduction == false) {
+      _kTransferState.addressEC.text =
+          "0x4e268c89495254288b4D1Cb4bc4c010f8C009b25";
+    }
+    _kTransferState.valueEC.addListener(() async {
+      final text = _kTransferState.valueEC.text;
+    });
+    _initData();
+  }
+
+  void _initData() async {
+    dynamic result = await WalletServices.ethGasStation();
+    if (result != null && mounted) {}
+  }
+
+  @override
+  void dispose() {
+    _kTransferState.valueEC.removeListener(() {});
+    super.dispose();
+  }
 
   Widget _buildFee() {
     return GestureDetector(
@@ -82,6 +115,8 @@ class _TransferPaymentState extends State<TransferPayment> {
       {bool goContact = false,
       Widget? suffixIcon,
       int maxLine = 1,
+      TextInputType keyboardType = TextInputType.text,
+      List<TextInputFormatter>? inputFormatters,
       String? titleDetail}) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -124,6 +159,8 @@ class _TransferPaymentState extends State<TransferPayment> {
           ),
           padding: EdgeInsets.only(top: 8.width),
           maxLines: maxLine,
+          keyboardType: keyboardType,
+          inputFormatters: inputFormatters,
           decoration: CustomTextField.getBorderLineDecoration(
               context: context,
               focusedBorderColor: ColorUtils.blueColor,
@@ -139,9 +176,8 @@ class _TransferPaymentState extends State<TransferPayment> {
     return ChangeNotifierProvider(
         create: (_) => _kTransferState,
         child: CustomPageView(
-          title: CustomPageView.getTitle(
-            title: "eth" + "transferetype_transfer".local(),
-          ),
+          title:
+              CustomPageView.getTitle(title: "transferetype_transfer".local()),
           backgroundColor: ColorUtils.backgroudColor,
           actions: [
             CustomPageView.getScan(() async {
@@ -165,32 +201,42 @@ class _TransferPaymentState extends State<TransferPayment> {
                               "icons/icon_addcontact.png", () {
                             _kTransferState.goContract(context);
                           })),
-                      _buildTextField(_kTransferState.valueEC,
-                          "transferetype_value".local(),
-                          titleDetail: "aaaaa",
-                          suffixIcon: GestureDetector(
-                            behavior: HitTestBehavior.opaque,
-                            onTap: () {
-                              _kTransferState.tapBalanceAll(context);
-                            },
-                            child: Container(
-                              alignment: Alignment.center,
-                              height: 30.width,
-                              child: Text(
-                                "transferetype_all".local(),
-                                style: TextStyle(
-                                  fontSize: 12.font,
-                                  fontWeight: FontWeightUtils.medium,
-                                  color: ColorUtils.blueColor,
+                      Consumer<CurrentChooseWalletState>(
+                          builder: (_, provider, child) {
+                        return _buildTextField(_kTransferState.valueEC,
+                            "transferetype_value".local(),
+                            titleDetail: "paymentsheep_canuse".local() +
+                                provider.chooseTokens()!.balanceString,
+                            keyboardType: const TextInputType.numberWithOptions(
+                                decimal: true),
+                            inputFormatters: [
+                              CustomTextField.decimalInputFormatter(18),
+                            ],
+                            suffixIcon: GestureDetector(
+                              behavior: HitTestBehavior.opaque,
+                              onTap: () {
+                                _kTransferState.valueEC.text =
+                                    provider.chooseTokens()!.balanceString;
+                              },
+                              child: Container(
+                                alignment: Alignment.center,
+                                height: 30.width,
+                                child: Text(
+                                  "transferetype_all".local(),
+                                  style: TextStyle(
+                                    fontSize: 12.font,
+                                    fontWeight: FontWeightUtils.medium,
+                                    color: ColorUtils.blueColor,
+                                  ),
                                 ),
                               ),
-                            ),
-                          )),
+                            ));
+                      }),
                       Container(
                         padding: EdgeInsets.only(top: 4.width),
                         alignment: Alignment.centerLeft,
                         child: Text(
-                          "#FF7685A2",
+                          _paymentAssets,
                           style: TextStyle(
                             fontSize: 12.font,
                             color: ColorUtils.fromHex("#FF7685A2"),

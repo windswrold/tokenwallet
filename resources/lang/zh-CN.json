@@ -168,5 +168,6 @@
     "paymenttip_ethnotenough": "ETH余额不足支付手续费",
     "input_paymentvaluezero": "转账金额不能为0",
     "payment_transsuccess": "已提交，等待确认",
-    "paymentsheep_info": "确认付款"
+    "paymentsheep_info": "确认付款",
+    "paymentsheep_canuse": "可用"
 }

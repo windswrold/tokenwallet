@@ -65,6 +65,7 @@ class _PaymentSheetState extends State<PaymentSheet> {
   Widget _getTitle() {
     return Container(
       height: 55.width,
+      padding: EdgeInsets.symmetric(horizontal: 16.width),
       decoration: const BoxDecoration(
           border: Border(
               bottom: BorderSide(
@@ -95,7 +96,7 @@ class _PaymentSheetState extends State<PaymentSheet> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 450.width,
+      height: 420.width,
       child: Column(
         children: [
           _getTitle(),
@@ -127,27 +128,39 @@ class _PaymentSheetState extends State<PaymentSheet> {
                       itemBuilder: (BuildContext context, int index) {
                         PaymentSheetText sheet = widget.datas[index];
                         return Container(
+                          padding: EdgeInsets.symmetric(vertical: 8.width),
+                          constraints: BoxConstraints(
+                            minHeight: 45.height,
+                          ),
+                          decoration: const BoxDecoration(
+                              border: Border(
+                                  bottom: BorderSide(
+                            width: 0.5,
+                            color: ColorUtils.lineColor,
+                          ))),
                           child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
                               Container(
-                                height: 40.width,
-                                alignment: Alignment.bottomLeft,
-                                padding: EdgeInsets.only(
-                                    left: 10.width, right: 10.width, bottom: 4),
+                                width: 120.width,
                                 child: Text(sheet.title!,
                                     style: TextStyle(
                                       color: ColorUtils.fromHex("#99000000"),
                                       fontSize: 12.font,
                                     )),
                               ),
-                              Container(
-                                alignment: Alignment.centerLeft,
-                                child: Text(sheet.content!,
-                                    style: TextStyle(
-                                      color: ColorUtils.fromHex("#FF000000"),
-                                      fontSize: 12.font,
-                                      fontWeight: FontWeightUtils.medium,
-                                    )),
+                              Expanded(
+                                child: Container(
+                                  alignment: Alignment.centerRight,
+                                  child: Text(sheet.content!,
+                                      textAlign: TextAlign.right,
+                                      style: TextStyle(
+                                        color: ColorUtils.fromHex("#FF000000"),
+                                        fontSize: 12.font,
+                                        fontWeight: FontWeightUtils.medium,
+                                      )),
+                                ),
                               ),
                             ],
                           ),

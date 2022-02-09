@@ -25,7 +25,7 @@ class _TransfeeViewState extends State<TransfeeView> {
 
   void _initData() async {
     dynamic result = await WalletServices.ethGasStation();
-    if (result != null) {
+    if (result != null && mounted) {
       setState(() {
         _feeGas = result;
       });
