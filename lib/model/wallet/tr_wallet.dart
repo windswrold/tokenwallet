@@ -192,7 +192,11 @@ class TRWallet {
         MCollectionTokens token = MCollectionTokens.fromJson(item);
         token.owner = walletID;
         token.state = 1;
-        token.tokenID = token.kNetType.toString() + "|" + token.contract!;
+        token.tokenID = token.kNetType.toString() +
+            "|" +
+            token.chainType.toString() +
+            "|" +
+            token.contract!;
         token.index = index++;
         tokens.add(token);
       }

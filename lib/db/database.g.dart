@@ -727,7 +727,7 @@ class _$MCollectionTokenDao extends MCollectionTokenDao {
   @override
   Future<int?> findMaxIndex(String owner, int kNetType) async {
     await _queryAdapter.queryNoReturn(
-        'SELECT MAX(index) FROM tokens_tablewhere owner = ?1 and kNetType = ?2',
+        'SELECT MAX(\'index\') FROM tokens_table where owner = ?1 and kNetType = ?2',
         arguments: [owner, kNetType]);
   }
 

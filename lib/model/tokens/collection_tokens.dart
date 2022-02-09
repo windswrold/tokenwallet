@@ -240,8 +240,8 @@ abstract class MCollectionTokenDao {
   @Query("UPDATE " + tableName + " SET :sql")
   Future<void> updateTokenData(String sql);
 
-  @Query('SELECT MAX(index) FROM ' +
+  @Query('SELECT MAX(\'index\') FROM ' +
       tableName +
-      "where owner = :owner and kNetType = :kNetType")
+      " where owner = :owner and kNetType = :kNetType")
   Future<int?> findMaxIndex(String owner, int kNetType);
 }
