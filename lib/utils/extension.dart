@@ -4,7 +4,6 @@ import 'package:cstoken/model/mnemonic/mnemonic.dart';
 import 'package:cstoken/utils/custom_toast.dart';
 import 'package:decimal/decimal.dart';
 import 'package:flutter/services.dart';
-import 'package:rational/rational.dart';
 import 'package:web3dart/credentials.dart';
 
 import '../public.dart';
@@ -153,7 +152,8 @@ extension FormatterString on Decimal {
     if (this == null) {
       return BigInt.zero.toString();
     }
-    Rational decimalValue = this / Decimal.fromInt(10).pow(decimals);
+    Decimal decimalValue =
+        (this / Decimal.fromInt(10).pow(decimals)).toDecimal();
     return decimalValue.toString();
   }
 }
@@ -164,7 +164,8 @@ extension FormatterBalance on BigInt {
       return BigInt.zero.toString();
     }
     Decimal value = Decimal.fromBigInt(this);
-    Rational decimalValue = value / Decimal.fromInt(10).pow(decimals);
+    Decimal decimalValue =
+        (value / Decimal.fromInt(10).pow(decimals)).toDecimal();
     return decimalValue.toString();
   }
 }

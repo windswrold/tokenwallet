@@ -14,6 +14,7 @@ import 'package:cstoken/pages/wallet/create/backup_tip_memo.dart';
 import 'package:cstoken/state/wallet_state.dart';
 import 'package:cstoken/utils/custom_toast.dart';
 import 'package:cstoken/utils/encode.dart';
+import 'package:decimal/decimal.dart';
 import 'package:floor/floor.dart';
 import '../../public.dart';
 import 'hd_wallet.dart';
@@ -362,10 +363,10 @@ class TRWallet {
     required String? beanValue, // sat price
     required String? offsetValue, //len
   }) {
-    double feeValue = 0.0;
-    num gasValue = num.tryParse(beanValue!)! * pow(10, 9);
-    gasValue = gasValue * num.tryParse(offsetValue!)!;
-    feeValue = gasValue / pow(10, 18);
+    Decimal gasValue =
+        Decimal.parse(beanValue ?? "0") * Decimal.fromInt(10).pow(9);
+    gasValue = gasValue * Decimal.parse(offsetValue ?? "0");
+    var feeValue = (gasValue / Decimal.fromInt(10).pow(18)).toDecimal();
     LogUtil.v("手续费beanValue $beanValue  offsetValue $offsetValue 计算是 " +
         feeValue.toStringAsFixed(6));
     return feeValue.toStringAsFixed(6);

@@ -1,4 +1,5 @@
 // import 'dart:html';
+import 'package:cstoken/utils/sp_manager.dart';
 import 'package:floor/floor.dart';
 import '../../public.dart';
 
@@ -19,24 +20,7 @@ class NodeModel {
       this.netType,
       this.chainID}); //ID
 
-  static void configNodeData() async {
-    // List<NodeModel>? nodes = await NodeModel.;
-    // if (nodes == null || nodes.length == 0) {
-    //   nodes = [];
-    //   NodeModel _nodeModel = NodeModel(
-    //       mainNet, MCoinType.MCoinType_ETH.index, true, true, true, 1);
-    //   ChainServices.currentNode = _nodeModel;
-    //   nodes.add(_nodeModel);
-    //   nodes.add(NodeModel(
-    //       rinkebyNet, MCoinType.MCoinType_ETH.index, false, true, false, 4));
-    //   NodeModel.insertNodeDatas(nodes);
-    //   return _nodeModel;
-    // } else {
-    //   NodeModel _nodeModel = nodes.first;
-    //   ChainServices.currentNode = _nodeModel;
-    //   return _nodeModel;
-    // }
-  }
+  static void configNodeData() async {}
 
   // static Future<bool> insertNodeDatas(List<NodeModel> list) async {
   //   try {
@@ -60,15 +44,57 @@ class NodeModel {
   //   return false;
   // }
 
-  // static Future<List<NodeModel>?> queryNodeByChainType(int chainType) async {
-  //   try {
-  //     FlutterDatabase? database = await (BaseModel.getDataBae());
-  //     return database?.nodeDao.queryNodeByChainType(chainType);
-  //   } catch (e) {
-  //     LogUtil.v("失败" + e.toString());
-  //     return null;
-  //   }
-  // }
+  static NodeModel queryNodeByChainType(int chainType) {
+    int netType = SPManager.getNetType();
+    NodeModel node = NodeModel();
+    node.netType = netType;
+    if (chainType == KCoinType.ETH.index) {
+      if (KNetType.Mainnet.index == netType) {
+        node.chainID = 1;
+        node.content =
+            "https://mainnet.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161";
+      } else {
+        node.chainID = 4;
+        node.content =
+            "https://rinkeby.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161";
+      }
+    }
+    if (chainType == KCoinType.BSC.index) {
+      if (KNetType.Mainnet.index == netType) {
+        node.chainID = 56;
+        node.content = "https://bsc-dataseed.binance.org/";
+      } else {
+        node.chainID = 97;
+        node.content = "https://data-seed-prebsc-1-s1.binance.org:8545/";
+      }
+    }
+    if (chainType == KCoinType.HECO.index) {
+      if (KNetType.Mainnet.index == netType) {
+        node.chainID = 128;
+        node.content = "https://http-mainnet.hecochain.com";
+      } else {
+        node.chainID = 256;
+        node.content = "https://http-testnet.hecochain.com";
+      }
+    }
+    if (chainType == KCoinType.OKChain.index) {
+      if (KNetType.Mainnet.index == netType) {
+        node.chainID = 128;
+        node.content = "https://http-mainnet.hecochain.com";
+      } else {
+        node.chainID = 256;
+        node.content = "https://http-testnet.hecochain.com";
+      }
+    }
+    if (chainType == KCoinType.Arbitrum.index) {
+      if (KNetType.Mainnet.index == netType) {
+      } else {
+        node.chainID = 421611;
+        node.content = "https://rinkeby.arbitrum.io/rpc";
+      }
+    }
+    return node;
+  }
 
   // static Future<List<NodeModel>?> queryNodeByIsChoose(bool isChoose) async {
   //   try {

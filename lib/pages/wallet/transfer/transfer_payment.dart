@@ -1,3 +1,4 @@
+import 'package:cstoken/model/tokens/collection_tokens.dart';
 import 'package:cstoken/net/wallet_services.dart';
 import 'package:cstoken/pages/scan/scan.dart';
 import 'package:cstoken/state/transfer_state.dart';
@@ -16,30 +17,24 @@ class TransferPayment extends StatefulWidget {
 
 class _TransferPaymentState extends State<TransferPayment> {
   KTransferState _kTransferState = KTransferState();
+
   String _paymentAssets = "--";
-  String _tokenprice = "";
-  String _gasLimit = '';
-  String _gasPrice = '';
-  String _feeValue = '';
-  bool _isCustomFee = false;
+  String _tokenprice = "0";
 
   @override
   void initState() {
     super.initState();
 
-    if (inProduction == false) {
-      _kTransferState.addressEC.text =
-          "0x4e268c89495254288b4D1Cb4bc4c010f8C009b25";
-    }
-    _kTransferState.valueEC.addListener(() async {
-      final text = _kTransferState.valueEC.text;
+    WidgetsBinding.instance!.addPostFrameCallback((timeStamp) async {
+      _kTransferState.init(context);
+      if (inProduction == false) {
+        _kTransferState.addressEC.text =
+            "0x4e268c89495254288b4D1Cb4bc4c010f8C009b25";
+      }
+      _kTransferState.valueEC.addListener(() async {
+        final text = _kTransferState.valueEC.text;
+      });
     });
-    _initData();
-  }
-
-  void _initData() async {
-    dynamic result = await WalletServices.ethGasStation();
-    if (result != null && mounted) {}
   }
 
   @override
@@ -49,25 +44,25 @@ class _TransferPaymentState extends State<TransferPayment> {
   }
 
   Widget _buildFee() {
-    return GestureDetector(
-      behavior: HitTestBehavior.opaque,
-      onTap: () {
-        _kTransferState.tapFeeView(context);
-      },
-      child: Container(
-        padding: EdgeInsets.only(top: 24.width),
-        alignment: Alignment.centerLeft,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              "transferetype_gas".local(),
-              style: TextStyle(
-                fontSize: 14.font,
-                color: ColorUtils.fromHex("#FF000000"),
-              ),
+    return Container(
+      margin: EdgeInsets.only(top: 24.width),
+      alignment: Alignment.centerLeft,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            "transferetype_gas".local(),
+            style: TextStyle(
+              fontSize: 14.font,
+              color: ColorUtils.fromHex("#FF000000"),
             ),
-            Container(
+          ),
+          GestureDetector(
+            behavior: HitTestBehavior.opaque,
+            onTap: () {
+              _kTransferState.tapFeeView(context);
+            },
+            child: Container(
               margin: EdgeInsets.only(top: 8.width),
               padding: EdgeInsets.only(left: 8.width, right: 8.width),
               height: 48.width,
@@ -78,23 +73,25 @@ class _TransferPaymentState extends State<TransferPayment> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text(
-                    "0.002234 ETH",
-                    style: TextStyle(
-                      fontSize: 14.font,
-                      fontWeight: FontWeightUtils.medium,
-                      color: ColorUtils.fromHex("#FF000000"),
-                    ),
-                  ),
+                  Consumer<KTransferState>(builder: (_, prover, child) {
+                    return Text(
+                      prover.feeValue(),
+                      style: TextStyle(
+                        fontSize: 14.font,
+                        fontWeight: FontWeightUtils.medium,
+                        color: ColorUtils.fromHex("#FF000000"),
+                      ),
+                    );
+                  }),
                   Row(
                     children: [
-                      Text(
-                        "≈￥10293.29",
-                        style: TextStyle(
-                          fontSize: 12.font,
-                          color: ColorUtils.fromHex("#99000000"),
-                        ),
-                      ),
+                      // Text(
+                      //   "≈￥10293.29",
+                      //   style: TextStyle(
+                      //     fontSize: 12.font,
+                      //     color: ColorUtils.fromHex("#99000000"),
+                      //   ),
+                      // ),
                       LoadAssetsImage(
                         "icons/icon_arrow_right.png",
                         width: 16,
@@ -105,8 +102,8 @@ class _TransferPaymentState extends State<TransferPayment> {
                 ],
               ),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

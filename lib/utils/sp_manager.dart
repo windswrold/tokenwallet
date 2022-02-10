@@ -13,6 +13,7 @@ class SPManager {
 
   static const String _languageSET = 'LANGUAGE_SET';
   static const String _aMOUNT_SET = "AMOUNT_SET";
+  static const String _kNetType = "_kNetType";
 
   static KAppLanguage getAppLanguageMode() {
     final String mode = getAppLanguage();
@@ -42,6 +43,15 @@ class SPManager {
 
   static void setAppCurrency(KCurrencyType value) {
     _sp!.setInt(_aMOUNT_SET, value.index);
+  }
+
+  static int getNetType() {
+    int value = _sp!.getInt(_kNetType) ?? KNetType.Mainnet.index;
+    return value;
+  }
+
+  static void setNetType(KNetType value) {
+    _sp!.setInt(_kNetType, value.index);
   }
 
   static KCurrencyType getAppCurrencyMode() {

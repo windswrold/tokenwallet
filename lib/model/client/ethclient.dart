@@ -1,3 +1,4 @@
+import 'dart:ffi';
 import 'dart:typed_data';
 import 'package:web3dart/contracts/erc20.dart';
 import 'package:web3dart/web3dart.dart';
@@ -13,20 +14,23 @@ class ETHClient {
       : client = Web3Client(url, Client()),
         _chainId = chainId;
 
-  Future<EtherAmount> getGasPrice() {
-    return this.client.getGasPrice();
+  Future<int> getGasPrice() async {
+    EtherAmount gas = await this.client.getGasPrice();
+    return gas.getValueInUnit(EtherUnit.gwei).toInt();
   }
 
   Future<TransactionReceipt?> getTransactionReceipt(String hash) {
     return this.client.getTransactionReceipt(hash);
   }
 
-  Future<EtherAmount?> getBalance(EthereumAddress address) {
-    return this.client.getBalance(address);
+  Future<num> getBalance(String address) async {
+    EtherAmount value =
+        await this.client.getBalance(EthereumAddress.fromHex(address));
+    return value.getValueInUnit(EtherUnit.ether);
   }
 
-  Future<BigInt> getTokenBalance(String address, String contractaa) {
-    final contractAddress = EthereumAddress.fromHex(contractaa);
+  Future<BigInt> getTokenBalance(String address, String contract) {
+    final contractAddress = EthereumAddress.fromHex(contract);
     final erc20 = Erc20(address: contractAddress, client: this.client);
     return erc20.balanceOf(EthereumAddress.fromHex(address));
   }

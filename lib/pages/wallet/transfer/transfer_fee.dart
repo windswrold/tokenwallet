@@ -4,7 +4,21 @@ import 'package:cstoken/state/transfer_state.dart';
 import '../../../public.dart';
 
 class TransfeeView extends StatefulWidget {
-  TransfeeView({Key? key}) : super(key: key);
+  TransfeeView({
+    Key? key,
+    required this.feeValue,
+    required this.feeToken,
+    this.gasPrice,
+    this.gasLimit,
+    required this.complationBack,
+  }) : super(key: key);
+  final String feeValue;
+  final String? gasPrice;
+  final String? gasLimit;
+  final String? feeToken;
+  final Function(
+          String feeValue, String gasPrice, String gasLimit, bool isCustom)
+      complationBack;
 
   @override
   State<TransfeeView> createState() => _TransfeeViewState();
@@ -12,7 +26,11 @@ class TransfeeView extends StatefulWidget {
 
 class _TransfeeViewState extends State<TransfeeView> {
   Map? _feeGas;
-  int _seleindex = 1;
+  int _seleindex = -1;
+  String? _feeValue;
+  String? _gasPrice;
+  String? _gasLimit;
+  bool _isCustom = false;
 
   TextEditingController _gasLimitEC = TextEditingController();
   TextEditingController _gasPriceEC = TextEditingController();
@@ -23,13 +41,60 @@ class _TransfeeViewState extends State<TransfeeView> {
     _initData();
   }
 
+  @override
+  void dispose() {
+    _gasLimitEC.removeListener(() {});
+    _gasPriceEC.removeListener(() {});
+
+    super.dispose();
+  }
+
   void _initData() async {
+    _feeValue = widget.feeValue;
+    _gasPrice = widget.gasPrice;
+    _gasLimit = widget.gasLimit;
+    _gasLimitEC.text = _gasLimit ?? "";
+    _gasPriceEC.text = _gasPrice ?? "";
     dynamic result = await WalletServices.ethGasStation();
     if (result != null && mounted) {
       setState(() {
         _feeGas = result;
       });
     }
+
+    _gasLimitEC.addListener(() {
+      _tapFee(_gasLimitEC.text, _gasPriceEC.text, _seleindex, modifyEC: false);
+    });
+    _gasPriceEC.addListener(() {
+      _tapFee(_gasLimitEC.text, _gasPriceEC.text, _seleindex, modifyEC: false);
+    });
+  }
+
+  void _tapNext() {
+    widget.complationBack(_feeValue!, _gasPrice!, _gasLimit!, _isCustom);
+    Routers.goBack(context);
+  }
+
+  void _tapFee(String newGaslimit, String newGasPrice, int index,
+      {bool modifyEC = true}) {
+    String fee = TRWallet.configFeeValue(
+        cointype: KCoinType.ETH.index,
+        beanValue: newGaslimit,
+        offsetValue: newGasPrice);
+    if (modifyEC == true) {
+      _gasLimitEC.text = newGaslimit;
+      _gasPriceEC.text = newGasPrice;
+      _isCustom = false;
+    } else {
+      _isCustom = true;
+    }
+
+    setState(() {
+      _feeValue = fee;
+      _gasPrice = newGasPrice;
+      _gasLimit = newGaslimit;
+      _seleindex = index;
+    });
   }
 
   Widget _buildTextField(TextEditingController controller, String title) {
@@ -53,6 +118,7 @@ class _TransfeeViewState extends State<TransfeeView> {
             color: ColorUtils.fromHex("#FF000000"),
           ),
           padding: EdgeInsets.only(top: 8.width),
+          keyboardType: const TextInputType.numberWithOptions(decimal: false),
           decoration: CustomTextField.getBorderLineDecoration(
             context: context,
             focusedBorderColor: ColorUtils.blueColor,
@@ -115,21 +181,15 @@ class _TransfeeViewState extends State<TransfeeView> {
         children: [
           _buildCellItem(fastest, fastestgas, "＜ 0.5" + minute, 0,
               onTap: (int index) {
-            setState(() {
-              _seleindex = 0;
-            });
+            _tapFee(widget.gasLimit!, fastestgas, index);
           }),
           _buildCellItem(fast, fastgas, "＜ 2.0" + minute, 1,
               onTap: (int index) {
-            setState(() {
-              _seleindex = 1;
-            });
+            _tapFee(widget.gasLimit!, fastgas, index);
           }),
           _buildCellItem(normal, average, "＜ 5.0" + minute, 2,
               onTap: (int index) {
-            setState(() {
-              _seleindex = 2;
-            });
+            _tapFee(widget.gasLimit!, average, index);
           }),
         ],
       ),
@@ -231,7 +291,7 @@ class _TransfeeViewState extends State<TransfeeView> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  "0.002234 ETH",
+                  (_feeValue ?? "") + " " + widget.feeToken!,
                   style: TextStyle(
                     fontSize: 14.font,
                     fontWeight: FontWeightUtils.medium,
@@ -240,13 +300,13 @@ class _TransfeeViewState extends State<TransfeeView> {
                 ),
                 Row(
                   children: [
-                    Text(
-                      "≈￥10293.29",
-                      style: TextStyle(
-                        fontSize: 12.font,
-                        color: ColorUtils.fromHex("#99000000"),
-                      ),
-                    ),
+                    // Text(
+                    //   "≈￥10293.29",
+                    //   style: TextStyle(
+                    //     fontSize: 12.font,
+                    //     color: ColorUtils.fromHex("#99000000"),
+                    //   ),
+                    // ),
                   ],
                 ),
               ],
@@ -274,7 +334,7 @@ class _TransfeeViewState extends State<TransfeeView> {
                     Container(
                       padding: EdgeInsets.fromLTRB(0, 8.width, 0, 0),
                       child: Text(
-                        "Gas Price (124.00 GWEI) * Gas Limit (21000)",
+                        "Gas Price ($_gasPrice GWEI) * Gas Limit ($_gasLimit)",
                         style: TextStyle(
                           fontSize: 12.font,
                           color: ColorUtils.fromHex("#807685A2"),
@@ -309,7 +369,7 @@ class _TransfeeViewState extends State<TransfeeView> {
               ),
             ),
             NextButton(
-                onPressed: () {},
+                onPressed: _tapNext,
                 bgc: ColorUtils.blueColor,
                 borderRadius: 12,
                 margin: EdgeInsets.fromLTRB(16.width, 0, 16.width, 20.width),
