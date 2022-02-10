@@ -197,7 +197,6 @@ class _CustomAlertState extends State<CustomAlert> {
     return Container(
       constraints: BoxConstraints(minHeight: 158.width, maxHeight: 812.width),
       margin: EdgeInsets.only(left: 40.width, right: 40.width),
-      padding: EdgeInsets.only(left: 16.width, right: 16.width),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(12),
         color: Colors.white,
@@ -222,7 +221,8 @@ class _CustomAlertState extends State<CustomAlert> {
       visible: text == null ? false : true,
       child: Container(
         alignment: Alignment.center,
-        padding: EdgeInsets.only(top: 16.width),
+        padding:
+            EdgeInsets.only(top: 16.width, left: 16.width, right: 16.width),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
@@ -294,7 +294,7 @@ class _CustomAlertState extends State<CustomAlert> {
     } else if (widget.alertType == KAlertType.edit_name) {
     } else {}
     return Container(
-      padding: EdgeInsets.only(top: 16.width),
+      padding: EdgeInsets.only(top: 16.width, left: 16.width, right: 16.width),
       alignment: Alignment.center,
       constraints:
           BoxConstraints(minHeight: widget.contextViewMinHeight ?? 80.width),
@@ -305,8 +305,14 @@ class _CustomAlertState extends State<CustomAlert> {
   /// 底部按钮组合
   Widget _bottomActions() {
     return Container(
-      padding: widget.bottomActionsPadding ??
-          EdgeInsets.only(top: 16.width, bottom: 24.width),
+      margin: EdgeInsets.only(top: 16.width),
+      padding: widget.bottomActionsPadding ?? EdgeInsets.only(bottom: 12.width),
+      decoration: const BoxDecoration(
+          border: Border(
+              top: BorderSide(
+        color: ColorUtils.lineColor,
+        width: 0.5,
+      ))),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         crossAxisAlignment: CrossAxisAlignment.center,

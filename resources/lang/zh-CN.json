@@ -175,5 +175,9 @@
     "minepage_modifytestnet": "切换到 TestNet 后，钱包内的所有资产和藏品皆为测试链数据。",
     "minepage_staymain": "停留在 MainNet",
     "minepage_modifytest": "切换到 TestNet",
-    "gasLow": "手续费太低"
+    "gasLow": "手续费太低",
+    "dapppage_nextjump": "您即将跳转至第三方应用",
+    "dapppage_warningtip": "提示：您即将访问的页面属于第三方应用{dappName}，使用行为将适用其《用户协议》和《隐私政策》，由{dappName}直接并单独向您承担责任。",
+    "dapppage_stop": "停止访问",
+    "dapppage_iknowit": "我已知晓"
 }

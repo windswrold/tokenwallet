@@ -1,3 +1,4 @@
+import 'package:cstoken/component/custom_refresher.dart';
 import 'package:cstoken/component/top_search_widget.dart';
 import 'package:cstoken/component/wallet_card.dart';
 import 'package:cstoken/component/wallet_swipe.dart';
@@ -9,6 +10,7 @@ import 'package:cstoken/pages/wallet/wallets/wallets_manager.dart';
 import 'package:cstoken/state/wallet_state.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 import '../../public.dart';
 import 'create/create_tip.dart';
@@ -23,6 +25,8 @@ class WalletPage extends StatefulWidget {
 }
 
 class _WalletPageState extends State<WalletPage> {
+  RefreshController _refreshController = RefreshController();
+
   void _create() async {
     List<TRWallet> datas = await TRWallet.queryAllWallets();
     if (datas.isEmpty) {
@@ -143,7 +147,21 @@ class _WalletPageState extends State<WalletPage> {
                 _topView(wallet),
                 WalletSwipe(),
                 _helperView(),
-                WalletsTabCell(),
+                Expanded(
+                  child: CustomRefresher(
+                      onRefresh: () {
+                        Provider.of<CurrentChooseWalletState>(context,
+                                listen: false)
+                            .requestAssets();
+                        Future.delayed(Duration(seconds: 3)).then((value) => {
+                              _refreshController.loadComplete(),
+                              _refreshController.refreshCompleted(),
+                            });
+                      },
+                      enableFooter: false,
+                      child: WalletsTabCell(),
+                      refreshController: _refreshController),
+                ),
               ],
             ))
         : CustomPageView(

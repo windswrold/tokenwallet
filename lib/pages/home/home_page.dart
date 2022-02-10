@@ -29,15 +29,15 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance!.addPostFrameCallback((timeStamp) async {
-      _initData();
-    });
+    _initData();
   }
 
   void _initData() async {
     _initApp();
     _initBanner();
     _initHotDatas();
+    Provider.of<CurrentChooseWalletState>(context, listen: false)
+        .initNFTIndex();
     Future.delayed(Duration(seconds: 3)).then((value) => {
           _refreshController.loadComplete(),
           _refreshController.refreshCompleted(),

@@ -88,16 +88,18 @@ class CurrentChooseWalletState with ChangeNotifier {
       return;
     }
     String? ethAdress;
+    String? chainType;
     List<TRWalletInfo> infos =
         await _currentWallet!.queryWalletInfos(coinType: KCoinType.ETH);
     if (infos.isEmpty) {
       return;
     }
     ethAdress = infos.first.walletAaddress;
+    chainType = infos.first.coinType!.geCoinType().coinTypeString();
     if (ethAdress == null) {
       return;
     }
-    Map? result = await WalletServices.getindexnftInfo(ethAdress);
+    Map? result = await WalletServices.getindexnftInfo(ethAdress, chainType);
     if (result == null) {
       return;
     }
@@ -362,7 +364,6 @@ class CurrentChooseWalletState with ChangeNotifier {
       var info =
           infos.where((element) => element.coinType == map.chainType).first;
       walletAaddress = info.walletAaddress!;
-      LogUtil.v("匹配的钱包地址是 $walletAaddress");
       Map params = {};
       if (map.isToken == false) {
         params["jsonrpc"] = "2.0";

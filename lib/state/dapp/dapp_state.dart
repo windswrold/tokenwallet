@@ -30,11 +30,6 @@ class DappDataState extends ChangeNotifier {
     }
     final dAppType = _myTabs[index]["dAppType"] ?? "1";
     List result = await WalletServices.getdapptypeList(dAppType.toString());
-    //"title": "SWFT闪兑",
-    // "introduction": "多鏈幣種一鍵跨鏈閃兌",
-    // "jumpLinks": "https://defi.swft.pro/?sourceFlag=Consensus",
-    // "logoUrl": "https://token-new.oss-cn-shenzhen.aliyuncs.com/CONSENSUS/pics/swft.png",
-    // "marketId": 1
     List<DAppRecordsDBModel> _datas = [];
     for (var item in result) {
       final title = item["title"] ?? "";
@@ -58,13 +53,28 @@ class DappDataState extends ChangeNotifier {
 
   void bannerTap(BuildContext context, String jumpLinks) {
     LogUtil.v("bannerTap  $jumpLinks");
-
-    Routers.push(
-        context, DappBrowser(model: DAppRecordsDBModel(url: jumpLinks)));
+    dappTap(context, DAppRecordsDBModel(url: jumpLinks));
   }
 
   void dappTap(BuildContext context, DAppRecordsDBModel model) {
     LogUtil.v("dappTap  ");
+    bool isAuthorization = SPManager.getDappAuthorization(model.url ?? "");
+    if (isAuthorization == false) {
+      ShowCustomAlert.showCustomAlertType(
+          context, KAlertType.text, "dapppage_nextjump".local(), null,
+          subtitleText: "dapppage_warningtip"
+              .local(namedArgs: {"dappName": model.name ?? ""}),
+          leftButtonTitle: "dapppage_stop".local(),
+          rightButtonTitle: "dapppage_iknowit".local(),
+          rightButtonStyle: TextStyle(
+            color: ColorUtils.blueColor,
+            fontSize: 16.font,
+          ), confirmPressed: (result) {
+        SPManager.setDappAuthorization(model.url ?? "");
+        Routers.push(context, DappBrowser(model: model));
+      });
+      return;
+    }
     Routers.push(context, DappBrowser(model: model));
   }
 

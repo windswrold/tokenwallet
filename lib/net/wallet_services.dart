@@ -116,9 +116,12 @@ class WalletServices {
     }
   }
 
-  static Future<Map?> getindexnftInfo(String address) async {
+  static Future<Map?> getindexnftInfo(String address, String chainType) async {
     const url = RequestURLS.getindexnftInfo;
-    Map<String, dynamic> params = {"address": address.toString()};
+    Map<String, dynamic> params = {
+      "address": address.toString(),
+      "chainType": chainType
+    };
     dynamic result = await RequestMethod.manager!
         .requestData(Method.GET, url, queryParameters: params);
     if (result != null && result["code"] == 200) {

@@ -14,6 +14,7 @@ class SPManager {
   static const String _languageSET = 'LANGUAGE_SET';
   static const String _aMOUNT_SET = "AMOUNT_SET";
   static const String _kNetType = "_kNetType";
+  static const String _DAppsAuthorization = "DAppsAuthorization";
 
   static KAppLanguage getAppLanguageMode() {
     final String mode = getAppLanguage();
@@ -54,6 +55,15 @@ class SPManager {
 
   static void setNetType(KNetType value) {
     _sp!.setInt(_kNetType, value.index);
+  }
+
+  static bool getDappAuthorization(String url) {
+    bool value = _sp!.getBool(_DAppsAuthorization + url) ?? false;
+    return value;
+  }
+
+  static void setDappAuthorization(String url) {
+    _sp!.setBool(_DAppsAuthorization + url, true);
   }
 
   static KCurrencyType getAppCurrencyMode() {

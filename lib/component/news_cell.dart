@@ -98,7 +98,7 @@ class NewsCell extends StatelessWidget {
     return Container(
       padding: EdgeInsets.only(top: 16.width, left: 12.width, bottom: 25.width),
       margin: EdgeInsets.only(left: 3),
-      decoration: BoxDecoration(
+      decoration: const BoxDecoration(
           border: Border(
               left: BorderSide(
         width: 0.5,
