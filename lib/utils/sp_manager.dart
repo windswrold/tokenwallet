@@ -45,9 +45,11 @@ class SPManager {
     _sp!.setInt(_aMOUNT_SET, value.index);
   }
 
-  static int getNetType() {
+  static KNetType getNetType() {
     int value = _sp!.getInt(_kNetType) ?? KNetType.Mainnet.index;
-    return value;
+    return value == KNetType.Mainnet.index
+        ? KNetType.Mainnet
+        : KNetType.Testnet;
   }
 
   static void setNetType(KNetType value) {

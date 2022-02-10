@@ -251,6 +251,10 @@ extension KAppLanguageString on KAppLanguage {
   String get value => <String>['跟随系统', '简体中文', 'English'][index];
 }
 
+extension KNetTypeString on KNetType {
+  String get value => <String>['MainNet', 'TestNet'][index];
+}
+
 class FontWeightUtils {
   ///400
   static const FontWeight regular = FontWeight.w400;

@@ -45,11 +45,11 @@ class NodeModel {
   // }
 
   static NodeModel queryNodeByChainType(int chainType) {
-    int netType = SPManager.getNetType();
+    KNetType netType = SPManager.getNetType();
     NodeModel node = NodeModel();
-    node.netType = netType;
+    node.netType = netType.index;
     if (chainType == KCoinType.ETH.index) {
-      if (KNetType.Mainnet.index == netType) {
+      if (KNetType.Mainnet == netType) {
         node.chainID = 1;
         node.content =
             "https://mainnet.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161";
@@ -60,7 +60,7 @@ class NodeModel {
       }
     }
     if (chainType == KCoinType.BSC.index) {
-      if (KNetType.Mainnet.index == netType) {
+      if (KNetType.Mainnet == netType) {
         node.chainID = 56;
         node.content = "https://bsc-dataseed.binance.org/";
       } else {
@@ -69,7 +69,7 @@ class NodeModel {
       }
     }
     if (chainType == KCoinType.HECO.index) {
-      if (KNetType.Mainnet.index == netType) {
+      if (KNetType.Mainnet == netType) {
         node.chainID = 128;
         node.content = "https://http-mainnet.hecochain.com";
       } else {
@@ -78,7 +78,7 @@ class NodeModel {
       }
     }
     if (chainType == KCoinType.OKChain.index) {
-      if (KNetType.Mainnet.index == netType) {
+      if (KNetType.Mainnet == netType) {
         node.chainID = 128;
         node.content = "https://http-mainnet.hecochain.com";
       } else {
@@ -87,7 +87,7 @@ class NodeModel {
       }
     }
     if (chainType == KCoinType.Arbitrum.index) {
-      if (KNetType.Mainnet.index == netType) {
+      if (KNetType.Mainnet == netType) {
       } else {
         node.chainID = 421611;
         node.content = "https://rinkeby.arbitrum.io/rpc";

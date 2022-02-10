@@ -88,19 +88,18 @@ class KTransferState with ChangeNotifier {
     Routers.push(
         context,
         TransfeeView(
-          feeValue: _feeValue,
-          gasLimit: _gasLimit,
-          gasPrice: _gasPrice,
-          complationBack: (feeValue, gasPrice, gasLimit, isCustom) {
-            LogUtil.v("feeValue $feeValue $gasPrice $gasLimit $isCustom");
-            _feeValue = feeValue;
-            _gasPrice = gasPrice;
-            _gasLimit = gasLimit;
-            _isCustomFee = _isCustomFee;
-            notifyListeners();
-          },
-          feeToken: _tokens!.coinType!,
-        ));
+            feeValue: _feeValue,
+            gasLimit: _gasLimit,
+            gasPrice: _gasPrice,
+            complationBack: (feeValue, gasPrice, gasLimit, isCustom) {
+              LogUtil.v("feeValue $feeValue $gasPrice $gasLimit $isCustom");
+              _feeValue = feeValue;
+              _gasPrice = gasPrice;
+              _gasLimit = gasLimit;
+              _isCustomFee = _isCustomFee;
+              notifyListeners();
+            },
+            feeToken: _tokens!.coinType!));
   }
 
   void tapTransfer(BuildContext context) async {

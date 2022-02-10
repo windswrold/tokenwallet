@@ -169,5 +169,10 @@
     "input_paymentvaluezero": "转账金额不能为0",
     "payment_transsuccess": "已提交，等待确认",
     "paymentsheep_info": "确认付款",
-    "paymentsheep_canuse": "可用"
+    "paymentsheep_canuse": "可用",
+    "minepage_currentnet": "当前网络",
+    "minepage_modify": "切换到",
+    "minepage_modifytestnet": "切换到 TestNet 后，钱包内的所有资产和藏品皆为测试链数据。",
+    "minepage_staymain": "停留在 MainNet",
+    "minepage_modifytest": "切换到 TestNet"
 }
