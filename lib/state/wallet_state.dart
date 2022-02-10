@@ -405,14 +405,12 @@ class CurrentChooseWalletState with ChangeNotifier {
             BigInt balBInt = BigInt.parse(bal, radix: 16);
             for (var i = 0; i < tokens.length; i++) {
               MCollectionTokens map = tokens[i];
-              TokenPrice? price;
               if (id == map.tokenID) {
+                TokenPrice? price = await TokenPrice.queryTokenPrices(
+                    map.token!, currencyType ?? KCurrencyType.CNY);
                 map.balance = balBInt.tokenDouble(map.decimals!);
                 if (price != null) {
                   map.price = double.tryParse(price.rate ?? "0.0");
-                }
-                if (inProduction == false) {
-                  map.price = 1000;
                 }
                 MCollectionTokens.updateTokenData(
                     "price=${map.price},balance =${map.balance} WHERE tokenID = '$id'");

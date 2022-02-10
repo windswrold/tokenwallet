@@ -1,5 +1,6 @@
 import 'package:cstoken/db/database.dart';
 import 'package:cstoken/db/database_config.dart';
+import 'package:cstoken/public.dart';
 import 'package:cstoken/utils/log_util.dart';
 import 'package:floor/floor.dart';
 
@@ -14,10 +15,14 @@ class TokenPrice {
 
   TokenPrice({required this.contract, this.source, this.target, this.rate});
 
-  // static Future<List<TokenPrice>> queryTokenPrices(
-  //     String contract, String target) async {
-
-  //     }
+  static Future<TokenPrice?> queryTokenPrices(
+      String contract, KCurrencyType target) async {
+    if (target == KCurrencyType.CNY) {
+      return TokenPrice(contract: contract, rate: "1000");
+    } else {
+      return TokenPrice(contract: contract, rate: "500");
+    }
+  }
 
   static Future<void> insertTokenPrice(TokenPrice model) async {}
 
