@@ -121,6 +121,15 @@ class MCollectionTokens {
     }
   }
 
+  static Future<List<MCollectionTokens>> findWalletsTokens(String owner) async {
+    try {
+      FlutterDatabase? database = await DataBaseConfig.openDataBase();
+      return (await database?.tokensDao.findAllTokens(owner)) ?? [];
+    } catch (e) {
+      rethrow;
+    }
+  }
+
   static Future<List<MCollectionTokens>> findChainTokens(
       String owner, int kNetType, int chainType) async {
     try {
@@ -166,10 +175,10 @@ class MCollectionTokens {
     }
   }
 
-  static Future<void> deleteTokens(MCollectionTokens model) async {
+  static Future<void> deleteTokens(List<MCollectionTokens> models) async {
     try {
       FlutterDatabase? database = await DataBaseConfig.openDataBase();
-      database?.tokensDao.deleteTokens(model);
+      database?.tokensDao.deleteTokens(models);
     } catch (e) {
       rethrow;
     }
@@ -205,6 +214,9 @@ class MCollectionTokens {
 
 @dao
 abstract class MCollectionTokenDao {
+  @Query('SELECT * FROM ' + tableName + ' WHERE owner = :owner')
+  Future<List<MCollectionTokens>> findAllTokens(String owner);
+
   @Query('SELECT * FROM ' +
       tableName +
       ' WHERE owner = :owner and kNetType=:kNetType ORDER BY "index"')
@@ -235,7 +247,7 @@ abstract class MCollectionTokenDao {
   Future<void> insertTokens(List<MCollectionTokens> models);
 
   @delete
-  Future<void> deleteTokens(MCollectionTokens model);
+  Future<void> deleteTokens(List<MCollectionTokens> models);
 
   @update
   Future<void> updateTokens(MCollectionTokens model);

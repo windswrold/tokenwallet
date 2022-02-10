@@ -168,6 +168,16 @@ extension FormatterBalance on BigInt {
         (value / Decimal.fromInt(10).pow(decimals)).toDecimal();
     return decimalValue.toString();
   }
+
+  double tokenDouble(int decimals) {
+    if (this == null) {
+      return BigInt.zero.toDouble();
+    }
+    Decimal value = Decimal.fromBigInt(this);
+    Decimal decimalValue =
+        (value / Decimal.fromInt(10).pow(decimals)).toDecimal();
+    return decimalValue.toDouble();
+  }
 }
 
 extension Numextension on num {

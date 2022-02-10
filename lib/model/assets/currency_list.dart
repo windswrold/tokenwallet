@@ -86,7 +86,8 @@ List<Map<String, dynamic>> currency_List = [
     "decimals": 18,
     "contract": "",
     "digits": 6,
-    "kNetType": 0
+    "kNetType": 0,
+    "tokenType": 0,
   },
   {
     "coinType": "Matic",

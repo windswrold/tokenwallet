@@ -48,6 +48,7 @@ class NodeModel {
     KNetType netType = SPManager.getNetType();
     NodeModel node = NodeModel();
     node.netType = netType.index;
+    node.chainType = chainType;
     if (chainType == KCoinType.ETH.index) {
       if (KNetType.Mainnet == netType) {
         node.chainID = 1;
@@ -79,20 +80,42 @@ class NodeModel {
     }
     if (chainType == KCoinType.OKChain.index) {
       if (KNetType.Mainnet == netType) {
-        node.chainID = 128;
-        node.content = "https://http-mainnet.hecochain.com";
+        node.chainID = 66;
+        node.content = "https://exchainrpc.okex.org";
       } else {
-        node.chainID = 256;
-        node.content = "https://http-testnet.hecochain.com";
+        node.chainID = 65;
+        node.content = "https://exchaintestrpc.okex.org";
       }
     }
     if (chainType == KCoinType.Arbitrum.index) {
       if (KNetType.Mainnet == netType) {
+        node.chainID = 42161;
+        node.content = "https://arb1.arbitrum.io/rpc";
       } else {
         node.chainID = 421611;
         node.content = "https://rinkeby.arbitrum.io/rpc";
       }
     }
+    if (chainType == KCoinType.Matic.index) {
+      if (KNetType.Mainnet == netType) {
+        node.chainID = 137;
+        node.content = "https://polygon-rpc.com/";
+      } else {
+        node.chainID = 80001;
+        node.content = "https://matic-mumbai.chainstacklabs.com";
+      }
+    }
+    if (chainType == KCoinType.AVAX.index) {
+      if (KNetType.Mainnet == netType) {
+        node.chainID = 43114;
+        node.content = "https://api.avax.network/ext/bc/C/rpc";
+      } else {
+        node.chainID = 43113;
+        node.content = "https://api.avax-test.network/ext/bc/C/rpc";
+      }
+    }
+    assert(node.content != null,
+        "nodechainType " + chainType.geCoinType().coinTypeString() + "没有节点信息");
     return node;
   }
 

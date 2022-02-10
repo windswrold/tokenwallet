@@ -2,9 +2,11 @@ import 'dart:async';
 
 import 'package:cstoken/component/chain_listtype.dart';
 import 'package:cstoken/model/dapps_record/dapps_record.dart';
+import 'package:cstoken/model/token_price/tokenprice.dart';
 import 'package:cstoken/model/tokens/collection_tokens.dart';
 import 'package:cstoken/model/wallet/tr_wallet.dart';
 import 'package:cstoken/model/wallet/tr_wallet_info.dart';
+import 'package:cstoken/net/chain_services.dart';
 import 'package:cstoken/net/wallet_services.dart';
 import 'package:cstoken/pages/browser/dapp_browser.dart';
 import 'package:cstoken/pages/wallet/create/backup_tip_memo.dart';
@@ -14,6 +16,7 @@ import 'package:cstoken/pages/wallet/wallets/wallets_setting.dart';
 import 'package:cstoken/utils/custom_toast.dart';
 import 'package:cstoken/utils/sp_manager.dart';
 import 'package:cstoken/utils/timer_util.dart';
+import 'package:decimal/decimal.dart';
 import 'package:flutter/services.dart';
 import '../public.dart';
 
@@ -75,7 +78,7 @@ class CurrentChooseWalletState with ChangeNotifier {
     _currencyType = SPManager.getAppCurrencyMode();
     initNFTIndex();
     requestAssets();
-    // _configTimerRequest();
+    _configTimerRequest();
     notifyListeners();
     return _currentWallet;
   }
@@ -171,10 +174,11 @@ class CurrentChooseWalletState with ChangeNotifier {
     }
     _chooseChainType = null;
     _tokenIndex = 0;
+    TRWallet.updateWallets(wallets);
     initNFTIndex();
     requestAssets();
     notifyListeners();
-    return TRWallet.updateWallets(wallets);
+    return true;
   }
 
   void updateTokenChoose(BuildContext context, int index) async {
@@ -347,34 +351,78 @@ class CurrentChooseWalletState with ChangeNotifier {
     if (_currentWallet == null) {
       return;
     }
-    // final String walletID = _currentWallet!.walletID!;
-    // List<Map> rpcList = [];
-    // int i = 0;
-    // for (i = 0; i < tokens.length; i++) {
-    //   MCollectionTokens map = tokens[i];
-    //   Map params = {};
-    //   if (map.token == "ETH") {
-    //     params["jsonrpc"] = "2.0";
-    //     params["method"] = "eth_getBalance";
-    //     params["params"] = [_mhWallet!.walletAaddress!, "latest"];
-    //     params["id"] = "1";
-    //   } else {
-    //     String owner = map.owner ?? "";
-    //     String data =
-    //         "0x70a08231000000000000000000000000" + owner.replaceAll("0x", "");
-    //     params["jsonrpc"] = "2.0";
-    //     params["method"] = "eth_call";
-    //     params["params"] = [
-    //       {"to": map.contract, "data": data},
-    //       "latest"
-    //     ];
-    //     params["id"] = map.contract;
-    //   }
-    //   rpcList.add(params);
-    // }
-
-    notifyListeners();
-    _calTotalAssets();
+    final String walletID = _currentWallet!.walletID!;
+    Map<KCoinType, List<Map>> rpcList = {};
+    int i = 0;
+    List<TRWalletInfo> infos = await _currentWallet!.queryWalletInfos();
+    for (i = 0; i < tokens.length; i++) {
+      MCollectionTokens map = tokens[i];
+      KCoinType coinType = map.chainType!.geCoinType();
+      String walletAaddress = "";
+      var info =
+          infos.where((element) => element.coinType == map.chainType).first;
+      walletAaddress = info.walletAaddress!;
+      LogUtil.v("匹配的钱包地址是 $walletAaddress");
+      Map params = {};
+      if (map.isToken == false) {
+        params["jsonrpc"] = "2.0";
+        params["method"] = "eth_getBalance";
+        params["params"] = [walletAaddress, "latest"];
+        params["id"] = map.tokenID;
+      } else {
+        String owner = walletAaddress;
+        String data =
+            "0x70a08231000000000000000000000000" + owner.replaceAll("0x", "");
+        params["jsonrpc"] = "2.0";
+        params["method"] = "eth_call";
+        params["params"] = [
+          {"to": map.contract, "data": data},
+          "latest"
+        ];
+        params["id"] = map.tokenID;
+      }
+      List<Map> datas = rpcList[coinType] ?? [];
+      datas.add(params);
+      rpcList[coinType] = datas;
+    }
+    if (rpcList.isEmpty) {
+      return;
+    }
+    for (var item in rpcList.keys) {
+      List<Map> rpc = rpcList[item] ?? [];
+      if (rpc.isEmpty) {
+        continue;
+      }
+      dynamic result =
+          await ChainServices.requestDatas(coinType: item, params: rpc);
+      if (result != null && result is List) {
+        for (var response in result) {
+          if (response.keys.contains("result")) {
+            String id = response["id"];
+            String? bal = response["result"] as String;
+            bal = bal.replaceFirst("0x", "");
+            bal = bal.length == 0 ? "0" : bal;
+            BigInt balBInt = BigInt.parse(bal, radix: 16);
+            for (var i = 0; i < tokens.length; i++) {
+              MCollectionTokens map = tokens[i];
+              TokenPrice? price;
+              if (id == map.tokenID) {
+                map.balance = balBInt.tokenDouble(map.decimals!);
+                if (price != null) {
+                  map.price = double.tryParse(price.rate ?? "0.0");
+                }
+                if (inProduction == false) {
+                  map.price = 1000;
+                }
+                MCollectionTokens.updateTokenData(
+                    "price=${map.price},balance =${map.balance} WHERE tokenID = '$id'");
+              }
+            }
+          }
+        }
+        _calTotalAssets();
+      }
+    }
   }
 
   void _configTimerRequest() async {
@@ -399,5 +447,15 @@ class CurrentChooseWalletState with ChangeNotifier {
   }
 
   ///计算我的总资产
-  void _calTotalAssets() {}
+  void _calTotalAssets() {
+    final String? walletID = _currentWallet!.walletID;
+    Decimal sumAssets = Decimal.zero;
+    for (int i = 0; i < tokens.length; i++) {
+      MCollectionTokens map = tokens[i];
+      sumAssets += Decimal.tryParse(map.assets) ?? Decimal.zero;
+    }
+    String total = sumAssets == Decimal.zero ? "0.00" : sumAssets.toString();
+    _totalAssets[walletID] = total;
+    notifyListeners();
+  }
 }

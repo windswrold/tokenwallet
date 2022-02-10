@@ -85,7 +85,7 @@ class RequestMethod {
       }
       dynamic result = response.data;
       if (response.statusCode == 200) {
-        LogUtil.v("完整地址 " + response.realUri.toString());
+        // LogUtil.v("完整地址 " + response.realUri.toString());
         if (complationBlock != null) {
           complationBlock(result, 200);
         }
@@ -95,7 +95,7 @@ class RequestMethod {
       }
     } on DioError catch (e) {
       LogUtil.v('请求出错：' + e.toString());
-      LogUtil.v("完整地址 " + e.requestOptions.uri.toString());
+      LogUtil.v("错误完整地址 " + e.requestOptions.uri.toString());
       if (complationBlock != null) {
         complationBlock(e.toString(), 500);
       }

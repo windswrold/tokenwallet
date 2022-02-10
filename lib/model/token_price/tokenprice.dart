@@ -13,6 +13,15 @@ class TokenPrice {
   String? rate; //价格
 
   TokenPrice({required this.contract, this.source, this.target, this.rate});
+
+  // static Future<List<TokenPrice>> queryTokenPrices(
+  //     String contract, String target) async {
+
+  //     }
+
+  static Future<void> insertTokenPrice(TokenPrice model) async {}
+
+  static Future<void> insertTokensPrice(List<TokenPrice> models) async {}
 }
 
 @dao

@@ -191,13 +191,17 @@ class TRWallet {
       List<MCollectionTokens> tokens = [];
       for (var item in currency_List) {
         MCollectionTokens token = MCollectionTokens.fromJson(item);
-        token.owner = walletID;
-        token.state = 1;
-        token.tokenID = token.kNetType.toString() +
+        String contract = token.contract ?? "";
+        String tokenID = (token.kNetType.toString() +
             "|" +
             token.chainType.toString() +
             "|" +
-            token.contract!;
+            walletID +
+            "|" +
+            contract);
+        token.owner = walletID;
+        token.state = 1;
+        token.tokenID = TREncode.SHA256(tokenID);
         token.index = index++;
         tokens.add(token);
       }
@@ -310,8 +314,11 @@ class TRWallet {
 
   static Future<bool> deleteWallet(TRWallet wallet) async {
     try {
+      String walletID = wallet.walletID!;
       FlutterDatabase? database = await DataBaseConfig.openDataBase();
       database?.walletDao.deleteWallet(wallet);
+      var item = await MCollectionTokens.findWalletsTokens(walletID);
+      MCollectionTokens.deleteTokens(item);
       return true;
     } catch (e) {
       rethrow;

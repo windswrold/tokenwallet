@@ -687,6 +687,29 @@ class _$MCollectionTokenDao extends MCollectionTokenDao {
   final DeletionAdapter<MCollectionTokens> _mCollectionTokensDeletionAdapter;
 
   @override
+  Future<List<MCollectionTokens>> findAllTokens(String owner) async {
+    return _queryAdapter.queryList(
+        'SELECT * FROM tokens_table WHERE owner = ?1',
+        mapper: (Map<String, Object?> row) => MCollectionTokens(
+            tokenID: row['tokenID'] as String?,
+            owner: row['owner'] as String?,
+            contract: row['contract'] as String?,
+            token: row['token'] as String?,
+            coinType: row['coinType'] as String?,
+            state: row['state'] as int?,
+            decimals: row['decimals'] as int?,
+            price: row['price'] as double?,
+            balance: row['balance'] as double?,
+            digits: row['digits'] as int?,
+            iconPath: row['iconPath'] as String?,
+            chainType: row['chainType'] as int?,
+            index: row['index'] as int?,
+            kNetType: row['kNetType'] as int?,
+            tokenType: row['tokenType'] as int?),
+        arguments: [owner]);
+  }
+
+  @override
   Future<List<MCollectionTokens>> findTokens(String owner, int kNetType) async {
     return _queryAdapter.queryList(
         'SELECT * FROM tokens_table WHERE owner = ?1 and kNetType=?2 ORDER BY \"index\"',
@@ -723,8 +746,7 @@ class _$MCollectionTokenDao extends MCollectionTokenDao {
 
   @override
   Future<void> updateTokenData(String sql) async {
-    await _queryAdapter
-        .queryNoReturn('UPDATE tokens_table SET ?1', arguments: [sql]);
+    await _queryAdapter.queryNoReturn('UPDATE tokens_table SET $sql');
   }
 
   @override
@@ -753,7 +775,7 @@ class _$MCollectionTokenDao extends MCollectionTokenDao {
   }
 
   @override
-  Future<void> deleteTokens(MCollectionTokens model) async {
-    await _mCollectionTokensDeletionAdapter.delete(model);
+  Future<void> deleteTokens(List<MCollectionTokens> models) async {
+    await _mCollectionTokensDeletionAdapter.deleteList(models);
   }
 }
