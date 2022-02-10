@@ -174,5 +174,6 @@
     "minepage_modify": "切换到",
     "minepage_modifytestnet": "切换到 TestNet 后，钱包内的所有资产和藏品皆为测试链数据。",
     "minepage_staymain": "停留在 MainNet",
-    "minepage_modifytest": "切换到 TestNet"
+    "minepage_modifytest": "切换到 TestNet",
+    "gasLow": "手续费太低"
 }

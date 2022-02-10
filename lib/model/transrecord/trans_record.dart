@@ -1,3 +1,5 @@
+import 'package:cstoken/db/database.dart';
+import 'package:cstoken/db/database_config.dart';
 import 'package:floor/floor.dart';
 import 'package:json_annotation/json_annotation.dart';
 
@@ -359,14 +361,14 @@ class TransRecordModel {
   //   }
   // }
 
-  // static void insertTrxLists(List<TransRecordModel> models) async {
-  //   try {
-  //     FlutterDatabase? database = await (BaseModel.getDataBae());
-  //     database?.transListDao.insertTrxLists(models);
-  //   } catch (e) {
-  //     LogUtil.v("失败" + e.toString());
-  //   }
-  // }
+  static void insertTrxLists(List<TransRecordModel> models) async {
+    try {
+      FlutterDatabase? database = await DataBaseConfig.openDataBase();
+      // database?.transListDao.insertTrxLists(models);
+    } catch (e) {
+      // LogUtil.v("失败" + e.toString());
+    }
+  }
 
   // static void deleteTrxList(TransRecordModel model) async {
   //   try {

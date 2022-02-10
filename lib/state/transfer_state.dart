@@ -166,21 +166,15 @@ class KTransferState with ChangeNotifier {
       HWToast.showText(text: "input_paymentvaluezero".local());
       return;
     }
-    // _showSheetView(
-    //   context,
-    //   _wallet!,
-    //   _tokens!,
-    //   amount: amountBig.tokenString(decimals),
-    //   fee: "zzz",
-    //   remark: remark,
-    //   to: to,
-    //   from: from,
-    //   feeToken: ' ' + feeToken,
-    //   gasPrice: _gasPrice,
-    //   gasLimit: _gasLimit,
-    //   isCustomfee: true,
-    //   kCoinType: coinType.geCoinType(),
-    // );
+    HWToast.hiddenAllToast();
+    _showSheetView(
+      context,
+      amount: amountBig.tokenString(decimals),
+      remark: remark,
+      to: to,
+      from: from,
+      feeToken: feeToken,
+    );
   }
 
   ///重新计算后的转账金额，手续费
@@ -225,11 +219,11 @@ class KTransferState with ChangeNotifier {
                   String prv = hdWallets.first.prv ?? "";
                   _startSign(
                     context,
-                    amount,
                     from: from,
                     to: to,
                     amount: amount,
                     remark: remark,
+                    prv: prv,
                   );
                 }
               });
@@ -240,8 +234,8 @@ class KTransferState with ChangeNotifier {
 
   ///开始签名
   void _startSign(
-    BuildContext context,
-    String? pin, {
+    BuildContext context, {
+    required String prv,
     required String from,
     required String to,
     required String amount,
@@ -249,6 +243,13 @@ class KTransferState with ChangeNotifier {
   }) async {
     HWToast.showLoading(clickClose: true);
     String? result;
+    result = await _client!.transfer(
+        prv: prv,
+        token: _tokens!,
+        amount: amount,
+        to: to,
+        isCustomfee: _isCustomFee,
+        data: remark);
 
     if (result?.isNotEmpty == true) {
       HWToast.showText(text: "payment_transsuccess".local());
