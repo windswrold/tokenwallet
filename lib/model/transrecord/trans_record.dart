@@ -1,11 +1,9 @@
 import 'package:cstoken/db/database.dart';
 import 'package:cstoken/db/database_config.dart';
 import 'package:floor/floor.dart';
-import 'package:json_annotation/json_annotation.dart';
 
 const String tableName = "translist_table";
 
-@JsonSerializable()
 @Entity(tableName: tableName)
 class TransRecordModel {
   @primaryKey
@@ -19,17 +17,17 @@ class TransRecordModel {
   String? gasPrice;
   String? gasLimit;
   int? transStatus; //0失败 1成功
-  String? symbol; //转账符号
+  String? token; //转账符号
   String? coinType;
   //自定义字段
-  int? transType; //转入转出类型
   int? chainid; //哪条链
-  int? nonce;
-  String? signTo; //收款人的to
+  int? nonce; //用来加速交易或者取消交易
+  String? contractTo; //发上交易后的to 可能是代币的合约地址 也有可能是某个中间合约的地址
   String? input;
-  String? signMessage;
-  int? repeatPushCount;
+  String? signMessage; //签过名的数据用来重发交易
+  int? repeatPushCount; //重发的次数
   int? blockHeight; //区块高度
+  int? transType; //转账类型
 
   TransRecordModel({
     this.txid,
@@ -40,14 +38,13 @@ class TransRecordModel {
     this.remarks,
     this.fee,
     this.transStatus,
-    this.symbol,
+    this.token,
     this.coinType,
     this.gasLimit,
     this.gasPrice,
-    this.transType,
     this.chainid,
     this.nonce,
-    this.signTo,
+    this.contractTo,
     this.input,
     this.signMessage,
     this.repeatPushCount,
@@ -403,27 +400,24 @@ abstract class TransRecordModelDao {
   //or toAdd =:fromAdd
   @Query('SELECT * FROM ' +
       tableName +
-      ' WHERE (fromAdd = :fromAdd )  and symbol = :symbol and chainid = :chainid ORDER BY date DESC')
+      ' WHERE (fromAdd = :fromAdd )  and token = :token and chainid = :chainid ORDER BY date DESC')
   Future<List<TransRecordModel>> queryTrxList(
-      String fromAdd, String symbol, int chainid);
+      String fromAdd, String token, int chainid);
 
   @Query('SELECT * FROM ' +
       tableName +
-      ' WHERE (fromAdd = :fromAdd )  and symbol = :symbol and chainid = :chainid and transType =:transType ORDER BY date DESC')
+      ' WHERE (fromAdd = :fromAdd )  and token = :token and chainid = :chainid and transType =:transType ORDER BY date DESC')
   Future<List<TransRecordModel>> queryTrxListWithType(
-      String fromAdd, String symbol, int chainid, int transType);
+      String fromAdd, String token, int chainid, int transType);
 
   @Query('SELECT * FROM ' +
       tableName +
-      ' WHERE (fromAdd = :fromAdd)  and symbol = :symbol and chainid = :chainid and (transStatus = 2 OR transStatus = 3)  ORDER BY date DESC')
+      ' WHERE (fromAdd = :fromAdd)  and token = :token and chainid = :chainid and (transStatus = 2 OR transStatus = 3)  ORDER BY date DESC')
   Future<List<TransRecordModel>> queryPendingTrxList(
-      String fromAdd, String symbol, int chainid);
+      String fromAdd, String token, int chainid);
 
   @Query('SELECT * FROM ' + tableName + ' WHERE txid = :txid')
   Future<List<TransRecordModel>> queryTrxFromTrxid(String txid);
-
-  @Insert(onConflict: OnConflictStrategy.replace)
-  Future<void> insertTrxList(TransRecordModel model);
 
   @Insert(onConflict: OnConflictStrategy.replace)
   Future<void> insertTrxLists(List<TransRecordModel> models);

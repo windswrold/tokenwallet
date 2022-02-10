@@ -86,20 +86,21 @@ class ETHClient {
       model.amount = amount;
       model.fromAdd = from;
       model.date = DateUtil.getNowDateStr();
-      model.symbol = token.token;
+      model.token = token.token;
       model.coinType = token.coinType;
       model.fee = fee;
       model.gasPrice = gasPrice.toString();
       model.gasLimit = maxGas.toString();
       model.toAdd = to;
-      model.transStatus = MTransState.MTransState_Pending.index;
+      model.transStatus = KTransState.pending.index;
       model.remarks = data;
       model.chainid = _chainId;
       model.nonce = ts.nonce;
-      model.signTo = to; //收款人的to
+      model.contractTo = ts.to?.hexEip55;
       model.input = ts.data != null ? bytesToHex(ts.data!) : null;
       model.signMessage = signMessage;
       model.repeatPushCount = 0;
+      model.transType = KTransType.transfer.index;
       TransRecordModel.insertTrxLists([model]);
       return result;
     } catch (e) {

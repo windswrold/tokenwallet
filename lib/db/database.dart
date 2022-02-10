@@ -3,6 +3,7 @@ import 'package:cstoken/model/contacts/contact_address.dart';
 import 'package:cstoken/model/dapps_record/dapps_record.dart';
 import 'package:cstoken/model/token_price/tokenprice.dart';
 import 'package:cstoken/model/tokens/collection_tokens.dart';
+import 'package:cstoken/model/transrecord/trans_record.dart';
 import 'package:cstoken/model/wallet/tr_wallet.dart';
 import 'package:cstoken/model/wallet/tr_wallet_info.dart';
 import 'package:floor/floor.dart';
@@ -19,6 +20,7 @@ const int dbCurrentVersion = 1;
   DAppRecordsDBModel,
   TokenPrice,
   MCollectionTokens,
+  TransRecordModel
 ])
 abstract class FlutterDatabase extends FloorDatabase {
   WalletDao get walletDao;
@@ -27,4 +29,5 @@ abstract class FlutterDatabase extends FloorDatabase {
   DAppRecordsDao get dAppRecordsDao;
   TokenPriceDao get tokenPriceDao;
   MCollectionTokenDao get tokensDao;
+  TransRecordModelDao get transListDao;
 }

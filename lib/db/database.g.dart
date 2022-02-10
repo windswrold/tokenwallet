@@ -73,6 +73,8 @@ class _$FlutterDatabase extends FlutterDatabase {
 
   MCollectionTokenDao? _tokensDaoInstance;
 
+  TransRecordModelDao? _transListDaoInstance;
+
   Future<sqflite.Database> open(String path, List<Migration> migrations,
       [Callback? callback]) async {
     final databaseOptions = sqflite.OpenDatabaseOptions(
@@ -103,6 +105,8 @@ class _$FlutterDatabase extends FlutterDatabase {
             'CREATE TABLE IF NOT EXISTS `tokenPrice_table` (`contract` TEXT, `source` TEXT, `target` TEXT, `rate` TEXT, PRIMARY KEY (`contract`, `source`, `target`))');
         await database.execute(
             'CREATE TABLE IF NOT EXISTS `tokens_table` (`tokenID` TEXT, `owner` TEXT, `contract` TEXT, `token` TEXT, `coinType` TEXT, `chainType` INTEGER, `state` INTEGER, `iconPath` TEXT, `decimals` INTEGER, `price` REAL, `balance` REAL, `digits` INTEGER, `kNetType` INTEGER, `index` INTEGER, `tokenType` INTEGER, PRIMARY KEY (`tokenID`))');
+        await database.execute(
+            'CREATE TABLE IF NOT EXISTS `translist_table` (`txid` TEXT, `toAdd` TEXT, `fromAdd` TEXT, `date` TEXT, `amount` TEXT, `remarks` TEXT, `fee` TEXT, `gasPrice` TEXT, `gasLimit` TEXT, `transStatus` INTEGER, `token` TEXT, `coinType` TEXT, `chainid` INTEGER, `nonce` INTEGER, `contractTo` TEXT, `input` TEXT, `signMessage` TEXT, `repeatPushCount` INTEGER, `blockHeight` INTEGER, `transType` INTEGER, PRIMARY KEY (`txid`))');
 
         await callback?.onCreate?.call(database, version);
       },
@@ -141,6 +145,12 @@ class _$FlutterDatabase extends FlutterDatabase {
   MCollectionTokenDao get tokensDao {
     return _tokensDaoInstance ??=
         _$MCollectionTokenDao(database, changeListener);
+  }
+
+  @override
+  TransRecordModelDao get transListDao {
+    return _transListDaoInstance ??=
+        _$TransRecordModelDao(database, changeListener);
   }
 }
 
@@ -777,5 +787,176 @@ class _$MCollectionTokenDao extends MCollectionTokenDao {
   @override
   Future<void> deleteTokens(List<MCollectionTokens> models) async {
     await _mCollectionTokensDeletionAdapter.deleteList(models);
+  }
+}
+
+class _$TransRecordModelDao extends TransRecordModelDao {
+  _$TransRecordModelDao(this.database, this.changeListener)
+      : _queryAdapter = QueryAdapter(database),
+        _transRecordModelInsertionAdapter = InsertionAdapter(
+            database,
+            'translist_table',
+            (TransRecordModel item) => <String, Object?>{
+                  'txid': item.txid,
+                  'toAdd': item.toAdd,
+                  'fromAdd': item.fromAdd,
+                  'date': item.date,
+                  'amount': item.amount,
+                  'remarks': item.remarks,
+                  'fee': item.fee,
+                  'gasPrice': item.gasPrice,
+                  'gasLimit': item.gasLimit,
+                  'transStatus': item.transStatus,
+                  'token': item.token,
+                  'coinType': item.coinType,
+                  'chainid': item.chainid,
+                  'nonce': item.nonce,
+                  'contractTo': item.contractTo,
+                  'input': item.input,
+                  'signMessage': item.signMessage,
+                  'repeatPushCount': item.repeatPushCount,
+                  'blockHeight': item.blockHeight,
+                  'transType': item.transType
+                }),
+        _transRecordModelUpdateAdapter = UpdateAdapter(
+            database,
+            'translist_table',
+            ['txid'],
+            (TransRecordModel item) => <String, Object?>{
+                  'txid': item.txid,
+                  'toAdd': item.toAdd,
+                  'fromAdd': item.fromAdd,
+                  'date': item.date,
+                  'amount': item.amount,
+                  'remarks': item.remarks,
+                  'fee': item.fee,
+                  'gasPrice': item.gasPrice,
+                  'gasLimit': item.gasLimit,
+                  'transStatus': item.transStatus,
+                  'token': item.token,
+                  'coinType': item.coinType,
+                  'chainid': item.chainid,
+                  'nonce': item.nonce,
+                  'contractTo': item.contractTo,
+                  'input': item.input,
+                  'signMessage': item.signMessage,
+                  'repeatPushCount': item.repeatPushCount,
+                  'blockHeight': item.blockHeight,
+                  'transType': item.transType
+                }),
+        _transRecordModelDeletionAdapter = DeletionAdapter(
+            database,
+            'translist_table',
+            ['txid'],
+            (TransRecordModel item) => <String, Object?>{
+                  'txid': item.txid,
+                  'toAdd': item.toAdd,
+                  'fromAdd': item.fromAdd,
+                  'date': item.date,
+                  'amount': item.amount,
+                  'remarks': item.remarks,
+                  'fee': item.fee,
+                  'gasPrice': item.gasPrice,
+                  'gasLimit': item.gasLimit,
+                  'transStatus': item.transStatus,
+                  'token': item.token,
+                  'coinType': item.coinType,
+                  'chainid': item.chainid,
+                  'nonce': item.nonce,
+                  'contractTo': item.contractTo,
+                  'input': item.input,
+                  'signMessage': item.signMessage,
+                  'repeatPushCount': item.repeatPushCount,
+                  'blockHeight': item.blockHeight,
+                  'transType': item.transType
+                });
+
+  final sqflite.DatabaseExecutor database;
+
+  final StreamController<String> changeListener;
+
+  final QueryAdapter _queryAdapter;
+
+  final InsertionAdapter<TransRecordModel> _transRecordModelInsertionAdapter;
+
+  final UpdateAdapter<TransRecordModel> _transRecordModelUpdateAdapter;
+
+  final DeletionAdapter<TransRecordModel> _transRecordModelDeletionAdapter;
+
+  @override
+  Future<List<TransRecordModel>> queryTrxList(
+      String fromAdd, String token, int chainid) async {
+    return _queryAdapter.queryList(
+        'SELECT * FROM translist_table WHERE (fromAdd = ?1 )  and token = ?2 and chainid = ?3 ORDER BY date DESC',
+        mapper: (Map<String, Object?> row) => TransRecordModel(txid: row['txid'] as String?, toAdd: row['toAdd'] as String?, fromAdd: row['fromAdd'] as String?, date: row['date'] as String?, amount: row['amount'] as String?, remarks: row['remarks'] as String?, fee: row['fee'] as String?, transStatus: row['transStatus'] as int?, token: row['token'] as String?, coinType: row['coinType'] as String?, gasLimit: row['gasLimit'] as String?, gasPrice: row['gasPrice'] as String?, chainid: row['chainid'] as int?, nonce: row['nonce'] as int?, contractTo: row['contractTo'] as String?, input: row['input'] as String?, signMessage: row['signMessage'] as String?, repeatPushCount: row['repeatPushCount'] as int?, blockHeight: row['blockHeight'] as int?),
+        arguments: [fromAdd, token, chainid]);
+  }
+
+  @override
+  Future<List<TransRecordModel>> queryTrxListWithType(
+      String fromAdd, String token, int chainid, int transType) async {
+    return _queryAdapter.queryList(
+        'SELECT * FROM translist_table WHERE (fromAdd = ?1 )  and token = ?2 and chainid = ?3 and transType =?4 ORDER BY date DESC',
+        mapper: (Map<String, Object?> row) => TransRecordModel(txid: row['txid'] as String?, toAdd: row['toAdd'] as String?, fromAdd: row['fromAdd'] as String?, date: row['date'] as String?, amount: row['amount'] as String?, remarks: row['remarks'] as String?, fee: row['fee'] as String?, transStatus: row['transStatus'] as int?, token: row['token'] as String?, coinType: row['coinType'] as String?, gasLimit: row['gasLimit'] as String?, gasPrice: row['gasPrice'] as String?, chainid: row['chainid'] as int?, nonce: row['nonce'] as int?, contractTo: row['contractTo'] as String?, input: row['input'] as String?, signMessage: row['signMessage'] as String?, repeatPushCount: row['repeatPushCount'] as int?, blockHeight: row['blockHeight'] as int?),
+        arguments: [fromAdd, token, chainid, transType]);
+  }
+
+  @override
+  Future<List<TransRecordModel>> queryPendingTrxList(
+      String fromAdd, String token, int chainid) async {
+    return _queryAdapter.queryList(
+        'SELECT * FROM translist_table WHERE (fromAdd = ?1)  and token = ?2 and chainid = ?3 and (transStatus = 2 OR transStatus = 3)  ORDER BY date DESC',
+        mapper: (Map<String, Object?> row) => TransRecordModel(txid: row['txid'] as String?, toAdd: row['toAdd'] as String?, fromAdd: row['fromAdd'] as String?, date: row['date'] as String?, amount: row['amount'] as String?, remarks: row['remarks'] as String?, fee: row['fee'] as String?, transStatus: row['transStatus'] as int?, token: row['token'] as String?, coinType: row['coinType'] as String?, gasLimit: row['gasLimit'] as String?, gasPrice: row['gasPrice'] as String?, chainid: row['chainid'] as int?, nonce: row['nonce'] as int?, contractTo: row['contractTo'] as String?, input: row['input'] as String?, signMessage: row['signMessage'] as String?, repeatPushCount: row['repeatPushCount'] as int?, blockHeight: row['blockHeight'] as int?),
+        arguments: [fromAdd, token, chainid]);
+  }
+
+  @override
+  Future<List<TransRecordModel>> queryTrxFromTrxid(String txid) async {
+    return _queryAdapter.queryList(
+        'SELECT * FROM translist_table WHERE txid = ?1',
+        mapper: (Map<String, Object?> row) => TransRecordModel(
+            txid: row['txid'] as String?,
+            toAdd: row['toAdd'] as String?,
+            fromAdd: row['fromAdd'] as String?,
+            date: row['date'] as String?,
+            amount: row['amount'] as String?,
+            remarks: row['remarks'] as String?,
+            fee: row['fee'] as String?,
+            transStatus: row['transStatus'] as int?,
+            token: row['token'] as String?,
+            coinType: row['coinType'] as String?,
+            gasLimit: row['gasLimit'] as String?,
+            gasPrice: row['gasPrice'] as String?,
+            chainid: row['chainid'] as int?,
+            nonce: row['nonce'] as int?,
+            contractTo: row['contractTo'] as String?,
+            input: row['input'] as String?,
+            signMessage: row['signMessage'] as String?,
+            repeatPushCount: row['repeatPushCount'] as int?,
+            blockHeight: row['blockHeight'] as int?),
+        arguments: [txid]);
+  }
+
+  @override
+  Future<void> insertTrxLists(List<TransRecordModel> models) async {
+    await _transRecordModelInsertionAdapter.insertList(
+        models, OnConflictStrategy.replace);
+  }
+
+  @override
+  Future<void> updateTrxList(TransRecordModel model) async {
+    await _transRecordModelUpdateAdapter.update(
+        model, OnConflictStrategy.abort);
+  }
+
+  @override
+  Future<void> updateTrxLists(List<TransRecordModel> models) async {
+    await _transRecordModelUpdateAdapter.updateList(
+        models, OnConflictStrategy.abort);
+  }
+
+  @override
+  Future<void> deleteTrxList(TransRecordModel model) async {
+    await _transRecordModelDeletionAdapter.delete(model);
   }
 }

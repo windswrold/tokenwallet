@@ -63,15 +63,19 @@ enum KAlertType {
   edit_name, //nodeUrl
 }
 
-enum MTransState {
-  MTransState_Failere,
-  MTransState_Success,
-  MTransState_Pending, //l1转账打包中 l2 loading 然后l2
+enum KTransState {
+  failere,
+  success,
+  pending, //l1转账打包中 l2 loading 然后l2
 }
 
 enum KTokenType { native, token }
 
 enum KNetType { Mainnet, Testnet }
+
+enum KTransType {
+  transfer,
+}
 
 final bool inProduction = kReleaseMode;
 final bool isAndroid = Platform.isAndroid;
