@@ -76,9 +76,9 @@ class _HomePageState extends State<HomePage> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             WalletCard(wallet: wallet),
-            CustomPageView.getMessage(() {
-              Routers.push(context, MineMessagePage());
-            }),
+            // CustomPageView.getMessage(() {
+            //   Routers.push(context, MineMessagePage());
+            // }),
           ],
         ),
       ),

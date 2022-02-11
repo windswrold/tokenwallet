@@ -1,5 +1,6 @@
 import 'package:cstoken/db/database.dart';
 import 'package:cstoken/db/database_config.dart';
+import 'package:cstoken/utils/log_util.dart';
 import 'package:floor/floor.dart';
 
 const String tableName = "translist_table";
@@ -361,9 +362,9 @@ class TransRecordModel {
   static void insertTrxLists(List<TransRecordModel> models) async {
     try {
       FlutterDatabase? database = await DataBaseConfig.openDataBase();
-      // database?.transListDao.insertTrxLists(models);
+      database?.transListDao.insertTrxLists(models);
     } catch (e) {
-      // LogUtil.v("失败" + e.toString());
+      LogUtil.v("失败" + e.toString());
     }
   }
 

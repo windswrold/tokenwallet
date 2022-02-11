@@ -98,9 +98,9 @@ class _MinePageState extends State<MinePage> {
         title: CustomPageView.getTitle(title: "minepage_minetitle".local()),
         backgroundColor: ColorUtils.backgroudColor,
         actions: [
-          CustomPageView.getMessage(() {
-            Routers.push(context, MineMessagePage());
-          }),
+          // CustomPageView.getMessage(() {
+          //   Routers.push(context, MineMessagePage());
+          // }),
         ],
         child: Column(
           children: [

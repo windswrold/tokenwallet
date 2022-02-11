@@ -180,5 +180,7 @@
     "dapppage_warningtip": "提示：您即将访问的页面属于第三方应用{dappName}，使用行为将适用其《用户协议》和《隐私政策》，由{dappName}直接并单独向您承担责任。",
     "dapppage_stop": "停止访问",
     "dapppage_iknowit": "我已知晓",
-    "dapppage_chooseright": "请选择对应链钱包"
+    "dapppage_chooseright": "请选择对应链钱包",
+    "dapppage_qrcodewrong": "二维码不正确",
+    "dapppage_notsupport": "不支持此指令"
 }

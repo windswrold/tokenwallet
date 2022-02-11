@@ -131,11 +131,13 @@ class _DappBrowserState extends State<DappBrowser> {
             builder: (_) {
               return PaymentSheet(
                 datas: PaymentSheet.getTransStyleList(
-                    from: bridge.from ?? "",
-                    to: bridge.to ?? '',
-                    remark: '',
-                    fee: fee + feeToken),
-                amount: (bridge.value ?? BigInt.zero).tokenString(18),
+                  from: bridge.from ?? "",
+                  to: bridge.to ?? '',
+                  remark: '',
+                  fee: fee + " $feeToken",
+                ),
+                amount: (bridge.value ?? BigInt.zero).tokenString(18) +
+                    " $feeToken",
                 nextAction: () {
                   tr.showLockPin(context,
                       infoCoinType: widget.info!.coinType!.geCoinType(),
@@ -205,6 +207,8 @@ class _DappBrowserState extends State<DappBrowser> {
           });
         });
       }
+    } else if (name == 'addEthereumChain') {
+      HWToast.showText(text: "dapppage_notsupport".local());
     }
   }
 

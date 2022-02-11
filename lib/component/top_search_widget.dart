@@ -1,6 +1,7 @@
 import 'package:cstoken/pages/apps/dapp_search_page.dart';
 import 'package:cstoken/pages/scan/scan.dart';
 import 'package:cstoken/pages/wallet/wallets/wallets_manager.dart';
+import 'package:cstoken/state/dapp/dapp_state.dart';
 import 'package:cstoken/utils/custom_toast.dart';
 
 import '../public.dart';
@@ -75,7 +76,13 @@ class TopSearchView extends StatelessWidget {
             ),
             CustomPageView.getScan(() async {
               Map? params = await Routers.push(context, ScanCodePage());
-              String? result = params?["data"];
+              String result = params?["data"] ?? "";
+              if (result.isValidUrl() == true) {
+                Provider.of<DappDataState>(context, listen: false)
+                    .bannerTap(context, result);
+              } else {
+                HWToast.showText(text: "dapppage_qrcodewrong".local());
+              }
             }),
           ],
         ),
