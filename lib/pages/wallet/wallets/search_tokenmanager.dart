@@ -1,4 +1,5 @@
 import 'package:cstoken/component/assets_cell.dart';
+import 'package:cstoken/model/tokens/collection_tokens.dart';
 
 import '../../../public.dart';
 
@@ -11,6 +12,8 @@ class TokenManager extends StatefulWidget {
 
 class _TokenManagerState extends State<TokenManager> {
   TextEditingController searchController = TextEditingController();
+
+  List<MCollectionTokens> _datas = [];
 
   Widget _topSearchView() {
     return Container(
@@ -25,7 +28,19 @@ class _TokenManagerState extends State<TokenManager> {
     return CustomTextField(
       controller: searchController,
       maxLines: 1,
-      onChange: (value) {},
+      onChange: (value) async {
+        final walletID =
+            Provider.of<CurrentChooseWalletState>(context, listen: false)
+                .currentWallet!
+                .walletID!;
+        final type = SPManager.getNetType().index;
+
+        List<MCollectionTokens> datas = await MCollectionTokens.findTokensBySQL(
+            "contract like '%$value%' or token like '%$value%' and owner = '$walletID' and kNetType = $type");
+        setState(() {
+          _datas = datas;
+        });
+      },
       style: TextStyle(
         color: ColorUtils.fromHex("#FF000000"),
         fontSize: 14.font,
@@ -48,6 +63,27 @@ class _TokenManagerState extends State<TokenManager> {
           ),
           fillColor: ColorUtils.fromHex("#FFF6F8FF")),
     );
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    _initData();
+  }
+
+  void _initData() async {
+    final walletID =
+        Provider.of<CurrentChooseWalletState>(context, listen: false)
+            .currentWallet!
+            .walletID!;
+
+    List<MCollectionTokens> datas = [];
+    KNetType netType = SPManager.getNetType();
+    datas = await MCollectionTokens.findTokens(walletID, netType.index);
+    setState(() {
+      _datas = datas;
+    });
   }
 
   @override
@@ -84,18 +120,24 @@ class _TokenManagerState extends State<TokenManager> {
             Expanded(
               child: ReorderableListView.builder(
                 itemBuilder: (BuildContext context, int index) {
+                  MCollectionTokens token = _datas[index];
                   return AssetsCell(
                     key: ValueKey(index),
+                    token: token,
+                    onTap: () {
+                      token.state = token.state == 1 ? 0 : 1;
+                      String id = token.tokenID ?? "";
+                      MCollectionTokens.updateTokenData(
+                          "state=${token.state} WHERE tokenID = '$id'");
+                      _initData();
+                    },
                   );
                 },
-                itemCount: 10,
+                itemCount: _datas.length,
                 onReorder: (int oldIndex, int newIndex) {
-                  // if (oldIndex < newIndex) {
-                  //   newIndex -= 1;
-                  // }
-                  // var child = items.removeAt(oldIndex);
-                  // items.insert(newIndex, child);
-                  // setState(() {});
+                  // MCollectionTokens token = _datas[oldIndex];
+                  // String id = token.tokenID ?? "";
+                  // token.moveItem(id, token.owner!, oldIndex, newIndex);
                 },
               ),
             ),

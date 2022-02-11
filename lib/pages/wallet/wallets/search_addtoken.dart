@@ -66,14 +66,14 @@ class _SearchAddTokenState extends State<SearchAddToken> {
         child: Column(
           children: [
             _topSearchView(),
-            Expanded(
-              child: ListView.builder(
-                itemCount: 10,
-                itemBuilder: (BuildContext context, int index) {
-                  return AssetsCell();
-                },
-              ),
-            )
+            // Expanded(
+            //   child: ListView.builder(
+            //     itemCount: 10,
+            //     itemBuilder: (BuildContext context, int index) {
+            //       return AssetsCell();
+            //     },
+            //   ),
+            // )
           ],
         ));
   }

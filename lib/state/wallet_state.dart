@@ -309,7 +309,7 @@ class CurrentChooseWalletState with ChangeNotifier {
     }
     final String walletID = _currentWallet!.walletID!;
     List<MCollectionTokens> datas = [];
-    KNetType netType = KNetType.Mainnet;
+    KNetType netType = SPManager.getNetType();
     if (_chooseChainType == null) {
       datas =
           await MCollectionTokens.findStateTokens(walletID, 1, netType.index);

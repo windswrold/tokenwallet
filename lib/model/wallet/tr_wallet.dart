@@ -225,7 +225,7 @@ class TRWallet {
         TRWalletInfo.insertWallets([infos]);
       }
       int index = (await MCollectionTokens.findMaxIndex(
-              walletID, KNetType.Mainnet.index)) ??
+              walletID)) ??
           0;
       List<MCollectionTokens> tokens = [];
       for (var item in currency_List) {

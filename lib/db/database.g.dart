@@ -760,10 +760,33 @@ class _$MCollectionTokenDao extends MCollectionTokenDao {
   }
 
   @override
-  Future<int?> findMaxIndex(String owner, int kNetType) async {
+  Future<List<MCollectionTokens>> findTokensBySQL(String sql) async {
+    return _queryAdapter.queryList(
+      'SELECT * FROM tokens_table WHERE $sql  ORDER BY \"index\"',
+      mapper: (Map<String, Object?> row) => MCollectionTokens(
+          tokenID: row['tokenID'] as String?,
+          owner: row['owner'] as String?,
+          contract: row['contract'] as String?,
+          token: row['token'] as String?,
+          coinType: row['coinType'] as String?,
+          state: row['state'] as int?,
+          decimals: row['decimals'] as int?,
+          price: row['price'] as double?,
+          balance: row['balance'] as double?,
+          digits: row['digits'] as int?,
+          iconPath: row['iconPath'] as String?,
+          chainType: row['chainType'] as int?,
+          index: row['index'] as int?,
+          kNetType: row['kNetType'] as int?,
+          tokenType: row['tokenType'] as int?),
+    );
+  }
+
+  @override
+  Future<int?> findMaxIndex(String owner) async {
     await _queryAdapter.queryNoReturn(
-        'SELECT MAX(\'index\') FROM tokens_table where owner = ?1 and kNetType = ?2',
-        arguments: [owner, kNetType]);
+        'SELECT MAX(\'index\') FROM tokens_table where owner = ?1',
+        arguments: [owner]);
   }
 
   @override
@@ -779,9 +802,9 @@ class _$MCollectionTokenDao extends MCollectionTokenDao {
   }
 
   @override
-  Future<void> updateTokens(MCollectionTokens model) async {
-    await _mCollectionTokensUpdateAdapter.update(
-        model, OnConflictStrategy.abort);
+  Future<void> updateTokens(List<MCollectionTokens> models) async {
+    await _mCollectionTokensUpdateAdapter.updateList(
+        models, OnConflictStrategy.abort);
   }
 
   @override

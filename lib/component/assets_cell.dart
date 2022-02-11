@@ -1,7 +1,11 @@
+import 'package:cstoken/model/tokens/collection_tokens.dart';
+
 import '../public.dart';
 
 class AssetsCell extends StatelessWidget {
-  const AssetsCell({Key? key}) : super(key: key);
+  const AssetsCell({Key? key, required this.token, required this.onTap}) : super(key: key);
+  final MCollectionTokens token;
+  final VoidCallback onTap;
 
   Widget _loadImgView(String icon) {
     return Container(
@@ -37,7 +41,7 @@ class AssetsCell extends StatelessWidget {
                   children: [
                     Container(
                       child: Text(
-                        "data1",
+                        token.token ?? "",
                         style: TextStyle(
                           color: ColorUtils.fromHex("#FF000000"),
                           fontSize: 16.font,
@@ -48,7 +52,7 @@ class AssetsCell extends StatelessWidget {
                     4.columnWidget,
                     Container(
                       child: Text(
-                        "data2",
+                        token.coinType ?? "",
                         style: TextStyle(
                           color: ColorUtils.fromHex("#FF000000"),
                           fontSize: 12.font,
@@ -58,17 +62,23 @@ class AssetsCell extends StatelessWidget {
                     ),
                   ],
                 ),
-                LoadAssetsImage(
-                  "icons/icon_tokenadd.png",
-                  width: 20,
-                  height: 20,
+                GestureDetector(
+                  onTap: onTap,
+                  behavior: HitTestBehavior.opaque,
+                  child: LoadAssetsImage(
+                    token.state == 1
+                        ? "icons/icon_tokened.png"
+                        : "icons/icon_tokenadd.png",
+                    width: 20,
+                    height: 20,
+                  ),
                 ),
               ],
             ),
             Container(
               margin: EdgeInsets.only(top: 4.width),
               child: Text(
-                "data3",
+                token.contract ?? (token.coinType ?? ""),
                 style: TextStyle(
                   color: ColorUtils.fromHex("#FF000000"),
                   fontSize: 12.font,
@@ -89,7 +99,7 @@ class AssetsCell extends StatelessWidget {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          _loadImgView("tokens/Arbitrum.png"),
+          _loadImgView(token.iconPath ?? ''),
           12.rowWidget,
           _loadContent(),
         ],

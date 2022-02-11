@@ -68,47 +68,59 @@ class MCollectionTokens {
   String get balanceString =>
       StringUtil.dataFormat(this.balance ?? 0.0, this.digits!);
 
-  // static Future<bool> moveItem(
-  //     String walletID, int oldIndex, int newIndex) async {
-  //   try {
-  //     FlutterDatabase database = await BaseModel.getDataBae();
-  //     List<MHWallet> datas = [];
-  //     MHWallet wallet = await MHWallet.findWalletByWalletID(walletID);
-  //     wallet.index = double.maxFinite.toInt();
-  //     database.walletDao.updateWallet(wallet);
-  //     String sql = "";
-  //     if (oldIndex < newIndex) {
-  //       //  (oldIndex  < index <= newIndex)  -1
-  //       sql = '"index" > $oldIndex and "index" <= $newIndex ';
-  //       datas = await database.walletDao.findWalletsBySQL(sql);
-  //       datas.forEach((element) {
-  //         element.index -= 1;
-  //       });
-  //     } else if (oldIndex > newIndex) {
-  //       // newIndex < index <= oldIndex  + 1
-  //       sql = '"index" >= $newIndex and "index" < $oldIndex ';
-  //       datas = await database.walletDao.findWalletsBySQL(sql);
-  //       datas.forEach((element) {
-  //         element.index += 1;
-  //       });
-  //     }
-  //     if (datas.length > 0) {
-  //       wallet.index = newIndex;
-  //       datas.add(wallet);
-  //       datas.forEach((element) {
-  //         print("444444444  " +
-  //             element.walletAaddress +
-  //             "  index " +
-  //             element.index.toString());
-  //       });
-  //       database.walletDao.updateWallets(datas);
-  //     }
-  //     return true;
-  //   } catch (e) {
-  //     LogUtil.v("失败" + e.toString());
-  //     return false;
-  //   }
-  // }
+  Future<bool> moveItem(
+      String tokenid, String walletid, int oldIndex, int newIndex) async {
+    try {
+      FlutterDatabase? database = await DataBaseConfig.openDataBase();
+      List<MCollectionTokens> datas = [];
+      int maxnum = double.maxFinite.toInt();
+
+      database?.tokensDao
+          .updateTokenData("'index' = $maxnum where 'tokenID' = '$tokenid'");
+      String sql = "";
+      if (oldIndex < newIndex) {
+        //  (oldIndex  < index <= newIndex)  -1
+        sql =
+            '"index" > $oldIndex and "index" <= $newIndex and "owner" = \'$walletid\'';
+
+        datas = (await database?.tokensDao.findTokensBySQL(sql)) ?? [];
+        datas.forEach((element) {
+          element.index = element.index! - 1;
+          print("444444444  " +
+              element.token! +
+              "  index " +
+              element.index.toString());
+        });
+      } else if (oldIndex > newIndex) {
+        // newIndex < index <= oldIndex  + 1
+        sql =
+            '"index" >= $newIndex and "index" < $oldIndex and "owner" = \'$walletid\'';
+        datas = (await database?.tokensDao.findTokensBySQL(sql)) ?? [];
+        datas.forEach((element) {
+          element.index = element.index! + 1;
+          print("444444444  " +
+              element.token! +
+              "  index " +
+              element.index.toString());
+        });
+      }
+      if (datas.length > 0) {
+        database?.tokensDao.updateTokenData(
+            "'index' = $newIndex where 'tokenID' = '$tokenid'");
+        datas.forEach((element) {
+          print("444444444  " +
+              element.token! +
+              "  index " +
+              element.index.toString());
+        });
+        database?.tokensDao.updateTokens(datas);
+      }
+      return true;
+    } catch (e) {
+      LogUtil.v("失败" + e.toString());
+      return false;
+    }
+  }
 
   ///查询当前钱包下当前节点的所有
   static Future<List<MCollectionTokens>> findTokens(
@@ -116,6 +128,15 @@ class MCollectionTokens {
     try {
       FlutterDatabase? database = await DataBaseConfig.openDataBase();
       return (await database?.tokensDao.findTokens(owner, kNetType)) ?? [];
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  static Future<List<MCollectionTokens>> findTokensBySQL(String sql) async {
+    try {
+      FlutterDatabase? database = await DataBaseConfig.openDataBase();
+      return (await database?.tokensDao.findTokensBySQL(sql)) ?? [];
     } catch (e) {
       rethrow;
     }
@@ -187,7 +208,7 @@ class MCollectionTokens {
   static Future<void> updateTokens(MCollectionTokens model) async {
     try {
       FlutterDatabase? database = await DataBaseConfig.openDataBase();
-      database?.tokensDao.updateTokens(model);
+      database?.tokensDao.updateTokens([model]);
     } catch (e) {
       rethrow;
     }
@@ -202,10 +223,10 @@ class MCollectionTokens {
     }
   }
 
-  static Future<int?> findMaxIndex(String owner, int kNetType) async {
+  static Future<int?> findMaxIndex(String owner) async {
     try {
       FlutterDatabase? database = await DataBaseConfig.openDataBase();
-      return database?.tokensDao.findMaxIndex(owner, kNetType);
+      return database?.tokensDao.findMaxIndex(owner);
     } catch (e) {
       rethrow;
     }
@@ -250,13 +271,14 @@ abstract class MCollectionTokenDao {
   Future<void> deleteTokens(List<MCollectionTokens> models);
 
   @update
-  Future<void> updateTokens(MCollectionTokens model);
+  Future<void> updateTokens(List<MCollectionTokens> models);
 
   @Query("UPDATE " + tableName + " SET :sql")
   Future<void> updateTokenData(String sql);
 
-  @Query('SELECT MAX(\'index\') FROM ' +
-      tableName +
-      " where owner = :owner and kNetType = :kNetType")
-  Future<int?> findMaxIndex(String owner, int kNetType);
+  @Query('SELECT * FROM ' + tableName + ' WHERE :sql ' + ' ORDER BY "index"')
+  Future<List<MCollectionTokens>> findTokensBySQL(String sql);
+
+  @Query('SELECT MAX(\'index\') FROM ' + tableName + " where owner = :owner ")
+  Future<int?> findMaxIndex(String owner);
 }
