@@ -52,7 +52,7 @@ class _DappBrowserState extends State<DappBrowser> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    walletAaddress = widget.info!.walletAaddress!;
+    walletAaddress = widget.info?.walletAaddress ?? "";
     _client = ETHClient(widget.node?.content ?? "", widget.node?.chainID ?? 1);
     _loadWeb3();
   }

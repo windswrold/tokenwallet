@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:cstoken/component/chain_listtype.dart';
 import 'package:cstoken/model/dapps_record/dapps_record.dart';
+import 'package:cstoken/model/node/node_model.dart';
 import 'package:cstoken/model/token_price/tokenprice.dart';
 import 'package:cstoken/model/tokens/collection_tokens.dart';
 import 'package:cstoken/model/transrecord/trans_record.dart';
@@ -117,11 +118,68 @@ class CurrentChooseWalletState with ChangeNotifier {
 
   void bannerTap(BuildContext context, String jumpLinks) {
     LogUtil.v("bannerTap  $jumpLinks");
-    if (jumpLinks.isEmpty) {
+    dappTap(context, DAppRecordsDBModel(url: jumpLinks));
+  }
+
+  ///先判断是否授权
+  ///没有cointype 弹窗手动选链
+  ///有则继续找数据
+  Future<void> dappTap(BuildContext context, DAppRecordsDBModel model,
+      {KCoinType? coinType}) async {
+    LogUtil.v("dappTap  ");
+    bool isAuthorization = SPManager.getDappAuthorization(model.url ?? "");
+    if (isAuthorization == false) {
+      ShowCustomAlert.showCustomAlertType(
+          context, KAlertType.text, "dapppage_nextjump".local(), null,
+          subtitleText: "dapppage_warningtip"
+              .local(namedArgs: {"dappName": model.name ?? ""}),
+          leftButtonTitle: "dapppage_stop".local(),
+          rightButtonTitle: "dapppage_iknowit".local(),
+          rightButtonStyle: TextStyle(
+            color: ColorUtils.blueColor,
+            fontSize: 16.font,
+          ), confirmPressed: (result) {
+        SPManager.setDappAuthorization(model.url ?? "");
+        _queryCoinType(context, model, coinType: coinType);
+      });
       return;
     }
+    _queryCoinType(context, model, coinType: coinType);
+  }
+
+  void _queryCoinType(BuildContext context, DAppRecordsDBModel model,
+      {KCoinType? coinType}) {
+    if (coinType != null) {
+      _queryWalletInfo(context, model, coinType);
+    } else {
+      showModalBottomSheet(
+          context: context,
+          backgroundColor: Colors.transparent,
+          isScrollControlled: true,
+          builder: (_) {
+            return ChainListType(onTap: (KCoinType coinType) {
+              _queryWalletInfo(context, model, coinType);
+            });
+          });
+    }
+  }
+
+  void _queryWalletInfo(BuildContext context, DAppRecordsDBModel model,
+      KCoinType coinType) async {
+    TRWallet wallet =
+        Provider.of<CurrentChooseWalletState>(context, listen: false)
+            .currentWallet!;
+    List<TRWalletInfo> infos =
+        await wallet.queryWalletInfos(coinType: coinType);
+    if (infos.isEmpty) {
+      HWToast.showText(text: "dapppage_chooseright".local());
+      return;
+    }
+    NodeModel node = NodeModel.queryNodeByChainType(coinType.index);
+    LogUtil.v(
+        "dapp address ${infos.first.walletAaddress} chain ${node.content}");
     Routers.push(
-        context, DappBrowser(model: DAppRecordsDBModel(url: jumpLinks)));
+        context, DappBrowser(model: model, info: infos.first, node: node));
   }
 
   void assetsHidden(BuildContext context) async {

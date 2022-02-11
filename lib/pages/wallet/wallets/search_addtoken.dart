@@ -26,11 +26,7 @@ class _SearchAddTokenState extends State<SearchAddToken> {
     return CustomTextField(
       controller: searchController,
       maxLines: 1,
-      onChange: (value) {
-
-
-        
-      },
+      onChange: (value) {},
       style: TextStyle(
         color: ColorUtils.fromHex("#FF000000"),
         fontSize: 14.font,
