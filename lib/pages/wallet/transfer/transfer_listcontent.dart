@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:cstoken/component/custom_refresher.dart';
 import 'package:cstoken/component/empty_data.dart';
 import 'package:cstoken/component/trasnfer_listcell.dart';
@@ -24,10 +26,15 @@ class _TransferListContentState extends State<TransferListContent>
   List<TransRecordModel> _dappListData = [];
   MCollectionTokens? tokens;
   TRWalletInfo? trWalletInfo;
+  StreamSubscription? _transupTE;
   int? chainid;
   void initState() {
     // TODO: implement initState
     super.initState();
+
+    _transupTE = eventBus.on<MtransListUpdate>().listen((event) {
+      _initData();
+    });
 
     tokens = Provider.of<CurrentChooseWalletState>(context, listen: false)
         .chooseTokens();
@@ -36,6 +43,12 @@ class _TransferListContentState extends State<TransferListContent>
     chainid = NodeModel.queryNodeByChainType(trWalletInfo!.coinType!).chainID;
     LogUtil.v("initState " + widget.type.toString());
     _initData();
+  }
+
+  @override
+  void dispose() {
+    _transupTE?.cancel();
+    super.dispose();
   }
 
   void _initData() async {

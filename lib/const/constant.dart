@@ -94,3 +94,10 @@ final String SLOGAN = "Aggregation of NFT";
 
 const int transferETHGasLimit = 25000;
 const int transferERC20GasLimit = 65000;
+
+EventBus eventBus = EventBus();
+
+
+class MtransListUpdate {
+  
+}

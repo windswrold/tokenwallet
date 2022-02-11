@@ -22,6 +22,8 @@ class _TransferListPageState extends State<TransferListPage>
   void initState() {
     // TODO: implement initState
     super.initState();
+
+    _kTransListState.initTimer();
   }
 
   Widget _headerBuilder() {

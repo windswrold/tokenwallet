@@ -4,6 +4,7 @@ import 'package:cstoken/component/chain_listtype.dart';
 import 'package:cstoken/model/dapps_record/dapps_record.dart';
 import 'package:cstoken/model/token_price/tokenprice.dart';
 import 'package:cstoken/model/tokens/collection_tokens.dart';
+import 'package:cstoken/model/transrecord/trans_record.dart';
 import 'package:cstoken/model/wallet/tr_wallet.dart';
 import 'package:cstoken/model/wallet/tr_wallet_info.dart';
 import 'package:cstoken/net/chain_services.dart';
@@ -398,7 +399,7 @@ class CurrentChooseWalletState with ChangeNotifier {
 
   void _configTimerRequest() async {
     if (_timer == null) {
-      _timer = TimerUtil(mInterval: 20000);
+      _timer = TimerUtil(mInterval: 10000);
       _timer!.setOnTimerTickCallback((millisUntilFinished) async {
         if (_currentWallet == null) return;
 

@@ -1,5 +1,7 @@
 import 'package:cstoken/db/database.dart';
 import 'package:cstoken/db/database_config.dart';
+import 'package:cstoken/model/node/node_model.dart';
+import 'package:cstoken/net/chain_services.dart';
 import 'package:cstoken/public.dart';
 import 'package:cstoken/utils/log_util.dart';
 import 'package:floor/floor.dart';
@@ -90,174 +92,60 @@ class TransRecordModel {
       result = "translist_statefailere".local();
     } else if (transStatus == KTransState.pending.index) {
       result = "translist_pending".local();
-    }else if (transStatus == KTransState.success.index) {
+    } else if (transStatus == KTransState.success.index) {
       result = "translist_success".local();
     }
     return result;
   }
 
-    String transStateicon() {
+  String transStateicon() {
     String result = "";
     if (transStatus == KTransState.failere.index) {
       result = "icons/trans_failere.png";
     } else if (transStatus == KTransState.pending.index) {
       result = "icons/trans_pending.png";
-    }else if (transStatus == KTransState.success.index) {
+    } else if (transStatus == KTransState.success.index) {
       result = "icons/trans_success.png";
     }
     return result;
   }
 
-  // Future<bool?> updateTransState(BuildContext context) async {
-  //   String tx = this.txid!;
-  //   if (this.transType! < MTransListType.L2All.index ||
-  //       this.transType == MTransListType.L2Authorize.index ||
-  //       this.transType == MTransListType.L2Deposit.index ||
-  //       (this.transType! <= MTransListType.whitelistWithdraw.index &&
-  //           this.transType! >= MTransListType.stackAuthorize.index)) {
-  //     //l1查询回执
-  //     dynamic result = await ChainServices.requestTransactionReceipt(tx);
-  //     if (result != null &&
-  //         result is Map &&
-  //         result.keys.contains("result") &&
-  //         result["result"] != null) {
-  //       String status = result["result"]["status"];
-  //       String? gasPrice = this.gasPrice;
-  //       String gasUsed = result["result"]["gasUsed"];
-  //       String block = result["result"]["blockNumber"];
-  //       int blockNumber =
-  //           int.tryParse(block.replaceAll("0x", ""), radix: 16) ?? 0;
-  //       BigInt? gas = BigInt.tryParse(gasUsed.replaceAll("0x", ""), radix: 16);
-  //       if (gasPrice != null && gasUsed != null) {
-  //         String fee = MHWallet.configFeeValue(
-  //             cointype: MCoinType.MCoinType_ETH.index,
-  //             beanValue: gas.toString(),
-  //             offsetValue: gasPrice);
-  //         this.fee = fee;
-  //       }
-  //       this.blockHeight = blockNumber;
-  //       if (status == "0x1") {
-  //         if (this.transType == MTransListType.L2Deposit.index) {
-  //           //deposit 查询l2状态
-  //           // this.transStatus = MTransState.MTransState_PendingL2.index;
-  //           // bool? state = await ChainServices.requestVerState(tx);
-  //           // if (state == true) {
-  //           //1层成功直接成功
-  //           this.transStatus = MTransState.MTransState_Success.index;
-  //           // }
-  //           TransRecordModel.updateTrxList(this);
-  //           return true;
-  //         } else {
-  //           //其他置为success
-  //           this.transStatus = MTransState.MTransState_Success.index;
-  //           TransRecordModel.updateTrxList(this);
-  //           return true;
-  //         }
-  //       } else {
-  //         //1层失败则置为失败
-  //         this.transStatus = MTransState.MTransState_Failere.index;
-  //         TransRecordModel.updateTrxList(this);
-  //         return true;
-  //       }
-  //     } else {
-  //       //10s没有查出结果时触发重新push 主网交易
-  //       //还在pending中的数据 already known
-  //       int repeatPushCount = this.repeatPushCount ?? 0;
-  //       DateTime? trxTime = DateUtil.getDateTime(this.date ?? '');
-  //       int nowTime = DateTime.now().millisecondsSinceEpoch;
-  //       if (trxTime != null &&
-  //           nowTime > (trxTime.millisecondsSinceEpoch + 15000) &&
-  //           repeatPushCount < 5 &&
-  //           this.chainid == 1) {
-  //         if (this.signMessage != null) {
-  //           final Map<String, dynamic> params = {
-  //             "id": "1",
-  //             "jsonrpc": "2.0",
-  //             "method": "eth_sendRawTransaction",
-  //             "params": [this.signMessage]
-  //           };
-  //           var urls = [
-  //             'https://jsonrpc.maiziqianbao.net',
-  //             'https://mainnet.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161', //metamask
-  //             'https://mainnet.infura.io/v3/5214b556252f4858b486bcb825f578e6' //zktube
-  //           ];
-  //           dynamic result = await ChainServices.requestETHRpc(
-  //               url: urls[repeatPushCount ~/ 2], paramas: params);
-  //           LogUtil.v('重新push $result');
-  //           if (result != null) {
-  //             final pushResult = result.toString();
-  //             if (pushResult.contains('already known') == true) {
-  //               this.repeatPushCount = 99;
-  //             } else {
-  //               this.repeatPushCount = repeatPushCount + 1;
-  //             }
-  //             TransRecordModel.updateTrxList(this);
-  //           }
-  //         }
-  //       }
-  //     }
-  //   } else {
-  //     if (this.transType == MTransListType.L2ChangepubKey.index ||
-  //         this.transType == MTransListType.L2Transfer.index) {
-  //       bool? txState =
-  //           await Provider.of<CurrentChooseWalletState>(context, listen: false)
-  //               .getTransactionStatus(tx);
-  //       if (txState == true) {
-  //         this.transStatus = MTransState.MTransState_PendingL2.index;
-  //         bool? state = await ChainServices.requestVerState(tx);
-  //         if (state == true) {
-  //           this.transStatus = MTransState.MTransState_Success.index;
-  //         }
-  //         TransRecordModel.updateTrxList(this);
-  //         return true;
-  //       } else if (txState == false) {
-  //         this.transStatus = MTransState.MTransState_Failere.index;
-  //         TransRecordModel.updateTrxList(this);
-  //         return true;
-  //       } else if (txState == null) {
-  //         // this.transStatus = MTransState.MTransState_Failere.index;
-  //         // return TransRecordModel.updateTrxList(this);
-  //       }
-  //     } else if (this.transType == MTransListType.L2Withdraw.index) {
-  //       bool? txState =
-  //           await Provider.of<CurrentChooseWalletState>(context, listen: false)
-  //               .getTransactionStatus(tx);
-  //       if (txState == true) {
-  //         this.transStatus = MTransState.MTransState_PendingL2.index;
-  //         String? ethsync = (await Provider.of<CurrentChooseWalletState>(
-  //                 context,
-  //                 listen: false)
-  //             .getEthTransactionForWithdrawal(tx));
-  //         if (ethsync != null) {
-  //           final ethresult =
-  //               await ChainServices.requestTransactionReceipt(ethsync);
-  //           if (ethresult != null &&
-  //               ethresult is Map &&
-  //               ethresult.keys.contains("result") &&
-  //               ethresult["result"] != null) {
-  //             final result = ethresult["result"];
-  //             if (result != null) {
-  //               String status = result["status"];
-  //               if (status == "0x1") {
-  //                 this.transStatus = MTransState.MTransState_Success.index;
-  //               } else {
-  //                 this.transStatus = MTransState.MTransState_Failere.index;
-  //               }
-  //               TransRecordModel.updateTrxList(this);
-  //               return true;
-  //             }
-  //           }
-  //         }
-  //         TransRecordModel.updateTrxList(this);
-  //         return true;
-  //       } else if (txState == false) {
-  //         this.transStatus = MTransState.MTransState_Failere.index;
-  //         TransRecordModel.updateTrxList(this);
-  //         return true;
-  //       }
-  //     }
-  //   }
-  // }
+  Future<bool?> updateTransState() async {
+    String tx = txid!;
+    KCoinType coin = chainid!.chainGetCoinType();
+    NodeModel node = NodeModel.queryNodeByChainType(coin.index);
+    dynamic result =
+        await ChainServices.requestTransactionReceipt(tx, node.content ?? "");
+    if (result != null &&
+        result is Map &&
+        result.keys.contains("result") &&
+        result["result"] != null) {
+      String status = result["result"]["status"];
+      String? gasPrice = this.gasPrice;
+      String gasUsed = result["result"]["gasUsed"];
+      String block = result["result"]["blockNumber"];
+      int blockNumber =
+          int.tryParse(block.replaceAll("0x", ""), radix: 16) ?? 0;
+      BigInt? gas = BigInt.tryParse(gasUsed.replaceAll("0x", ""), radix: 16);
+      if (gasPrice != null && gasUsed != null) {
+        String fee = TRWallet.configFeeValue(
+            cointype: 1, beanValue: gas.toString(), offsetValue: gasPrice);
+        this.fee = fee;
+      }
+      blockHeight = blockNumber;
+      if (status == "0x1") {
+        //其他置为success
+        transStatus = KTransState.success.index;
+        TransRecordModel.updateTrxLists([this]);
+        return true;
+      } else {
+        //1层失败则置为失败
+        transStatus = KTransState.failere.index;
+        TransRecordModel.updateTrxLists([this]);
+        return true;
+      }
+    }
+  }
 
   static Future<List<TransRecordModel>> queryTrxList(
       String from, String symbol, int chainid, int kTransDataType) async {
@@ -291,12 +179,11 @@ class TransRecordModel {
     }
   }
 
-  static Future<List<TransRecordModel>> queryPendingTrxList(
-      String from, String symbol, int chainid) async {
+  static Future<List<TransRecordModel>> queryPendingTrxList() async {
     try {
       FlutterDatabase? database = await DataBaseConfig.openDataBase();
-      List<TransRecordModel>? datas = await database?.transListDao
-          .queryPendingTrxList(from, symbol, chainid);
+      List<TransRecordModel>? datas =
+          await database?.transListDao.queryPendingTrxList();
       return datas ?? [];
     } catch (e) {
       LogUtil.v("失败" + e.toString());
@@ -379,9 +266,8 @@ abstract class TransRecordModelDao {
 
   @Query('SELECT * FROM ' +
       tableName +
-      ' WHERE (fromAdd = :fromAdd)  and token = :token and chainid = :chainid and (transStatus = 2 OR transStatus = 3)  ORDER BY date DESC')
-  Future<List<TransRecordModel>> queryPendingTrxList(
-      String fromAdd, String token, int chainid);
+      ' WHERE  (transStatus = 2 OR transStatus = 3)  ORDER BY date DESC')
+  Future<List<TransRecordModel>> queryPendingTrxList();
 
   @Query('SELECT * FROM ' + tableName + ' WHERE txid = :txid')
   Future<List<TransRecordModel>> queryTrxFromTrxid(String txid);

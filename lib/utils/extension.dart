@@ -228,6 +228,31 @@ extension Numextension on num {
     return KCoinType.ETH;
   }
 
+  KCoinType chainGetCoinType() {
+    if (this == 1 || this == 4) {
+      return KCoinType.ETH;
+    }
+    if (this == 42161 || this == 421611) {
+      return KCoinType.Arbitrum;
+    }
+    if (this == 43114 || this == 43113) {
+      return KCoinType.AVAX;
+    }
+    if (this == 56 || this == 97) {
+      return KCoinType.BSC;
+    }
+    if (this == 128 || this == 256) {
+      return KCoinType.HECO;
+    }
+    if (this == 137 || this == 80001) {
+      return KCoinType.Matic;
+    }
+    if (this == 66 || this == 65) {
+      return KCoinType.OKChain;
+    }
+    return KCoinType.OKChain;
+  }
+
   KCoinType? getDappSuppertCoinType() {
     if (this == 4) {
       return KCoinType.Arbitrum;

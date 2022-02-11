@@ -5,9 +5,8 @@ import 'package:cstoken/utils/timer_util.dart';
 import '../public.dart';
 
 class KTransListState with ChangeNotifier {
-  TimerUtil? timer;
   List<Tab> _myTabs = [];
-
+  TimerUtil? timer;
   List<Tab> get myTabs => <Tab>[
         Tab(text: 'transferetype_all'.local()),
         Tab(text: 'transferetype_in'.local()),
@@ -21,10 +20,24 @@ class KTransListState with ChangeNotifier {
     super.dispose();
   }
 
-  void initTimer(BuildContext context) {
+  void initTimer() {
     if (timer == null) {
       timer = TimerUtil(mInterval: 10000);
-      timer?.setOnTimerTickCallback((millisUntilFinished) async {});
+      timer?.setOnTimerTickCallback((millisUntilFinished) async {
+        List<TransRecordModel> pendingDB =
+            await TransRecordModel.queryPendingTrxList();
+        if (pendingDB.isEmpty) {
+          timer!.isActive();
+          return;
+        }
+        for (var item in pendingDB) {
+          bool? result = await item.updateTransState();
+          if (result != null) {
+            LogUtil.v("发出更新");
+            eventBus.fire(MtransListUpdate());
+          }
+        }
+      });
     }
     if (timer?.isActive() == false) {
       timer?.startTimer();
@@ -42,7 +55,9 @@ class KTransListState with ChangeNotifier {
   }
 
   void paymentClick(BuildContext context) {
-    Routers.push(context, TransferPayment());
+    Routers.push(context, TransferPayment()).then((value) => {
+      eventBus.fire(MtransListUpdate()),
+    });
   }
 
   void cellContentSelectRowAt(BuildContext context, int index) {}

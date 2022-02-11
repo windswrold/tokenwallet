@@ -409,6 +409,8 @@ class TRWallet {
     required String? beanValue, // sat price
     required String? offsetValue, //len
   }) {
+    beanValue = beanValue?.replaceAll("null", "0");
+    offsetValue = offsetValue?.replaceAll("null", "0");
     Decimal gasValue =
         Decimal.parse(beanValue ?? "0") * Decimal.fromInt(10).pow(9);
     gasValue = gasValue * Decimal.parse(offsetValue ?? "0");

@@ -12,4 +12,15 @@ class ChainServices {
         .requestData(Method.POST, url!, data: params);
     return result;
   }
+
+  static Future requestTransactionReceipt(String tx, String url) async {
+    String method = "eth_getTransactionReceipt";
+    Map params = {
+      "jsonrpc": "2.0",
+      "method": method,
+      "params": [tx],
+      "id": tx,
+    };
+    return RequestMethod.manager!.requestData(Method.POST, url, data: params);
+  }
 }

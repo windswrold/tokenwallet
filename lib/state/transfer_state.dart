@@ -238,7 +238,10 @@ class KTransferState with ChangeNotifier {
         to: to,
         isCustomfee: _isCustomFee,
         data: remark,
-        from: from);
+        from: from,
+        fee: _feeValue,
+        maxGas: int.tryParse(_gasLimit) ?? null,
+        gasPrice: int.tryParse(_gasPrice) ?? null);
 
     if (result?.isNotEmpty == true) {
       HWToast.showText(text: "payment_transsuccess".local());
