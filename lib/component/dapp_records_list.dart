@@ -1,4 +1,5 @@
 import 'package:cstoken/model/dapps_record/dapps_record.dart';
+import 'package:cstoken/state/dapp/dapp_state.dart';
 
 import '../../public.dart';
 import 'dapp_records_cell.dart';
@@ -33,8 +34,8 @@ class DAppRecordList extends StatelessWidget {
                   return DAppListCell(
                     model: recordList[index],
                     onTap: (DAppRecordsDBModel model) {
-
-                      
+                      Provider.of<DappDataState>(context, listen: false)
+                          .bannerTap(context, model.url ?? "");
                     },
                   );
                 }),

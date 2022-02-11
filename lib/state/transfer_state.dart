@@ -202,32 +202,20 @@ class KTransferState with ChangeNotifier {
                 from: from, to: to, remark: remark, fee: _feeValue + feeToken),
             amount: amount + " ${_tokens!.token!}",
             nextAction: () {
-              ShowCustomAlert.showCustomAlertType(context, KAlertType.password,
-                  "dialog_walletpin".local(), _wallet,
-                  hideLeftButton: true,
-                  rightButtonBGC: ColorUtils.blueColor,
-                  rightButtonRadius: 8,
-                  rightButtonTitle: "walletssetting_modifyok".local(),
-                  confirmPressed: (result) {
-                String? memo = _wallet!.exportEncContent(pin: result["text"]);
-                List<HDWallet> hdWallets = HDWallet.getHDWallet(
-                    content: memo!,
-                    pin: "",
-                    kLeadType: _wallet!.leadType!.getLeadType(),
-                    kCoinType: _walletInfo!.coinType!.geCoinType());
-                if (hdWallets.isNotEmpty) {
-                  String prv = hdWallets.first.prv ?? "";
-                  _startSign(
-                    context,
-                    from: from,
-                    to: to,
-                    amount: amount,
-                    remark: remark,
-                    prv: prv,
-                  );
-                }
-              });
+              _wallet!.showLockPin(context,
+                  infoCoinType: _walletInfo!.coinType!.geCoinType(),
+                  confirmPressed: (value) {
+                _startSign(
+                  context,
+                  from: from,
+                  to: to,
+                  amount: amount,
+                  remark: remark,
+                  prv: value,
+                );
+              }, cancelPress: null);
             },
+            cancelAction: () {},
           );
         });
   }

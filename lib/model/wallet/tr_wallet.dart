@@ -64,6 +64,45 @@ class TRWallet {
     return "钱包#" + random.toString();
   }
 
+  void showLockPin(
+    BuildContext context, {
+    bool exportPrv = true,
+    required KCoinType? infoCoinType,
+    required Function(String value) confirmPressed,
+    required VoidCallback? cancelPress,
+  }) {
+    ShowCustomAlert.showCustomAlertType(
+      context,
+      KAlertType.password,
+      "dialog_walletpin".local(),
+      this,
+      hideLeftButton: true,
+      bottomActionsPadding:
+          EdgeInsets.fromLTRB(16.width, 0, 16.width, 16.width),
+      rightButtonBGC: ColorUtils.blueColor,
+      rightButtonRadius: 8,
+      rightButtonTitle: "walletssetting_modifyok".local(),
+      confirmPressed: (result) {
+        String? memo = exportEncContent(pin: result["text"]);
+        if (exportPrv == true) {
+          assert(infoCoinType != null, "导出 私钥需要类型");
+          List<HDWallet> hdWallets = HDWallet.getHDWallet(
+              content: memo!,
+              pin: "",
+              kLeadType: leadType!.getLeadType(),
+              kCoinType: infoCoinType);
+          if (hdWallets.isNotEmpty) {
+            String prv = hdWallets.first.prv ?? "";
+            confirmPressed(prv);
+          }
+        } else {
+          confirmPressed(memo!);
+        }
+      },
+      cancelPressed: cancelPress,
+    );
+  }
+
   static bool validImportValue(
       {required String content,
       required String pin,

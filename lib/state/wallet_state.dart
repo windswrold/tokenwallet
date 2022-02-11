@@ -197,15 +197,8 @@ class CurrentChooseWalletState with ChangeNotifier {
   }
 
   void deleteWallet(BuildContext context, {required TRWallet wallet}) {
-    ShowCustomAlert.showCustomAlertType(context, KAlertType.password,
-        "dialog_walletpin".local(), currentWallet!,
-        hideLeftButton: true,
-        rightButtonBGC: ColorUtils.blueColor,
-        rightButtonRadius: 8,
-        rightButtonTitle: "walletssetting_modifyok".local(),
-        subtitleText:
-            "33KrFMz32433KrFMz32433KrFMz324jAwMttvi1t33KrFMz324jAwMttvi1jAwMttvi1tjAwMttvi1t33KrFMz32433KrFMz32433KrFMz324jAwMttvi1t33KrFMz324jAwMttvi1jAwMttvi1tjAwMttvi1t",
-        confirmPressed: (result) async {
+    wallet.showLockPin(context, exportPrv: false,
+        confirmPressed: (value) async {
       bool flag = await TRWallet.deleteWallet(wallet);
       if (flag) {
         TRWallet? wallet = await TRWallet.queryChooseWallet();
@@ -227,7 +220,7 @@ class CurrentChooseWalletState with ChangeNotifier {
           }
         }
       }
-    });
+    }, cancelPress: null, infoCoinType: null);
   }
 
   void exportPrv(BuildContext context, {required TRWallet wallet}) {
@@ -238,52 +231,31 @@ class CurrentChooseWalletState with ChangeNotifier {
         builder: (_) {
           return ChainListType(
             onTap: (KCoinType coinType) {
-              ShowCustomAlert.showCustomAlertType(context, KAlertType.password,
-                  "dialog_walletpin".local(), wallet,
-                  hideLeftButton: true,
-                  rightButtonBGC: ColorUtils.blueColor,
-                  rightButtonRadius: 8,
-                  rightButtonTitle: "walletssetting_modifyok".local(),
-                  confirmPressed: (result) {
-                String? memo = wallet.exportEncContent(pin: result["text"]);
-                List<HDWallet> hdWallets = HDWallet.getHDWallet(
-                    content: memo!,
-                    pin: "",
-                    kLeadType: wallet.leadType!.getLeadType(),
-                    kCoinType: coinType);
-                if (hdWallets.isNotEmpty) {
-                  String prv = hdWallets.first.prv ?? "";
-                  ShowCustomAlert.showCustomAlertType(context, KAlertType.text,
-                      "walletssetting_exportprv".local(), wallet,
-                      hideLeftButton: true,
-                      rightButtonBGC: ColorUtils.blueColor,
-                      rightButtonRadius: 8,
-                      rightButtonTitle: "dialog_copy".local(),
-                      subtitleText: prv, confirmPressed: (result) {
-                    String text = result["text"] ?? '';
-                    text.copy();
-                  });
-                }
-              });
+              wallet.showLockPin(context, infoCoinType: coinType,
+                  confirmPressed: (value) {
+                ShowCustomAlert.showCustomAlertType(context, KAlertType.text,
+                    "walletssetting_exportprv".local(), wallet,
+                    hideLeftButton: true,
+                    bottomActionsPadding:
+                        EdgeInsets.fromLTRB(16.width, 0, 16.width, 16.width),
+                    rightButtonBGC: ColorUtils.blueColor,
+                    rightButtonRadius: 8,
+                    rightButtonTitle: "dialog_copy".local(),
+                    subtitleText: value, confirmPressed: (result) {
+                  String text = result["text"] ?? '';
+                  text.copy();
+                });
+              }, cancelPress: () {});
             },
           );
         });
   }
 
   void backupWallet(BuildContext context, {required TRWallet wallet}) {
-    ShowCustomAlert.showCustomAlertType(context, KAlertType.password,
-        "dialog_walletpin".local(), currentWallet!,
-        hideLeftButton: true,
-        rightButtonBGC: ColorUtils.blueColor,
-        rightButtonRadius: 8,
-        rightButtonTitle: "walletssetting_modifyok".local(),
-        subtitleText:
-            "33KrFMz32433KrFMz32433KrFMz324jAwMttvi1t33KrFMz324jAwMttvi1jAwMttvi1tjAwMttvi1t33KrFMz32433KrFMz32433KrFMz324jAwMttvi1t33KrFMz324jAwMttvi1jAwMttvi1tjAwMttvi1t",
-        confirmPressed: (result) {
-      String? memo = wallet.exportEncContent(pin: result["text"]);
+    wallet.showLockPin(context, exportPrv: false, confirmPressed: (value) {
       Routers.push(
-          context, BackupTipMemo(memo: memo!, walletID: wallet.walletID!));
-    });
+          context, BackupTipMemo(memo: value, walletID: wallet.walletID!));
+    }, cancelPress: null, infoCoinType: null);
   }
 
   void modifyPwd(BuildContext context,
@@ -426,7 +398,7 @@ class CurrentChooseWalletState with ChangeNotifier {
 
   void _configTimerRequest() async {
     if (_timer == null) {
-      _timer = TimerUtil(mInterval: 5000);
+      _timer = TimerUtil(mInterval: 20000);
       _timer!.setOnTimerTickCallback((millisUntilFinished) async {
         if (_currentWallet == null) return;
 

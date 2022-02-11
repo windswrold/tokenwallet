@@ -1,5 +1,7 @@
 import 'package:cstoken/component/dapp_records_list.dart';
 import 'package:cstoken/model/dapps_record/dapps_record.dart';
+import 'package:cstoken/pages/browser/dapp_browser.dart';
+import 'package:cstoken/state/dapp/dapp_state.dart';
 
 import '../../public.dart';
 
@@ -11,6 +13,8 @@ class DAppSearch extends StatefulWidget {
 }
 
 class _DAppSearchState extends State<DAppSearch> {
+  DappDataState _kdataState = DappDataState();
+
   TextEditingController searchController = TextEditingController();
   int pageSize = 50;
   int pageNum = 1;
@@ -19,12 +23,10 @@ class _DAppSearchState extends State<DAppSearch> {
   bool _isRecord = true;
 
   void _jumpWeb(BuildContext context, String openUrl) {
+    searchController.clear();
     DAppRecordsDBModel.insertRecords(DAppRecordsDBModel(url: openUrl));
-    // Routers.pushWidget(context, DappBrowser(url: openUrl)).then((value) {
-    //   searchController.clear();
-
-    //   _getRecords();
-    // });
+    _kdataState.bannerTap(context, openUrl);
+    _getRecords();
   }
 
   Future<void> _getSearchDApps(String name) async {
@@ -47,35 +49,31 @@ class _DAppSearchState extends State<DAppSearch> {
   }
 
   void _textFieldOnSubmitted(String value) async {
-    // if (value.isNotEmpty) {
-    //   HWToast.showLoading();
-    //   await _getSearchDApps(value);
-    //   HWToast.hiddenAllToast();
-    //   if (_searchDAppsList.isEmpty) {
-    //     if (StringUtil.isValidUrl(value) == true) {
-    _jumpWeb(context, value);
-    //     } else {
-    //       if (value.contains(".")) {
-    //         List strList = value.split('.');
-    //         if (strList.length == 3) {
-    //           String url = "https://" + value;
-    //           _jumpWeb(context, url);
-    //         } else if (strList.length == 2) {
-    //           if (strList.contains('www')) {
-    //             String url = "https://" + value + '.com';
-    //             _jumpWeb(context, url);
-    //           } else {
-    //             String url = "https://www." + value;
-    //             _jumpWeb(context, url);
-    //           }
-    //         }
-    //       } else {
-    //         String url = "https://www." + value + ".com";
-    //         _jumpWeb(context, url);
-    //       }
-    //     }
-    //   }
-    // }
+    if (value.isEmpty) {
+      return;
+    }
+    if (value.isValidUrl() == true) {
+      _jumpWeb(context, value);
+    } else {
+      if (value.contains(".")) {
+        List strList = value.split('.');
+        if (strList.length == 3) {
+          String url = "https://" + value;
+          _jumpWeb(context, url);
+        } else if (strList.length == 2) {
+          if (strList.contains('www')) {
+            String url = "https://" + value + '.com';
+            _jumpWeb(context, url);
+          } else {
+            String url = "https://www." + value;
+            _jumpWeb(context, url);
+          }
+        }
+      } else {
+        String url = "https://www." + value + ".com";
+        _jumpWeb(context, url);
+      }
+    }
   }
 
   void _deleteAllRecords() async {
@@ -104,19 +102,22 @@ class _DAppSearchState extends State<DAppSearch> {
 
   @override
   Widget build(BuildContext context) {
-    return CustomPageView(
-      hiddenAppBar: true,
-      hiddenResizeToAvoidBottomInset: false,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          _topSearchView(),
-          Expanded(
-              child: DAppRecordList(
-            recordList: _recordList,
-            deleteAllCallback: _deleteAllRecords,
-          )),
-        ],
+    return ChangeNotifierProvider(
+      create: (_) => _kdataState,
+      child: CustomPageView(
+        hiddenAppBar: true,
+        hiddenResizeToAvoidBottomInset: false,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            _topSearchView(),
+            Expanded(
+                child: DAppRecordList(
+              recordList: _recordList,
+              deleteAllCallback: _deleteAllRecords,
+            )),
+          ],
+        ),
       ),
     );
   }

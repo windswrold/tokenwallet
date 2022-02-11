@@ -13,6 +13,7 @@ import 'package:web3dart/crypto.dart';
 import 'package:web3dart/web3dart.dart';
 import 'package:http/http.dart';
 import 'package:web3dart/web3dart.dart' as web3;
+import 'package:eth_sig_util/eth_sig_util.dart';
 
 class ETHClient {
   final Web3Client client;
@@ -111,6 +112,36 @@ class ETHClient {
         HWToast.showText(text: e.toString());
       }
     }
+  }
+
+  Future<String?> signPersonalMessage(String prv, String payload) async {
+    final ethSigner = EthPrivateKey.fromHex(prv);
+    Uint8List message =
+        await ethSigner.signPersonalMessage(hexToBytes(payload));
+    return bytesToHex(message, include0x: true);
+  }
+
+  Future<String?> transferOrigin(
+      String prv, String to, int? gasLimit, String data, BigInt amount) async {
+    final credentials = EthPrivateKey.fromHex(prv);
+    final signto = EthereumAddress.fromHex(to);
+    final input = hexToBytes(data);
+    return client.sendTransaction(
+        credentials,
+        web3.Transaction(
+            to: signto,
+            value: EtherAmount.inWei(amount),
+            gasPrice: null,
+            maxGas: gasLimit,
+            data: input),
+        chainId: _chainId,
+        fetchChainIdFromNetworkId: false);
+  }
+
+  Future<String?> signTypedMessage(String prv, String jsonData) async {
+    String signature = EthSigUtil.signTypedData(
+        privateKey: prv, jsonData: jsonData, version: TypedDataVersion.V4);
+    return signature;
   }
 
   Future<int> getGasPrice() async {

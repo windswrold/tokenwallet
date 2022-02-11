@@ -11,6 +11,25 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:easy_localization/src/public.dart' as ez;
 
 extension StringUtil on String {
+  bool isValidUrl() {
+    String regStr = "http(s)?:\\/\\/([\\w-]+\\.)+[\\w-]+(\\/[\\w- .\\/?%&=]*)?";
+    RegExp reg = RegExp(regStr);
+    bool isResult = reg.hasMatch(this);
+    if (!isResult) {
+      final ipArray = this.split(".");
+      if (ipArray.length == 4) {
+        for (final ipnumberStr in ipArray) {
+          int ipnumber = int.parse(ipnumberStr);
+          if (!(ipnumber >= 0 && ipnumber <= 255)) {
+            return false;
+          }
+        }
+        return true;
+      }
+    }
+    return isResult;
+  }
+
   bool checkPassword() {
     //密码长度8位数以上，建议使用英文字母、数字和标点符号组成，不采用特殊字符。
     if (this.length < 8) {
@@ -207,6 +226,27 @@ extension Numextension on num {
       }
     }
     return KCoinType.ETH;
+  }
+
+  KCoinType? getDappSuppertCoinType() {
+    if (this == 4) {
+      return KCoinType.Arbitrum;
+    }
+    if (this == 5) {
+      return KCoinType.AVAX;
+    }
+    if (this == 6) {
+      return KCoinType.Matic;
+    }
+    if (this == 7) {
+      return KCoinType.HECO;
+    }
+    if (this == 8) {
+      return KCoinType.BSC;
+    }
+    if (this == 9) {
+      return KCoinType.ETH;
+    }
   }
 
   KCurrencyType getCurrencyType() {

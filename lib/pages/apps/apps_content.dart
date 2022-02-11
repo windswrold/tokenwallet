@@ -11,7 +11,7 @@ class AppsContentPage extends StatefulWidget {
   const AppsContentPage({Key? key, required this.dappTap, required this.type})
       : super(key: key);
 
-  final Function(DAppRecordsDBModel model) dappTap;
+  final Function(DAppRecordsDBModel model,int type) dappTap;
   final int type;
 
   @override
@@ -57,7 +57,7 @@ class _AppsContentPageState extends State<AppsContentPage>
                   return DAppListCell(
                     model: model,
                     onTap: (DAppRecordsDBModel tapModel) {
-                      widget.dappTap(tapModel);
+                      widget.dappTap(tapModel,widget.type);
                     },
                   );
                 },

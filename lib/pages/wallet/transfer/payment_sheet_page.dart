@@ -18,11 +18,13 @@ class PaymentSheet extends StatefulWidget {
       {Key? key,
       required this.datas,
       required this.nextAction,
-      required this.amount})
+      required this.amount,
+      required this.cancelAction})
       : super(key: key);
 
   final List<PaymentSheetText> datas;
   final VoidCallback nextAction;
+  final VoidCallback cancelAction;
   final String amount;
 
   @override
@@ -60,6 +62,7 @@ class _PaymentSheetState extends State<PaymentSheet> {
 
   void sheetClose() {
     Navigator.pop(context);
+    widget.cancelAction();
   }
 
   Widget _getTitle() {

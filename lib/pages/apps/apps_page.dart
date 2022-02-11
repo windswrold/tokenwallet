@@ -22,6 +22,8 @@ class AppsPage extends StatefulWidget {
 class _AppsPageState extends State<AppsPage> {
   DappDataState _kdataState = DappDataState();
 
+  RefreshController _refreshController = RefreshController();
+
   @override
   void initState() {
     // TODO: implement initState
@@ -44,7 +46,9 @@ class _AppsPageState extends State<AppsPage> {
         child: Column(
           children: [
             const TopSearchView(),
-            Expanded(child: _bodyListView()),
+            Expanded(
+              child: _bodyListView(),
+            ),
           ],
         ),
       ),
@@ -55,8 +59,8 @@ class _AppsPageState extends State<AppsPage> {
     List<Widget> datass = [];
     for (var i = 0; i < tabs.length; i++) {
       datass.add(AppsContentPage(
-          dappTap: (DAppRecordsDBModel model) {
-            _kdataState.dappTap(context, model);
+          dappTap: (DAppRecordsDBModel model, int type) {
+            _kdataState.dappTap(context, model, dappType: type);
           },
           type: i));
     }

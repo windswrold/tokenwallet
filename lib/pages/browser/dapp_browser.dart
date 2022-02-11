@@ -1,7 +1,12 @@
 import 'dart:collection';
 import 'dart:convert';
+import 'package:cstoken/model/client/ethclient.dart';
 import 'package:cstoken/model/dapps_record/dapps_record.dart';
+import 'package:cstoken/model/node/node_model.dart';
+import 'package:cstoken/model/wallet/tr_wallet_info.dart';
 import 'package:cstoken/pages/browser/js_bridge_bean.dart';
+import 'package:cstoken/pages/wallet/transfer/payment_sheet_page.dart';
+import 'package:cstoken/utils/custom_toast.dart';
 import 'package:cstoken/utils/json_util.dart';
 import 'package:flutter/services.dart';
 import '../../public.dart';
@@ -9,8 +14,10 @@ import './js_bridge_callback_bean.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 
 class DappBrowser extends StatefulWidget {
-  DappBrowser({Key? key, this.model}) : super(key: key);
+  DappBrowser({Key? key, this.model, this.info, this.node}) : super(key: key);
   final DAppRecordsDBModel? model;
+  final TRWalletInfo? info;
+  final NodeModel? node;
 
   @override
   _DappBrowserState createState() => _DappBrowserState();
@@ -21,8 +28,10 @@ class _DappBrowserState extends State<DappBrowser> {
   String? js;
   String? addd;
   bool isLoadJs = false;
+  String walletAaddress = "";
 
   final _alertTitle = "messagePayTube";
+  ETHClient? _client;
 
   InAppWebViewController? _webViewController;
   InAppWebViewGroupOptions options = InAppWebViewGroupOptions(
@@ -43,6 +52,8 @@ class _DappBrowserState extends State<DappBrowser> {
   void initState() {
     // TODO: implement initState
     super.initState();
+    walletAaddress = widget.info!.walletAaddress!;
+    _client = ETHClient(widget.node?.content ?? "", widget.node?.chainID ?? 1);
     _loadWeb3();
   }
 
@@ -58,9 +69,8 @@ class _DappBrowserState extends State<DappBrowser> {
 
   _loadWeb3() async {
     var web3 = await rootBundle.loadString('assets/data/Paytube-min.js');
-    final rpcurl = "";
-    final walletAaddress = "";
-    final chainId = "";
+    final rpcurl = widget.node?.content ?? "";
+    final chainId = widget.node?.chainID ?? '';
     if (mounted) {
       setState(() {
         isLoadJs =
@@ -86,21 +96,116 @@ class _DappBrowserState extends State<DappBrowser> {
 
   // ///返回结果
   void _jsBridgeCallBack(String message) async {
-    // {"id":4,"name":"signMessage","object":{"data":"0xfc6b770d8c80e6324d08282e66604ffb787c444b139e90414e1a54be5fd06b87"}}
-
+    TRWallet tr = Provider.of<CurrentChooseWalletState>(context, listen: false)
+        .currentWallet!;
     Map<dynamic, dynamic> params = JsonUtil.getObj(message);
     final id = params["id"];
     final name = params["name"];
-    if (name == 'signTransaction') {
-      Map<String, dynamic> object = params["object"];
-      BridgeParams bridge = BridgeParams.fromJson(object);
+    if (name == 'requestAccounts' || name == 'eth_requestAccounts') {
+      _webViewController!.setAddress(walletAaddress, id);
+    } else if (name == 'signTransaction' ||
+        name == 'signMessage' ||
+        name == 'signPersonalMessage' ||
+        name == 'signTypedMessage') {
+      String from = walletAaddress;
+      String feeToken = widget.info!.coinType!.geCoinType().coinTypeString();
+      if (name == 'signTransaction') {
+        Map<String, dynamic> object = params["object"];
+        BridgeParams bridge = BridgeParams.fromJson(object);
+        HWToast.showLoading();
+        int price = await _client!.getGasPrice();
+        String fee = TRWallet.configFeeValue(
+            cointype: 1,
+            beanValue: bridge.gas.toString(),
+            offsetValue: price.toString());
+        HWToast.hiddenAllToast();
+        showModalBottomSheet(
+            context: context,
+            elevation: 0,
+            isDismissible: true,
+            isScrollControlled: true,
+            shape: const RoundedRectangleBorder(
+                borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(20),
+                    topRight: Radius.circular(20))),
+            builder: (_) {
+              return PaymentSheet(
+                datas: PaymentSheet.getTransStyleList(
+                    from: bridge.from ?? "",
+                    to: bridge.to ?? '',
+                    remark: '',
+                    fee: fee + feeToken),
+                amount: (bridge.value ?? BigInt.zero).tokenString(18),
+                nextAction: () {
+                  tr.showLockPin(context,
+                      infoCoinType: widget.info!.coinType!.geCoinType(),
+                      confirmPressed: (prv) async {
+                    final result = await _client!.transferOrigin(
+                        prv,
+                        bridge.to ?? "",
+                        bridge.gas,
+                        bridge.data ?? '',
+                        bridge.value ?? BigInt.zero);
 
-      // _webViewController!.sendResult(tx, id);
+                    _webViewController!.sendResult(result!, id);
+                  }, cancelPress: () {
+                    _webViewController!.sendError("Canceled", id);
+                  });
+                },
+                cancelAction: () {
+                  _webViewController!.sendError("Canceled", id);
+                },
+              );
+            });
+      } else if (name == 'signMessage' || name == 'signPersonalMessage') {
+        final object = params["object"];
+        final data = object["data"];
+        ShowCustomAlert.showCustomAlertType(context, KAlertType.text, name, tr,
+            subtitleText: utf8.decode(TREncode.kHexToBytes(data)),
+            rightButtonStyle: TextStyle(
+              color: ColorUtils.blueColor,
+              fontSize: 16.font,
+            ),
+            rightButtonRadius: 8,
+            rightButtonTitle: "walletssetting_modifyok".local(),
+            cancelPressed: () {
+          _webViewController!.sendError("Canceled", id);
+        }, confirmPressed: (result) async {
+          tr.showLockPin(context,
+              infoCoinType: widget.info!.coinType!.geCoinType(),
+              confirmPressed: (prv) async {
+            String? result = await _client!.signPersonalMessage(prv, data);
+            _webViewController!.sendResult(result!, id);
+          }, cancelPress: () {
+            _webViewController!.sendError("Canceled", id);
+          });
+        });
+      } else {
+        final object = params["object"];
+        final raw = object["raw"];
 
-    } else if (name == 'signMessage' || name == 'signPersonalMessage') {
-      final object = params["object"];
-      final data = object["data"];
-    } else if (name == 'requestAccounts' || name == 'eth_requestAccounts') {}
+        ShowCustomAlert.showCustomAlertType(context, KAlertType.text, name, tr,
+            subtitleText: JsonUtil.encodeObj(object),
+            rightButtonStyle: TextStyle(
+              color: ColorUtils.blueColor,
+              fontSize: 16.font,
+            ),
+            rightButtonRadius: 8,
+            rightButtonTitle: "walletssetting_modifyok".local(),
+            cancelPressed: () {
+          _webViewController!.sendError("Canceled", id);
+        }, confirmPressed: (result) {
+          tr.showLockPin(context,
+              infoCoinType: widget.info!.coinType!.geCoinType(),
+              confirmPressed: (prv) async {
+            final result = await _client!.signTypedMessage(prv, raw);
+            _webViewController!.sendResult(result!, id);
+          }, cancelPress: () {
+            _webViewController!.sendError("Canceled", id);
+          });
+        });
+      }
+    }
   }
 
   _progressBar(double progress, BuildContext context) {
@@ -160,7 +265,7 @@ class _DappBrowserState extends State<DappBrowser> {
                       action: PermissionRequestResponseAction.GRANT);
                 },
                 onJsAlert: (controller, request) {
-                  LogUtil.v("收到js alert ${request.message}");
+                  print("收到js alert ${request.message}");
                   final message = request.message;
                   bool handledByClient = false;
                   if (message?.contains(_alertTitle) == true) {

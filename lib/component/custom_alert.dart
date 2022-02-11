@@ -240,6 +240,9 @@ class _CustomAlertState extends State<CustomAlert> {
             GestureDetector(
               onTap: () {
                 Navigator.pop(context);
+                if (widget.cancelPressed != null) {
+                  widget.cancelPressed!();
+                }
               },
               child: Center(
                 child: Image.asset(
@@ -307,12 +310,14 @@ class _CustomAlertState extends State<CustomAlert> {
     return Container(
       margin: EdgeInsets.only(top: 16.width),
       padding: widget.bottomActionsPadding ?? EdgeInsets.only(bottom: 12.width),
-      decoration: const BoxDecoration(
-          border: Border(
-              top: BorderSide(
-        color: ColorUtils.lineColor,
-        width: 0.5,
-      ))),
+      decoration: widget.hideLeftButton == false
+          ? const BoxDecoration(
+              border: Border(
+                  top: BorderSide(
+              color: ColorUtils.lineColor,
+              width: 0.5,
+            )))
+          : null,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         crossAxisAlignment: CrossAxisAlignment.center,

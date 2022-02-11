@@ -37,4 +37,7 @@ class RequestURLS {
 
   ///首页banner
   static const String getbannerInfo = host + "/app/index/bannerInfo";
+
+  ///token符号，若多个以逗号分隔
+  static const String gettokenPrice = host + "/app/token/tokenPrice";
 }
