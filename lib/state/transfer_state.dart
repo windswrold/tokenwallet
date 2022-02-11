@@ -237,7 +237,8 @@ class KTransferState with ChangeNotifier {
         amount: amount,
         to: to,
         isCustomfee: _isCustomFee,
-        data: remark);
+        data: remark,
+        from: from);
 
     if (result?.isNotEmpty == true) {
       HWToast.showText(text: "payment_transsuccess".local());

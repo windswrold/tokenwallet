@@ -11,6 +11,7 @@ import 'package:sqflite/sqflite.dart' as sqflite;
 part 'database.g.dart';
 
 //flutter packages pub run build_runner build
+// updateTokenData
 const int dbCurrentVersion = 1;
 
 @Database(version: dbCurrentVersion, entities: [

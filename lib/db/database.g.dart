@@ -884,10 +884,37 @@ class _$TransRecordModelDao extends TransRecordModelDao {
   final DeletionAdapter<TransRecordModel> _transRecordModelDeletionAdapter;
 
   @override
-  Future<List<TransRecordModel>> queryTrxList(
+  Future<List<TransRecordModel>> queryAllTrxList(
+      String fromAdd, String token, int chainid) async {
+    return _queryAdapter.queryList(
+        'SELECT * FROM translist_table WHERE (fromAdd = ?1 or toAdd =?1 )  and token = ?2 and chainid = ?3 ORDER BY date DESC',
+        mapper: (Map<String, Object?> row) => TransRecordModel(txid: row['txid'] as String?, toAdd: row['toAdd'] as String?, fromAdd: row['fromAdd'] as String?, date: row['date'] as String?, amount: row['amount'] as String?, remarks: row['remarks'] as String?, fee: row['fee'] as String?, transStatus: row['transStatus'] as int?, token: row['token'] as String?, coinType: row['coinType'] as String?, gasLimit: row['gasLimit'] as String?, gasPrice: row['gasPrice'] as String?, chainid: row['chainid'] as int?, nonce: row['nonce'] as int?, contractTo: row['contractTo'] as String?, input: row['input'] as String?, signMessage: row['signMessage'] as String?, repeatPushCount: row['repeatPushCount'] as int?, blockHeight: row['blockHeight'] as int?),
+        arguments: [fromAdd, token, chainid]);
+  }
+
+  @override
+  Future<List<TransRecordModel>> queryOutTrxList(
       String fromAdd, String token, int chainid) async {
     return _queryAdapter.queryList(
         'SELECT * FROM translist_table WHERE (fromAdd = ?1 )  and token = ?2 and chainid = ?3 ORDER BY date DESC',
+        mapper: (Map<String, Object?> row) => TransRecordModel(txid: row['txid'] as String?, toAdd: row['toAdd'] as String?, fromAdd: row['fromAdd'] as String?, date: row['date'] as String?, amount: row['amount'] as String?, remarks: row['remarks'] as String?, fee: row['fee'] as String?, transStatus: row['transStatus'] as int?, token: row['token'] as String?, coinType: row['coinType'] as String?, gasLimit: row['gasLimit'] as String?, gasPrice: row['gasPrice'] as String?, chainid: row['chainid'] as int?, nonce: row['nonce'] as int?, contractTo: row['contractTo'] as String?, input: row['input'] as String?, signMessage: row['signMessage'] as String?, repeatPushCount: row['repeatPushCount'] as int?, blockHeight: row['blockHeight'] as int?),
+        arguments: [fromAdd, token, chainid]);
+  }
+
+  @override
+  Future<List<TransRecordModel>> queryInTrxList(
+      String fromAdd, String token, int chainid) async {
+    return _queryAdapter.queryList(
+        'SELECT * FROM translist_table WHERE (toAdd = ?1 )  and token = ?2 and chainid = ?3 ORDER BY date DESC',
+        mapper: (Map<String, Object?> row) => TransRecordModel(txid: row['txid'] as String?, toAdd: row['toAdd'] as String?, fromAdd: row['fromAdd'] as String?, date: row['date'] as String?, amount: row['amount'] as String?, remarks: row['remarks'] as String?, fee: row['fee'] as String?, transStatus: row['transStatus'] as int?, token: row['token'] as String?, coinType: row['coinType'] as String?, gasLimit: row['gasLimit'] as String?, gasPrice: row['gasPrice'] as String?, chainid: row['chainid'] as int?, nonce: row['nonce'] as int?, contractTo: row['contractTo'] as String?, input: row['input'] as String?, signMessage: row['signMessage'] as String?, repeatPushCount: row['repeatPushCount'] as int?, blockHeight: row['blockHeight'] as int?),
+        arguments: [fromAdd, token, chainid]);
+  }
+
+  @override
+  Future<List<TransRecordModel>> queryOtherTrxList(
+      String fromAdd, String token, int chainid) async {
+    return _queryAdapter.queryList(
+        'SELECT * FROM translist_table WHERE (fromAdd = ?1 or toAdd =?1  )  and token = ?2 and chainid = ?3 and transStatus = 0  ORDER BY date DESC',
         mapper: (Map<String, Object?> row) => TransRecordModel(txid: row['txid'] as String?, toAdd: row['toAdd'] as String?, fromAdd: row['fromAdd'] as String?, date: row['date'] as String?, amount: row['amount'] as String?, remarks: row['remarks'] as String?, fee: row['fee'] as String?, transStatus: row['transStatus'] as int?, token: row['token'] as String?, coinType: row['coinType'] as String?, gasLimit: row['gasLimit'] as String?, gasPrice: row['gasPrice'] as String?, chainid: row['chainid'] as int?, nonce: row['nonce'] as int?, contractTo: row['contractTo'] as String?, input: row['input'] as String?, signMessage: row['signMessage'] as String?, repeatPushCount: row['repeatPushCount'] as int?, blockHeight: row['blockHeight'] as int?),
         arguments: [fromAdd, token, chainid]);
   }

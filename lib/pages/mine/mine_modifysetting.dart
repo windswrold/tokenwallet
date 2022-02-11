@@ -1,3 +1,4 @@
+import 'package:cstoken/utils/custom_toast.dart';
 import 'package:cstoken/utils/sp_manager.dart';
 import 'package:easy_localization/easy_localization.dart';
 
@@ -64,13 +65,22 @@ class _MineModifySettingState extends State<MineModifySetting> {
       SPManager.setAppLanguage(index.getAppLanguageType());
       if (index == 0) {
         context.deleteSaveLocale();
+        Locale first = context.deviceLocale;
+        for (var element in context.supportedLocales) {
+          if (element.languageCode.contains(first.languageCode)) {
+            context.setLocale(element);
+          }
+        }
       } else if (index == 1) {
         context.setLocale(Locale('zh', 'CN'));
       } else {
         context.setLocale(Locale('en', 'US'));
       }
+      HWToast.showText(text: "dialog_modifyok".local());
+      Future.delayed(Duration(milliseconds: 1000)).then((value) => {
+            Routers.goBack(context),
+          });
     }
-    Navigator.pop(context);
   }
 
   Widget _buildCell(int index) {

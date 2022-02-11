@@ -1,5 +1,6 @@
 import 'package:cstoken/db/database.dart';
 import 'package:cstoken/db/database_config.dart';
+import 'package:cstoken/public.dart';
 import 'package:cstoken/utils/log_util.dart';
 import 'package:floor/floor.dart';
 
@@ -61,9 +62,51 @@ class TransRecordModel {
     }
   }
 
-  // factory TransRecordModel.fromJson(Map<String, dynamic> json) =>
-  //     _$TransRecordModelFromJson(json);
-  // Map<String, dynamic> toJson() => _$TransRecordModelToJson(this);
+  String vaueString(String from) {
+    String result = "";
+    if (isOut(from) == true) {
+      result = "-";
+    } else {
+      result = "+";
+    }
+    result += amount ?? "0";
+    result += token ?? "";
+    return result;
+  }
+
+  String transTypeIcon(String from) {
+    String result = "";
+    if (isOut(from) == true) {
+      result = "icons/icon_out.png";
+    } else {
+      result = "icons/icon_in.png";
+    }
+    return result;
+  }
+
+  String transState() {
+    String result = "";
+    if (transStatus == KTransState.failere.index) {
+      result = "translist_statefailere".local();
+    } else if (transStatus == KTransState.pending.index) {
+      result = "translist_pending".local();
+    }else if (transStatus == KTransState.success.index) {
+      result = "translist_success".local();
+    }
+    return result;
+  }
+
+    String transStateicon() {
+    String result = "";
+    if (transStatus == KTransState.failere.index) {
+      result = "icons/trans_failere.png";
+    } else if (transStatus == KTransState.pending.index) {
+      result = "icons/trans_pending.png";
+    }else if (transStatus == KTransState.success.index) {
+      result = "icons/trans_success.png";
+    }
+    return result;
+  }
 
   // Future<bool?> updateTransState(BuildContext context) async {
   //   String tx = this.txid!;
@@ -216,148 +259,62 @@ class TransRecordModel {
   //   }
   // }
 
-  // static Future<List<TransRecordModel>> queryTrxList(
-  //     String from, String symbol, int chainid, int transType) async {
-  //   try {
-  //     FlutterDatabase? database = await (BaseModel.getDataBae());
-  //     if (transType >= MTransListType.All.index ||
-  //         transType <= MTransListType.L2Transfer.index) {
-  //       List<TransRecordModel> dbs =
-  //           await database?.transListDao.queryTrxList(from, symbol, chainid) ??
-  //               [];
-  //       List<TransRecordModel> datas = [];
-  //       dbs.forEach((element) {
-  //         //1层所有的 deposit 也放到1层
-  //         if (transType == MTransListType.All.index) {
-  //           if (element.transType! <= MTransListType.L2Deposit.index ||
-  //               element.transType! == MTransListType.L2Authorize.index) {
-  //             datas.add(element);
-  //           }
-  //         }
-  //         //1层 in
-  //         if (transType == MTransListType.Out.index &&
-  //             element.transType! == MTransListType.In.index) {
-  //           datas.add(element);
-  //         }
-  //         //1层 out
-  //         if (transType == MTransListType.In.index) {
-  //           if (element.transType! == MTransListType.Out.index ||
-  //               element.transType! == MTransListType.L2Deposit.index ||
-  //               element.transType! == MTransListType.L2Authorize.index) {
-  //             datas.add(element);
-  //           }
-  //         }
-  //         //1层失败
-  //         if (transType == MTransListType.Err.index &&
-  //             element.transStatus! == MTransState.MTransState_Failere.index) {
-  //           datas.add(element);
-  //         }
-  //         //2层all 2层out
-  //         if ((transType == MTransListType.L2All.index ||
-  //                 transType == MTransListType.L2Withdraw.index) &&
-  //             (element.transType! >= MTransListType.L2All.index &&
-  //                 element.transType! <= MTransListType.L2Authorize.index)) {
-  //           datas.add(element);
-  //         }
-  //         //2层 in
-  //         // if (transType == MTransListType.L2Deposit.index &&
-  //         //     element.transType! == MTransListType.In.index) {
-  //         //   datas.add(element);
-  //         // }
-  //         //2层 out
-  //         // if (transType == MTransListType.L2Withdraw.index &&
-  //         //    (element.transType == )) {
-  //         //   datas.add(element);
-  //         // }
-  //         //2层失败
-  //         if (transType == MTransListType.L2Transfer.index &&
-  //             element.transStatus! == MTransState.MTransState_Failere.index) {
-  //           datas.add(element);
-  //         }
-  //       });
-  //       return datas;
-  //     } else {
-  //       return await database?.transListDao
-  //               .queryTrxListWithType(from, symbol, chainid, transType) ??
-  //           [];
-  //     }
-  //   } catch (e) {
-  //     LogUtil.v("失败" + e.toString());
-  //     return [];
-  //   }
-  // }
+  static Future<List<TransRecordModel>> queryTrxList(
+      String from, String symbol, int chainid, int kTransDataType) async {
+    try {
+      LogUtil.v(
+          "queryTrxList from $from symbol $symbol chainid $chainid kTransDataType $kTransDataType");
 
-  // static Future<List<TransRecordModel>> queryMinersTrxListWithType(
-  //     int chainid, int transType) async {
-  //   try {
-  //     FlutterDatabase? database = await (BaseModel.getDataBae());
-  //     List<TransRecordModel>? dbs = await database?.transListDao
-  //         .queryMinersTrxListWithType(chainid, transType);
-  //     return dbs ?? [];
-  //   } catch (e) {
-  //     LogUtil.v("失败" + e.toString());
-  //     return [];
-  //   }
-  // }
+      FlutterDatabase? database = await DataBaseConfig.openDataBase();
+      List<TransRecordModel> dbs = [];
+      if (KTransDataType.ts_all.index == kTransDataType) {
+        dbs = await database?.transListDao
+                .queryAllTrxList(from, symbol, chainid) ??
+            [];
+      } else if (KTransDataType.ts_out.index == kTransDataType) {
+        dbs = await database?.transListDao
+                .queryOutTrxList(from, symbol, chainid) ??
+            [];
+      } else if (KTransDataType.ts_in.index == kTransDataType) {
+        dbs = await database?.transListDao
+                .queryInTrxList(from, symbol, chainid) ??
+            [];
+      } else if (KTransDataType.ts_other.index == kTransDataType) {
+        dbs = await database?.transListDao
+                .queryOtherTrxList(from, symbol, chainid) ??
+            [];
+      }
+      return dbs;
+    } catch (e) {
+      LogUtil.v("失败" + e.toString());
+      return [];
+    }
+  }
 
-  // static Future<List<TransRecordModel>> queryMinersPendingTrxList(
-  //     int chainid) async {
-  //   try {
-  //     FlutterDatabase? database = await (BaseModel.getDataBae());
-  //     List<TransRecordModel>? datas =
-  //         await database?.transListDao.queryMinersPendingTrxList(chainid);
-  //     return datas ?? [];
-  //   } catch (e) {
-  //     LogUtil.v("失败" + e.toString());
-  //     return [];
-  //   }
-  // }
+  static Future<List<TransRecordModel>> queryPendingTrxList(
+      String from, String symbol, int chainid) async {
+    try {
+      FlutterDatabase? database = await DataBaseConfig.openDataBase();
+      List<TransRecordModel>? datas = await database?.transListDao
+          .queryPendingTrxList(from, symbol, chainid);
+      return datas ?? [];
+    } catch (e) {
+      LogUtil.v("失败" + e.toString());
+      return [];
+    }
+  }
 
-  // static Future<List<TransRecordModel>> queryPendingTrxList(
-  //     String from, String symbol, int chainid) async {
-  //   try {
-  //     FlutterDatabase? database = await (BaseModel.getDataBae());
-  //     List<TransRecordModel>? datas = await database?.transListDao
-  //         .queryPendingTrxList(from, symbol, chainid);
-  //     return datas ?? [];
-  //   } catch (e) {
-  //     LogUtil.v("失败" + e.toString());
-  //     return [];
-  //   }
-  // }
-
-  // static Future<List<TransRecordModel>> queryAllList() async {
-  //   try {
-  //     FlutterDatabase? database = await (BaseModel.getDataBae());
-  //     List<TransRecordModel>? datas =
-  //         await database?.transListDao.queryAllTrx();
-  //     return datas ?? [];
-  //   } catch (e) {
-  //     LogUtil.v("失败" + e.toString());
-  //     return [];
-  //   }
-  // }
-
-  // static Future<List<TransRecordModel>> queryTrxFromTrxid(String txid) async {
-  //   try {
-  //     FlutterDatabase? database = await (BaseModel.getDataBae());
-  //     List<TransRecordModel>? datas =
-  //         await database?.transListDao.queryTrxFromTrxid(txid);
-  //     return datas ?? [];
-  //   } catch (e) {
-  //     LogUtil.v("失败" + e.toString());
-  //     return [];
-  //   }
-  // }
-
-  // static void insertTrxList(TransRecordModel model) async {
-  //   try {
-  //     FlutterDatabase? database = await (BaseModel.getDataBae());
-  //     database?.transListDao.insertTrxList(model);
-  //   } catch (e) {
-  //     LogUtil.v("失败" + e.toString());
-  //   }
-  // }
+  static Future<List<TransRecordModel>> queryTrxFromTrxid(String txid) async {
+    try {
+      FlutterDatabase? database = await DataBaseConfig.openDataBase();
+      List<TransRecordModel>? datas =
+          await database?.transListDao.queryTrxFromTrxid(txid);
+      return datas ?? [];
+    } catch (e) {
+      LogUtil.v("失败" + e.toString());
+      return [];
+    }
+  }
 
   static void insertTrxLists(List<TransRecordModel> models) async {
     try {
@@ -368,32 +325,23 @@ class TransRecordModel {
     }
   }
 
-  // static void deleteTrxList(TransRecordModel model) async {
-  //   try {
-  //     FlutterDatabase? database = await (BaseModel.getDataBae());
-  //     database?.transListDao.deleteTrxList(model);
-  //   } catch (e) {
-  //     LogUtil.v("失败" + e.toString());
-  //   }
-  // }
+  static void deleteTrxList(TransRecordModel model) async {
+    try {
+      FlutterDatabase? database = await DataBaseConfig.openDataBase();
+      database?.transListDao.deleteTrxList(model);
+    } catch (e) {
+      LogUtil.v("失败" + e.toString());
+    }
+  }
 
-  // static void updateTrxList(TransRecordModel model) async {
-  //   try {
-  //     FlutterDatabase? database = await (BaseModel.getDataBae());
-  //     database?.transListDao.updateTrxList(model);
-  //   } catch (e) {
-  //     LogUtil.v("失败" + e.toString());
-  //   }
-  // }
-
-  // static void updateTrxLists(List<TransRecordModel> models) async {
-  //   try {
-  //     FlutterDatabase? database = await (BaseModel.getDataBae());
-  //     database?.transListDao.updateTrxLists(models);
-  //   } catch (e) {
-  //     LogUtil.v("失败" + e.toString());
-  //   }
-  // }
+  static void updateTrxLists(List<TransRecordModel> models) async {
+    try {
+      FlutterDatabase? database = await DataBaseConfig.openDataBase();
+      database?.transListDao.updateTrxLists(models);
+    } catch (e) {
+      LogUtil.v("失败" + e.toString());
+    }
+  }
 }
 
 @dao
@@ -401,8 +349,26 @@ abstract class TransRecordModelDao {
   //or toAdd =:fromAdd
   @Query('SELECT * FROM ' +
       tableName +
+      ' WHERE (fromAdd = :fromAdd or toAdd =:fromAdd )  and token = :token and chainid = :chainid ORDER BY date DESC')
+  Future<List<TransRecordModel>> queryAllTrxList(
+      String fromAdd, String token, int chainid);
+
+  @Query('SELECT * FROM ' +
+      tableName +
       ' WHERE (fromAdd = :fromAdd )  and token = :token and chainid = :chainid ORDER BY date DESC')
-  Future<List<TransRecordModel>> queryTrxList(
+  Future<List<TransRecordModel>> queryOutTrxList(
+      String fromAdd, String token, int chainid);
+
+  @Query('SELECT * FROM ' +
+      tableName +
+      ' WHERE (toAdd = :fromAdd )  and token = :token and chainid = :chainid ORDER BY date DESC')
+  Future<List<TransRecordModel>> queryInTrxList(
+      String fromAdd, String token, int chainid);
+
+  @Query('SELECT * FROM ' +
+      tableName +
+      ' WHERE (fromAdd = :fromAdd or toAdd =:fromAdd  )  and token = :token and chainid = :chainid and transStatus = 0  ORDER BY date DESC')
+  Future<List<TransRecordModel>> queryOtherTrxList(
       String fromAdd, String token, int chainid);
 
   @Query('SELECT * FROM ' +

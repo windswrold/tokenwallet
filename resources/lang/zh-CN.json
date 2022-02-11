@@ -182,5 +182,8 @@
     "dapppage_iknowit": "我已知晓",
     "dapppage_chooseright": "请选择对应链钱包",
     "dapppage_qrcodewrong": "二维码不正确",
-    "dapppage_notsupport": "不支持此指令"
+    "dapppage_notsupport": "不支持此指令",
+    "translist_statefailere": "失败",
+    "translist_pending": "确认中",
+    "translist_success": "成功"
 }

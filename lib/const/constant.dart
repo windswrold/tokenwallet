@@ -77,6 +77,13 @@ enum KTransType {
   transfer,
 }
 
+enum KTransDataType {
+  ts_all,
+  ts_in,
+  ts_out,
+  ts_other,
+}
+
 final bool inProduction = kReleaseMode;
 final bool isAndroid = Platform.isAndroid;
 final bool isIOS = Platform.isIOS;

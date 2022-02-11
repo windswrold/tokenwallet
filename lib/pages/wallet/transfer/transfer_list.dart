@@ -203,7 +203,10 @@ class _TransferListPageState extends State<TransferListPage>
   List<Widget> _getChildren(List<Tab> tabs) {
     List<Widget> datass = [];
     for (var i = 0; i < tabs.length; i++) {
-      datass.add(TransferListContent(type: i));
+      datass.add(TransferListContent(
+        type: i,
+        key: ObjectKey(i),
+      ));
     }
     return datass;
   }

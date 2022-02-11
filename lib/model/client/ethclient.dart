@@ -31,12 +31,12 @@ class ETHClient {
     required String to,
     required bool isCustomfee,
     required String? data,
+    required String? from,
+    String? fee,
     int? gasPrice,
     int? maxGas,
     int? nonce,
     String? input,
-    String? from,
-    String? fee,
   }) async {
     try {
       final credentials = EthPrivateKey.fromHex(prv);
@@ -85,7 +85,7 @@ class ETHClient {
       TransRecordModel model = TransRecordModel();
       model.txid = result;
       model.amount = amount;
-      model.fromAdd = from;
+      model.fromAdd = from ?? credentials.address.hexEip55;
       model.date = DateUtil.getNowDateStr();
       model.token = token.token;
       model.coinType = token.coinType;

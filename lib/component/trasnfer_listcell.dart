@@ -1,23 +1,26 @@
+import 'package:cstoken/model/transrecord/trans_record.dart';
 import 'package:cstoken/pages/wallet/transfer/transdetail_page.dart';
 
 import '../public.dart';
 
 class TransferListCell extends StatelessWidget {
-  const TransferListCell({Key? key}) : super(key: key);
+  const TransferListCell({Key? key, required this.model, required this.from})
+      : super(key: key);
+  final TransRecordModel model;
+  final String from;
 
   @override
   Widget build(BuildContext context) {
-    String imgName = "icons/icon_in.png";
-    String address =
-        "0xE5298fD436B9874f7FB87a5117fA269B2623Ca34".contractAddress(end: 5);
-    String time = "2021-05-04 13:23:34";
-    String value = "-123.0134 USDT";
-    String state = "确认中";
+    String imgName = model.transTypeIcon(from);
+    String address = model.toAdd!.contractAddress(end: 5);
+    String time = model.date!;
+    String value = model.vaueString(from);
+    String state = model.transState();
     bool isSpeed = false;
     return GestureDetector(
         behavior: HitTestBehavior.opaque,
         onTap: () {
-          Routers.push(context, TransDetailPage());
+          Routers.push(context, TransDetailPage(model: model));
         },
         child: Container(
           height: 71.width,
@@ -82,7 +85,9 @@ class TransferListCell extends StatelessWidget {
                   Text(
                     state,
                     style: TextStyle(
-                      color: ColorUtils.fromHex("#99000000"),
+                      color: model.transStatus == KTransState.failere.index
+                          ? ColorUtils.fromHex("#FFFF233E")
+                          : ColorUtils.fromHex("#99000000"),
                       fontSize: 12.font,
                       fontWeight: FontWeightUtils.regular,
                     ),

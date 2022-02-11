@@ -23,8 +23,12 @@ class WalletsTabCell extends StatelessWidget {
               String token = collectToken.token ?? "";
               String tokenPrice =
                   "≈$currencySymbolStr" + collectToken.priceString;
-              String balance = collectToken.balanceString;
-              String assets = "$currencySymbolStr ${collectToken.assets}";
+              String balance = provider.currentWallet?.hiddenAssets == true
+                  ? "****"
+                  : collectToken.balanceString;
+              String assets = provider.currentWallet?.hiddenAssets == true
+                  ? "****"
+                  : "$currencySymbolStr ${collectToken.assets}";
 
               return GestureDetector(
                 behavior: HitTestBehavior.opaque,

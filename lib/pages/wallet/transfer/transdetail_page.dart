@@ -1,41 +1,33 @@
+import 'package:cstoken/model/transrecord/trans_record.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
 import '../../../public.dart';
 
 class TransDetailPage extends StatefulWidget {
-  TransDetailPage({Key? key, this.params}) : super(key: key);
+  TransDetailPage({Key? key, this.model}) : super(key: key);
 
-  final Map? params;
+  final TransRecordModel? model;
 
   @override
   _TransDetailPageState createState() => _TransDetailPageState();
 }
 
 class _TransDetailPageState extends State<TransDetailPage> {
-  static const String leftKey = "leftKey";
-  static const String rightKey = "rightKey";
-  String amount = "";
-  String assets = "";
-  String price = "";
-  String _feeToken = "";
-  String _typeFrom = "";
-  String _typeTo = "";
-  String _txid = '';
+  String from = "";
   @override
   void initState() {
     super.initState();
-    if (widget.params != null) {
-      initData();
-    }
-  }
 
-  void initData() async {}
+    from = Provider.of<CurrentChooseWalletState>(context, listen: false)
+        .walletinfo!
+        .walletAaddress!;
+  }
 
   Widget _buildStateIcon() {
     return Container(
       child: LoadAssetsImage(
-        "icons/trans_success.png",
+        widget.model!.transStateicon(),
         width: 56,
         height: 56,
       ),
@@ -46,7 +38,7 @@ class _TransDetailPageState extends State<TransDetailPage> {
     return Container(
         padding: EdgeInsets.only(top: 8.width),
         child: Text(
-          "data",
+          widget.model!.transState(),
           style: TextStyle(
             color: ColorUtils.fromHex("#FF000000"),
             fontSize: 14.font,
@@ -58,7 +50,7 @@ class _TransDetailPageState extends State<TransDetailPage> {
     return Container(
         padding: EdgeInsets.only(top: 8.width),
         child: Text(
-          "-19.2837 ETH2837283728372837283728372837283728372837",
+          widget.model!.vaueString(from),
           textAlign: TextAlign.center,
           style: TextStyle(
             color: ColorUtils.fromHex("#FF000000"),
@@ -71,7 +63,7 @@ class _TransDetailPageState extends State<TransDetailPage> {
   Widget _buildTransTime() {
     return Container(
         child: Text(
-      "2018-5-15  12:43:35",
+      widget.model!.date ?? "",
       style: TextStyle(
         color: ColorUtils.fromHex("#FF000000"),
         fontSize: 11.font,
@@ -223,13 +215,13 @@ class _TransDetailPageState extends State<TransDetailPage> {
       title: CustomPageView.getTitle(
         title: "transferetype_transdetail".local(),
       ),
-      actions: [
-        Padding(
-          padding: EdgeInsets.only(right: 16.width),
-          child:
-              CustomPageView.getCustomIcon("icons/icon_blue_share.png", () {}),
-        ),
-      ],
+      // actions: [
+      //   Padding(
+      //     padding: EdgeInsets.only(right: 16.width),
+      //     child:
+      //         CustomPageView.getCustomIcon("icons/icon_blue_share.png", () {}),
+      //   ),
+      // ],
       backgroundColor: ColorUtils.backgroudColor,
       child: Column(
         children: [
@@ -265,19 +257,26 @@ class _TransDetailPageState extends State<TransDetailPage> {
                     child: Column(
                       children: [
                         _buildCell("transferetype_chain".local(),
-                            "rightContentrightContentrightContentrightContentrightContentrightContentrightContent"),
-                        _buildCell("transferetype_bl".local(), "rightContent"),
-                        _buildCell("transferetype_trx".local(), "rightContent",
+                            widget.model!.coinType ?? ""),
+                        _buildCell(
+                            "transferetype_bl".local(),
+                            widget.model!.blockHeight == null
+                                ? "-"
+                                : widget.model!.blockHeight.toString()),
+                        _buildCell("transferetype_trx".local(),
+                            widget.model!.txid ?? "",
                             canCopy: true),
                         _buildCell(
                           "transferetype_from".local(),
-                          "rightContent",
+                          widget.model!.fromAdd ?? "",
                           canCopy: true,
                         ),
-                        _buildCell("transferetype_to".local(), "rightContent"),
-                        _buildCell("transferetype_fee".local(), "rightContent"),
-                        _buildCell(
-                            "transferetype_remark".local(), "rightContent"),
+                        _buildCell("transferetype_to".local(),
+                            widget.model!.toAdd ?? ""),
+                        _buildCell("transferetype_fee".local(),
+                            widget.model!.fee ?? ""),
+                        _buildCell("transferetype_remark".local(),
+                            widget.model!.remarks ?? ""),
                       ],
                     ),
                   ),
