@@ -17,7 +17,8 @@ class TransferListContent extends StatefulWidget {
   State<TransferListContent> createState() => _TransferListContentState();
 }
 
-class _TransferListContentState extends State<TransferListContent> {
+class _TransferListContentState extends State<TransferListContent>
+    with AutomaticKeepAliveClientMixin {
   RefreshController refreshController = RefreshController();
 
   List<TransRecordModel> _dappListData = [];
@@ -56,6 +57,7 @@ class _TransferListContentState extends State<TransferListContent> {
         onRefresh: () {
           _initData();
         },
+        enableFooter: false,
         child: _dappListData.length == 0
             ? EmptyDataPage()
             : ListView.builder(
@@ -73,5 +75,5 @@ class _TransferListContentState extends State<TransferListContent> {
 
   // @override
   // TODO: implement wantKeepAlive
-  // bool get wantKeepAlive => true;
+  bool get wantKeepAlive => true;
 }

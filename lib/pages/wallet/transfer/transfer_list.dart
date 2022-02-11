@@ -15,20 +15,12 @@ class TransferListPage extends StatefulWidget {
 
 class _TransferListPageState extends State<TransferListPage>
     with SingleTickerProviderStateMixin {
-  List<Tab> _myTabs = [];
   TabController? _tabController;
   KTransListState _kTransListState = KTransListState();
 
   @override
   void initState() {
     // TODO: implement initState
-    _myTabs = <Tab>[
-      Tab(text: 'transferetype_all'.local()),
-      Tab(text: 'transferetype_in'.local()),
-      Tab(text: 'transferetype_out'.local()),
-      Tab(text: 'transferetype_other'.local()),
-    ];
-    _tabController = TabController(length: _myTabs.length, vsync: this);
     super.initState();
   }
 
@@ -218,68 +210,72 @@ class _TransferListPageState extends State<TransferListPage>
             .chooseTokens()!;
     return ChangeNotifierProvider(
       create: (_) => _kTransListState,
-      child: DefaultTabController(
-        length: _myTabs.length,
-        child: CustomPageView(
-          title: CustomPageView.getTitle(title: tokens.token ?? ""),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              _headerBuilder(),
-              Expanded(
-                child: Container(
-                  alignment: Alignment.center,
-                  color: ColorUtils.backgroudColor,
-                  child: Column(
-                    children: [
-                      Material(
-                          color: Colors.white,
-                          borderRadius: const BorderRadius.only(
-                            topLeft: Radius.circular(20),
-                            topRight: Radius.circular(20),
-                          ),
-                          child: Theme(
-                            data: ThemeData(
-                                splashColor: Color.fromRGBO(0, 0, 0, 0),
-                                highlightColor: Color.fromRGBO(0, 0, 0, 0)),
-                            child: TabBar(
-                              tabs: _myTabs,
-                              controller: _tabController,
-                              indicator: const CustomUnderlineTabIndicator(
-                                  gradientColor: [
-                                    ColorUtils.blueColor,
-                                    ColorUtils.blueColor
-                                  ]),
-                              indicatorWeight: 4,
-                              indicatorSize: TabBarIndicatorSize.tab,
-                              labelColor: ColorUtils.fromHex("#FF000000"),
-                              labelStyle: TextStyle(
-                                fontSize: 14.font,
-                                fontWeight: FontWeightUtils.medium,
+      child: Consumer<KTransListState>(
+        builder: (_, provider, child) {
+          return DefaultTabController(
+            length: provider.myTabs.length,
+            child: CustomPageView(
+              title: CustomPageView.getTitle(title: tokens.token ?? ""),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  _headerBuilder(),
+                  Expanded(
+                    child: Container(
+                      alignment: Alignment.center,
+                      color: ColorUtils.backgroudColor,
+                      child: Column(
+                        children: [
+                          Material(
+                              color: Colors.white,
+                              borderRadius: const BorderRadius.only(
+                                topLeft: Radius.circular(20),
+                                topRight: Radius.circular(20),
                               ),
-                              unselectedLabelColor:
-                                  ColorUtils.fromHex("#99000000"),
-                              unselectedLabelStyle: TextStyle(
-                                fontSize: 14.font,
-                                fontWeight: FontWeightUtils.regular,
-                              ),
-                              onTap: (page) => {},
+                              child: Theme(
+                                data: ThemeData(
+                                    splashColor: Color.fromRGBO(0, 0, 0, 0),
+                                    highlightColor: Color.fromRGBO(0, 0, 0, 0)),
+                                child: TabBar(
+                                  tabs: provider.myTabs,
+                                  controller: _tabController,
+                                  indicator: const CustomUnderlineTabIndicator(
+                                      gradientColor: [
+                                        ColorUtils.blueColor,
+                                        ColorUtils.blueColor
+                                      ]),
+                                  indicatorWeight: 4,
+                                  indicatorSize: TabBarIndicatorSize.tab,
+                                  labelColor: ColorUtils.fromHex("#FF000000"),
+                                  labelStyle: TextStyle(
+                                    fontSize: 14.font,
+                                    fontWeight: FontWeightUtils.medium,
+                                  ),
+                                  unselectedLabelColor:
+                                      ColorUtils.fromHex("#99000000"),
+                                  unselectedLabelStyle: TextStyle(
+                                    fontSize: 14.font,
+                                    fontWeight: FontWeightUtils.regular,
+                                  ),
+                                  onTap: (page) => {},
+                                ),
+                              )),
+                          Expanded(
+                            child: TabBarView(
+                              physics: NeverScrollableScrollPhysics(), //禁止左右滑动
+                              children: _getChildren(provider.myTabs),
                             ),
-                          )),
-                      Expanded(
-                        child: TabBarView(
-                          physics: NeverScrollableScrollPhysics(), //禁止左右滑动
-                          children: _getChildren(_myTabs),
-                        ),
+                          ),
+                        ],
                       ),
-                    ],
+                    ),
                   ),
-                ),
+                  _getBottomWidget(),
+                ],
               ),
-              _getBottomWidget(),
-            ],
-          ),
-        ),
+            ),
+          );
+        },
       ),
     );
   }

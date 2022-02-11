@@ -6,6 +6,14 @@ import '../public.dart';
 
 class KTransListState with ChangeNotifier {
   TimerUtil? timer;
+  List<Tab> _myTabs = [];
+
+  List<Tab> get myTabs => <Tab>[
+        Tab(text: 'transferetype_all'.local()),
+        Tab(text: 'transferetype_in'.local()),
+        Tab(text: 'transferetype_out'.local()),
+        Tab(text: 'transferetype_other'.local()),
+      ];
 
   @override
   void dispose() {
