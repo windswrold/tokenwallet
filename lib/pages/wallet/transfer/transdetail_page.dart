@@ -271,8 +271,11 @@ class _TransDetailPageState extends State<TransDetailPage> {
                           widget.model!.fromAdd ?? "",
                           canCopy: true,
                         ),
-                        _buildCell("transferetype_to".local(),
-                            widget.model!.toAdd ?? ""),
+                        _buildCell(
+                          "transferetype_to".local(),
+                          widget.model!.toAdd ?? "",
+                          canCopy: true,
+                        ),
                         _buildCell("transferetype_fee".local(),
                             widget.model!.fee ?? ""),
                         _buildCell("transferetype_remark".local(),

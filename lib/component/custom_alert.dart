@@ -289,6 +289,12 @@ class _CustomAlertState extends State<CustomAlert> {
         },
         decoration: CustomTextField.getUnderLineDecoration(
             errorText: _errText,
+            hintText: "input_pwd".local(),
+            hintStyle: TextStyle(
+              fontSize: 14.font,
+              fontWeight: FontWeightUtils.regular,
+              color: ColorUtils.fromHex("#66000000"),
+            ),
             underLineWidth: 0.5,
             underLineColor: ColorUtils.lineColor,
             focusedUnderLineColor: ColorUtils.lineColor,
@@ -382,9 +388,13 @@ class _CustomAlertState extends State<CustomAlert> {
         Navigator.pop(context);
         widget.confirmPressed({'text': text});
       } else {
-        // String tip = mwallet.pinTip!;
+        String tip = mwallet.pinTip ?? "";
         setState(() {
-          _errText = "dialog_wrongpin".local();
+          _errText = "dialog_wrongpin".local() +
+              "," +
+              "createwallet_pwdtip".local() +
+              "：" +
+              tip;
           // _errColor = ColorUtils.fromHex("#FFFF6613");
         });
       }

@@ -1,19 +1,22 @@
 import 'package:cstoken/pages/wallet/create/create_wallet_page.dart';
+import 'package:cstoken/pages/wallet/import/import_wallets.dart';
 import 'package:cstoken/pages/wallet/restore/restore_wallet_page.dart';
 import 'package:cstoken/utils/extension.dart';
 
 import '../../../public.dart';
 
 class CreateTip extends StatelessWidget {
-  const CreateTip({Key? key, required this.isCreate}) : super(key: key);
+  const CreateTip({Key? key, required this.type}) : super(key: key);
 
-  final bool isCreate;
+  final KCreateType type;
 
   void _onTap(BuildContext context) {
-    if (isCreate) {
+    if (type == KCreateType.create) {
       Routers.push(context, CreateWalletPage());
-    } else {
+    } else if (type == KCreateType.restore) {
       Routers.push(context, RestoreWalletPage());
+    } else if (type == KCreateType.import) {
+      Routers.push(context, ImportsWallet());
     }
   }
 

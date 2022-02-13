@@ -82,11 +82,11 @@ class TRWallet {
       rightButtonBGC: ColorUtils.blueColor,
       rightButtonRadius: 8,
       rightButtonTitle: "walletssetting_modifyok".local(),
-      confirmPressed: (result) {
+      confirmPressed: (result) async {
         String? memo = exportEncContent(pin: result["text"]);
         if (exportPrv == true) {
           assert(infoCoinType != null, "导出 私钥需要类型");
-          List<HDWallet> hdWallets = HDWallet.getHDWallet(
+          List<HDWallet> hdWallets = await HDWallet.getHDWallet(
               content: memo!,
               pin: "",
               kLeadType: leadType!.getLeadType(),
@@ -189,7 +189,10 @@ class TRWallet {
       TRWallet? oldWallets = await TRWallet.queryWalletByWalletID(walletID);
       if (oldWallets != null) {
         LogUtil.v("查找到有已经导入的钱包");
-        HWToast.showText(text: "create_wallet_exist".local());
+        HWToast.showText(
+          text: "create_wallet_exist"
+              .local(namedArgs: {"walletname": oldWallets.walletName ?? ""}),
+        );
         return;
       }
       TRWallet trWallet = TRWallet();
@@ -209,7 +212,7 @@ class TRWallet {
         trWallet.isChoose = true;
       }
       //开始生成地址信息
-      List<HDWallet> _hdwallets = HDWallet.getHDWallet(
+      List<HDWallet> _hdwallets = await HDWallet.getHDWallet(
           content: content,
           pin: pin,
           kLeadType: kLeadType,
@@ -224,9 +227,7 @@ class TRWallet {
         infos.coinType = object.coinType!.index;
         TRWalletInfo.insertWallets([infos]);
       }
-      int index = (await MCollectionTokens.findMaxIndex(
-              walletID)) ??
-          0;
+      int index = (await MCollectionTokens.findMaxIndex(walletID)) ?? 0;
       List<MCollectionTokens> tokens = [];
       for (var item in currency_List) {
         MCollectionTokens token = MCollectionTokens.fromJson(item);

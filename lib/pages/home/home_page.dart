@@ -331,6 +331,7 @@ class _HomePageState extends State<HomePage> {
     return CustomPageView(
       hiddenLeading: true,
       hiddenAppBar: true,
+      backgroundColor: ColorUtils.backgroudColor,
       child: Column(
         children: [
           _topView(wallet),
@@ -342,18 +343,15 @@ class _HomePageState extends State<HomePage> {
               },
               enableFooter: false,
               child: SingleChildScrollView(
-                child: Container(
-                  color: ColorUtils.backgroudColor,
-                  child: Column(
-                    children: [
-                      _nftNumview(),
-                      _nftList(),
-                      HomeBanner(
-                        datas: _banners,
-                      ),
-                      _nftHot(),
-                    ],
-                  ),
+                child: Column(
+                  children: [
+                    _nftNumview(),
+                    _nftList(),
+                    HomeBanner(
+                      datas: _banners,
+                    ),
+                    _nftHot(),
+                  ],
                 ),
               ),
             ),

@@ -39,7 +39,7 @@
     "createwallet_warning": "注意",
     "createwallet_warningvalue": "CSToken不存储用户的钱包密码，请务必保管好您的钱包密码！钱包密码用来加密您的私钥，使用安全的保密性强的密码策略也非常重要。",
     "createwallet_createnext": "我已妥善保管钱包密码",
-    "create_wallet_exist": "钱包已创建，请勿重复导入",
+    "create_wallet_exist": "钱包{walletname}已创建，请勿重复导入",
     "backup_memotitle": "备份助记词",
     "backup_know": "备份须知",
     "backup_memoowner": "获得助记词等于拥有钱包资产的所有权",
@@ -185,5 +185,16 @@
     "dapppage_notsupport": "不支持此指令",
     "translist_statefailere": "失败",
     "translist_pending": "确认中",
-    "translist_success": "成功"
+    "translist_success": "成功",
+    "dappmenu_share": "分享页面",
+    "dappmenu_collect": "加入收藏",
+    "dappmenu_cancollect": "取消收藏",
+    "dappmenu_copy": "复制链接",
+    "dappmenu_refresh": "刷新页面",
+    "minepage_checkversion": "检查更新",
+    "homepage_backuptip": "您尚未备份助记词，助记词可用于恢复钱包资产，以防忘记密码、删除应用、丢失手机等造成资产丢失。",
+    "homepage_warningtip": "安全提示",
+    "homepage_backup": "立即备份",
+    "newspage_sharenews": "快讯",
+    "newspage_sharenewssouce": "来源"
 }

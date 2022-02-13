@@ -159,4 +159,14 @@ class WalletServices {
     }
     return [];
   }
+
+  static Future<Map?> getAppversion() async {
+    const url = RequestURLS.getAppversion;
+    dynamic result = await RequestMethod.manager!.requestData(Method.GET, url);
+    if (result != null && result["code"] == 200) {
+      Map data = result["result"] ?? [];
+      return data;
+    }
+    return null;
+  }
 }

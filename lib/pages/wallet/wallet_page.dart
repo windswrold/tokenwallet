@@ -1,3 +1,4 @@
+import 'package:cstoken/component/backup_warningtip.dart';
 import 'package:cstoken/component/custom_refresher.dart';
 import 'package:cstoken/component/top_search_widget.dart';
 import 'package:cstoken/component/wallet_card.dart';
@@ -8,6 +9,7 @@ import 'package:cstoken/pages/scan/scan.dart';
 import 'package:cstoken/pages/wallet/wallets/search_addtoken.dart';
 import 'package:cstoken/pages/wallet/wallets/wallets_manager.dart';
 import 'package:cstoken/state/wallet_state.dart';
+import 'package:custom_pop_up_menu/custom_pop_up_menu.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
@@ -26,11 +28,48 @@ class WalletPage extends StatefulWidget {
 
 class _WalletPageState extends State<WalletPage> {
   RefreshController _refreshController = RefreshController();
+  CustomPopupMenuController _controller = CustomPopupMenuController();
+
+  @override
+  void initState() {
+    super.initState();
+
+    WidgetsBinding.instance!.addPostFrameCallback((timeStamp) {
+      _showMnemonicsTips();
+    });
+  }
+
+  void _showMnemonicsTips() async {
+    await Future.delayed(Duration(seconds: 1));
+
+    TRWallet? wallet =
+        Provider.of<CurrentChooseWalletState>(context, listen: false)
+            .currentWallet;
+    if (wallet == null) {
+      return;
+    }
+    if (wallet.accountState == KAccountState.init.index) {
+      showModalBottomSheet(
+        context: context,
+        isDismissible: true,
+        isScrollControlled: true,
+        backgroundColor: Colors.transparent,
+        builder: (context) {
+          return BackupWarningTip(
+            onTap: () {
+              Provider.of<CurrentChooseWalletState>(context, listen: false)
+                  .backupWallet(context, wallet: wallet);
+            },
+          );
+        },
+      );
+    }
+  }
 
   void _create() async {
     List<TRWallet> datas = await TRWallet.queryAllWallets();
     if (datas.isEmpty) {
-      Routers.push(context, const CreateTip(isCreate: true));
+      Routers.push(context, const CreateTip(type: KCreateType.create));
       return;
     }
     Routers.push(context, CreateWalletPage());
@@ -39,20 +78,10 @@ class _WalletPageState extends State<WalletPage> {
   void _restore() async {
     List<TRWallet> datas = await TRWallet.queryAllWallets();
     if (datas.isEmpty) {
-      Routers.push(
-          context,
-          const CreateTip(
-            isCreate: false,
-          ));
+      Routers.push(context, const CreateTip(type: KCreateType.restore));
       return;
     }
     Routers.push(context, RestoreWalletPage());
-  }
-
-  void _tapHelper() {
-    LogUtil.v("_tapHelper");
-    Provider.of<CurrentChooseWalletState>(context, listen: false)
-        .tapHelper(context);
   }
 
   void _tapAssets() {
@@ -77,6 +106,39 @@ class _WalletPageState extends State<WalletPage> {
     );
   }
 
+  List<Widget> _getMenuItem() {
+    Widget _getItem(KCoinType? e) {
+      return GestureDetector(
+        behavior: HitTestBehavior.translucent,
+        onTap: () {
+          _controller.hideMenu();
+          Provider.of<CurrentChooseWalletState>(context, listen: false)
+              .tapHelper(context, e);
+        },
+        child: Container(
+          height: 45.width,
+          padding: EdgeInsets.symmetric(horizontal: 16.width),
+          alignment: Alignment.center,
+          child: Text(
+            e == null ? "walletmanager_asset_all".local() : e.coinTypeString(),
+            style: TextStyle(
+              color: Colors.black,
+              fontSize: 14.font,
+            ),
+          ),
+        ),
+      );
+    }
+
+    List<Widget> datas = KCoinType.values
+        .map(
+          (e) => _getItem(e),
+        )
+        .toList();
+    datas.insert(0, _getItem(null));
+    return datas;
+  }
+
   Widget _helperView() {
     return Container(
       height: 45.width,
@@ -85,11 +147,22 @@ class _WalletPageState extends State<WalletPage> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          GestureDetector(
-            behavior: HitTestBehavior.opaque,
-            onTap: () {
-              _tapHelper();
-            },
+          CustomPopupMenu(
+            menuBuilder: () => ClipRRect(
+              borderRadius: BorderRadius.circular(5),
+              child: Container(
+                color: Colors.white,
+                child: IntrinsicWidth(
+                  child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: _getMenuItem()),
+                ),
+              ),
+            ),
+            pressType: PressType.singleClick,
+            verticalMargin: -10,
+            controller: _controller,
+            showArrow: false,
             child: Row(
               children: [
                 Consumer<CurrentChooseWalletState>(
@@ -159,7 +232,7 @@ class _WalletPageState extends State<WalletPage> {
                             });
                       },
                       enableFooter: false,
-                      child: WalletsTabCell(),
+                      child: WalletsTabList(),
                       refreshController: _refreshController),
                 ),
               ],

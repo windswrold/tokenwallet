@@ -39,7 +39,7 @@
     "createwallet_warning": "Notice",
     "createwallet_warningvalue": "CSToken does not store the user's wallet password, please be sure to keep your wallet password! The wallet password is used to encrypt your private key, and it is also important to use a secure and confidential password policy.",
     "createwallet_createnext": "I have kept the wallet password properly",
-    "create_wallet_exist": "Wallet has been created, please do not import again",
+    "create_wallet_exist": "Wallet {walletname} has been created, please do not import again",
     "backup_memotitle": "Backup mnemonic",
     "backup_know": "Backup Instructions",
     "backup_memoowner": "Obtaining a mnemonic is equivalent to having wallet assets",

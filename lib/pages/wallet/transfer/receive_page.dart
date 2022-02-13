@@ -45,23 +45,12 @@ class _RecervePaymentPageState extends State<RecervePaymentPage> {
         Provider.of<CurrentChooseWalletState>(context, listen: false)
             .walletinfo!;
     qrCodeStr = info.walletAaddress!;
-    walletName = wallet.walletName!;
+    walletName =
+        info.coinType!.geCoinType().coinTypeString() + "tabbar_wallet".local();
   }
 
   void _shareImage() async {
-    late ui.Image _convertedImage;
-    final _boundary =
-        _repaintKey.currentContext!.findRenderObject() as RenderRepaintBoundary;
-    _convertedImage = await _boundary.toImage(pixelRatio: 3);
-    final byteData =
-        await _convertedImage.toByteData(format: ui.ImageByteFormat.png);
-    final image = byteData?.buffer.asUint8List();
-    final directory = (await getTemporaryDirectory()).path;
-    await Directory('$directory/sample').create(recursive: true);
-    final fullPath =
-        '$directory/sample/${DateTime.now().millisecondsSinceEpoch}.png';
-    final imgFile = File('$fullPath');
-    final ok = await imgFile.writeAsBytes(image!);
+    final ok = await shareImage(_repaintKey);
     Share.shareFiles([ok.absolute.path]);
     await Future.delayed(Duration(seconds: 1));
     setState(() {
@@ -125,6 +114,7 @@ class _RecervePaymentPageState extends State<RecervePaymentPage> {
         hiddenAppBar: true,
         hiddenLeading: true,
         safeAreaTop: false,
+        safeAreaBottom: false,
         child: _isShare == true
             ? RepaintBoundary(
                 key: _repaintKey,
@@ -226,24 +216,13 @@ class _RecervePaymentPageState extends State<RecervePaymentPage> {
                             alignment: Alignment.center,
                             color: ColorUtils.fromHex("#1A7685A2"),
                             padding: EdgeInsets.symmetric(horizontal: 10.width),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                LoadAssetsImage(
-                                  "icons/icon_receive_default.png",
-                                  width: 40,
-                                  height: 40,
-                                ),
-                                Text(
-                                  walletName,
-                                  style: TextStyle(
-                                    fontSize: 20.font,
-                                    fontWeight: FontWeightUtils.medium,
-                                    color: ColorUtils.fromHex("#FF000000"),
-                                  ),
-                                ),
-                                SizedBox(width: 40)
-                              ],
+                            child: Text(
+                              walletName,
+                              style: TextStyle(
+                                fontSize: 20.font,
+                                fontWeight: FontWeightUtils.medium,
+                                color: ColorUtils.fromHex("#FF000000"),
+                              ),
                             ),
                           ),
                           Container(

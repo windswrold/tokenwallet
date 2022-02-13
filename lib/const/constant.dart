@@ -1,6 +1,9 @@
 import 'dart:io';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/rendering.dart';
+import 'package:path_provider/path_provider.dart';
 import '../public.dart';
+import 'dart:ui' as ui;
 
 //链类型
 enum KChainType {
@@ -84,6 +87,12 @@ enum KTransDataType {
   ts_other,
 }
 
+enum KCreateType {
+  create,
+  restore,
+  import,
+}
+
 final bool inProduction = kReleaseMode;
 final bool isAndroid = Platform.isAndroid;
 final bool isIOS = Platform.isIOS;
@@ -97,7 +106,45 @@ const int transferERC20GasLimit = 65000;
 
 EventBus eventBus = EventBus();
 
+class MtransListUpdate {}
 
-class MtransListUpdate {
-  
+Size calculateTextSize(
+  String value,
+  double fontSize,
+  FontWeight fontWeight,
+  double maxWidth,
+  int? maxLines,
+  BuildContext context,
+) {
+  TextPainter painter = TextPainter(
+    locale: Localizations.localeOf(context),
+    maxLines: maxLines,
+    textDirection: TextDirection.ltr,
+    text: TextSpan(
+      text: value,
+      style: TextStyle(
+        fontWeight: fontWeight,
+        fontSize: fontSize,
+      ),
+    ),
+  );
+  painter.layout(maxWidth: maxWidth);
+  LogUtil.v("calculateTextSize ${Size(painter.width, painter.height)}");
+  return Size(painter.width, painter.height);
+}
+
+Future<File> shareImage(GlobalKey repkey) async {
+  late ui.Image _convertedImage;
+  final _boundary =
+      repkey.currentContext!.findRenderObject() as RenderRepaintBoundary;
+  _convertedImage = await _boundary.toImage(pixelRatio: 3);
+  final byteData =
+      await _convertedImage.toByteData(format: ui.ImageByteFormat.png);
+  final image = byteData?.buffer.asUint8List();
+  final directory = (await getTemporaryDirectory()).path;
+  await Directory('$directory/sample').create(recursive: true);
+  final fullPath =
+      '$directory/sample/${DateTime.now().millisecondsSinceEpoch}.png';
+  final imgFile = File('$fullPath');
+  return imgFile.writeAsBytes(image!);
 }

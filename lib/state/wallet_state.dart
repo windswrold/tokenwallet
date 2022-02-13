@@ -13,7 +13,9 @@ import 'package:cstoken/net/wallet_services.dart';
 import 'package:cstoken/pages/browser/dapp_browser.dart';
 import 'package:cstoken/pages/wallet/create/backup_tip_memo.dart';
 import 'package:cstoken/pages/wallet/create/create_wallet_page.dart';
+import 'package:cstoken/pages/wallet/transfer/receive_page.dart';
 import 'package:cstoken/pages/wallet/transfer/transfer_list.dart';
+import 'package:cstoken/pages/wallet/transfer/transfer_payment.dart';
 import 'package:cstoken/pages/wallet/wallets/wallets_setting.dart';
 import 'package:cstoken/utils/custom_toast.dart';
 import 'package:cstoken/utils/sp_manager.dart';
@@ -166,9 +168,13 @@ class CurrentChooseWalletState with ChangeNotifier {
 
   void _queryWalletInfo(BuildContext context, DAppRecordsDBModel model,
       KCoinType coinType) async {
-    TRWallet wallet =
+    TRWallet? wallet =
         Provider.of<CurrentChooseWalletState>(context, listen: false)
-            .currentWallet!;
+            .currentWallet;
+    if (wallet == null) {
+      HWToast.showText(text: "minepage_pleasecreate".local());
+      return;
+    }
     List<TRWalletInfo> infos =
         await wallet.queryWalletInfos(coinType: coinType);
     if (infos.isEmpty) {
@@ -197,21 +203,23 @@ class CurrentChooseWalletState with ChangeNotifier {
     notifyListeners();
   }
 
-  void tapHelper(BuildContext context) {
+  void tapHelper(BuildContext context, KCoinType? coinType) {
     LogUtil.v("_tapHelper");
     if (_currentWallet == null) {
       return;
     }
-    showModalBottomSheet(
-        context: context,
-        backgroundColor: Colors.transparent,
-        isScrollControlled: true,
-        builder: (_) {
-          return ChainListType(onTap: (KCoinType coinType) async {
-            _chooseChainType = coinType;
-            queryMyCollectionTokens();
-          });
-        });
+    _chooseChainType = coinType;
+    queryMyCollectionTokens();
+    // showModalBottomSheet(
+    //     context: context,
+    //     backgroundColor: Colors.transparent,
+    //     isScrollControlled: true,
+    //     builder: (_) {
+    //       return ChainListType(onTap: (KCoinType coinType) async {
+    //         _chooseChainType = coinType;
+    //         queryMyCollectionTokens();
+    //       });
+    //     });
   }
 
   void tapWalletSetting(BuildContext context) {
@@ -242,7 +250,8 @@ class CurrentChooseWalletState with ChangeNotifier {
     return true;
   }
 
-  void updateTokenChoose(BuildContext context, int index) async {
+  void updateTokenChoose(BuildContext context, int index,
+      {bool pushTransList = true}) async {
     _tokenIndex = index;
 
     final String walletID = _currentWallet!.walletID!;
@@ -251,8 +260,21 @@ class CurrentChooseWalletState with ChangeNotifier {
         .first;
     _walletinfo = infos;
     LogUtil.v("updateTokenChoose infos " + infos.walletAaddress!);
-    Routers.push(context, TransferListPage());
+    if (pushTransList == true) {
+      Routers.push(context, TransferListPage());
+    }
+
     // LogUtil.v("updateTokenChoose _tokenIndex $_tokenIndex ");
+  }
+
+  void walletcellTapReceive(BuildContext context, int index) async {
+    updateTokenChoose(context, index, pushTransList: false);
+    Routers.push(context, RecervePaymentPage());
+  }
+
+  void walletcellTapPayment(BuildContext context, int index) async {
+    updateTokenChoose(context, index, pushTransList: false);
+    Routers.push(context, TransferPayment());
   }
 
   void deleteWallet(BuildContext context, {required TRWallet wallet}) {
@@ -457,7 +479,7 @@ class CurrentChooseWalletState with ChangeNotifier {
 
   void _configTimerRequest() async {
     if (_timer == null) {
-      _timer = TimerUtil(mInterval: 10000);
+      _timer = TimerUtil(mInterval: 5000);
       _timer!.setOnTimerTickCallback((millisUntilFinished) async {
         if (_currentWallet == null) return;
 

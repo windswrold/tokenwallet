@@ -1,3 +1,4 @@
+import 'package:cstoken/component/news_share_image.dart';
 import 'package:cstoken/model/news/news_model.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -92,7 +93,7 @@ class NewsCell extends StatelessWidget {
     );
   }
 
-  Widget _builfromTypeAndShare() {
+  Widget _builfromTypeAndShare(BuildContext context) {
     String source = model.source ?? "";
     String share = model.content ?? "";
     return Container(
@@ -109,6 +110,7 @@ class NewsCell extends StatelessWidget {
         children: [
           Container(
             height: 20.width,
+            alignment: Alignment.center,
             padding: EdgeInsets.only(left: 4.width, right: 4.width),
             decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(4),
@@ -128,7 +130,7 @@ class NewsCell extends StatelessWidget {
           GestureDetector(
             behavior: HitTestBehavior.opaque,
             onTap: () {
-              Share.share(share);
+              Routers.push(context, NewsShare(model: model));
             },
             child: SizedBox(
               width: 30,
@@ -156,7 +158,7 @@ class NewsCell extends StatelessWidget {
             _buildTime(),
             _builTitle(),
             _builContent(),
-            _builfromTypeAndShare(),
+            _builfromTypeAndShare(context),
           ],
         ));
   }

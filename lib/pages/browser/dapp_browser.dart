@@ -8,7 +8,9 @@ import 'package:cstoken/pages/browser/js_bridge_bean.dart';
 import 'package:cstoken/pages/wallet/transfer/payment_sheet_page.dart';
 import 'package:cstoken/utils/custom_toast.dart';
 import 'package:cstoken/utils/json_util.dart';
+import 'package:custom_pop_up_menu/custom_pop_up_menu.dart';
 import 'package:flutter/services.dart';
+import 'package:share_plus/share_plus.dart';
 import '../../public.dart';
 import './js_bridge_callback_bean.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
@@ -32,6 +34,7 @@ class _DappBrowserState extends State<DappBrowser> {
 
   final _alertTitle = "messagePayTube";
   ETHClient? _client;
+  CustomPopupMenuController _controller = CustomPopupMenuController();
 
   InAppWebViewController? _webViewController;
   InAppWebViewGroupOptions options = InAppWebViewGroupOptions(
@@ -223,16 +226,92 @@ class _DappBrowserState extends State<DappBrowser> {
     );
   }
 
+  Widget _getMenuItem(String itemIcon, String title, VoidCallback callBack) {
+    return GestureDetector(
+      behavior: HitTestBehavior.translucent,
+      onTap: () {
+        _controller.hideMenu();
+        callBack();
+      },
+      child: Container(
+        height: 48.width,
+        padding: EdgeInsets.symmetric(horizontal: 16.width),
+        child: Row(
+          children: <Widget>[
+            LoadAssetsImage(itemIcon, width: 20, height: 20),
+            Expanded(
+              child: Container(
+                margin: EdgeInsets.only(left: 4),
+                child: Text(
+                  title,
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 14.font,
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return CustomPageView(
         title: CustomPageView.getTitle(title: widget.model?.name ?? ""),
+        safeAreaBottom: false,
         bottom: PreferredSize(
             child: _progressBar(_lineProgress, context),
             preferredSize: const Size.fromHeight(1)),
         leading: CustomPageView.getCloseLeading(() {
           Routers.goBack(context);
         }),
+        actions: [
+          CustomPopupMenu(
+              menuBuilder: () => ClipRRect(
+                    borderRadius: BorderRadius.circular(5),
+                    child: Container(
+                      color: ColorUtils.fromHex("#FF000000").withOpacity(0.7),
+                      child: IntrinsicWidth(
+                        child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.stretch,
+                            children: [
+                              _getMenuItem("icons/item_white_share.png",
+                                  "dappmenu_share".local(), () {
+                                String url = widget.model?.url ?? "";
+                                Share.share(url);
+                              }),
+                              _getMenuItem("icons/item_white_collect.png",
+                                  "dappmenu_collect".local(), () {}),
+                              _getMenuItem("icons/item_white_copy.png",
+                                  "dappmenu_copy".local(), () {
+                                String url = widget.model?.url ?? "";
+                                url.copy();
+                              }),
+                              _getMenuItem("icons/item_white_refresh.png",
+                                  "dappmenu_refresh".local(), () {
+                                _webViewController?.reload();
+                              }),
+                            ]),
+                      ),
+                    ),
+                  ),
+              pressType: PressType.singleClick,
+              verticalMargin: -10,
+              controller: _controller,
+              child: Padding(
+                padding: EdgeInsets.only(right: 16.width),
+                child: Center(
+                  child: Image.asset(
+                    ASSETS_IMG + "icons/icon_blue_three.png",
+                    width: 24,
+                    height: 24,
+                  ),
+                ),
+              )),
+        ],
         child: js == null || addd == null
             ? Container(
                 color: Colors.white,

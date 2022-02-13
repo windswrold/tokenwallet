@@ -29,12 +29,12 @@ class HDWallet {
         "HDWallet prv $prv , address $address pin $pin content $content leadType $leadType coinType $coinType");
   }
 
-  static List<HDWallet> getHDWallet(
+  static Future<List<HDWallet>> getHDWallet(
       {required String content,
       required String pin,
       required KLeadType kLeadType,
       KChainType? chainType,
-      KCoinType? kCoinType}) {
+      KCoinType? kCoinType}) async {
     List<HDWallet> _hdwallets = [];
     if (kLeadType == KLeadType.Memo || kLeadType == KLeadType.Restore) {
       kLeadType = KLeadType.Memo;
@@ -84,7 +84,6 @@ class HDWallet {
 
     // btc
     // trx
-
     return _hdwallets;
   }
 }

@@ -36,7 +36,7 @@ class _WalletsManagerState extends State<WalletsManager> {
   void _create() async {
     List<TRWallet> datas = await TRWallet.queryAllWallets();
     if (datas.isEmpty) {
-      Routers.push(context, const CreateTip(isCreate: true));
+      Routers.push(context, const CreateTip(type: KCreateType.create));
       return;
     }
     Routers.push(context, CreateWalletPage());
@@ -45,7 +45,7 @@ class _WalletsManagerState extends State<WalletsManager> {
   void _imports() async {
     List<TRWallet> datas = await TRWallet.queryAllWallets();
     if (datas.isEmpty) {
-      Routers.push(context, const CreateTip(isCreate: true));
+      Routers.push(context, const CreateTip(type: KCreateType.import));
       return;
     }
     Routers.push(context, ImportsWallet());

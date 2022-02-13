@@ -232,6 +232,13 @@ packages:
       url: "https://pub.flutter-io.cn"
     source: hosted
     version: "1.0.4"
+  custom_pop_up_menu:
+    dependency: "direct main"
+    description:
+      name: custom_pop_up_menu
+      url: "https://pub.flutter-io.cn"
+    source: hosted
+    version: "1.2.3+1"
   dart_style:
     dependency: transitive
     description:

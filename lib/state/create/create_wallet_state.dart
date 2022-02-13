@@ -63,7 +63,7 @@ class CreateWalletProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  void createWallet(BuildContext context, {required KChainType chainType}) {
+  void createWallet(BuildContext context, {required KChainType chainType}) async{
     HWToast.showLoading();
     String memo = "";
     if (_leadType == KLeadType.Memo) {

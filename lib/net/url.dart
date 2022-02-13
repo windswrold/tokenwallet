@@ -40,4 +40,6 @@ class RequestURLS {
 
   ///token符号，若多个以逗号分隔
   static const String gettokenPrice = host + "/app/token/tokenPrice";
+
+  static const String getAppversion = host + "/app/version/lastVersion";
 }

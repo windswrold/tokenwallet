@@ -1,3 +1,5 @@
+import 'package:cstoken/net/wallet_services.dart';
+import 'package:cstoken/utils/custom_toast.dart';
 import 'package:flutter/material.dart';
 import 'package:package_info/package_info.dart';
 import 'package:share_plus/share_plus.dart';
@@ -27,6 +29,16 @@ class _MineVersionState extends State<MineVersion> {
     setState(() {
       _version = appversion;
     });
+  }
+
+  void _getLastversion() async {
+    HWToast.showLoading();
+    Map? result = await WalletServices.getAppversion();
+    HWToast.hiddenAllToast();
+    if (result == null) {
+      return;
+    }
+    
   }
 
   @override
@@ -62,26 +74,30 @@ class _MineVersionState extends State<MineVersion> {
               fontWeight: FontWeightUtils.regular,
             ),
           ),
-          Expanded(child: Container()),
-          GestureDetector(
+          Expanded(
+              child: Center(
+                  child: GestureDetector(
             behavior: HitTestBehavior.opaque,
             onTap: () {
-              Share.share('https://www.baidu.com');
+              _getLastversion();
             },
             child: Container(
-              alignment: Alignment.center,
-              height: 50.width,
-              margin: EdgeInsets.only(bottom: 20.width),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(8),
+                color: ColorUtils.blueBGColor,
+              ),
+              padding:
+                  EdgeInsets.symmetric(horizontal: 28.width, vertical: 8.width),
               child: Text(
-                "minepage_share".local(),
+                "minepage_checkversion".local(),
                 style: TextStyle(
-                  color: ColorUtils.fromHex("#66000000"),
                   fontSize: 14.font,
-                  fontWeight: FontWeightUtils.regular,
+                  fontWeight: FontWeightUtils.medium,
+                  color: ColorUtils.blueColor,
                 ),
               ),
             ),
-          ),
+          ))),
         ],
       ),
     );

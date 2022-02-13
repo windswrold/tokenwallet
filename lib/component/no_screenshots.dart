@@ -32,7 +32,7 @@ class NoScreentshots extends StatelessWidget {
                       color: ColorUtils.fromHex("#12FF2F23"),
                       child: Center(
                         child: LoadAssetsImage(
-                          "/icons/no_screenshots.png",
+                          "icons/no_screenshots.png",
                           width: 56.width,
                           height: 56.width,
                         ),

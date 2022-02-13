@@ -29,14 +29,16 @@ class _TokenManagerState extends State<TokenManager> {
       controller: searchController,
       maxLines: 1,
       onChange: (value) async {
+        LogUtil.v("value  $value");
         final walletID =
             Provider.of<CurrentChooseWalletState>(context, listen: false)
                 .currentWallet!
                 .walletID!;
         final type = SPManager.getNetType().index;
+        List<MCollectionTokens> datas = [];
+        datas = await MCollectionTokens.findTokensBySQL(
+            "(contract like '%$value%' or token like '%$value%') and owner = '$walletID' and kNetType = $type");
 
-        List<MCollectionTokens> datas = await MCollectionTokens.findTokensBySQL(
-            "contract like '%$value%' or token like '%$value%' and owner = '$walletID' and kNetType = $type");
         setState(() {
           _datas = datas;
         });

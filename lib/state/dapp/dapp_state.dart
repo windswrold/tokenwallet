@@ -117,9 +117,13 @@ class DappDataState extends ChangeNotifier {
 
   void _queryWalletInfo(BuildContext context, DAppRecordsDBModel model,
       KCoinType coinType) async {
-    TRWallet wallet =
+    TRWallet? wallet =
         Provider.of<CurrentChooseWalletState>(context, listen: false)
-            .currentWallet!;
+            .currentWallet;
+    if (wallet == null) {
+      HWToast.showText(text: "minepage_pleasecreate".local());
+      return;
+    }
     List<TRWalletInfo> infos =
         await wallet.queryWalletInfos(coinType: coinType);
     if (infos.isEmpty) {
