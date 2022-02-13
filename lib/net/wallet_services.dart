@@ -1,4 +1,5 @@
 import 'package:cstoken/model/news/news_model.dart';
+import 'package:cstoken/model/token_price/tokenprice.dart';
 import 'package:cstoken/net/request_method.dart';
 import 'package:cstoken/net/url.dart';
 import 'package:cstoken/public.dart';
@@ -160,13 +161,50 @@ class WalletServices {
     return [];
   }
 
-  static Future<Map?> getAppversion() async {
+  static Future<Map?> getAppversion(String version) async {
     const url = RequestURLS.getAppversion;
-    dynamic result = await RequestMethod.manager!.requestData(Method.GET, url);
+    Map<String, dynamic> params = {
+      "version": version.replaceAll(".", ""),
+    };
+    dynamic result = await RequestMethod.manager!
+        .requestData(Method.GET, url, queryParameters: params);
     if (result != null && result["code"] == 200) {
       Map data = result["result"] ?? [];
       return data;
     }
     return null;
+  }
+
+  static void gettokenPrice(String symbol) async {
+    const url = RequestURLS.gettokenPrice;
+    Map<String, dynamic> params = {
+      "symbol": symbol,
+    };
+    dynamic result = await RequestMethod.manager!
+        .requestData(Method.GET, url, queryParameters: params);
+    if (result != null && result["code"] == 200) {
+      List<TokenPrice> tokens = [];
+      List data = result["result"]["page"] ?? [];
+      for (var item in data) {
+        final cnyPrice = item["cnyPrice"];
+        final usdPrice = item["usdPrice"];
+        final tokenName = item["tokenName"];
+        final chainType = item["chainType"];
+
+        final tokencny = TokenPrice(
+            contract: tokenName,
+            source: tokenName,
+            target: KCurrencyType.CNY.index.toString(),
+            rate: cnyPrice);
+        final tokenusd = TokenPrice(
+            contract: tokenName,
+            source: tokenName,
+            target: KCurrencyType.USD.index.toString(),
+            rate: usdPrice);
+        tokens.add(tokencny);
+        tokens.add(tokenusd);
+      }
+      TokenPrice.insertTokensPrice(tokens);
+    }
   }
 }

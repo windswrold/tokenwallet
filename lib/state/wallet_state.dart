@@ -483,13 +483,9 @@ class CurrentChooseWalletState with ChangeNotifier {
       _timer!.setOnTimerTickCallback((millisUntilFinished) async {
         if (_currentWallet == null) return;
 
-        // Set<String> token = Set();
-        // token.addAll(tokensL1.map((e) => e.token!).toList());
-        // token.addAll(tokensL2.map((e) => e.token!).toList());
-        // await WalletServices.requestPrices(
-        //     currency: currencyTypeStr, tokensStr: token.toList());
-        // _btcTokenPrice =
-        //     await TokenPrice.queryTokenPrices("BTC", currencyTypeStr);
+        Set<String> token = Set();
+        token.addAll(tokens.map((e) => e.token!).toList());
+        WalletServices.gettokenPrice(token.join(","));
         requestAssets();
       });
     }

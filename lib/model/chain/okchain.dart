@@ -6,26 +6,26 @@ import '../../public.dart';
 
 class OKChain implements HDWalletProtocol {
   @override
-  String getPublicAddress(String privateKey) {
+  Future<String> getPublicAddress(String privateKey) async {
     final private = EthPrivateKey.fromHex(privateKey);
     return private.address.hexEip55;
   }
 
   @override
-  HDWallet? importWallet(
+  Future<HDWallet?> importWallet(
       {required String content,
       required String pin,
-      required KLeadType kLeadType}) {
+      required KLeadType kLeadType}) async {
     var prv;
     var address;
     if (kLeadType == KLeadType.Memo) {
-      prv = privateKeyFromMnemonic(content);
+      prv = await privateKeyFromMnemonic(content);
     } else if (kLeadType == KLeadType.KeyStore) {
-      prv = privateKeyFromJson(content, pin);
+      prv = await privateKeyFromJson(content, pin);
     } else if (kLeadType == KLeadType.Prvkey) {
       prv = content;
     }
-    address = getPublicAddress(prv);
+    address = await getPublicAddress(prv);
     HDWallet wallet = HDWallet(
         coinType: KCoinType.OKChain,
         prv: prv,
@@ -38,13 +38,13 @@ class OKChain implements HDWalletProtocol {
   }
 
   @override
-  String privateKeyFromJson(String json, String password) {
+  Future<String> privateKeyFromJson(String json, String password) async {
     Wallet wallet = Wallet.fromJson(json, password);
     return TREncode.kBytesToHex(wallet.privateKey.privateKey, include0x: true);
   }
 
   @override
-  String privateKeyFromMnemonic(String mnemonic) {
+  Future<String> privateKeyFromMnemonic(String mnemonic) async {
     var seed = bip39.mnemonicToSeed(mnemonic);
     var root = bip32.BIP32.fromSeed(seed);
     var child = root.derivePath("m/44'/996'/0'/0/0");

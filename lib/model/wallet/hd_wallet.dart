@@ -42,44 +42,44 @@ class HDWallet {
     if (chainType == KChainType.HD ||
         chainType == KChainType.ETH ||
         kCoinType == KCoinType.ETH) {
-      _hdwallets.add(ETHChain()
-          .importWallet(content: content, pin: pin, kLeadType: kLeadType)!);
+      _hdwallets.add((await ETHChain()
+          .importWallet(content: content, pin: pin, kLeadType: kLeadType))!);
     }
     if (chainType == KChainType.HD ||
         chainType == KChainType.ETH ||
         kCoinType == KCoinType.BSC) {
-      _hdwallets.add(BSCChain()
-          .importWallet(content: content, pin: pin, kLeadType: kLeadType)!);
+      _hdwallets.add((await BSCChain()
+          .importWallet(content: content, pin: pin, kLeadType: kLeadType))!);
     }
     if (chainType == KChainType.HD ||
         chainType == KChainType.ETH ||
         kCoinType == KCoinType.HECO) {
-      _hdwallets.add(HecoChain()
-          .importWallet(content: content, pin: pin, kLeadType: kLeadType)!);
+      _hdwallets.add((await HecoChain()
+          .importWallet(content: content, pin: pin, kLeadType: kLeadType))!);
     }
     if (chainType == KChainType.HD ||
         chainType == KChainType.ETH ||
         kCoinType == KCoinType.Arbitrum) {
-      _hdwallets.add(ARBChain()
-          .importWallet(content: content, pin: pin, kLeadType: kLeadType)!);
+      _hdwallets.add((await await ARBChain()
+          .importWallet(content: content, pin: pin, kLeadType: kLeadType))!);
     }
     if (chainType == KChainType.HD ||
         chainType == KChainType.ETH ||
         kCoinType == KCoinType.AVAX) {
-      _hdwallets.add(AVAXChain()
-          .importWallet(content: content, pin: pin, kLeadType: kLeadType)!);
+      _hdwallets.add((await AVAXChain()
+          .importWallet(content: content, pin: pin, kLeadType: kLeadType))!);
     }
     if (chainType == KChainType.HD ||
         chainType == KChainType.ETH ||
         kCoinType == KCoinType.Matic) {
-      _hdwallets.add(MaticChain()
-          .importWallet(content: content, pin: pin, kLeadType: kLeadType)!);
+      _hdwallets.add((await MaticChain()
+          .importWallet(content: content, pin: pin, kLeadType: kLeadType))!);
     }
     if (chainType == KChainType.HD ||
         chainType == KChainType.ETH ||
         kCoinType == KCoinType.OKChain) {
-      _hdwallets.add(OKChain()
-          .importWallet(content: content, pin: pin, kLeadType: kLeadType)!);
+      _hdwallets.add((await OKChain()
+          .importWallet(content: content, pin: pin, kLeadType: kLeadType))!);
     }
 
     // btc
@@ -89,15 +89,15 @@ class HDWallet {
 }
 
 abstract class HDWalletProtocol {
-  String privateKeyFromMnemonic(String mnemonic);
+  Future<String> privateKeyFromMnemonic(String mnemonic);
 
-  String privateKeyFromJson(String json, String password);
+  Future<String> privateKeyFromJson(String json, String password);
 
-  String getPublicAddress(String privateKey);
+  Future<String> getPublicAddress(String privateKey);
 
   // String getPublicKey(String privateKey);
 
-  HDWallet? importWallet(
+  Future<HDWallet?> importWallet(
       {required String content,
       required String pin,
       required KLeadType kLeadType});

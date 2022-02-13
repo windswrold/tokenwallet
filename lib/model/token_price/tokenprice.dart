@@ -17,16 +17,30 @@ class TokenPrice {
 
   static Future<TokenPrice?> queryTokenPrices(
       String contract, KCurrencyType target) async {
-    if (target == KCurrencyType.CNY) {
-      return TokenPrice(contract: contract, rate: "1000");
-    } else {
-      return TokenPrice(contract: contract, rate: "500");
+    try {
+      FlutterDatabase? database = await DataBaseConfig.openDataBase();
+      List<TokenPrice> datas = (await database?.tokenPriceDao
+              .queryTokenPrices(contract, target.index.toString())) ??
+          [];
+      return datas.first;
+    } catch (e) {
+      return TokenPrice(rate: "0", contract: contract);
     }
+    // if (target == KCurrencyType.CNY) {
+    //   return TokenPrice(contract: contract, rate: "1000");
+    // } else {
+    //   return TokenPrice(contract: contract, rate: "500");
+    // }
   }
 
-  static Future<void> insertTokenPrice(TokenPrice model) async {}
-
-  static Future<void> insertTokensPrice(List<TokenPrice> models) async {}
+  static Future<void> insertTokensPrice(List<TokenPrice> models) async {
+    try {
+      FlutterDatabase? database = await DataBaseConfig.openDataBase();
+      database?.tokenPriceDao.insertTokensPrice(models);
+    } catch (e) {
+      rethrow;
+    }
+  }
 }
 
 @dao

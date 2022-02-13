@@ -22,6 +22,7 @@ class WalletsTabList extends StatelessWidget {
               MCollectionTokens collectToken = provider.tokens[index];
               String imgname = collectToken.iconPath ?? "";
               String token = collectToken.token ?? "";
+
               String tokenPrice =
                   "≈$currencySymbolStr" + collectToken.priceString;
               String balance = provider.currentWallet?.hiddenAssets == true

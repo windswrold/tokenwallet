@@ -56,7 +56,7 @@ class _MinePageState extends State<MinePage> {
             _initData(),
           });
     }));
-    _datas.add(MinePageData("mine/mine_anquan.png", safe, ""));
+    // _datas.add(MinePageData("mine/mine_anquan.png", safe, ""));
     _datas.add(MinePageData("mine/mine_walletset.png", walletsetting, "",
         onTap: () async {
       Provider.of<CurrentChooseWalletState>(context, listen: false)

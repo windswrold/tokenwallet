@@ -33,7 +33,7 @@ class _MineVersionState extends State<MineVersion> {
 
   void _getLastversion() async {
     HWToast.showLoading();
-    Map? result = await WalletServices.getAppversion();
+    Map? result = await WalletServices.getAppversion(_version);
     HWToast.hiddenAllToast();
     if (result == null) {
       return;
