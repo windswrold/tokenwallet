@@ -10,7 +10,6 @@ class WalletsTabList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: ColorUtils.backgroudColor,
       padding: EdgeInsets.symmetric(horizontal: 16.width),
       child: Consumer<CurrentChooseWalletState>(
         builder: (_, provider, child) {

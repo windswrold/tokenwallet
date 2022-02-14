@@ -44,10 +44,12 @@ class _MineVersionState extends State<MineVersion> {
     String version = result["version"] ?? "";
     String url = result["url"] ?? "";
     if (url.isEmpty || version.isEmpty) {
+      HWToast.showText(text: "newspage_noversiontip".local());
       return;
     }
     ShowCustomAlert.showCustomAlertType(context, KAlertType.text, null, null,
-        hideLeftButton: update == 1 ? true : false,
+        bottomActionsPadding: EdgeInsets.zero,
+        hideLeftButton: update == 2 ? true : false,
         rightButtonStyle: TextStyle(
           color: ColorUtils.blueColor,
           fontSize: 16.font,

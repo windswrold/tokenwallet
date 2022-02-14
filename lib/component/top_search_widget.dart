@@ -78,7 +78,7 @@ class TopSearchView extends StatelessWidget {
               Map? params = await Routers.push(context, ScanCodePage());
               String result = params?["data"] ?? "";
               if (result.isValidUrl() == true) {
-                Provider.of<DappDataState>(context, listen: false)
+                Provider.of<CurrentChooseWalletState>(context, listen: false)
                     .bannerTap(context, result);
               } else {
                 HWToast.showText(text: "dapppage_qrcodewrong".local());

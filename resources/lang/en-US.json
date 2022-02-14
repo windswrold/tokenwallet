@@ -165,7 +165,7 @@
     "walletpage_assets": "Token",
     "input_paymentvalue": "Please enter the transfer amount",
     "payment_highfee": "Please increase handling fee",
-    "paymenttip_ethnotenough": "ETH balance is not enough to pay the handling fee",
+    "paymenttip_ethnotenough": "Main currency balance is not enough to pay the handling fee",
     "input_paymentvaluezero": "Transfer amount cannot be 0",
     "payment_transsuccess": "Submitted, waiting for confirmation",
     "paymentsheep_info": "Confirm Transfer",
@@ -198,5 +198,6 @@
     "newspage_sharenews": "News",
     "newspage_sharenewssouce": "Source",
     "newspage_versiontip": "New version tips",
-    "newspage_noversiontip": "No new version yet"
+    "newspage_noversiontip": "Is the latest version",
+    "payment_valueshouldlessbal": "The transfer amount needs to be less than the balance"
 }

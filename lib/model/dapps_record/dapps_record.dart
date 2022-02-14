@@ -14,14 +14,19 @@ class DAppRecordsDBModel {
   final String? description;
   final String? marketId;
   final String? date;
+  final String? chainType; //链类型
+  final int? type; // 0 浏览数据  1加入本地收藏
 
-  DAppRecordsDBModel(
-      {this.url,
-      this.name,
-      this.imageUrl,
-      this.description,
-      this.marketId,
-      this.date});
+  DAppRecordsDBModel({
+    this.url,
+    this.name,
+    this.imageUrl,
+    this.description,
+    this.marketId,
+    this.date,
+    this.chainType,
+    this.type,
+  });
 
   static Future<List<DAppRecordsDBModel>> finaAllRecords() async {
     try {

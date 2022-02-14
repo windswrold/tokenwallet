@@ -1,8 +1,11 @@
 import '../public.dart';
 
 class BackupWarningTip extends StatelessWidget {
-  const BackupWarningTip({Key? key, required this.onTap}) : super(key: key);
+  const BackupWarningTip(
+      {Key? key, required this.onTap, required this.tapClose})
+      : super(key: key);
   final VoidCallback onTap;
+  final VoidCallback tapClose;
 
   @override
   Widget build(BuildContext context) {
@@ -13,6 +16,7 @@ class BackupWarningTip extends StatelessWidget {
 
     return Container(
       height: 70.width + maxsize.height,
+      color: ColorUtils.fromHex("#FFFFFCFA"),
       margin:
           EdgeInsets.only(left: 16.width, right: 16.width, bottom: 16.width),
       child: Stack(
@@ -77,9 +81,7 @@ class BackupWarningTip extends StatelessWidget {
               top: 0,
               child: GestureDetector(
                 behavior: HitTestBehavior.opaque,
-                onTap: () {
-                  Routers.goBack(context);
-                },
+                onTap: tapClose,
                 child: Center(
                   child: LoadAssetsImage(
                     "icons/icon_circle_close.png",

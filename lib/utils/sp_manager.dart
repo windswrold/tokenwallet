@@ -71,7 +71,7 @@ class SPManager {
     switch (mode) {
       case '人民币(CNY)':
         return KCurrencyType.CNY;
-      case '美国(USD)':
+      case '美元(USD)':
         return KCurrencyType.USD;
       default:
         return KCurrencyType.CNY;

@@ -25,7 +25,8 @@ class _DAppSearchState extends State<DAppSearch> {
   void _jumpWeb(BuildContext context, String openUrl) {
     searchController.clear();
     DAppRecordsDBModel.insertRecords(DAppRecordsDBModel(url: openUrl));
-    _kdataState.bannerTap(context, openUrl);
+    Provider.of<CurrentChooseWalletState>(context, listen: false)
+        .bannerTap(context, openUrl);
     _getRecords();
   }
 

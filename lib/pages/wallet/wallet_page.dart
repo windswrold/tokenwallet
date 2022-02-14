@@ -29,41 +29,11 @@ class WalletPage extends StatefulWidget {
 class _WalletPageState extends State<WalletPage> {
   RefreshController _refreshController = RefreshController();
   CustomPopupMenuController _controller = CustomPopupMenuController();
+  bool _showBackupWaing = true;
 
   @override
   void initState() {
     super.initState();
-
-    WidgetsBinding.instance!.addPostFrameCallback((timeStamp) {
-      _showMnemonicsTips();
-    });
-  }
-
-  void _showMnemonicsTips() async {
-    await Future.delayed(Duration(seconds: 1));
-
-    TRWallet? wallet =
-        Provider.of<CurrentChooseWalletState>(context, listen: false)
-            .currentWallet;
-    if (wallet == null) {
-      return;
-    }
-    if (wallet.accountState == KAccountState.init.index) {
-      showModalBottomSheet(
-        context: context,
-        isDismissible: true,
-        isScrollControlled: true,
-        backgroundColor: Colors.transparent,
-        builder: (context) {
-          return BackupWarningTip(
-            onTap: () {
-              Provider.of<CurrentChooseWalletState>(context, listen: false)
-                  .backupWallet(context, wallet: wallet);
-            },
-          );
-        },
-      );
-    }
   }
 
   void _create() async {
@@ -118,13 +88,13 @@ class _WalletPageState extends State<WalletPage> {
         child: Container(
           height: 45.width,
           padding: EdgeInsets.symmetric(horizontal: 16.width),
-          alignment: Alignment.center,
+          alignment: Alignment.centerLeft,
           child: Text(
             e == null ? "walletmanager_asset_all".local() : e.coinTypeString(),
             style: TextStyle(
-              color: Colors.black,
-              fontSize: 14.font,
-            ),
+                color: Colors.black,
+                fontSize: 14.font,
+                fontWeight: FontWeightUtils.medium),
           ),
         ),
       );
@@ -234,6 +204,25 @@ class _WalletPageState extends State<WalletPage> {
                       enableFooter: false,
                       child: WalletsTabList(),
                       refreshController: _refreshController),
+                ),
+                Visibility(
+                  visible: _showBackupWaing == true
+                      ? (wallet.accountState == KAccountState.init.index)
+                      : false,
+                  child: BackupWarningTip(
+                    onTap: () {
+                      Provider.of<CurrentChooseWalletState>(context,
+                              listen: false)
+                          .backupWallet(context, wallet: wallet);
+                    },
+                    tapClose: () {
+                      setState(() {
+                        setState(() {
+                          _showBackupWaing = false;
+                        });
+                      });
+                    },
+                  ),
                 ),
               ],
             ))

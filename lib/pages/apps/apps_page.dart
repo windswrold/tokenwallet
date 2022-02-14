@@ -60,7 +60,9 @@ class _AppsPageState extends State<AppsPage> {
     for (var i = 0; i < tabs.length; i++) {
       datass.add(AppsContentPage(
           dappTap: (DAppRecordsDBModel model, int type) {
-            _kdataState.dappTap(context, model, dappType: type);
+            KCoinType? coinType = _kdataState.getCoinTypeWithDappType(type);
+            Provider.of<CurrentChooseWalletState>(context, listen: false)
+                .dappTap(context, model, coinType: coinType);
           },
           type: i));
     }

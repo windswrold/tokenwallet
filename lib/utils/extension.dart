@@ -331,7 +331,7 @@ extension CoinTypeString on KCoinType {
 }
 
 extension KCurrencyTypeString on KCurrencyType {
-  String get value => <String>['人民币(CNY)', '美国(USD)'][index];
+  String get value => <String>['人民币(CNY)', '美元(USD)'][index];
 }
 
 extension KAppLanguageString on KAppLanguage {

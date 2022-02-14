@@ -165,7 +165,7 @@
     "walletpage_assets": "资产",
     "input_paymentvalue": "请输入转账金额",
     "payment_highfee": "请调高手续费",
-    "paymenttip_ethnotenough": "ETH余额不足支付手续费",
+    "paymenttip_ethnotenough": "主币余额不足支付手续费",
     "input_paymentvaluezero": "转账金额不能为0",
     "payment_transsuccess": "已提交，等待确认",
     "paymentsheep_info": "确认付款",
@@ -198,5 +198,6 @@
     "newspage_sharenews": "快讯",
     "newspage_sharenewssouce": "来源",
     "newspage_versiontip": "新版本提示",
-    "newspage_noversiontip": "暂无新版本"
+    "newspage_noversiontip": "已是最新版本",
+    "payment_valueshouldlessbal": "转账数量需要小于余额"
 }

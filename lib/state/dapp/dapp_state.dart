@@ -52,89 +52,11 @@ class DappDataState extends ChangeNotifier {
     return _datas;
   }
 
-  void bannerTap(BuildContext context, String jumpLinks) {
-    LogUtil.v("bannerTap  $jumpLinks");
-    dappTap(context, DAppRecordsDBModel(url: jumpLinks));
-  }
-
-  ///先判断是否授权
-  ///没有cointype 弹窗手动选链
-  ///有则继续找数据
-  Future<void> dappTap(BuildContext context, DAppRecordsDBModel model,
-      {int? dappType}) async {
-    LogUtil.v("dappTap  ");
-    bool isAuthorization = SPManager.getDappAuthorization(model.url ?? "");
-    if (isAuthorization == false) {
-      ShowCustomAlert.showCustomAlertType(
-          context, KAlertType.text, "dapppage_nextjump".local(), null,
-          subtitleText: "dapppage_warningtip"
-              .local(namedArgs: {"dappName": model.name ?? ""}),
-          leftButtonTitle: "dapppage_stop".local(),
-          rightButtonTitle: "dapppage_iknowit".local(),
-          rightButtonStyle: TextStyle(
-            color: ColorUtils.blueColor,
-            fontSize: 16.font,
-          ), confirmPressed: (result) {
-        SPManager.setDappAuthorization(model.url ?? "");
-        _queryCoinType(context, model, dappType: dappType);
-      });
-      return;
-    }
-    _queryCoinType(context, model, dappType: dappType);
-  }
-
-  void _queryCoinType(BuildContext context, DAppRecordsDBModel model,
-      {int? dappType}) {
-    if (dappType != null) {
-      if (dappType < 0) return;
-      int dAppType = _myTabs[dappType]["dAppType"] ?? 9;
-      KCoinType? coinType = dAppType.getDappSuppertCoinType();
-      if (coinType == null) {
-        showModalBottomSheet(
-            context: context,
-            backgroundColor: Colors.transparent,
-            isScrollControlled: true,
-            builder: (_) {
-              return ChainListType(onTap: (KCoinType coinType) {
-                _queryWalletInfo(context, model, coinType);
-              });
-            });
-        return;
-      }
-      _queryWalletInfo(context, model, coinType);
-    } else {
-      showModalBottomSheet(
-          context: context,
-          backgroundColor: Colors.transparent,
-          isScrollControlled: true,
-          builder: (_) {
-            return ChainListType(onTap: (KCoinType coinType) {
-              _queryWalletInfo(context, model, coinType);
-            });
-          });
-    }
-  }
-
-  void _queryWalletInfo(BuildContext context, DAppRecordsDBModel model,
-      KCoinType coinType) async {
-    TRWallet? wallet =
-        Provider.of<CurrentChooseWalletState>(context, listen: false)
-            .currentWallet;
-    if (wallet == null) {
-      HWToast.showText(text: "minepage_pleasecreate".local());
-      return;
-    }
-    List<TRWalletInfo> infos =
-        await wallet.queryWalletInfos(coinType: coinType);
-    if (infos.isEmpty) {
-      HWToast.showText(text: "dapppage_chooseright".local());
-      return;
-    }
-    NodeModel node = NodeModel.queryNodeByChainType(coinType.index);
-    LogUtil.v(
-        "dapp address ${infos.first.walletAaddress} chain ${node.content}");
-    Routers.push(
-        context, DappBrowser(model: model, info: infos.first, node: node));
+  KCoinType? getCoinTypeWithDappType(int dappType) {
+    if (dappType < 0) return null;
+    int dAppType = _myTabs[dappType]["dAppType"] ?? 9;
+    KCoinType? coinType = dAppType.getDappSuppertCoinType();
+    return coinType;
   }
 
   void getDataOnRefresh() {

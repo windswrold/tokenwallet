@@ -15,12 +15,11 @@ import 'public.dart';
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized(); //不加这个强制横/竖屏会报错
   await EasyLocalization.ensureInitialized();
-
+  //状态栏颜色改为透明
+  SystemUiOverlayStyle systemUiOverlayStyle =
+      const SystemUiOverlayStyle(statusBarColor: Colors.white);
+  SystemChrome.setSystemUIOverlayStyle(systemUiOverlayStyle);
   if (Platform.isAndroid) {
-    //状态栏颜色改为透明
-    SystemUiOverlayStyle systemUiOverlayStyle =
-        const SystemUiOverlayStyle(statusBarColor: Colors.white);
-    SystemChrome.setSystemUIOverlayStyle(systemUiOverlayStyle);
     await AndroidInAppWebViewController.setWebContentsDebuggingEnabled(true);
     var swAvailable = await AndroidWebViewFeature.isFeatureSupported(
         AndroidWebViewFeature.SERVICE_WORKER_BASIC_USAGE);
