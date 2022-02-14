@@ -11,6 +11,18 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:easy_localization/src/public.dart' as ez;
 
 extension StringUtil on String {
+  String breakWord() {
+    if (this == null || this.isEmpty) {
+      return this;
+    }
+    String breakWord = ' ';
+    this.runes.forEach((element) {
+      breakWord += String.fromCharCode(element);
+      breakWord += '\u200B';
+    });
+    return breakWord;
+  }
+
   bool isValidUrl() {
     String regStr = "http(s)?:\\/\\/([\\w-]+\\.)+[\\w-]+(\\/[\\w- .\\/?%&=]*)?";
     RegExp reg = RegExp(regStr);

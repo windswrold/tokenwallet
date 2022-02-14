@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:ffi';
+import 'dart:math';
 import 'dart:typed_data';
 import 'package:cstoken/const/constant.dart';
 import 'package:cstoken/model/tokens/collection_tokens.dart';
@@ -146,7 +147,8 @@ class ETHClient {
 
   Future<int> getGasPrice() async {
     EtherAmount gas = await this.client.getGasPrice();
-    return gas.getValueInUnit(EtherUnit.gwei).toInt();
+    int value = gas.getValueInUnit(EtherUnit.gwei).toInt();
+    return max(10, value);
   }
 
   Future<TransactionReceipt?> getTransactionReceipt(String hash) {

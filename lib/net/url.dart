@@ -42,4 +42,6 @@ class RequestURLS {
   static const String gettokenPrice = host + "/app/token/tokenPrice";
 
   static const String getAppversion = host + "/app/version/lastVersion";
+
+  static const String gettokenList = host + "/app/token/tokenList";
 }

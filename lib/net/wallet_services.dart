@@ -177,6 +177,7 @@ class WalletServices {
 
   static void gettokenPrice(String symbol) async {
     const url = RequestURLS.gettokenPrice;
+
     Map<String, dynamic> params = {
       "symbol": symbol,
     };
@@ -206,5 +207,21 @@ class WalletServices {
       }
       TokenPrice.insertTokensPrice(tokens);
     }
+  }
+
+  static void gettokenList(int page, int pagesize,
+      {String? tokenName, String? tokenContractAddress}) async {
+    const url = RequestURLS.gettokenList;
+    Map<String, dynamic> params = {"pageSize": pagesize, "page": page};
+    if (tokenName != null) {
+      params["tokenName"] = tokenName;
+    }
+    if (tokenContractAddress != null) {
+      params["tokenContractAddress"] = tokenContractAddress;
+    }
+
+    dynamic result = await RequestMethod.manager!
+        .requestData(Method.GET, url, queryParameters: params);
+    if (result != null && result["code"] == 200) {}
   }
 }

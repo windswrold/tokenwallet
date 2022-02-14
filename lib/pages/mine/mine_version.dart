@@ -3,7 +3,7 @@ import 'package:cstoken/utils/custom_toast.dart';
 import 'package:flutter/material.dart';
 import 'package:package_info/package_info.dart';
 import 'package:share_plus/share_plus.dart';
-
+import 'package:url_launcher/url_launcher.dart';
 import '../../public.dart';
 
 class MineVersion extends StatefulWidget {
@@ -36,9 +36,27 @@ class _MineVersionState extends State<MineVersion> {
     Map? result = await WalletServices.getAppversion(_version);
     HWToast.hiddenAllToast();
     if (result == null) {
+      HWToast.showText(text: "newspage_noversiontip".local());
       return;
     }
-    
+    String descTxt = result["descTxt"] ?? "";
+    int update = result["update"] ?? 0;
+    String version = result["version"] ?? "";
+    String url = result["url"] ?? "";
+    if (url.isEmpty || version.isEmpty) {
+      return;
+    }
+    ShowCustomAlert.showCustomAlertType(context, KAlertType.text, null, null,
+        hideLeftButton: update == 1 ? true : false,
+        rightButtonStyle: TextStyle(
+          color: ColorUtils.blueColor,
+          fontSize: 16.font,
+        ),
+        rightButtonRadius: 8,
+        subtitleText: "newspage_versiontip".local() + "\n" + descTxt,
+        confirmPressed: (result) {
+      launch(url);
+    });
   }
 
   @override

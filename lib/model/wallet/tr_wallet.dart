@@ -207,17 +207,18 @@ class TRWallet {
           : KAccountState.noauthed.index;
       trWallet.encContent = TREncode.encrypt(content, pin);
       trWallet.pin = TREncode.SHA256(pin);
-      TRWallet? chooseTR = await TRWallet.queryChooseWallet();
-      if (chooseTR == null) {
-        trWallet.isChoose = true;
-      }
+      // TRWallet? chooseTR = await TRWallet.queryChooseWallet();
+      TRWallet.insertWallet(trWallet);
+      TRWallet.updateWalletChoose(trWallet);
+      // if (chooseTR == null) {
+      //   trWallet.isChoose = true;
+      // } else {}
       //开始生成地址信息
       List<HDWallet> _hdwallets = await HDWallet.getHDWallet(
           content: content,
           pin: pin,
           kLeadType: kLeadType,
           chainType: kChainType);
-      TRWallet.insertWallet(trWallet);
       for (var object in _hdwallets) {
         String address = object.address!;
         String key = walletID + address + object.coinType!.coinTypeString();
@@ -297,6 +298,21 @@ class TRWallet {
             [];
       }
       return wallet;
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  static void updateWalletChoose(TRWallet wallet) async {
+    try {
+      List<TRWallet> wallets = await TRWallet.queryAllWallets();
+      for (var item in wallets) {
+        item.isChoose = false;
+        if (wallet.walletID == item.walletID) {
+          item.isChoose = true;
+        }
+      }
+      TRWallet.updateWallets(wallets);
     } catch (e) {
       rethrow;
     }

@@ -196,5 +196,7 @@
     "homepage_warningtip": "安全提示",
     "homepage_backup": "立即备份",
     "newspage_sharenews": "快讯",
-    "newspage_sharenewssouce": "来源"
+    "newspage_sharenewssouce": "来源",
+    "newspage_versiontip": "新版本提示",
+    "newspage_noversiontip": "暂无新版本"
 }

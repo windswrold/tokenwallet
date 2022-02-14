@@ -75,8 +75,8 @@ class MCollectionTokens {
       List<MCollectionTokens> datas = [];
       int maxnum = double.maxFinite.toInt();
 
-      database?.tokensDao
-          .updateTokenData("'index' = $maxnum where 'tokenID' = '$tokenid'");
+      // database?.tokensDao
+      //     .updateTokenData("'index' = $maxnum where 'tokenID' = '$tokenid'");
       String sql = "";
       if (oldIndex < newIndex) {
         //  (oldIndex  < index <= newIndex)  -1
@@ -105,15 +105,15 @@ class MCollectionTokens {
         });
       }
       if (datas.length > 0) {
-        database?.tokensDao.updateTokenData(
-            "'index' = $newIndex where 'tokenID' = '$tokenid'");
+        // database?.tokensDao.updateTokenData(
+        //     "'index' = $newIndex where 'tokenID' = '$tokenid'");
         datas.forEach((element) {
           print("444444444  " +
               element.token! +
               "  index " +
               element.index.toString());
         });
-        database?.tokensDao.updateTokens(datas);
+        // database?.tokensDao.updateTokens(datas);
       }
       return true;
     } catch (e) {

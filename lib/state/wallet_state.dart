@@ -78,6 +78,8 @@ class CurrentChooseWalletState with ChangeNotifier {
   }
 
   Future<TRWallet?> loadWallet() async {
+    _chooseChainType = null;
+    _tokenIndex = 0;
     _currentWallet = await TRWallet.queryChooseWallet();
     _currencyType = SPManager.getAppCurrencyMode();
     initNFTIndex();
