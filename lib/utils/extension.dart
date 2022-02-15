@@ -11,6 +11,30 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:easy_localization/src/public.dart' as ez;
 
 extension StringUtil on String {
+  KCoinType? chainTypeGetCoinType() {
+    if (toLowerCase().contains("bsc")) {
+      return KCoinType.BSC;
+    }
+    if (toLowerCase().contains("eth")) {
+      return KCoinType.ETH;
+    }
+    if (toLowerCase().contains("heco")) {
+      return KCoinType.HECO;
+    }
+    if (toLowerCase().contains("okchain")) {
+      return KCoinType.OKChain;
+    }
+    if (toLowerCase().contains("matic")) {
+      return KCoinType.Matic;
+    }
+    if (toLowerCase().contains("avax")) {
+      return KCoinType.AVAX;
+    }
+    if (toLowerCase().contains("arbitrum")) {
+      return KCoinType.Arbitrum;
+    }
+  }
+
   String breakWord() {
     if (this == null || this.isEmpty) {
       return this;

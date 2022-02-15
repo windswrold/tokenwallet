@@ -209,7 +209,7 @@ class WalletServices {
     }
   }
 
-  static void gettokenList(int page, int pagesize,
+  static Future<List> gettokenList(int page, int pagesize,
       {String? tokenName, String? tokenContractAddress}) async {
     const url = RequestURLS.gettokenList;
     Map<String, dynamic> params = {"pageSize": pagesize, "page": page};
@@ -222,6 +222,10 @@ class WalletServices {
 
     dynamic result = await RequestMethod.manager!
         .requestData(Method.GET, url, queryParameters: params);
-    if (result != null && result["code"] == 200) {}
+    if (result != null && result["code"] == 200) {
+      List data = result["result"]["page"]["list"] ?? [];
+      return data;
+    }
+    return [];
   }
 }

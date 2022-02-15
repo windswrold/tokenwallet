@@ -9,6 +9,7 @@ import '../../public.dart';
 
 const String tableName = "tokens_table";
 
+@JsonSerializable()
 @Entity(tableName: tableName)
 class MCollectionTokens {
   @primaryKey
@@ -46,19 +47,38 @@ class MCollectionTokens {
     this.tokenType,
   });
 
-  bool get isToken => tokenType == KTokenType.native.index ? false : true;
-
-  static MCollectionTokens fromJson(Map<String, dynamic> json) {
-    return MCollectionTokens(
-        coinType: json['coinType'] as String?,
-        chainType: json['chainType'] as int?,
-        token: json['token'] as String?,
-        decimals: json['decimals'] as int?,
+  static MCollectionTokens fromJson(Map<String, dynamic> json) =>
+      MCollectionTokens(
+        owner: json['owner'] as String?,
         contract: json['contract'] as String?,
+        token: json['token'] as String?,
+        coinType: json['coinType'] as String?,
+        state: json['state'] as int?,
+        decimals: json['decimals'] as int?,
         digits: json['digits'] as int?,
-        kNetType: json['kNetType'] as int?,
-        tokenType: json["tokenType"] as int?);
+        iconPath: json["iconPath"] as String?,
+        chainType: json["chainType"] as int?,
+        kNetType: json["kNetType"] as int?,
+        tokenType: json["tokenType"] as int?,
+      );
+
+  Map<String, dynamic> toJson() {
+    return <String, dynamic>{
+      'owner': this.owner,
+      'contract': this.contract,
+      'token': this.token,
+      'coinType': this.coinType,
+      'state': this.state,
+      'decimals': this.decimals,
+      'digits': this.digits,
+      'iconPath': this.iconPath,
+      'chainType': this.chainType,
+      'kNetType': this.kNetType,
+      'tokenType': this.tokenType
+    };
   }
+
+  bool get isToken => tokenType == KTokenType.native.index ? false : true;
 
   String get assets =>
       StringUtil.dataFormat(((price ??= 0) * (balance ??= 0)), 2);

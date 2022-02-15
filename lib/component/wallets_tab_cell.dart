@@ -115,15 +115,8 @@ class WalletsTabList extends StatelessWidget {
                       children: [
                         Row(
                           children: [
-                            LoadAssetsImage(imgname,
-                                width: 36,
-                                height: 36,
-                                errorBuilder: (context, error, stackTrace) =>
-                                    LoadAssetsImage(
-                                      "tokens/token_default.png",
-                                      width: 36,
-                                      height: 36,
-                                    )),
+                            LoadTokenAssetsImage(imgname,
+                                width: 36, height: 36),
                             8.rowWidget,
                             Column(
                               mainAxisAlignment: MainAxisAlignment.center,

@@ -35,7 +35,7 @@ class _TransferListPageState extends State<TransferListPage>
             String amountType = kwallet.currencySymbolStr;
             MCollectionTokens tokens = kwallet.chooseTokens()!;
             final total = "≈" + amountType;
-            String _imageName = "";
+            String _imageName = tokens.iconPath ?? "";
             String _balance = tokens.balanceString;
             String _assets = total + tokens.assets;
             String _address = kwallet.walletinfo!.walletAaddress!;
@@ -44,13 +44,8 @@ class _TransferListPageState extends State<TransferListPage>
                 Container(
                   padding: EdgeInsets.only(top: 12.width),
                   child: ClipOval(
-                    child: LoadAssetsImage(_imageName, width: 54, height: 54,
-                        errorBuilder: (BuildContext context, Object exception,
-                            StackTrace? stackTrace) {
-                      return LoadAssetsImage("tokens/token_default.png",
-                          width: 54, height: 54);
-                    }),
-                  ),
+                      child: LoadTokenAssetsImage(_imageName,
+                          width: 54, height: 54)),
                 ),
                 Container(
                   alignment: Alignment.center,

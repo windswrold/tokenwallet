@@ -9,6 +9,8 @@ import 'package:cstoken/model/chain/eth.dart';
 import 'package:cstoken/model/chain/heco.dart';
 import 'package:cstoken/model/tokens/collection_tokens.dart';
 import 'package:cstoken/model/wallet/tr_wallet_info.dart';
+import 'package:cstoken/net/url.dart';
+import 'package:cstoken/net/wallet_services.dart';
 import 'package:cstoken/pages/tabbar/tabbar.dart';
 import 'package:cstoken/pages/wallet/create/backup_tip_memo.dart';
 import 'package:cstoken/state/wallet_state.dart';
@@ -228,7 +230,10 @@ class TRWallet {
         infos.coinType = object.coinType!.index;
         TRWalletInfo.insertWallets([infos]);
       }
-      int index = (await MCollectionTokens.findMaxIndex(walletID)) ?? 0;
+      List indexTokens = await WalletServices.gettokenList(1, 20);
+      KNetType netType = RequestURLS.host.contains("consensus.zooonews.com")
+          ? KNetType.Testnet
+          : KNetType.Mainnet;
       List<MCollectionTokens> tokens = [];
       for (var item in currency_List) {
         MCollectionTokens token = MCollectionTokens.fromJson(item);
@@ -243,7 +248,40 @@ class TRWallet {
         token.owner = walletID;
         token.state = 1;
         token.tokenID = TREncode.SHA256(tokenID);
-        token.index = index++;
+        tokens.add(token);
+      }
+      for (var item in indexTokens) {
+        MCollectionTokens token = MCollectionTokens();
+        token.token = item["tokenName"] ?? "";
+        token.decimals = item["amountPrecision"] as int;
+        token.contract = item["tokenContractAddress"] ?? "";
+        token.digits = item["pricePrecision"] ?? 4;
+        token.tokenType =
+            token.contract == "0x0000000000000000000000000000000000000000"
+                ? KTokenType.native.index
+                : KTokenType.token.index;
+
+        String tokenIconUrl = item["tokenIconUrl"] ?? "";
+        String chainIconUrl = item["chainIconUrl"] ?? "";
+        token.iconPath = tokenIconUrl + "," + chainIconUrl;
+        token.coinType = item["chainType"] ?? "";
+        token.chainType = token.coinType!.chainTypeGetCoinType()?.index;
+        token.kNetType = netType.index;
+        if (token.chainType == null) {
+          assert(token.chainType != null, "有判断失败的数据 ");
+          continue;
+        }
+        String contract = token.contract ?? "";
+        String tokenID = (token.kNetType.toString() +
+            "|" +
+            token.chainType.toString() +
+            "|" +
+            walletID +
+            "|" +
+            contract);
+        token.owner = walletID;
+        token.state = 1;
+        token.tokenID = TREncode.SHA256(tokenID);
         tokens.add(token);
       }
       MCollectionTokens.insertTokens(tokens);

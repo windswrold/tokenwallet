@@ -1,5 +1,12 @@
 import 'package:cstoken/component/assets_cell.dart';
+import 'package:cstoken/component/custom_refresher.dart';
+import 'package:cstoken/component/empty_data.dart';
+import 'package:cstoken/model/tokens/collection_tokens.dart';
+import 'package:cstoken/net/url.dart';
+import 'package:cstoken/net/wallet_services.dart';
 import 'package:cstoken/pages/wallet/wallets/search_tokenmanager.dart';
+import 'package:cstoken/utils/custom_toast.dart';
+import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 import '../../../public.dart';
 
@@ -12,6 +19,84 @@ class SearchAddToken extends StatefulWidget {
 
 class _SearchAddTokenState extends State<SearchAddToken> {
   TextEditingController searchController = TextEditingController();
+  RefreshController _refreshController = RefreshController();
+
+  int _page = 1;
+  List<MCollectionTokens> _datas = [];
+
+  @override
+  void initState() {
+    super.initState();
+    _initData(_page);
+  }
+
+  void _initData(int page,
+      {String? tokenName, String? tokenContractAddress}) async {
+    HWToast.showLoading();
+
+    final walletID =
+        Provider.of<CurrentChooseWalletState>(context, listen: false)
+            .currentWallet!
+            .walletID!;
+    _page = page;
+    List indexTokens = await WalletServices.gettokenList(page, 20,
+        tokenName: tokenName, tokenContractAddress: tokenContractAddress);
+    List<MCollectionTokens> tokens = [];
+    KNetType netType = RequestURLS.host.contains("consensus.zooonews.com")
+        ? KNetType.Testnet
+        : KNetType.Mainnet;
+    for (var item in indexTokens) {
+      MCollectionTokens token = MCollectionTokens();
+      token.token = item["tokenName"] ?? "";
+      token.decimals = item["amountPrecision"] as int;
+      token.contract = item["tokenContractAddress"] ?? "";
+      token.digits = item["pricePrecision"] ?? 4;
+      token.tokenType =
+          token.contract == "0x0000000000000000000000000000000000000000"
+              ? KTokenType.native.index
+              : KTokenType.token.index;
+
+      String tokenIconUrl = item["tokenIconUrl"] ?? "";
+      String chainIconUrl = item["chainIconUrl"] ?? "";
+      token.iconPath = tokenIconUrl + "," + chainIconUrl;
+      token.coinType = item["chainType"] ?? "";
+      token.chainType = token.coinType!.chainTypeGetCoinType()?.index;
+      token.kNetType = netType.index;
+      if (token.chainType == null) {
+        assert(token.chainType != null, "有判断失败的数据 ");
+        continue;
+      }
+      String contract = token.contract ?? "";
+      String tokenID = (token.kNetType.toString() +
+          "|" +
+          token.chainType.toString() +
+          "|" +
+          walletID +
+          "|" +
+          contract);
+      token.tokenID = TREncode.SHA256(tokenID);
+      tokens.add(token);
+    }
+
+    List<MCollectionTokens> statesTokens =
+        await MCollectionTokens.findTokens(walletID, netType.index);
+    for (var item in tokens) {
+      for (var stateTokens in statesTokens) {
+        if (item.tokenID == stateTokens.tokenID) {
+          item.state = 1;
+        }
+      }
+    }
+    if (_page == 1) {
+      _datas.clear();
+    }
+    HWToast.hiddenAllToast();
+    _refreshController.loadComplete();
+    _refreshController.refreshCompleted();
+    setState(() {
+      _datas.addAll(tokens);
+    });
+  }
 
   Widget _topSearchView() {
     return Container(
@@ -26,7 +111,16 @@ class _SearchAddTokenState extends State<SearchAddToken> {
     return CustomTextField(
       controller: searchController,
       maxLines: 1,
-      onChange: (value) {},
+      onChange: (value) {
+        if (value.isEmpty) {
+          return;
+        }
+        if (value.checkAddress(KCoinType.ETH) == true) {
+          _initData(1, tokenContractAddress: value);
+        } else {
+          _initData(1, tokenName: value);
+        }
+      },
       style: TextStyle(
         color: ColorUtils.fromHex("#FF000000"),
         fontSize: 14.font,
@@ -66,14 +160,37 @@ class _SearchAddTokenState extends State<SearchAddToken> {
         child: Column(
           children: [
             _topSearchView(),
-            // Expanded(
-            //   child: ListView.builder(
-            //     itemCount: 10,
-            //     itemBuilder: (BuildContext context, int index) {
-            //       return AssetsCell();
-            //     },
-            //   ),
-            // )
+            Expanded(
+                child: CustomRefresher(
+                    onRefresh: () {
+                      searchController.clear();
+                      _initData(1);
+                    },
+                    onLoading: () {
+                      searchController.clear();
+                      _initData(_page + 1);
+                    },
+                    child: _datas.length == 0
+                        ? EmptyDataPage()
+                        : ListView.builder(
+                            itemCount: _datas.length,
+                            itemBuilder: (BuildContext context, int index) {
+                              MCollectionTokens item = _datas[index];
+                              return AssetsCell(
+                                onTap: () {
+                                  if (item.state != 1) {
+                                    item.state = item.state == 1 ? 0 : 1;
+                                    String id = item.tokenID ?? "";
+                                    MCollectionTokens.updateTokenData(
+                                        "state=${item.state} WHERE tokenID = '$id'");
+                                    _initData(1);
+                                  }
+                                },
+                                token: item,
+                              );
+                            },
+                          ),
+                    refreshController: _refreshController))
           ],
         ));
   }

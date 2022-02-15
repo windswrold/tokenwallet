@@ -3,20 +3,19 @@ import 'package:cstoken/model/tokens/collection_tokens.dart';
 import '../public.dart';
 
 class AssetsCell extends StatelessWidget {
-  const AssetsCell({Key? key, required this.token, required this.onTap}) : super(key: key);
+  const AssetsCell({Key? key, required this.token, required this.onTap})
+      : super(key: key);
   final MCollectionTokens token;
   final VoidCallback onTap;
+  
 
   Widget _loadImgView(String icon) {
     return Container(
-      child: LoadAssetsImage(icon,
-          width: 40,
-          height: 40,
-          errorBuilder: (context, error, stackTrace) => LoadAssetsImage(
-                "tokens/token_default.png",
-                width: 40,
-                height: 40,
-              )),
+      child: LoadTokenAssetsImage(
+        icon,
+        width: 40,
+        height: 40,
+      ),
     );
   }
 
@@ -78,7 +77,9 @@ class AssetsCell extends StatelessWidget {
             Container(
               margin: EdgeInsets.only(top: 4.width),
               child: Text(
-                token.contract ?? (token.coinType ?? ""),
+                (token.contract?.replaceAll(
+                        "0x0000000000000000000000000000000000000000", "")) ??
+                    (token.coinType ?? ""),
                 style: TextStyle(
                   color: ColorUtils.fromHex("#FF000000"),
                   fontSize: 12.font,

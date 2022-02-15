@@ -284,7 +284,10 @@ class _DappBrowserState extends State<DappBrowser> {
                                 Share.share(url);
                               }),
                               _getMenuItem("icons/item_white_collect.png",
-                                  "dappmenu_collect".local(), () {}),
+                                  "dappmenu_collect".local(), () {
+                                DAppRecordsDBModel model = widget.model!;
+                                model.type = 2;
+                              }),
                               _getMenuItem("icons/item_white_copy.png",
                                   "dappmenu_copy".local(), () {
                                 String url = widget.model?.url ?? "";

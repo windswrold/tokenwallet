@@ -15,7 +15,7 @@ class DAppRecordsDBModel {
   final String? marketId;
   final String? date;
   final String? chainType; //链类型
-  final int? type; // 0 浏览数据  1加入本地收藏
+  int? type; //1加入本地收藏 2取消本地收藏
 
   DAppRecordsDBModel({
     this.url,
