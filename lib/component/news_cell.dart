@@ -6,6 +6,8 @@ import 'package:flutter/painting.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
 import 'package:share_plus/share_plus.dart';
+import 'package:flutter_html/flutter_html.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../public.dart';
 
@@ -75,20 +77,27 @@ class NewsCell extends StatelessWidget {
     String content = model.content ?? "";
     return Container(
       padding: EdgeInsets.only(top: 16.width, left: 12.width),
-      margin: EdgeInsets.only(left: 3),
-      decoration: BoxDecoration(
+      margin: const EdgeInsets.only(left: 3),
+      decoration: const BoxDecoration(
           border: Border(
               left: BorderSide(
         width: 0.5,
         color: ColorUtils.lineColor,
       ))),
-      child: Text(
-        content,
-        style: TextStyle(
-          color: ColorUtils.fromHex("#99000000"),
-          fontSize: 14.font,
-          fontWeight: FontWeightUtils.regular,
-        ),
+      child: Html(
+        // content,
+        // style: TextStyle(
+        //   color: ColorUtils.fromHex("#99000000"),
+        //   fontSize: 14.font,
+        //   fontWeight: FontWeightUtils.regular,
+        // ),
+        data: content,
+        onLinkTap: (url, context, attributes, element) {
+          if (url == null || url.isEmpty) {
+            return;
+          }
+          launch(url);
+        },
       ),
     );
   }
