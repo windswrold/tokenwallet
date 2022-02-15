@@ -39,8 +39,16 @@ class _SearchAddTokenState extends State<SearchAddToken> {
             .currentWallet!
             .walletID!;
     _page = page;
-    List indexTokens = await WalletServices.gettokenList(page, 20,
-        tokenName: tokenName, tokenContractAddress: tokenContractAddress);
+    List indexTokens = [];
+    bool popular = false;
+    if (tokenName != null || tokenContractAddress != null) {
+      indexTokens = await WalletServices.gettokenList(page, 20,
+          tokenName: tokenName, tokenContractAddress: tokenContractAddress);
+    } else {
+      popular = true;
+      indexTokens = await WalletServices.getpopularToken();
+    }
+
     List<MCollectionTokens> tokens = [];
     KNetType netType = RequestURLS.host.contains("consensus.zooonews.com")
         ? KNetType.Testnet
@@ -87,7 +95,7 @@ class _SearchAddTokenState extends State<SearchAddToken> {
         }
       }
     }
-    if (_page == 1) {
+    if (_page == 1 || popular == true) {
       _datas.clear();
     }
     HWToast.hiddenAllToast();
@@ -113,12 +121,13 @@ class _SearchAddTokenState extends State<SearchAddToken> {
       maxLines: 1,
       onChange: (value) {
         if (value.isEmpty) {
-          return;
-        }
-        if (value.checkAddress(KCoinType.ETH) == true) {
-          _initData(1, tokenContractAddress: value);
+          _initData(1);
         } else {
-          _initData(1, tokenName: value);
+          if (value.checkAddress(KCoinType.ETH) == true) {
+            _initData(1, tokenContractAddress: value);
+          } else {
+            _initData(1, tokenName: value);
+          }
         }
       },
       style: TextStyle(
@@ -178,13 +187,12 @@ class _SearchAddTokenState extends State<SearchAddToken> {
                               MCollectionTokens item = _datas[index];
                               return AssetsCell(
                                 onTap: () {
-                                  if (item.state != 1) {
-                                    item.state = item.state == 1 ? 0 : 1;
-                                    String id = item.tokenID ?? "";
-                                    MCollectionTokens.updateTokenData(
-                                        "state=${item.state} WHERE tokenID = '$id'");
-                                    _initData(1);
-                                  }
+                                  item.state = item.state == 1 ? 0 : 1;
+                                  String id = item.tokenID ?? "";
+                                  MCollectionTokens.updateTokenData(
+                                      "state=${item.state} WHERE tokenID = '$id'");
+                                  searchController.clear();
+                                  _initData(1);
                                 },
                                 token: item,
                               );

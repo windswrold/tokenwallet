@@ -1,5 +1,6 @@
 import 'package:cstoken/net/wallet_services.dart';
 import 'package:cstoken/state/transfer_state.dart';
+import 'package:decimal/decimal.dart';
 
 import '../../../public.dart';
 
@@ -11,14 +12,17 @@ class TransfeeView extends StatefulWidget {
     this.gasPrice,
     this.gasLimit,
     required this.complationBack,
+    required this.chaintype,
+    required this.seleindex,
   }) : super(key: key);
   final String feeValue;
   final String? gasPrice;
   final String? gasLimit;
   final String? feeToken;
-  final Function(
-          String feeValue, String gasPrice, String gasLimit, bool isCustom)
-      complationBack;
+  final String chaintype;
+  final int seleindex;
+  final Function(String feeValue, String gasPrice, String gasLimit,
+      bool isCustom, int seleindex) complationBack;
 
   @override
   State<TransfeeView> createState() => _TransfeeViewState();
@@ -26,7 +30,7 @@ class TransfeeView extends StatefulWidget {
 
 class _TransfeeViewState extends State<TransfeeView> {
   Map? _feeGas;
-  int _seleindex = -1;
+  int _seleindex = 1;
   String? _feeValue;
   String? _gasPrice;
   String? _gasLimit;
@@ -38,6 +42,7 @@ class _TransfeeViewState extends State<TransfeeView> {
   @override
   void initState() {
     super.initState();
+    _seleindex = widget.seleindex;
     _initData();
   }
 
@@ -55,7 +60,7 @@ class _TransfeeViewState extends State<TransfeeView> {
     _gasLimit = widget.gasLimit;
     _gasLimitEC.text = _gasLimit ?? "";
     _gasPriceEC.text = _gasPrice ?? "";
-    dynamic result = await WalletServices.ethGasStation();
+    dynamic result = await WalletServices.getgasPrice(widget.chaintype);
     if (result != null && mounted) {
       setState(() {
         _feeGas = result;
@@ -71,7 +76,8 @@ class _TransfeeViewState extends State<TransfeeView> {
   }
 
   void _tapNext() {
-    widget.complationBack(_feeValue!, _gasPrice!, _gasLimit!, _isCustom);
+    widget.complationBack(
+        _feeValue!, _gasPrice!, _gasLimit!, _isCustom, _seleindex);
     Routers.goBack(context);
   }
 
@@ -163,9 +169,13 @@ class _TransfeeViewState extends State<TransfeeView> {
     if (_feeGas == null) {
       return Container();
     }
-    String fastestgas = _feeGas!["fastestgas"];
-    String fastgas = _feeGas!["fastgas"];
-    String average = _feeGas!["average"];
+    Decimal offset = Decimal.fromInt(10).pow(9);
+    String fastestgas = _feeGas!["gasFastPrice"];
+    fastestgas = (Decimal.parse(fastestgas) / offset).toDecimal().toString();
+    String fastgas = _feeGas!["gasNormalPrice"];
+    fastgas = (Decimal.parse(fastgas) / offset).toDecimal().toString();
+    String average = _feeGas!["gasSlowPrice"];
+    average = (Decimal.parse(average) / offset).toDecimal().toString();
     String fastest = "transferetype_fastest".local();
     String fast = "transferetype_fast".local();
     String normal = "transferetype_normal".local();

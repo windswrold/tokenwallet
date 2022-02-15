@@ -8,6 +8,8 @@ class ShareDefaultWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    String url = SPManager.getLinkInfo(SPManager.setappDownUrl);
+
     return Container(
       height: 100.width,
       alignment: Alignment.center,
@@ -43,7 +45,7 @@ class ShareDefaultWidget extends StatelessWidget {
             ],
           ),
           QrImage(
-            data: CSTOKEN_QR,
+            data: url,
             size: 80.width,
           )
         ],

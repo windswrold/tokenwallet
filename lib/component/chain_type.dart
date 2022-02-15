@@ -10,7 +10,7 @@ class ChooseChainType extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    String currentBsc = "ETH,BSC,Heco,OK,Matic,AVAX,Arbitrum";
+    String currentBsc = "ETH,BSC,Heco,OK,Polygon,AVAX,Arbitrum";
     return Container(
       padding: padding,
       alignment: Alignment.centerLeft,

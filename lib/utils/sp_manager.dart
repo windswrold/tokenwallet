@@ -1,4 +1,5 @@
 import 'package:cstoken/public.dart';
+import 'package:cstoken/utils/date_util.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SPManager {
@@ -76,5 +77,28 @@ class SPManager {
       default:
         return KCurrencyType.CNY;
     }
+  }
+
+  static const String setIosDwownloadUrl = "setIosDwownloadUrl";
+  static const String setAndroidUrl = "setAndroidUrl";
+  static const String setappDownUrl = "setappDownUrl";
+  static const String setuserAgreementUrl = "setuserAgreementUrl";
+
+  static void setLinkInfo(String key, String url) {
+    _sp!.setString(key, url);
+  }
+
+  static String getLinkInfo(String key) {
+    return _sp!.getString(key) ?? "";
+  }
+
+  static const String _setAppModalfrequency = "_setAppModalfrequency";
+  static void setVersionFrequency(int number) {
+    int now = DateUtil.getNowDateMs();
+    _sp!.setString(_setAppModalfrequency, "$number,$now");
+  }
+
+  static String? getVersionFrequency() {
+    return _sp!.getString(_setAppModalfrequency);
   }
 }

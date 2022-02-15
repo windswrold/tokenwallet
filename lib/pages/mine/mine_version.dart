@@ -42,23 +42,14 @@ class _MineVersionState extends State<MineVersion> {
     String descTxt = result["descTxt"] ?? "";
     int update = result["update"] ?? 0;
     String version = result["version"] ?? "";
+    int frequency = result["frequency"] ?? 0;
     String url = result["url"] ?? "";
     if (url.isEmpty || version.isEmpty) {
       HWToast.showText(text: "newspage_noversiontip".local());
       return;
     }
-    ShowCustomAlert.showCustomAlertType(context, KAlertType.text, null, null,
-        bottomActionsPadding: EdgeInsets.zero,
-        hideLeftButton: update == 2 ? true : false,
-        rightButtonStyle: TextStyle(
-          color: ColorUtils.blueColor,
-          fontSize: 16.font,
-        ),
-        rightButtonRadius: 8,
-        subtitleText: "newspage_versiontip".local() + "\n" + descTxt,
-        confirmPressed: (result) {
-      launch(url);
-    });
+    SPManager.setVersionFrequency(frequency);
+    ShowCustomAlert.versionAlert(context, update, descTxt, url);
   }
 
   @override

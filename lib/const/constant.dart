@@ -98,7 +98,6 @@ final bool isAndroid = Platform.isAndroid;
 final bool isIOS = Platform.isIOS;
 final String ASSETS_IMG = './assets/images/';
 
-final String CSTOKEN_QR = "https://www.baidu.com";
 final String SLOGAN = "Aggregation of NFT";
 
 const int transferETHGasLimit = 25000;

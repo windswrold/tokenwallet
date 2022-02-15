@@ -44,4 +44,11 @@ class RequestURLS {
   static const String getAppversion = host + "/app/version/lastVersion";
 
   static const String gettokenList = host + "/app/token/tokenList";
+
+  static const String getpopularToken = host + "/app/token/popularToken";
+
+  static const String linkInfo = host + "/app/common/linkInfo";
+
+  ///chainType
+  static const String getgasPrice = host + "/app/wallet/gasPrice";
 }

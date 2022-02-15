@@ -1,5 +1,6 @@
 import 'package:cstoken/component/share_default.dart';
 import 'package:cstoken/model/news/news_model.dart';
+import 'package:flutter_html/flutter_html.dart';
 import 'package:share_plus/share_plus.dart';
 
 import '../public.dart';
@@ -83,13 +84,13 @@ class _NewsShareState extends State<NewsShare> {
               Container(
                 margin: EdgeInsets.only(top: 16.width),
                 padding: EdgeInsets.symmetric(horizontal: 24.width),
-                child: Text(
-                  (widget.model.content ?? ''),
-                  style: TextStyle(
-                    fontSize: 14.font,
-                    fontWeight: FontWeightUtils.regular,
-                    color: ColorUtils.fromHex("#FF000000"),
-                  ),
+                child: Html(
+                  data: (widget.model.content ?? ''),
+                  // style: TextStyle(
+                  //   fontSize: 14.font,
+                  //   fontWeight: FontWeightUtils.regular,
+                  //   color: ColorUtils.fromHex("#FF000000"),
+                  // ),
                 ),
               ),
               Container(

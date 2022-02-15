@@ -46,6 +46,7 @@ class CurrentChooseWalletState with ChangeNotifier {
       : _chooseChainType!.coinTypeString();
 
   TimerUtil? _timer;
+  TimerUtil? _priceTimer;
   int _tokenIndex = 0;
   TRWalletInfo? _walletinfo;
   TRWalletInfo? get walletinfo => _walletinfo;
@@ -74,6 +75,8 @@ class CurrentChooseWalletState with ChangeNotifier {
   void dispose() {
     _timer?.cancel();
     _timer = null;
+    _priceTimer?.cancel();
+    _priceTimer = null;
     super.dispose();
   }
 
@@ -122,6 +125,9 @@ class CurrentChooseWalletState with ChangeNotifier {
 
   void bannerTap(BuildContext context, String jumpLinks, String chainType) {
     LogUtil.v("bannerTap  $jumpLinks");
+    if (jumpLinks.isEmpty) {
+      return;
+    }
     KCoinType? coinType;
     if (chainType.isNotEmpty) {
       coinType = chainType.chainTypeGetCoinType();
@@ -488,15 +494,26 @@ class CurrentChooseWalletState with ChangeNotifier {
       _timer = TimerUtil(mInterval: 5000);
       _timer!.setOnTimerTickCallback((millisUntilFinished) async {
         if (_currentWallet == null) return;
-
-        Set<String> token = Set();
-        token.addAll(tokens.map((e) => e.token!).toList());
-        WalletServices.gettokenPrice(token.join(","));
         requestAssets();
       });
     }
     if (_timer!.isActive() == false) {
       _timer!.startTimer();
+    }
+    if (_priceTimer == null) {
+      _priceTimer = TimerUtil(mInterval: 30000);
+      _priceTimer!.setOnTimerTickCallback((millisUntilFinished) async {
+        if (_currentWallet == null) return;
+        Set<String> token = Set();
+        token.addAll(tokens.map((e) => e.token!).toList());
+        if (token.isEmpty) {
+          return;
+        }
+        WalletServices.gettokenPrice(token.join(","));
+      });
+    }
+    if (_priceTimer!.isActive() == false) {
+      _priceTimer!.startTimer();
     }
   }
 

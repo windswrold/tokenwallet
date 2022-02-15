@@ -24,7 +24,7 @@ extension StringUtil on String {
     if (toLowerCase().contains("okchain")) {
       return KCoinType.OKChain;
     }
-    if (toLowerCase().contains("matic")) {
+    if (toLowerCase().contains("polygon")) {
       return KCoinType.Matic;
     }
     if (toLowerCase().contains("avax")) {
@@ -343,7 +343,7 @@ extension CoinTypeString on KCoinType {
       case KCoinType.OKChain:
         return "OKChain";
       case KCoinType.Matic:
-        return "Matic";
+        return "Polygon";
       case KCoinType.AVAX:
         return "AVAX";
       case KCoinType.Arbitrum:

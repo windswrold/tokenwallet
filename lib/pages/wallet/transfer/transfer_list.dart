@@ -42,11 +42,9 @@ class _TransferListPageState extends State<TransferListPage>
             return Column(
               children: [
                 Container(
-                  padding: EdgeInsets.only(top: 12.width),
-                  child: ClipOval(
-                      child: LoadTokenAssetsImage(_imageName,
-                          width: 54, height: 54)),
-                ),
+                    padding: EdgeInsets.only(top: 12.width),
+                    child: LoadTokenAssetsImage(_imageName,
+                        width: 54, height: 54)),
                 Container(
                   alignment: Alignment.center,
                   padding: EdgeInsets.only(

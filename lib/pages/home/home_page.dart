@@ -8,9 +8,12 @@ import 'package:cstoken/model/wallet/tr_wallet_info.dart';
 import 'package:cstoken/net/wallet_services.dart';
 import 'package:cstoken/pages/browser/dapp_browser.dart';
 import 'package:cstoken/pages/mine/mine_message.dart';
+import 'package:cstoken/utils/date_util.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:package_info/package_info.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../../public.dart';
 
@@ -30,6 +33,50 @@ class _HomePageState extends State<HomePage> {
   void initState() {
     super.initState();
     _initData();
+    WalletServices.getLinkInfo();
+
+    WidgetsBinding.instance!.addPostFrameCallback((timeStamp) {
+      _initVersion();
+    });
+  }
+
+  void _initVersion() async {
+    final PackageInfo appInfo = await PackageInfo.fromPlatform();
+    String appversion = appInfo.version;
+    Map? result = await WalletServices.getAppversion(appversion);
+    if (result == null) {
+      return;
+    }
+    String descTxt = result["descTxt"] ?? "";
+    int update = result["update"] ?? 0;
+    String version = result["version"] ?? "";
+    int frequency = result["frequency"] ?? 0;
+    String url = result["url"] ?? "";
+    if (url.isEmpty || version.isEmpty) {
+      return;
+    }
+    if (frequency == 0) {
+      SPManager.setVersionFrequency(frequency);
+      ShowCustomAlert.versionAlert(context, update, descTxt, url);
+    } else {
+      String? versionTip = SPManager.getVersionFrequency();
+      if (versionTip == null) {
+        //第一次
+        ShowCustomAlert.versionAlert(context, update, descTxt, url);
+        SPManager.setVersionFrequency(frequency);
+      } else {
+        List<String> versions = versionTip.split(",");
+        int frequency = int.parse(versions.first);
+        int lasttime = int.parse(versions.last);
+        int currentTime = DateUtil.getNowDateMs();
+        LogUtil.v(
+            "${currentTime - lasttime}  ${frequency * (3600 * 24 * 1000)}");
+        if (currentTime - lasttime >= frequency * (3600 * 24 * 1000)) {
+          ShowCustomAlert.versionAlert(context, update, descTxt, url);
+          SPManager.setVersionFrequency(frequency);
+        }
+      }
+    }
   }
 
   void _initData() async {

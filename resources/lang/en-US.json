@@ -65,7 +65,7 @@
     "wallets_manager_createnew": "Create new wallet",
     "wallets_manager_importnew": "Import wallet",
     "wallets_manager_setting": "Wallet Settings",
-    "wallets_manager_multichain": "Multi-chain wallet",
+    "wallets_manager_multichain": "Multi-chain",
     "wallets_manager_backupstate": "Not backed up",
     "importwallet_prv": "Private key import",
     "importwallet_memo": "Mnemonic import",
@@ -199,5 +199,6 @@
     "newspage_sharenewssouce": "Source",
     "newspage_versiontip": "New version tips",
     "newspage_noversiontip": "Is the latest version",
-    "payment_valueshouldlessbal": "The transfer amount needs to be less than the balance"
+    "payment_valueshouldlessbal": "The transfer amount needs to be less than the balance",
+    "homepage_update": "Update"
 }

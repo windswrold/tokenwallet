@@ -91,59 +91,77 @@ class _TokenManagerState extends State<TokenManager> {
   @override
   Widget build(BuildContext context) {
     return CustomPageView(
-        title: CustomPageView.getTitle(
-            title: "tokensetting_tokensmanager".local()),
-        child: Column(
-          children: [
-            _topSearchView(),
-            Container(
-              height: 44.width,
-              padding: EdgeInsets.symmetric(horizontal: 16.width),
-              child: Row(
-                children: [
-                  Text(
-                    "tokensetting_sortindex".local(),
-                    style: TextStyle(
-                        color: ColorUtils.fromHex("#FF000000"),
-                        fontSize: 14.font,
-                        fontWeight: FontWeightUtils.medium),
-                  ),
-                  11.rowWidget,
-                  Text(
-                    "tokensetting_longpresssort".local(),
-                    style: TextStyle(
-                        color: ColorUtils.fromHex("#66000000"),
-                        fontSize: 14.font,
-                        fontWeight: FontWeightUtils.regular),
-                  ),
-                ],
-              ),
+      title:
+          CustomPageView.getTitle(title: "tokensetting_tokensmanager".local()),
+      child: Column(
+        children: [
+          _topSearchView(),
+          // Container(
+          //   height: 44.width,
+          //   padding: EdgeInsets.symmetric(horizontal: 16.width),
+          //   child: Row(
+          //     children: [
+          //       Text(
+          //         "tokensetting_sortindex".local(),
+          //         style: TextStyle(
+          //             color: ColorUtils.fromHex("#FF000000"),
+          //             fontSize: 14.font,
+          //             fontWeight: FontWeightUtils.medium),
+          //       ),
+          //       11.rowWidget,
+          //       Text(
+          //         "tokensetting_longpresssort".local(),
+          //         style: TextStyle(
+          //             color: ColorUtils.fromHex("#66000000"),
+          //             fontSize: 14.font,
+          //             fontWeight: FontWeightUtils.regular),
+          //       ),
+          //     ],
+          //   ),
+          // ),
+          Expanded(
+            child: ListView.builder(
+              itemCount: _datas.length,
+              itemBuilder: (BuildContext context, int index) {
+                MCollectionTokens token = _datas[index];
+                return AssetsCell(
+                  key: ValueKey(index),
+                  token: token,
+                  onTap: () {
+                    token.state = token.state == 1 ? 0 : 1;
+                    String id = token.tokenID ?? "";
+                    MCollectionTokens.updateTokenData(
+                        "state=${token.state} WHERE tokenID = '$id'");
+                    _initData();
+                  },
+                );
+              },
             ),
-            Expanded(
-              child: ReorderableListView.builder(
-                itemBuilder: (BuildContext context, int index) {
-                  MCollectionTokens token = _datas[index];
-                  return AssetsCell(
-                    key: ValueKey(index),
-                    token: token,
-                    onTap: () {
-                      token.state = token.state == 1 ? 0 : 1;
-                      String id = token.tokenID ?? "";
-                      MCollectionTokens.updateTokenData(
-                          "state=${token.state} WHERE tokenID = '$id'");
-                      _initData();
-                    },
-                  );
-                },
-                itemCount: _datas.length,
-                onReorder: (int oldIndex, int newIndex) {
-                  // MCollectionTokens token = _datas[oldIndex];
-                  // String id = token.tokenID ?? "";
-                  // token.moveItem(id, token.owner!, oldIndex, newIndex);
-                },
-              ),
-            ),
-          ],
-        ));
+          ),
+        ],
+
+        // ReorderableListView.builder(
+        //   itemBuilder: (BuildContext context, int index) {
+        //     MCollectionTokens token = _datas[index];
+        //     return AssetsCell(
+        //       key: ValueKey(index),
+        //       token: token,
+        //       onTap: () {
+        //         token.state = token.state == 1 ? 0 : 1;
+        //         String id = token.tokenID ?? "";
+        //         MCollectionTokens.updateTokenData(
+        //             "state=${token.state} WHERE tokenID = '$id'");
+        //         _initData();
+        //       },
+        //     );
+        //   },
+        //   itemCount: _datas.length,
+        //   onReorder: (int oldIndex, int newIndex) {
+        //     // MCollectionTokens token = _datas[oldIndex];
+        //     // String id = token.tokenID ?? "";
+        //     // token.moveItem(id, token.owner!, oldIndex, newIndex);
+        //   },
+      ),
+    );
   }
 }

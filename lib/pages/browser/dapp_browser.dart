@@ -260,14 +260,56 @@ class _DappBrowserState extends State<DappBrowser> {
   @override
   Widget build(BuildContext context) {
     return CustomPageView(
-        title: CustomPageView.getTitle(title: widget.model?.name ?? ""),
+        // title: CustomPageView.getTitle(title: widget.model?.name ?? ""),
+
+        title: Container(
+          child: Row(
+            children: [
+              CustomPageView.getCloseLeading(() {
+                Routers.goBack(context);
+              }),
+              Expanded(
+                child: Center(
+                    child: CustomPageView.getTitle(
+                        title: widget.model?.name ?? "")),
+              ),
+              SizedBox(
+                width: 24,
+              )
+            ],
+          ),
+        ),
+        leadBack: () async {
+          bool? canGo = await _webViewController?.canGoBack();
+          if (canGo == true) {
+            _webViewController?.goBack();
+          } else {
+            Routers.goBack(context);
+          }
+        },
         safeAreaBottom: false,
         bottom: PreferredSize(
             child: _progressBar(_lineProgress, context),
             preferredSize: const Size.fromHeight(1)),
-        leading: CustomPageView.getCloseLeading(() {
-          Routers.goBack(context);
-        }),
+        // leading: Row(
+        //   children: [
+        //     Container(
+        //       padding: EdgeInsets.only(left: 8),
+        //       child: CustomPageView.getBack(() async {
+        //         bool? canGo = await _webViewController?.canGoBack();
+        //         if (canGo == true) {
+        //           _webViewController?.goBack();
+        //         } else {
+        //           Routers.goBack(context);
+        //         }
+        //       }),
+        //     ),
+        //     8.rowWidget,
+        //     CustomPageView.getCloseLeading(() {
+        //       Routers.goBack(context);
+        //     }),
+        //   ],
+        // ),
         actions: [
           CustomPopupMenu(
               menuBuilder: () => ClipRRect(

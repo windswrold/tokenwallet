@@ -228,4 +228,42 @@ class WalletServices {
     }
     return [];
   }
+
+  static Future<List> getpopularToken() async {
+    const url = RequestURLS.getpopularToken;
+    dynamic result = await RequestMethod.manager!.requestData(Method.GET, url);
+    if (result != null && result["code"] == 200) {
+      List data = result["result"]["page"] ?? [];
+      return data;
+    }
+    return [];
+  }
+
+  static void getLinkInfo() async {
+    const url = RequestURLS.linkInfo;
+
+    dynamic result = await RequestMethod.manager!.requestData(Method.GET, url);
+    if (result != null && result["code"] == 200) {
+      Map data = result["result"] ?? [];
+      final iosUrl = data["iosUrl"] ?? "";
+      final androidUrl = data["androidUrl"] ?? "";
+      final appDownUrl = data["appDownUrl"] ?? "";
+      final userAgreementUrl = data["userAgreementUrl"] ?? "";
+      SPManager.setLinkInfo(SPManager.setIosDwownloadUrl, iosUrl);
+      SPManager.setLinkInfo(SPManager.setAndroidUrl, androidUrl);
+      SPManager.setLinkInfo(SPManager.setappDownUrl, appDownUrl);
+      SPManager.setLinkInfo(SPManager.setuserAgreementUrl, userAgreementUrl);
+    }
+  }
+
+  static Future<Map?> getgasPrice(String chainType) async {
+    const url = RequestURLS.getgasPrice;
+    Map<String, dynamic> params = {"chainType": chainType};
+    dynamic result = await RequestMethod.manager!
+        .requestData(Method.GET, url, queryParameters: params);
+    if (result != null && result["code"] == 200) {
+      Map data = result["result"] ?? [];
+      return data;
+    }
+  }
 }

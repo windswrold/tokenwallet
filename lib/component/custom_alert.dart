@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../../public.dart';
 
@@ -109,6 +110,23 @@ class ShowCustomAlert {
             ),
           );
         });
+  }
+
+  static void versionAlert(
+      BuildContext context, int update, String descTxt, String url) {
+    ShowCustomAlert.showCustomAlertType(context, KAlertType.text, null, null,
+        bottomActionsPadding: EdgeInsets.zero,
+        hideLeftButton: update == 2 ? true : false,
+        rightButtonStyle: TextStyle(
+          color: ColorUtils.blueColor,
+          fontSize: 16.font,
+        ),
+        rightButtonRadius: 8,
+        rightButtonTitle: "homepage_update".local(),
+        subtitleText: "newspage_versiontip".local() + "\n" + descTxt,
+        confirmPressed: (result) {
+      launch(url);
+    });
   }
 }
 

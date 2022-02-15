@@ -7,6 +7,7 @@ import 'package:cstoken/pages/mine/mine_contacts.dart';
 import 'package:cstoken/pages/wallet/transfer/payment_sheet_page.dart';
 import 'package:cstoken/pages/wallet/transfer/transfer_fee.dart';
 import 'package:cstoken/utils/custom_toast.dart';
+import 'package:decimal/decimal.dart';
 import 'package:web3dart/web3dart.dart';
 import 'package:http/http.dart';
 
@@ -30,12 +31,13 @@ class KTransferState with ChangeNotifier {
   String _gasPrice = '';
   String _feeValue = '0.0';
   bool _isCustomFee = false;
+  int _seleindex = 1;
 
   String feeValue() {
     if (_tokens == null) {
       return _feeValue + "";
     }
-    return _feeValue + " " + _tokens!.coinType!;
+    return _feeValue + " " + _tokens!.coinType!.replaceAll("BSC", "BNB");
   }
 
   void init(BuildContext context) {
@@ -55,7 +57,13 @@ class KTransferState with ChangeNotifier {
   }
 
   void initGasData() async {
-    int gasPrice = await _client!.getGasPrice();
+    dynamic result = await WalletServices.getgasPrice(_tokens!.coinType!);
+    if (result == null) {
+      return;
+    }
+    Decimal offset = Decimal.fromInt(10).pow(9);
+    String fastgas = result!["gasNormalPrice"];
+    fastgas = (Decimal.parse(fastgas) / offset).toDecimal().toString();
     String fee = "";
     if (_tokens!.tokenType == KTokenType.native.index) {
       _gasLimit = transferETHGasLimit.toString();
@@ -65,8 +73,8 @@ class KTransferState with ChangeNotifier {
     fee = TRWallet.configFeeValue(
         cointype: _walletInfo!.coinType!,
         beanValue: _gasLimit,
-        offsetValue: gasPrice.toString());
-    _gasPrice = gasPrice.toString();
+        offsetValue: fastgas);
+    _gasPrice = fastgas;
     _feeValue = fee;
     notifyListeners();
   }
@@ -88,18 +96,22 @@ class KTransferState with ChangeNotifier {
     Routers.push(
         context,
         TransfeeView(
-            feeValue: _feeValue,
-            gasLimit: _gasLimit,
-            gasPrice: _gasPrice,
-            complationBack: (feeValue, gasPrice, gasLimit, isCustom) {
-              LogUtil.v("feeValue $feeValue $gasPrice $gasLimit $isCustom");
-              _feeValue = feeValue;
-              _gasPrice = gasPrice;
-              _gasLimit = gasLimit;
-              _isCustomFee = _isCustomFee;
-              notifyListeners();
-            },
-            feeToken: _tokens!.coinType!));
+          feeValue: _feeValue,
+          gasLimit: _gasLimit,
+          gasPrice: _gasPrice,
+          complationBack: (feeValue, gasPrice, gasLimit, isCustom, seleindex) {
+            LogUtil.v("feeValue $feeValue $gasPrice $gasLimit $isCustom");
+            _feeValue = feeValue;
+            _gasPrice = gasPrice;
+            _gasLimit = gasLimit;
+            _isCustomFee = _isCustomFee;
+            _seleindex = seleindex;
+            notifyListeners();
+          },
+          feeToken: _tokens!.coinType!,
+          chaintype: _tokens!.coinType!,
+          seleindex: _seleindex,
+        ));
   }
 
   void tapTransfer(BuildContext context) async {
@@ -115,7 +127,7 @@ class KTransferState with ChangeNotifier {
     String remark = _remarkEC.text.trim();
     bool? isValid = false;
     int coinType = _walletInfo!.coinType!;
-    String feeToken = _tokens!.coinType!;
+    String feeToken = _tokens!.coinType!.replaceAll("BSC", "BNB");
     isValid = to.checkAddress(coinType.geCoinType());
     if (isValid == false) {
       HWToast.showText(text: "input_addressinvalid".local());
@@ -230,6 +242,8 @@ class KTransferState with ChangeNotifier {
     required String remark,
   }) async {
     HWToast.showLoading(clickClose: true);
+    int? maxGas = Decimal.parse(_gasLimit).toBigInt().toInt();
+    int? gasPrice = Decimal.parse(_gasPrice).toBigInt().toInt();
     String? result;
     result = await _client!.transfer(
         prv: prv,
@@ -240,8 +254,8 @@ class KTransferState with ChangeNotifier {
         data: remark,
         from: from,
         fee: _feeValue,
-        maxGas: int.tryParse(_gasLimit) ?? null,
-        gasPrice: int.tryParse(_gasPrice) ?? null);
+        maxGas: maxGas,
+        gasPrice: gasPrice);
 
     if (result?.isNotEmpty == true) {
       HWToast.showText(text: "payment_transsuccess".local());
