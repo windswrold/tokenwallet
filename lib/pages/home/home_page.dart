@@ -151,7 +151,7 @@ class _HomePageState extends State<HomePage> {
                     onTap: () {
                       Provider.of<CurrentChooseWalletState>(context,
                               listen: false)
-                          .bannerTap(context, _jump);
+                          .bannerTap(context, _jump, "");
                     },
                     child: SizedBox(
                       width: 40,
@@ -189,13 +189,14 @@ class _HomePageState extends State<HomePage> {
                 String iconUrl = result["iconUrl"];
                 String title = result["title"];
                 String jumpLinks = result["jumpLinks"];
+                String chainType = result["chainType"] ?? "";
 
                 return GestureDetector(
                   behavior: HitTestBehavior.opaque,
                   onTap: () {
                     Provider.of<CurrentChooseWalletState>(context,
                             listen: false)
-                        .bannerTap(context, jumpLinks);
+                        .bannerTap(context, jumpLinks, chainType);
                   },
                   child: Container(
                     width: MediaQuery.of(context).size.width / 3,
@@ -253,12 +254,13 @@ class _HomePageState extends State<HomePage> {
                 String title = result["title"] ?? "";
                 String introduction = result["introduction"] ?? "";
                 String jumpLiks = result["jumpLiks"] ?? "";
+                String chainType = result["chainType"] ?? "";
                 return GestureDetector(
                   behavior: HitTestBehavior.opaque,
                   onTap: () {
                     Provider.of<CurrentChooseWalletState>(context,
                             listen: false)
-                        .bannerTap(context, jumpLiks);
+                        .bannerTap(context, jumpLiks, chainType);
                   },
                   child: Container(
                     width: 300.width,

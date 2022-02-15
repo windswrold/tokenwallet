@@ -235,6 +235,7 @@ class TRWallet {
           ? KNetType.Testnet
           : KNetType.Mainnet;
       List<MCollectionTokens> tokens = [];
+      List<MCollectionTokens> cacheTokens = [];
       for (var item in currency_List) {
         MCollectionTokens token = MCollectionTokens.fromJson(item);
         String contract = token.contract ?? "";
@@ -248,7 +249,7 @@ class TRWallet {
         token.owner = walletID;
         token.state = 1;
         token.tokenID = TREncode.SHA256(tokenID);
-        tokens.add(token);
+        cacheTokens.add(token);
       }
       for (var item in indexTokens) {
         MCollectionTokens token = MCollectionTokens();
@@ -283,7 +284,13 @@ class TRWallet {
         token.state = 1;
         token.tokenID = TREncode.SHA256(tokenID);
         tokens.add(token);
+        for (var item in cacheTokens) {
+          if (item.token == token.token && item.chainType == token.chainType) {
+            item.iconPath = token.iconPath;
+          }
+        }
       }
+      tokens.addAll(cacheTokens);
       MCollectionTokens.insertTokens(tokens);
       HWToast.hiddenAllToast();
       Provider.of<CurrentChooseWalletState>(context, listen: false)

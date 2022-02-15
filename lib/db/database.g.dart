@@ -100,7 +100,7 @@ class _$FlutterDatabase extends FlutterDatabase {
         await database.execute(
             'CREATE TABLE IF NOT EXISTS `contacts_table` (`address` TEXT NOT NULL, `coinType` INTEGER NOT NULL, `name` TEXT NOT NULL, PRIMARY KEY (`address`))');
         await database.execute(
-            'CREATE TABLE IF NOT EXISTS `dapp_records` (`url` TEXT, `name` TEXT, `imageUrl` TEXT, `description` TEXT, `marketId` TEXT, `date` TEXT, `chainType` TEXT, `type` INTEGER, PRIMARY KEY (`url`))');
+            'CREATE TABLE IF NOT EXISTS `dapp_records` (`url` TEXT, `name` TEXT, `imageUrl` TEXT, `description` TEXT, `marketId` TEXT, `date` TEXT, `chainType` TEXT, PRIMARY KEY (`url`))');
         await database.execute(
             'CREATE TABLE IF NOT EXISTS `tokenPrice_table` (`contract` TEXT, `source` TEXT, `target` TEXT, `rate` TEXT, PRIMARY KEY (`contract`, `source`, `target`))');
         await database.execute(
@@ -518,8 +518,7 @@ class _$DAppRecordsDao extends DAppRecordsDao {
                   'description': item.description,
                   'marketId': item.marketId,
                   'date': item.date,
-                  'chainType': item.chainType,
-                  'type': item.type
+                  'chainType': item.chainType
                 }),
         _dAppRecordsDBModelDeletionAdapter = DeletionAdapter(
             database,
@@ -532,8 +531,7 @@ class _$DAppRecordsDao extends DAppRecordsDao {
                   'description': item.description,
                   'marketId': item.marketId,
                   'date': item.date,
-                  'chainType': item.chainType,
-                  'type': item.type
+                  'chainType': item.chainType
                 });
 
   final sqflite.DatabaseExecutor database;
@@ -557,8 +555,7 @@ class _$DAppRecordsDao extends DAppRecordsDao {
             description: row['description'] as String?,
             marketId: row['marketId'] as String?,
             date: row['date'] as String?,
-            chainType: row['chainType'] as String?,
-            type: row['type'] as int?));
+            chainType: row['chainType'] as String?));
   }
 
   @override

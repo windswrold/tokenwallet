@@ -1,4 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:cstoken/model/dapps_record/dapps_record.dart';
 import 'package:flutter_swiper_null_safety/flutter_swiper_null_safety.dart';
 
 import '../public.dart';
@@ -30,8 +31,9 @@ class HomeBanner extends StatelessWidget {
               onTap: (index) {
                 Map resullt = datas[index];
                 String jumpLinks = resullt["jumpLinks"] ?? "";
+                String chainType = resullt["chainType"] ?? "";
                 Provider.of<CurrentChooseWalletState>(context, listen: false)
-                    .bannerTap(context, jumpLinks);
+                    .bannerTap(context, jumpLinks, chainType);
               },
             )));
   }

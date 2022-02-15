@@ -79,7 +79,7 @@ class TopSearchView extends StatelessWidget {
               String result = params?["data"] ?? "";
               if (result.isValidUrl() == true) {
                 Provider.of<CurrentChooseWalletState>(context, listen: false)
-                    .bannerTap(context, result);
+                    .bannerTap(context, result, "");
               } else {
                 HWToast.showText(text: "dapppage_qrcodewrong".local());
               }

@@ -84,7 +84,7 @@ class CurrentChooseWalletState with ChangeNotifier {
     _currencyType = SPManager.getAppCurrencyMode();
     initNFTIndex();
     requestAssets();
-    // _configTimerRequest();
+    _configTimerRequest();
     notifyListeners();
     return _currentWallet;
   }
@@ -120,9 +120,13 @@ class CurrentChooseWalletState with ChangeNotifier {
     requestAssets();
   }
 
-  void bannerTap(BuildContext context, String jumpLinks) {
+  void bannerTap(BuildContext context, String jumpLinks, String chainType) {
     LogUtil.v("bannerTap  $jumpLinks");
-    dappTap(context, DAppRecordsDBModel(url: jumpLinks));
+    KCoinType? coinType;
+    if (chainType.isNotEmpty) {
+      coinType = chainType.chainTypeGetCoinType();
+    }
+    dappTap(context, DAppRecordsDBModel(url: jumpLinks), coinType: coinType);
   }
 
   ///先判断是否授权

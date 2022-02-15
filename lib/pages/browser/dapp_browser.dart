@@ -285,8 +285,8 @@ class _DappBrowserState extends State<DappBrowser> {
                               }),
                               _getMenuItem("icons/item_white_collect.png",
                                   "dappmenu_collect".local(), () {
-                                DAppRecordsDBModel model = widget.model!;
-                                model.type = 2;
+                                // DAppRecordsDBModel model = widget.model!;
+                                // model.type = 2;
                               }),
                               _getMenuItem("icons/item_white_copy.png",
                                   "dappmenu_copy".local(), () {

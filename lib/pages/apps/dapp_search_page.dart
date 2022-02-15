@@ -26,7 +26,7 @@ class _DAppSearchState extends State<DAppSearch> {
     searchController.clear();
     DAppRecordsDBModel.insertRecords(DAppRecordsDBModel(url: openUrl));
     Provider.of<CurrentChooseWalletState>(context, listen: false)
-        .bannerTap(context, openUrl);
+        .bannerTap(context, openUrl,"");
     _getRecords();
   }
 

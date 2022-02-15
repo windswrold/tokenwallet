@@ -15,7 +15,7 @@ class DAppRecordsDBModel {
   final String? marketId;
   final String? date;
   final String? chainType; //链类型
-  int? type; //1加入本地收藏 2取消本地收藏
+  // int? type; //1加入本地收藏 2取消本地收藏
 
   DAppRecordsDBModel({
     this.url,
@@ -25,7 +25,7 @@ class DAppRecordsDBModel {
     this.marketId,
     this.date,
     this.chainType,
-    this.type,
+    // this.type,
   });
 
   static Future<List<DAppRecordsDBModel>> finaAllRecords() async {
