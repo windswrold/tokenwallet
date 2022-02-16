@@ -36,7 +36,8 @@ class CustomSwipe extends StatelessWidget {
                   onTap: (index) {
                     String jumpLinks =
                         kprovider.bannerData[index]["jumpLinks"] ?? '';
-                    String chainType = "";
+                    String chainType =
+                        kprovider.bannerData[index]["chainType"] ?? '';
                     Provider.of<CurrentChooseWalletState>(context,
                             listen: false)
                         .bannerTap(context, jumpLinks, chainType);

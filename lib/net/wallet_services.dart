@@ -118,7 +118,7 @@ class WalletServices {
   }
 
   static Future<Map?> getindexnftInfo(String address, String chainType) async {
-    const url = RequestURLS.getindexnftInfo;
+    final url = RequestURLS.getindexnftInfo;
     Map<String, dynamic> params = {
       "address": address.toString(),
       "chainType": chainType
@@ -132,7 +132,7 @@ class WalletServices {
   }
 
   static Future<List> getindexapplicationInfo() async {
-    const url = RequestURLS.getindexapplicationInfo;
+    final url = RequestURLS.getindexapplicationInfo;
     dynamic result = await RequestMethod.manager!.requestData(Method.GET, url);
     if (result != null && result["code"] == 200) {
       List data = result["result"]["page"] ?? [];
@@ -142,7 +142,7 @@ class WalletServices {
   }
 
   static Future<List> getbannerInfo() async {
-    const url = RequestURLS.getbannerInfo;
+    final url = RequestURLS.getbannerInfo;
     dynamic result = await RequestMethod.manager!.requestData(Method.GET, url);
     if (result != null && result["code"] == 200) {
       List data = result["result"]["page"] ?? [];
@@ -152,7 +152,7 @@ class WalletServices {
   }
 
   static Future<List> getindexpopularItem() async {
-    const url = RequestURLS.getindexpopularItem;
+    final url = RequestURLS.getindexpopularItem;
     dynamic result = await RequestMethod.manager!.requestData(Method.GET, url);
     if (result != null && result["code"] == 200) {
       List data = result["result"]["page"] ?? [];
@@ -162,7 +162,7 @@ class WalletServices {
   }
 
   static Future<Map?> getAppversion(String version) async {
-    const url = RequestURLS.getAppversion;
+    final url = RequestURLS.getAppversion;
     Map<String, dynamic> params = {
       "version": version.replaceAll(".", ""),
     };
@@ -176,7 +176,7 @@ class WalletServices {
   }
 
   static void gettokenPrice(String symbol) async {
-    const url = RequestURLS.gettokenPrice;
+    final url = RequestURLS.gettokenPrice;
 
     Map<String, dynamic> params = {
       "symbol": symbol,
@@ -213,7 +213,7 @@ class WalletServices {
       {String? tokenName,
       String? tokenContractAddress,
       bool? defaultFlag}) async {
-    const url = RequestURLS.gettokenList;
+    final url = RequestURLS.gettokenList;
     Map<String, dynamic> params = {"pageSize": pagesize, "pageNum": page};
     if (tokenName != null) {
       params["tokenName"] = tokenName;
@@ -235,7 +235,7 @@ class WalletServices {
   }
 
   static Future<List> getpopularToken() async {
-    const url = RequestURLS.getpopularToken;
+    final url = RequestURLS.getpopularToken;
     dynamic result = await RequestMethod.manager!.requestData(Method.GET, url);
     if (result != null && result["code"] == 200) {
       List data = result["result"]["page"] ?? [];
@@ -245,7 +245,7 @@ class WalletServices {
   }
 
   static void getLinkInfo() async {
-    const url = RequestURLS.linkInfo;
+    final url = RequestURLS.linkInfo;
 
     dynamic result = await RequestMethod.manager!.requestData(Method.GET, url);
     if (result != null && result["code"] == 200) {
@@ -262,7 +262,7 @@ class WalletServices {
   }
 
   static Future<Map?> getgasPrice(String chainType) async {
-    const url = RequestURLS.getgasPrice;
+    final url = RequestURLS.getgasPrice;
     Map<String, dynamic> params = {"chainType": chainType};
     dynamic result = await RequestMethod.manager!
         .requestData(Method.GET, url, queryParameters: params);

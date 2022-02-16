@@ -45,7 +45,7 @@ class _AppsPageState extends State<AppsPage> {
         hiddenLeading: true,
         child: Column(
           children: [
-            const TopSearchView(),
+            TopSearchView(),
             Expanded(
               child: _bodyListView(),
             ),
@@ -60,7 +60,9 @@ class _AppsPageState extends State<AppsPage> {
     for (var i = 0; i < tabs.length; i++) {
       datass.add(AppsContentPage(
           dappTap: (DAppRecordsDBModel model, int type) {
-            KCoinType? coinType = _kdataState.getCoinTypeWithDappType(type);
+            // KCoinType? coinType = _kdataState.getCoinTypeWithDappType(type);
+            // model.chainType
+            KCoinType? coinType = model.chainType?.chainTypeGetCoinType();
             Provider.of<CurrentChooseWalletState>(context, listen: false)
                 .dappTap(context, model, coinType: coinType);
           },

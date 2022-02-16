@@ -160,9 +160,11 @@ class _HomePageState extends State<HomePage> {
           Consumer<CurrentChooseWalletState>(builder: (_, kprovider, child) {
             String _nftNum = "--";
             String _jump = "";
+            String _chainType = "";
             if (kprovider.nftIndexInfo != null) {
               _nftNum = kprovider.nftIndexInfo!["holdNftNum"].toString();
               _jump = kprovider.nftIndexInfo!["saleNftUrl"].toString();
+              _chainType = kprovider.nftIndexInfo!["chainType"].toString();
             }
             return Padding(
               padding: EdgeInsets.only(top: 32.width, right: 48.width),
@@ -198,7 +200,7 @@ class _HomePageState extends State<HomePage> {
                     onTap: () {
                       Provider.of<CurrentChooseWalletState>(context,
                               listen: false)
-                          .bannerTap(context, _jump, "");
+                          .bannerTap(context, _jump, _chainType);
                     },
                     child: SizedBox(
                       width: 40,

@@ -1,54 +1,60 @@
+import 'package:cstoken/public.dart';
+import 'package:cstoken/utils/sp_manager.dart';
+
 class RequestURLS {
-  static const String host = "http://consensus.zooonews.com";
+  // static  String host = "http://consensus.zooonews.com";
+
+  static String get host => SPManager.getNetType() == KNetType.Mainnet
+      ? "https://www.consensustoken.vip"
+      : "http://consensus.zooonews.com";
 
   ///获取NFT新闻 pageNum pageSize
-  static const String getnftnews = host + "/app/information/news";
+  static String getnftnews = host + "/app/information/news";
 
   ///获取快讯 pageNum pageSize
-  static const String getlettersnews = host + "/app/information/letters";
+  static String getlettersnews = host + "/app/information/letters";
 
   ///我的收藏记录 pageNum pageSize address
-  static const String getdappmyCollect = host + "/app/dapp/myCollect";
+  static String getdappmyCollect = host + "/app/dapp/myCollect";
 
   ///取消收藏 address marketId
-  static const String getdappcancelCollect = host + "/app/dapp/cancelCollect";
+  static String getdappcancelCollect = host + "/app/dapp/cancelCollect";
 
   ///添加收藏 address marketId
-  static const String getdappcollect = host + "/app/dapp/collect";
+  static String getdappcollect = host + "/app/dapp/collect";
 
   ///获取dapp具体类型集合 dAppType
-  static const String getdapptypeList = host + "/app/dapp/typeList";
+  static String getdapptypeList = host + "/app/dapp/typeList";
 
   ///首页热门项目
-  static const String getindexpopularItem = host + "/app/index/popularItem";
+  static String getindexpopularItem = host + "/app/index/popularItem";
 
   ///首页应用
-  static const String getindexapplicationInfo =
-      host + "/app/index/applicationInfo";
+  static String getindexapplicationInfo = host + "/app/index/applicationInfo";
 
   ///获取用户地址持有NFT数量 address
-  static const String getindexnftInfo = host + "/app/index/nftInfo";
+  static String getindexnftInfo = host + "/app/index/nftInfo";
 
   ///获取dapp类型
-  static const String getdappType = host + "/app/dapp/dappType";
+  static String getdappType = host + "/app/dapp/dappType";
 
   ///Dapp banner
-  static const String getdappbannerInfo = host + "/app/dapp/bannerInfo";
+  static String getdappbannerInfo = host + "/app/dapp/bannerInfo";
 
   ///首页banner
-  static const String getbannerInfo = host + "/app/index/bannerInfo";
+  static String getbannerInfo = host + "/app/index/bannerInfo";
 
   ///token符号，若多个以逗号分隔
-  static const String gettokenPrice = host + "/app/token/tokenPrice";
+  static String gettokenPrice = host + "/app/token/tokenPrice";
 
-  static const String getAppversion = host + "/app/version/lastVersion";
+  static String getAppversion = host + "/app/version/lastVersion";
 
-  static const String gettokenList = host + "/app/token/tokenList";
+  static String gettokenList = host + "/app/token/tokenList";
 
-  static const String getpopularToken = host + "/app/token/popularToken";
+  static String getpopularToken = host + "/app/token/popularToken";
 
-  static const String linkInfo = host + "/app/common/linkInfo";
+  static String linkInfo = host + "/app/common/linkInfo";
 
   ///chainType
-  static const String getgasPrice = host + "/app/wallet/gasPrice";
+  static String getgasPrice = host + "/app/wallet/gasPrice";
 }

@@ -245,15 +245,17 @@ class _CustomAlertState extends State<CustomAlert> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             SizedBox(width: 24),
-            Text(
-              text ?? "",
-              style: TextStyle(
-                color: ColorUtils.fromHex("#FF000000"),
-                fontWeight: FontWeightUtils.medium,
-                fontSize: 16.font,
-                decoration: TextDecoration.none,
+            Expanded(
+              child: Text(
+                text ?? "",
+                style: TextStyle(
+                  color: ColorUtils.fromHex("#FF000000"),
+                  fontWeight: FontWeightUtils.medium,
+                  fontSize: 16.font,
+                  decoration: TextDecoration.none,
+                ),
+                textAlign: TextAlign.center,
               ),
-              textAlign: TextAlign.center,
             ),
             GestureDetector(
               onTap: () {

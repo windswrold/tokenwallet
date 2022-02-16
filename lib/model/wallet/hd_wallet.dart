@@ -51,48 +51,85 @@ class HDWallet {
     if (chainType == KChainType.HD ||
         chainType == KChainType.ETH ||
         kCoinType == KCoinType.BSC) {
-      ethWallet.coinType = KCoinType.BSC;
-      _hdwallets.add(ethWallet);
+      HDWallet hdWallet = HDWallet(
+          coinType: KCoinType.BSC,
+          prv: ethWallet.prv,
+          address: ethWallet.address,
+          pin: ethWallet.pin,
+          content: ethWallet.content,
+          leadType: ethWallet.leadType);
+      _hdwallets.add(hdWallet);
       // _hdwallets.add((await BSCChain()
       //     .importWallet(content: content, pin: pin, kLeadType: kLeadType))!);
     }
     if (chainType == KChainType.HD ||
         chainType == KChainType.ETH ||
         kCoinType == KCoinType.HECO) {
-      ethWallet.coinType = KCoinType.HECO;
-      _hdwallets.add(ethWallet);
+      HDWallet hdWallet = HDWallet(
+          coinType: KCoinType.HECO,
+          prv: ethWallet.prv,
+          address: ethWallet.address,
+          pin: ethWallet.pin,
+          content: ethWallet.content,
+          leadType: ethWallet.leadType);
+      _hdwallets.add(hdWallet);
       // _hdwallets.add((await HecoChain()
       //     .importWallet(content: content, pin: pin, kLeadType: kLeadType))!);
     }
     if (chainType == KChainType.HD ||
         chainType == KChainType.ETH ||
         kCoinType == KCoinType.Arbitrum) {
-      ethWallet.coinType = KCoinType.Arbitrum;
-      _hdwallets.add(ethWallet);
+      HDWallet hdWallet = HDWallet(
+          coinType: KCoinType.Arbitrum,
+          prv: ethWallet.prv,
+          address: ethWallet.address,
+          pin: ethWallet.pin,
+          content: ethWallet.content,
+          leadType: ethWallet.leadType);
+      _hdwallets.add(hdWallet);
       // _hdwallets.add((await await ARBChain()
       //     .importWallet(content: content, pin: pin, kLeadType: kLeadType))!);
     }
     if (chainType == KChainType.HD ||
         chainType == KChainType.ETH ||
         kCoinType == KCoinType.AVAX) {
-      ethWallet.coinType = KCoinType.AVAX;
-      _hdwallets.add(ethWallet);
+      HDWallet hdWallet = HDWallet(
+          coinType: KCoinType.AVAX,
+          prv: ethWallet.prv,
+          address: ethWallet.address,
+          pin: ethWallet.pin,
+          content: ethWallet.content,
+          leadType: ethWallet.leadType);
+      _hdwallets.add(hdWallet);
       // _hdwallets.add((await AVAXChain()
       //     .importWallet(content: content, pin: pin, kLeadType: kLeadType))!);
     }
     if (chainType == KChainType.HD ||
         chainType == KChainType.ETH ||
         kCoinType == KCoinType.Matic) {
-      ethWallet.coinType = KCoinType.Matic;
-      _hdwallets.add(ethWallet);
+      HDWallet hdWallet = HDWallet(
+          coinType: KCoinType.Matic,
+          prv: ethWallet.prv,
+          address: ethWallet.address,
+          pin: ethWallet.pin,
+          content: ethWallet.content,
+          leadType: ethWallet.leadType);
+
+      _hdwallets.add(hdWallet);
       // _hdwallets.add((await MaticChain()
       //     .importWallet(content: content, pin: pin, kLeadType: kLeadType))!);
     }
     if (chainType == KChainType.HD ||
         chainType == KChainType.ETH ||
         kCoinType == KCoinType.OKChain) {
-      ethWallet.coinType = KCoinType.OKChain;
-      _hdwallets.add(ethWallet);
+      HDWallet hdWallet = HDWallet(
+          coinType: KCoinType.OKChain,
+          prv: ethWallet.prv,
+          address: ethWallet.address,
+          pin: ethWallet.pin,
+          content: ethWallet.content,
+          leadType: ethWallet.leadType);
+      _hdwallets.add(hdWallet);
       // _hdwallets.add((await OKChain()
       //     .importWallet(content: content, pin: pin, kLeadType: kLeadType))!);
     }

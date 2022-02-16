@@ -44,11 +44,13 @@ class DappDataState extends ChangeNotifier {
         final jumpLinks = item["jumpLinks"] ?? "";
         final logoUrl = item["logoUrl"] ?? "";
         final marketId = item["marketId"] ?? "1";
+        final chainType = item["chainType"] ?? "";
         DAppRecordsDBModel mdoel = DAppRecordsDBModel(
             url: jumpLinks,
             name: title,
             imageUrl: logoUrl,
             description: introduction,
+            chainType: chainType,
             marketId: marketId.toString());
         _datas.add(mdoel);
       }
