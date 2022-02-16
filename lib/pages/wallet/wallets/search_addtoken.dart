@@ -75,15 +75,15 @@ class _SearchAddTokenState extends State<SearchAddToken> {
         continue;
       }
       token.owner = walletID;
-      String contract = token.contract ?? "";
-      String tokenID = (token.kNetType.toString() +
-          "|" +
-          token.chainType.toString() +
-          "|" +
-          walletID +
-          "|" +
-          contract);
-      token.tokenID = TREncode.SHA256(tokenID);
+      // String contract = token.contract ?? "";
+      // String tokenID = (token.kNetType.toString() +
+      //     "|" +
+      //     token.chainType.toString() +
+      //     "|" +
+      //     walletID +
+      //     "|" +
+      //     contract);
+      token.tokenID = token.createTokenID(walletID);
       tokens.add(token);
     }
 

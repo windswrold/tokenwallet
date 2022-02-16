@@ -88,6 +88,17 @@ class MCollectionTokens {
   String get balanceString =>
       StringUtil.dataFormat(this.balance ?? 0.0, this.digits!);
 
+  String createTokenID(String walletID) {
+    String tokenID = (kNetType.toString() +
+        "|" +
+        chainType.toString() +
+        "|" +
+        walletID +
+        "|" +
+        (contract ?? ""));
+    return TREncode.SHA256(tokenID);
+  }
+
   Future<bool> moveItem(
       String tokenid, String walletid, int oldIndex, int newIndex) async {
     try {

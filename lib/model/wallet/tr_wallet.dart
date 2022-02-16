@@ -230,7 +230,8 @@ class TRWallet {
         infos.coinType = object.coinType!.index;
         TRWalletInfo.insertWallets([infos]);
       }
-      List indexTokens = await WalletServices.gettokenList(1, 20,defaultFlag: true);
+      List indexTokens =
+          await WalletServices.gettokenList(1, 20, defaultFlag: true);
       KNetType netType = RequestURLS.host.contains("consensus.zooonews.com")
           ? KNetType.Testnet
           : KNetType.Mainnet;
@@ -238,17 +239,9 @@ class TRWallet {
       List<MCollectionTokens> cacheTokens = [];
       for (var item in currency_List) {
         MCollectionTokens token = MCollectionTokens.fromJson(item);
-        String contract = token.contract ?? "";
-        String tokenID = (token.kNetType.toString() +
-            "|" +
-            token.chainType.toString() +
-            "|" +
-            walletID +
-            "|" +
-            contract);
         token.owner = walletID;
         token.state = 1;
-        token.tokenID = TREncode.SHA256(tokenID);
+        token.tokenID = token.createTokenID(walletID);
         cacheTokens.add(token);
       }
       for (var item in indexTokens) {
@@ -272,17 +265,9 @@ class TRWallet {
           assert(token.chainType != null, "有判断失败的数据 ");
           continue;
         }
-        String contract = token.contract ?? "";
-        String tokenID = (token.kNetType.toString() +
-            "|" +
-            token.chainType.toString() +
-            "|" +
-            walletID +
-            "|" +
-            contract);
         token.owner = walletID;
         token.state = 1;
-        token.tokenID = TREncode.SHA256(tokenID);
+        token.tokenID = token.createTokenID(walletID);
         tokens.add(token);
         for (var item in cacheTokens) {
           if (item.token == token.token && item.chainType == token.chainType) {
