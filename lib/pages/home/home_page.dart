@@ -197,9 +197,13 @@ class _HomePageState extends State<HomePage> {
                   GestureDetector(
                     behavior: HitTestBehavior.opaque,
                     onTap: () {
+                      DAppRecordsDBModel model = DAppRecordsDBModel();
+                      model.url = _jump;
+                      model.chainType = _chainType;
+
                       Provider.of<CurrentChooseWalletState>(context,
                               listen: false)
-                          .bannerTap(context, _jump, _chainType);
+                          .bannerTap(context, model);
                     },
                     child: SizedBox(
                       width: 40,
@@ -242,9 +246,14 @@ class _HomePageState extends State<HomePage> {
                 return GestureDetector(
                   behavior: HitTestBehavior.opaque,
                   onTap: () {
+                    DAppRecordsDBModel model = DAppRecordsDBModel();
+                    model.url = jumpLinks;
+                    model.chainType = chainType;
+                    model.imageUrl = iconUrl;
+                    model.name = title;
                     Provider.of<CurrentChooseWalletState>(context,
                             listen: false)
-                        .bannerTap(context, jumpLinks, chainType);
+                        .bannerTap(context, model);
                   },
                   child: Container(
                     width: MediaQuery.of(context).size.width / 3,
@@ -306,9 +315,15 @@ class _HomePageState extends State<HomePage> {
                 return GestureDetector(
                   behavior: HitTestBehavior.opaque,
                   onTap: () {
+                    DAppRecordsDBModel model = DAppRecordsDBModel();
+                    model.url = jumpLiks;
+                    model.chainType = chainType;
+                    model.imageUrl = logoUrl;
+                    model.name = title;
+                    model.description = introduction;
                     Provider.of<CurrentChooseWalletState>(context,
                             listen: false)
-                        .bannerTap(context, jumpLiks, chainType);
+                        .bannerTap(context, model);
                   },
                   child: Container(
                     width: 300.width,

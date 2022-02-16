@@ -32,8 +32,12 @@ class HomeBanner extends StatelessWidget {
                 Map resullt = datas[index];
                 String jumpLinks = resullt["jumpLinks"] ?? "";
                 String chainType = resullt["chainType"] ?? "";
+
+                DAppRecordsDBModel model = DAppRecordsDBModel();
+                model.url = jumpLinks;
+                model.chainType = chainType;
                 Provider.of<CurrentChooseWalletState>(context, listen: false)
-                    .bannerTap(context, jumpLinks, chainType);
+                    .bannerTap(context, model);
               },
             )));
   }

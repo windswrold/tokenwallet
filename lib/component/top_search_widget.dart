@@ -1,3 +1,4 @@
+import 'package:cstoken/model/dapps_record/dapps_record.dart';
 import 'package:cstoken/pages/apps/dapp_search_page.dart';
 import 'package:cstoken/pages/scan/scan.dart';
 import 'package:cstoken/pages/wallet/wallets/wallets_manager.dart';
@@ -78,8 +79,11 @@ class TopSearchView extends StatelessWidget {
               Map? params = await Routers.push(context, ScanCodePage());
               String result = params?["data"] ?? "";
               if (result.isValidUrl() == true) {
+                DAppRecordsDBModel model = DAppRecordsDBModel();
+                model.url = result;
+                model.chainType = "";
                 Provider.of<CurrentChooseWalletState>(context, listen: false)
-                    .bannerTap(context, result, "");
+                    .bannerTap(context, model);
               } else {
                 HWToast.showText(text: "dapppage_qrcodewrong".local());
               }

@@ -8,13 +8,13 @@ const String tableName = "dapp_records";
 @Entity(tableName: tableName)
 class DAppRecordsDBModel {
   @primaryKey
-  final String? url;
-  final String? name;
-  final String? imageUrl;
-  final String? description;
-  final String? marketId;
-  final String? date;
-  final String? chainType; //链类型
+  String? url;
+  String? name;
+  String? imageUrl;
+  String? description;
+  String? marketId;
+  String? date;
+  String? chainType; //链类型
   int? type; //0 null浏览 1 收藏  2浏览与收藏
 
   DAppRecordsDBModel({

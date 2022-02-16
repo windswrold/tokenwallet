@@ -123,16 +123,15 @@ class CurrentChooseWalletState with ChangeNotifier {
     requestAssets();
   }
 
-  void bannerTap(BuildContext context, String jumpLinks, String chainType) {
-    LogUtil.v("bannerTap  $jumpLinks");
-    if (jumpLinks.isEmpty) {
+  void bannerTap(BuildContext context, DAppRecordsDBModel model) {
+    if (model.url == null || model.url!.isEmpty) {
       return;
     }
     KCoinType? coinType;
-    if (chainType.isNotEmpty) {
-      coinType = chainType.chainTypeGetCoinType();
+    if (model.chainType != null) {
+      coinType = model.chainType!.chainTypeGetCoinType();
     }
-    dappTap(context, DAppRecordsDBModel(url: jumpLinks), coinType: coinType);
+    dappTap(context, model, coinType: coinType);
   }
 
   ///先判断是否授权

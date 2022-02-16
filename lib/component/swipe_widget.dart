@@ -1,4 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:cstoken/model/dapps_record/dapps_record.dart';
 import 'package:cstoken/state/dapp/dapp_state.dart';
 import 'package:flutter_swiper_null_safety/flutter_swiper_null_safety.dart';
 
@@ -38,9 +39,12 @@ class CustomSwipe extends StatelessWidget {
                         kprovider.bannerData[index]["jumpLinks"] ?? '';
                     String chainType =
                         kprovider.bannerData[index]["chainType"] ?? '';
+                    DAppRecordsDBModel model = DAppRecordsDBModel();
+                    model.url = jumpLinks;
+                    model.chainType = chainType;
                     Provider.of<CurrentChooseWalletState>(context,
                             listen: false)
-                        .bannerTap(context, jumpLinks, chainType);
+                        .bannerTap(context, model);
                   },
                 );
         }));

@@ -36,7 +36,7 @@ class DAppRecordList extends StatelessWidget {
                     onTap: (DAppRecordsDBModel model) {
                       Provider.of<CurrentChooseWalletState>(context,
                               listen: false)
-                          .bannerTap(context, model.url ?? "", "");
+                          .bannerTap(context, model);
                     },
                   );
                 }),
