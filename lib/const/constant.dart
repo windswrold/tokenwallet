@@ -93,6 +93,12 @@ enum KCreateType {
   import,
 }
 
+enum KDappType {
+  records,
+  collect,
+  recordsandcollect,
+}
+
 final bool inProduction = kReleaseMode;
 final bool isAndroid = Platform.isAndroid;
 final bool isIOS = Platform.isIOS;

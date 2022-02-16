@@ -15,7 +15,7 @@ class DAppRecordsDBModel {
   final String? marketId;
   final String? date;
   final String? chainType; //链类型
-  // int? type; //1加入本地收藏 2取消本地收藏
+  final int? type; //0 null浏览 1 收藏  2浏览与收藏
 
   DAppRecordsDBModel({
     this.url,
@@ -25,14 +25,26 @@ class DAppRecordsDBModel {
     this.marketId,
     this.date,
     this.chainType,
-    // this.type,
+    this.type,
   });
 
   static Future<List<DAppRecordsDBModel>> finaAllRecords() async {
     try {
       FlutterDatabase? database = await DataBaseConfig.openDataBase();
       List<DAppRecordsDBModel>? datas =
-          await (database?.dAppRecordsDao.finaAllRecords());
+          await (database?.dAppRecordsDao.finaAllCollectRecords());
+      return datas ?? [];
+    } catch (e) {
+      LogUtil.v("失败" + e.toString());
+      return [];
+    }
+  }
+
+  static Future<List<DAppRecordsDBModel>> finaAllCollectRecords() async {
+    try {
+      FlutterDatabase? database = await DataBaseConfig.openDataBase();
+      List<DAppRecordsDBModel>? datas =
+          await (database?.dAppRecordsDao.finaAllCollectRecords());
       return datas ?? [];
     } catch (e) {
       LogUtil.v("失败" + e.toString());
@@ -76,8 +88,11 @@ class DAppRecordsDBModel {
 
 @dao
 abstract class DAppRecordsDao {
-  @Query('SELECT * FROM ' + tableName)
+  @Query('SELECT * FROM ' + tableName + "WHERE (type = 0 or type = 2)")
   Future<List<DAppRecordsDBModel>> finaAllRecords();
+
+  @Query('SELECT * FROM ' + tableName + "WHERE (type = 1 or type = 2)")
+  Future<List<DAppRecordsDBModel>> finaAllCollectRecords();
 
   @Insert(onConflict: OnConflictStrategy.replace)
   Future<void> insertRecords(DAppRecordsDBModel model);

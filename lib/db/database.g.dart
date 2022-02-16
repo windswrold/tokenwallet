@@ -100,7 +100,7 @@ class _$FlutterDatabase extends FlutterDatabase {
         await database.execute(
             'CREATE TABLE IF NOT EXISTS `contacts_table` (`address` TEXT NOT NULL, `coinType` INTEGER NOT NULL, `name` TEXT NOT NULL, PRIMARY KEY (`address`))');
         await database.execute(
-            'CREATE TABLE IF NOT EXISTS `dapp_records` (`url` TEXT, `name` TEXT, `imageUrl` TEXT, `description` TEXT, `marketId` TEXT, `date` TEXT, `chainType` TEXT, PRIMARY KEY (`url`))');
+            'CREATE TABLE IF NOT EXISTS `dapp_records` (`url` TEXT, `name` TEXT, `imageUrl` TEXT, `description` TEXT, `marketId` TEXT, `date` TEXT, `chainType` TEXT, `type` INTEGER, PRIMARY KEY (`url`))');
         await database.execute(
             'CREATE TABLE IF NOT EXISTS `tokenPrice_table` (`contract` TEXT, `source` TEXT, `target` TEXT, `rate` TEXT, PRIMARY KEY (`contract`, `source`, `target`))');
         await database.execute(
@@ -518,7 +518,8 @@ class _$DAppRecordsDao extends DAppRecordsDao {
                   'description': item.description,
                   'marketId': item.marketId,
                   'date': item.date,
-                  'chainType': item.chainType
+                  'chainType': item.chainType,
+                  'type': item.type
                 }),
         _dAppRecordsDBModelDeletionAdapter = DeletionAdapter(
             database,
@@ -531,7 +532,8 @@ class _$DAppRecordsDao extends DAppRecordsDao {
                   'description': item.description,
                   'marketId': item.marketId,
                   'date': item.date,
-                  'chainType': item.chainType
+                  'chainType': item.chainType,
+                  'type': item.type
                 });
 
   final sqflite.DatabaseExecutor database;
@@ -547,7 +549,8 @@ class _$DAppRecordsDao extends DAppRecordsDao {
 
   @override
   Future<List<DAppRecordsDBModel>> finaAllRecords() async {
-    return _queryAdapter.queryList('SELECT * FROM dapp_records',
+    return _queryAdapter.queryList(
+        'SELECT * FROM dapp_recordsWHERE (type = 0 or type = 2)',
         mapper: (Map<String, Object?> row) => DAppRecordsDBModel(
             url: row['url'] as String?,
             name: row['name'] as String?,
@@ -555,7 +558,23 @@ class _$DAppRecordsDao extends DAppRecordsDao {
             description: row['description'] as String?,
             marketId: row['marketId'] as String?,
             date: row['date'] as String?,
-            chainType: row['chainType'] as String?));
+            chainType: row['chainType'] as String?,
+            type: row['type'] as int?));
+  }
+
+  @override
+  Future<List<DAppRecordsDBModel>> finaAllCollectRecords() async {
+    return _queryAdapter.queryList(
+        'SELECT * FROM dapp_recordsWHERE (type = 1 or type = 2)',
+        mapper: (Map<String, Object?> row) => DAppRecordsDBModel(
+            url: row['url'] as String?,
+            name: row['name'] as String?,
+            imageUrl: row['imageUrl'] as String?,
+            description: row['description'] as String?,
+            marketId: row['marketId'] as String?,
+            date: row['date'] as String?,
+            chainType: row['chainType'] as String?,
+            type: row['type'] as int?));
   }
 
   @override

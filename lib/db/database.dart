@@ -21,7 +21,7 @@ const int dbCurrentVersion = 1;
   DAppRecordsDBModel,
   TokenPrice,
   MCollectionTokens,
-  TransRecordModel
+  TransRecordModel,
 ])
 abstract class FlutterDatabase extends FloorDatabase {
   WalletDao get walletDao;
