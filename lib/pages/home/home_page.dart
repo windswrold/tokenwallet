@@ -56,7 +56,6 @@ class _HomePageState extends State<HomePage> {
       return;
     }
     if (frequency == 0) {
-      SPManager.setVersionFrequency(frequency);
       ShowCustomAlert.versionAlert(context, update, descTxt, url);
     } else {
       String? versionTip = SPManager.getVersionFrequency();
@@ -66,12 +65,12 @@ class _HomePageState extends State<HomePage> {
         SPManager.setVersionFrequency(frequency);
       } else {
         List<String> versions = versionTip.split(",");
-        int frequency = int.parse(versions.first);
+        int oldversion = int.parse(versions.first);
         int lasttime = int.parse(versions.last);
         int currentTime = DateUtil.getNowDateMs();
         LogUtil.v(
-            "${currentTime - lasttime}  ${frequency * (3600 * 24 * 1000)}");
-        if (currentTime - lasttime >= frequency * (3600 * 24 * 1000)) {
+            "${currentTime - lasttime}  ${oldversion * (3600 * 24 * 1000)}");
+        if (currentTime - lasttime >= oldversion * (3600 * 24 * 1000)) {
           ShowCustomAlert.versionAlert(context, update, descTxt, url);
           SPManager.setVersionFrequency(frequency);
         }
