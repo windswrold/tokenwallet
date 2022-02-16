@@ -61,8 +61,8 @@ class RequestMethod {
   }) async {
     CancelToken cancelToken = RequestMethod._getCancelToken(url);
     Response response;
-
-    if (url.contains(RequestURLS.host) == true) {
+    if (url.contains(RequestURLS.testUrl) ||
+        url.contains(RequestURLS.productUrl)) {
       //按照plat统一传adr，苹果ios，语言英文en_us,繁体：zh_TW
       KAppLanguage langu = SPManager.getAppLanguageMode();
       Map<String, dynamic> _commonParams = {

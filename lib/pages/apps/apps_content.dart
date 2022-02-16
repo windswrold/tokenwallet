@@ -11,7 +11,7 @@ class AppsContentPage extends StatefulWidget {
   const AppsContentPage({Key? key, required this.dappTap, required this.type})
       : super(key: key);
 
-  final Function(DAppRecordsDBModel model,int type) dappTap;
+  final Function(DAppRecordsDBModel model, int type) dappTap;
   final int type;
 
   @override
@@ -35,9 +35,11 @@ class _AppsContentPageState extends State<AppsContentPage>
     List<DAppRecordsDBModel> _datas =
         await Provider.of<DappDataState>(context, listen: false)
             .getdappListData(widget.type);
-    setState(() {
-      _dappListData = _datas;
-    });
+    if (mounted) {
+      setState(() {
+        _dappListData = _datas;
+      });
+    }
     refreshController.loadComplete();
     refreshController.refreshCompleted(resetFooterState: true);
   }
@@ -58,7 +60,7 @@ class _AppsContentPageState extends State<AppsContentPage>
                   return DAppListCell(
                     model: model,
                     onTap: (DAppRecordsDBModel tapModel) {
-                      widget.dappTap(tapModel,widget.type);
+                      widget.dappTap(tapModel, widget.type);
                     },
                   );
                 },

@@ -2,59 +2,61 @@ import 'package:cstoken/public.dart';
 import 'package:cstoken/utils/sp_manager.dart';
 
 class RequestURLS {
-  // static  String host = "http://consensus.zooonews.com";
+  static String testUrl = "http://consensus.zooonews.com";
+  static String productUrl = "https://www.consensustoken.vip";
 
-  static String get host => SPManager.getNetType() == KNetType.Mainnet
-      ? "https://www.consensustoken.vip"
-      : "http://consensus.zooonews.com";
+  static String getHost() {
+    LogUtil.v("getgetHost()  ${SPManager.getNetType()}");
+    return SPManager.getNetType() == KNetType.Mainnet ? productUrl : testUrl;
+  }
 
   ///获取NFT新闻 pageNum pageSize
-  static String getnftnews = host + "/app/information/news";
+  static String getnftnews = "/app/information/news";
 
   ///获取快讯 pageNum pageSize
-  static String getlettersnews = host + "/app/information/letters";
+  static String getlettersnews = "/app/information/letters";
 
   ///我的收藏记录 pageNum pageSize address
-  static String getdappmyCollect = host + "/app/dapp/myCollect";
+  static String getdappmyCollect = "/app/dapp/myCollect";
 
   ///取消收藏 address marketId
-  static String getdappcancelCollect = host + "/app/dapp/cancelCollect";
+  static String getdappcancelCollect = "/app/dapp/cancelCollect";
 
   ///添加收藏 address marketId
-  static String getdappcollect = host + "/app/dapp/collect";
+  static String getdappcollect = "/app/dapp/collect";
 
   ///获取dapp具体类型集合 dAppType
-  static String getdapptypeList = host + "/app/dapp/typeList";
+  static String getdapptypeList = "/app/dapp/typeList";
 
   ///首页热门项目
-  static String getindexpopularItem = host + "/app/index/popularItem";
+  static String getindexpopularItem = "/app/index/popularItem";
 
   ///首页应用
-  static String getindexapplicationInfo = host + "/app/index/applicationInfo";
+  static String getindexapplicationInfo = "/app/index/applicationInfo";
 
   ///获取用户地址持有NFT数量 address
-  static String getindexnftInfo = host + "/app/index/nftInfo";
+  static String getindexnftInfo = "/app/index/nftInfo";
 
   ///获取dapp类型
-  static String getdappType = host + "/app/dapp/dappType";
+  static String getdappType = "/app/dapp/dappType";
 
   ///Dapp banner
-  static String getdappbannerInfo = host + "/app/dapp/bannerInfo";
+  static String getdappbannerInfo = "/app/dapp/bannerInfo";
 
   ///首页banner
-  static String getbannerInfo = host + "/app/index/bannerInfo";
+  static String getbannerInfo = "/app/index/bannerInfo";
 
   ///token符号，若多个以逗号分隔
-  static String gettokenPrice = host + "/app/token/tokenPrice";
+  static String gettokenPrice = "/app/token/tokenPrice";
 
-  static String getAppversion = host + "/app/version/lastVersion";
+  static String getAppversion = "/app/version/lastVersion";
 
-  static String gettokenList = host + "/app/token/tokenList";
+  static String gettokenList = "/app/token/tokenList";
 
-  static String getpopularToken = host + "/app/token/popularToken";
+  static String getpopularToken = "/app/token/popularToken";
 
-  static String linkInfo = host + "/app/common/linkInfo";
+  static String linkInfo = "/app/common/linkInfo";
 
   ///chainType
-  static String getgasPrice = host + "/app/wallet/gasPrice";
+  static String getgasPrice = "/app/wallet/gasPrice";
 }

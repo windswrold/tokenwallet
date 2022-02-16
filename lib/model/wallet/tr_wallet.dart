@@ -232,7 +232,7 @@ class TRWallet {
       }
       List indexTokens =
           await WalletServices.gettokenList(1, 20, defaultFlag: true);
-      KNetType netType = RequestURLS.host.contains("consensus.zooonews.com")
+      KNetType netType = RequestURLS.getHost() == RequestURLS.testUrl
           ? KNetType.Testnet
           : KNetType.Mainnet;
       List<MCollectionTokens> tokens = [];

@@ -29,6 +29,7 @@ class ShowCustomAlert {
     VoidCallback? cancelPressed,
     EdgeInsetsGeometry? bottomActionsPadding,
     required Function(Map map) confirmPressed,
+    bool tapConfirmAutoClose = true,
   }) {
     showDialog(
       context: context,
@@ -53,6 +54,7 @@ class ShowCustomAlert {
           rightButtonRadius: rightButtonRadius,
           contextViewMinHeight: contextViewMinHeight,
           bottomActionsPadding: bottomActionsPadding,
+          tapConfirmAutoClose: tapConfirmAutoClose,
         );
       },
     );
@@ -124,6 +126,7 @@ class ShowCustomAlert {
         rightButtonRadius: 8,
         rightButtonTitle: "homepage_update".local(),
         subtitleText: "newspage_versiontip".local() + "\n" + descTxt,
+        tapConfirmAutoClose: update == 2 ? false : true,
         confirmPressed: (result) {
       launch(url);
     });
@@ -153,6 +156,7 @@ class CustomAlert extends StatefulWidget {
   final EdgeInsetsGeometry? bottomActionsPadding;
   //右边按钮点击回调
   final Function(Map map) confirmPressed;
+  final bool tapConfirmAutoClose;
   const CustomAlert({
     Key? key,
     required this.alertType,
@@ -173,6 +177,7 @@ class CustomAlert extends StatefulWidget {
     required this.rightButtonRadius,
     required this.contextViewMinHeight,
     required this.bottomActionsPadding,
+    required this.tapConfirmAutoClose,
   }) : super(key: key);
 
   @override
@@ -396,7 +401,10 @@ class _CustomAlertState extends State<CustomAlert> {
 
   void _confirmOnPressed() async {
     if (widget.alertType == KAlertType.text) {
-      Navigator.pop(context);
+      if (widget.tapConfirmAutoClose == true) {
+        Navigator.pop(context);
+      }
+
       widget.confirmPressed({"text": widget.subtitleText});
     } else if (widget.alertType == KAlertType.password) {
       String text = _edTextEC!.text;
@@ -405,7 +413,9 @@ class _CustomAlertState extends State<CustomAlert> {
       mwallet = (await TRWallet.queryWalletByWalletID(mwallet.walletID!))!;
       bool isPassword = mwallet.lockPin(text: text, ok: null, wrong: null);
       if (isPassword) {
-        Navigator.pop(context);
+        if (widget.tapConfirmAutoClose == true) {
+          Navigator.pop(context);
+        }
         widget.confirmPressed({'text': text});
       } else {
         String tip = mwallet.pinTip ?? "";

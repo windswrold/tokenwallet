@@ -30,10 +30,8 @@ class _SearchAddTokenState extends State<SearchAddToken> {
     _initData(_page);
   }
 
-  void _initData(int page,
-      {String? tokenName, String? tokenContractAddress}) async {
+  void _initData(int page, {String? keywords}) async {
     HWToast.showLoading();
-
     final walletID =
         Provider.of<CurrentChooseWalletState>(context, listen: false)
             .currentWallet!
@@ -41,16 +39,21 @@ class _SearchAddTokenState extends State<SearchAddToken> {
     _page = page;
     List indexTokens = [];
     bool popular = false;
-    if (tokenName != null || tokenContractAddress != null) {
-      indexTokens = await WalletServices.gettokenList(page, 20,
-          tokenName: tokenName, tokenContractAddress: tokenContractAddress);
-    } else {
+    if (keywords == null || keywords.isEmpty) {
       popular = true;
       indexTokens = await WalletServices.getpopularToken();
+    } else {
+      if (keywords.checkAddress(KCoinType.ETH) == true) {
+        indexTokens = await WalletServices.gettokenList(page, 20,
+            tokenName: null, tokenContractAddress: keywords);
+      } else {
+        indexTokens = await WalletServices.gettokenList(page, 20,
+            tokenName: keywords, tokenContractAddress: null);
+      }
     }
 
     List<MCollectionTokens> tokens = [];
-    KNetType netType = RequestURLS.host.contains("consensus.zooonews.com")
+    KNetType netType = RequestURLS.getHost() == RequestURLS.testUrl
         ? KNetType.Testnet
         : KNetType.Mainnet;
     for (var item in indexTokens) {
@@ -75,18 +78,9 @@ class _SearchAddTokenState extends State<SearchAddToken> {
         continue;
       }
       token.owner = walletID;
-      // String contract = token.contract ?? "";
-      // String tokenID = (token.kNetType.toString() +
-      //     "|" +
-      //     token.chainType.toString() +
-      //     "|" +
-      //     walletID +
-      //     "|" +
-      //     contract);
       token.tokenID = token.createTokenID(walletID);
       tokens.add(token);
     }
-
     List<MCollectionTokens> statesTokens =
         await MCollectionTokens.findTokens(walletID, netType.index);
     for (var item in tokens) {
@@ -121,15 +115,7 @@ class _SearchAddTokenState extends State<SearchAddToken> {
       controller: searchController,
       maxLines: 1,
       onChange: (value) {
-        if (value.isEmpty) {
-          _initData(1);
-        } else {
-          if (value.checkAddress(KCoinType.ETH) == true) {
-            _initData(1, tokenContractAddress: value);
-          } else {
-            _initData(1, tokenName: value);
-          }
-        }
+        _initData(1, keywords: value);
       },
       style: TextStyle(
         color: ColorUtils.fromHex("#FF000000"),
@@ -173,12 +159,10 @@ class _SearchAddTokenState extends State<SearchAddToken> {
             Expanded(
                 child: CustomRefresher(
                     onRefresh: () {
-                      searchController.clear();
-                      _initData(1);
+                      _initData(1, keywords: searchController.text);
                     },
                     onLoading: () {
-                      searchController.clear();
-                      _initData(_page + 1);
+                      _initData(_page + 1, keywords: searchController.text);
                     },
                     child: _datas.length == 0
                         ? EmptyDataPage()
@@ -196,7 +180,7 @@ class _SearchAddTokenState extends State<SearchAddToken> {
                                   searchController.clear();
                                   HWToast.showText(
                                       text: "dialog_modifyok".local());
-                                  Future.delayed(Duration(seconds: 1))
+                                  Future.delayed(const Duration(seconds: 2))
                                       .then((value) => {
                                             _initData(1),
                                           });
