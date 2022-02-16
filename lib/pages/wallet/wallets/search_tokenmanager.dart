@@ -1,4 +1,5 @@
 import 'package:cstoken/component/assets_cell.dart';
+import 'package:cstoken/component/empty_data.dart';
 import 'package:cstoken/model/tokens/collection_tokens.dart';
 
 import '../../../public.dart';
@@ -120,23 +121,25 @@ class _TokenManagerState extends State<TokenManager> {
           //   ),
           // ),
           Expanded(
-            child: ListView.builder(
-              itemCount: _datas.length,
-              itemBuilder: (BuildContext context, int index) {
-                MCollectionTokens token = _datas[index];
-                return AssetsCell(
-                  key: ValueKey(index),
-                  token: token,
-                  onTap: () {
-                    token.state = token.state == 1 ? 0 : 1;
-                    String id = token.tokenID ?? "";
-                    MCollectionTokens.updateTokenData(
-                        "state=${token.state} WHERE tokenID = '$id'");
-                    _initData();
-                  },
-                );
-              },
-            ),
+            child: _datas.length == 0
+                ? EmptyDataPage()
+                : ListView.builder(
+                    itemCount: _datas.length,
+                    itemBuilder: (BuildContext context, int index) {
+                      MCollectionTokens token = _datas[index];
+                      return AssetsCell(
+                        key: ValueKey(index),
+                        token: token,
+                        onTap: () {
+                          token.state = token.state == 1 ? 0 : 1;
+                          String id = token.tokenID ?? "";
+                          MCollectionTokens.updateTokenData(
+                              "state=${token.state} WHERE tokenID = '$id'");
+                          _initData();
+                        },
+                      );
+                    },
+                  ),
           ),
         ],
 

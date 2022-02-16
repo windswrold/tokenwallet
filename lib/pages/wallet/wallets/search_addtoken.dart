@@ -173,10 +173,11 @@ class _SearchAddTokenState extends State<SearchAddToken> {
                               return AssetsCell(
                                 onTap: () {
                                   if (item.state == 1) {
-                                    return;
+                                    MCollectionTokens.deleteTokens([item]);
+                                  } else {
+                                    item.state = 1;
+                                    MCollectionTokens.insertTokens([item]);
                                   }
-                                  item.state = 1;
-                                  MCollectionTokens.insertTokens([item]);
                                   searchController.clear();
                                   HWToast.showText(
                                       text: "dialog_modifyok".local());
