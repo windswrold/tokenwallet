@@ -210,14 +210,19 @@ class WalletServices {
   }
 
   static Future<List> gettokenList(int page, int pagesize,
-      {String? tokenName, String? tokenContractAddress}) async {
+      {String? tokenName,
+      String? tokenContractAddress,
+      bool? defaultFlag}) async {
     const url = RequestURLS.gettokenList;
-    Map<String, dynamic> params = {"pageSize": pagesize, "page": page};
+    Map<String, dynamic> params = {"pageSize": pagesize, "pageNum": page};
     if (tokenName != null) {
       params["tokenName"] = tokenName;
     }
     if (tokenContractAddress != null) {
       params["tokenContractAddress"] = tokenContractAddress;
+    }
+    if (defaultFlag != null) {
+      params["defaultFlag"] = defaultFlag == true ? "1" : "0";
     }
 
     dynamic result = await RequestMethod.manager!

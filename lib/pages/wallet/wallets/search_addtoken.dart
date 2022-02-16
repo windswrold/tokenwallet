@@ -74,6 +74,7 @@ class _SearchAddTokenState extends State<SearchAddToken> {
         assert(token.chainType != null, "有判断失败的数据 ");
         continue;
       }
+      token.owner = walletID;
       String contract = token.contract ?? "";
       String tokenID = (token.kNetType.toString() +
           "|" +
@@ -187,12 +188,18 @@ class _SearchAddTokenState extends State<SearchAddToken> {
                               MCollectionTokens item = _datas[index];
                               return AssetsCell(
                                 onTap: () {
-                                  item.state = item.state == 1 ? 0 : 1;
-                                  String id = item.tokenID ?? "";
-                                  MCollectionTokens.updateTokenData(
-                                      "state=${item.state} WHERE tokenID = '$id'");
+                                  if (item.state == 1) {
+                                    return;
+                                  }
+                                  item.state = 1;
+                                  MCollectionTokens.insertTokens([item]);
                                   searchController.clear();
-                                  _initData(1);
+                                  HWToast.showText(
+                                      text: "dialog_modifyok".local());
+                                  Future.delayed(Duration(seconds: 1))
+                                      .then((value) => {
+                                            _initData(1),
+                                          });
                                 },
                                 token: item,
                               );

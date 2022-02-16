@@ -230,7 +230,7 @@ class TRWallet {
         infos.coinType = object.coinType!.index;
         TRWalletInfo.insertWallets([infos]);
       }
-      List indexTokens = await WalletServices.gettokenList(1, 20);
+      List indexTokens = await WalletServices.gettokenList(1, 20,defaultFlag: true);
       KNetType netType = RequestURLS.host.contains("consensus.zooonews.com")
           ? KNetType.Testnet
           : KNetType.Mainnet;
