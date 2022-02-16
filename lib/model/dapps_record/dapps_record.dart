@@ -15,7 +15,7 @@ class DAppRecordsDBModel {
   final String? marketId;
   final String? date;
   final String? chainType; //链类型
-  final int? type; //0 null浏览 1 收藏  2浏览与收藏
+  int? type; //0 null浏览 1 收藏  2浏览与收藏
 
   DAppRecordsDBModel({
     this.url,
@@ -32,7 +32,7 @@ class DAppRecordsDBModel {
     try {
       FlutterDatabase? database = await DataBaseConfig.openDataBase();
       List<DAppRecordsDBModel>? datas =
-          await (database?.dAppRecordsDao.finaAllCollectRecords());
+          await (database?.dAppRecordsDao.finaAllRecords());
       return datas ?? [];
     } catch (e) {
       LogUtil.v("失败" + e.toString());
@@ -88,10 +88,10 @@ class DAppRecordsDBModel {
 
 @dao
 abstract class DAppRecordsDao {
-  @Query('SELECT * FROM ' + tableName + "WHERE (type = 0 or type = 2)")
+  @Query('SELECT * FROM ' + tableName + " WHERE (type = 0 or type = 2)")
   Future<List<DAppRecordsDBModel>> finaAllRecords();
 
-  @Query('SELECT * FROM ' + tableName + "WHERE (type = 1 or type = 2)")
+  @Query('SELECT * FROM ' + tableName + " WHERE (type = 1 or type = 2)")
   Future<List<DAppRecordsDBModel>> finaAllCollectRecords();
 
   @Insert(onConflict: OnConflictStrategy.replace)

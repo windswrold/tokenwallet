@@ -35,6 +35,7 @@ class _DappBrowserState extends State<DappBrowser> {
   final _alertTitle = "messagePayTube";
   ETHClient? _client;
   CustomPopupMenuController _controller = CustomPopupMenuController();
+  int? _type;
 
   InAppWebViewController? _webViewController;
   InAppWebViewGroupOptions options = InAppWebViewGroupOptions(
@@ -57,6 +58,7 @@ class _DappBrowserState extends State<DappBrowser> {
     super.initState();
     walletAaddress = widget.info?.walletAaddress ?? "";
     _client = ETHClient(widget.node?.content ?? "", widget.node?.chainID ?? 1);
+    _type = widget.model!.type;
     _loadWeb3();
   }
 
@@ -72,8 +74,8 @@ class _DappBrowserState extends State<DappBrowser> {
 
   _loadWeb3() async {
     var web3 = await rootBundle.loadString('assets/data/Paytube-min.js');
-    final rpcurl = widget.node?.content ?? "";
-    final chainId = widget.node?.chainID ?? '';
+    String rpcurl = widget.node?.content ?? "";
+    int chainId = widget.node!.chainID!;
     if (mounted) {
       setState(() {
         isLoadJs =
@@ -81,9 +83,9 @@ class _DappBrowserState extends State<DappBrowser> {
         js = web3;
         addd = """
          (function() {
-            var config = {
-                chainId: '$chainId',
-                rpcUrl: '$rpcurl',
+           var config = {
+                chainId: $chainId,
+                rpcUrl: "$rpcurl",
                 isDebug: true
             };
             window.ethereum = new PayTube.Provider(config);
@@ -325,10 +327,25 @@ class _DappBrowserState extends State<DappBrowser> {
                                 String url = widget.model?.url ?? "";
                                 Share.share(url);
                               }),
-                              _getMenuItem("icons/item_white_collect.png",
-                                  "dappmenu_collect".local(), () {
-                                // DAppRecordsDBModel model = widget.model!;
-                                // model.type = 2;
+                              _getMenuItem(
+                                  "icons/item_white_collect.png",
+                                  (_type == 0 || _type == null)
+                                      ? "dappmenu_collect".local()
+                                      : "dappmenu_cancollect".local(), () {
+                                DAppRecordsDBModel model = widget.model!;
+                                if (_type == KDappType.records.index) {
+                                  _type = KDappType.recordsandcollect.index;
+                                } else if (_type == KDappType.collect.index) {
+                                  _type = KDappType.records.index;
+                                } else if (_type ==
+                                    KDappType.recordsandcollect.index) {
+                                  _type = KDappType.records.index;
+                                } else {
+                                  _type = KDappType.collect.index;
+                                }
+                                model.type = _type;
+                                DAppRecordsDBModel.insertRecords(model);
+                                setState(() {});
                               }),
                               _getMenuItem("icons/item_white_copy.png",
                                   "dappmenu_copy".local(), () {

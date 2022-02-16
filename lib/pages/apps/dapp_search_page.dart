@@ -24,9 +24,10 @@ class _DAppSearchState extends State<DAppSearch> {
 
   void _jumpWeb(BuildContext context, String openUrl) {
     searchController.clear();
-    DAppRecordsDBModel.insertRecords(DAppRecordsDBModel(url: openUrl));
+    DAppRecordsDBModel mdoel = DAppRecordsDBModel(url: openUrl, type: 0);
+    DAppRecordsDBModel.insertRecords(mdoel);
     Provider.of<CurrentChooseWalletState>(context, listen: false)
-        .bannerTap(context, openUrl,"");
+        .dappTap(context, mdoel);
     _getRecords();
   }
 
@@ -78,7 +79,6 @@ class _DAppSearchState extends State<DAppSearch> {
   }
 
   void _deleteAllRecords() async {
-    await DAppRecordsDBModel.finaAllRecords();
     await DAppRecordsDBModel.deleteRecords(_recordList);
     setState(() {
       _recordList.clear();

@@ -48,6 +48,7 @@ class _AppsContentPageState extends State<AppsContentPage>
         onRefresh: () {
           _initData();
         },
+        enableFooter: false,
         child: _dappListData.length == 0
             ? EmptyDataPage()
             : ListView.builder(

@@ -32,23 +32,28 @@ class DappDataState extends ChangeNotifier {
     if (index < 0) {
       return [];
     }
-    final dAppType = _myTabs[index]["dAppType"] ?? "1";
-    List result = await WalletServices.getdapptypeList(dAppType.toString());
     List<DAppRecordsDBModel> _datas = [];
-    for (var item in result) {
-      final title = item["title"] ?? "";
-      final introduction = item["introduction"] ?? "";
-      final jumpLinks = item["jumpLinks"] ?? "";
-      final logoUrl = item["logoUrl"] ?? "";
-      final marketId = item["marketId"] ?? "1";
-      DAppRecordsDBModel mdoel = DAppRecordsDBModel(
-          url: jumpLinks,
-          name: title,
-          imageUrl: logoUrl,
-          description: introduction,
-          marketId: marketId.toString());
-      _datas.add(mdoel);
+    int dAppType = _myTabs[index]["dAppType"] ?? 1;
+    if (dAppType == 2) {
+      _datas = await DAppRecordsDBModel.finaAllCollectRecords();
+    } else {
+      List result = await WalletServices.getdapptypeList(dAppType.toString());
+      for (var item in result) {
+        final title = item["title"] ?? "";
+        final introduction = item["introduction"] ?? "";
+        final jumpLinks = item["jumpLinks"] ?? "";
+        final logoUrl = item["logoUrl"] ?? "";
+        final marketId = item["marketId"] ?? "1";
+        DAppRecordsDBModel mdoel = DAppRecordsDBModel(
+            url: jumpLinks,
+            name: title,
+            imageUrl: logoUrl,
+            description: introduction,
+            marketId: marketId.toString());
+        _datas.add(mdoel);
+      }
     }
+
     return _datas;
   }
 

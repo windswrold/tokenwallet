@@ -550,7 +550,7 @@ class _$DAppRecordsDao extends DAppRecordsDao {
   @override
   Future<List<DAppRecordsDBModel>> finaAllRecords() async {
     return _queryAdapter.queryList(
-        'SELECT * FROM dapp_recordsWHERE (type = 0 or type = 2)',
+        'SELECT * FROM dapp_records WHERE (type = 0 or type = 2)',
         mapper: (Map<String, Object?> row) => DAppRecordsDBModel(
             url: row['url'] as String?,
             name: row['name'] as String?,
@@ -565,7 +565,7 @@ class _$DAppRecordsDao extends DAppRecordsDao {
   @override
   Future<List<DAppRecordsDBModel>> finaAllCollectRecords() async {
     return _queryAdapter.queryList(
-        'SELECT * FROM dapp_recordsWHERE (type = 1 or type = 2)',
+        'SELECT * FROM dapp_records WHERE (type = 1 or type = 2)',
         mapper: (Map<String, Object?> row) => DAppRecordsDBModel(
             url: row['url'] as String?,
             name: row['name'] as String?,

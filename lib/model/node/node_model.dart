@@ -66,7 +66,8 @@ class NodeModel {
         node.content = "https://bsc-dataseed.binance.org/";
       } else {
         node.chainID = 97;
-        node.content = "https://data-seed-prebsc-1-s1.binance.org:8545";
+        // node.content = "https://data-seed-prebsc-1-s1.binance.org:8545";
+        node.content = "https://data-seed-prebsc-2-s3.binance.org:8545";
       }
     }
     if (chainType == KCoinType.HECO.index) {
