@@ -15,7 +15,7 @@
    
    
    <application
-        android:label="cs"
+        android:label="CSToken"
         android:icon="@mipmap/ic_launcher">
         <activity
             android:name=".MainActivity"
