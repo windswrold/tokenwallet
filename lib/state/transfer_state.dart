@@ -32,12 +32,17 @@ class KTransferState with ChangeNotifier {
   String _feeValue = '0.0';
   bool _isCustomFee = false;
   int _seleindex = 1;
+  String _paymentAssets = "--";
+  String get paymentAssets => _paymentAssets;
+  String? _currencySymbolStr;
 
   String feeValue() {
     if (_tokens == null) {
       return _feeValue + "";
     }
-    return _feeValue + " " + _tokens!.coinType!.replaceAll("BSC", "BNB");
+    return _feeValue +
+        " " +
+        _walletInfo!.coinType!.geCoinType().feeTokenString();
   }
 
   void init(BuildContext context) {
@@ -47,13 +52,32 @@ class KTransferState with ChangeNotifier {
         .currentWallet!;
     _tokens = Provider.of<CurrentChooseWalletState>(context, listen: false)
         .chooseTokens()!;
+    _currencySymbolStr =
+        Provider.of<CurrentChooseWalletState>(context, listen: false)
+            .currencySymbolStr;
     NodeModel node = NodeModel.queryNodeByChainType(_walletInfo!.coinType!);
     if (node.content == null) {
       return;
     }
-
+    _valueEC.addListener(() async {
+      String text = _valueEC.text;
+      if (text.isEmpty) {
+        text = "0";
+      }
+      Decimal tokenPrice = Decimal.parse(_tokens!.priceString);
+      Decimal inputValue = Decimal.parse(text);
+      Decimal assets = tokenPrice * inputValue;
+      _paymentAssets = "≈" + _currencySymbolStr! + assets.toStringAsFixed(2);
+      notifyListeners();
+    });
     _client = ETHClient(node.content!, node.chainID!);
     initGasData();
+  }
+
+  @override
+  void dispose() {
+    _valueEC.removeListener(() {});
+    super.dispose();
   }
 
   void initGasData() async {
@@ -127,7 +151,7 @@ class KTransferState with ChangeNotifier {
     String remark = _remarkEC.text.trim();
     bool? isValid = false;
     int coinType = _walletInfo!.coinType!;
-    String feeToken = _tokens!.coinType!.replaceAll("BSC", "BNB");
+    String feeToken = coinType.geCoinType().feeTokenString();
     isValid = to.checkAddress(coinType.geCoinType());
     if (isValid == false) {
       HWToast.showText(text: "input_addressinvalid".local());

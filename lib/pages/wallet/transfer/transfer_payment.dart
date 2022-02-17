@@ -18,9 +18,6 @@ class TransferPayment extends StatefulWidget {
 class _TransferPaymentState extends State<TransferPayment> {
   KTransferState _kTransferState = KTransferState();
 
-  String _paymentAssets = "--";
-  String _tokenprice = "0";
-
   @override
   void initState() {
     super.initState();
@@ -31,16 +28,7 @@ class _TransferPaymentState extends State<TransferPayment> {
         _kTransferState.addressEC.text =
             "0x4e268c89495254288b4D1Cb4bc4c010f8C009b25";
       }
-      _kTransferState.valueEC.addListener(() async {
-        final text = _kTransferState.valueEC.text;
-      });
     });
-  }
-
-  @override
-  void dispose() {
-    _kTransferState.valueEC.removeListener(() {});
-    super.dispose();
   }
 
   Widget _buildFee() {
@@ -112,6 +100,7 @@ class _TransferPaymentState extends State<TransferPayment> {
       {bool goContact = false,
       Widget? suffixIcon,
       int maxLine = 1,
+      String? hintText,
       TextInputType keyboardType = TextInputType.text,
       List<TextInputFormatter>? inputFormatters,
       String? titleDetail}) {
@@ -161,6 +150,7 @@ class _TransferPaymentState extends State<TransferPayment> {
           decoration: CustomTextField.getBorderLineDecoration(
               context: context,
               focusedBorderColor: ColorUtils.blueColor,
+              hintText: hintText,
               fillColor: Colors.white,
               suffixIcon: suffixIcon),
         ),
@@ -170,11 +160,15 @@ class _TransferPaymentState extends State<TransferPayment> {
 
   @override
   Widget build(BuildContext context) {
+    String token = Provider.of<CurrentChooseWalletState>(context, listen: false)
+            .chooseTokens()!
+            .token ??
+        "";
     return ChangeNotifierProvider(
         create: (_) => _kTransferState,
         child: CustomPageView(
-          title:
-              CustomPageView.getTitle(title: "transferetype_transfer".local()),
+          title: CustomPageView.getTitle(
+              title: token + " " + "transferetype_transfer".local()),
           backgroundColor: ColorUtils.backgroudColor,
           actions: [
             CustomPageView.getScan(() async {
@@ -194,6 +188,7 @@ class _TransferPaymentState extends State<TransferPayment> {
                     children: [
                       _buildTextField(
                           _kTransferState.addressEC, "transferetype_to".local(),
+                          hintText: "payments_address".local(),
                           suffixIcon: CustomPageView.getCustomIcon(
                               "icons/icon_addcontact.png", () {
                             _kTransferState.goContract(context);
@@ -204,6 +199,7 @@ class _TransferPaymentState extends State<TransferPayment> {
                             "transferetype_value".local(),
                             titleDetail: "paymentsheep_canuse".local() +
                                 provider.chooseTokens()!.balanceString,
+                            hintText: "payments_value".local(),
                             keyboardType: const TextInputType.numberWithOptions(
                                 decimal: true),
                             inputFormatters: [
@@ -232,18 +228,22 @@ class _TransferPaymentState extends State<TransferPayment> {
                       Container(
                         padding: EdgeInsets.only(top: 4.width),
                         alignment: Alignment.centerLeft,
-                        child: Text(
-                          _paymentAssets,
-                          style: TextStyle(
-                            fontSize: 12.font,
-                            color: ColorUtils.fromHex("#FF7685A2"),
-                          ),
+                        child: Consumer<KTransferState>(
+                          builder: (context, provider, child) {
+                            return Text(
+                              provider.paymentAssets,
+                              style: TextStyle(
+                                fontSize: 12.font,
+                                color: ColorUtils.fromHex("#FF7685A2"),
+                              ),
+                            );
+                          },
                         ),
                       ),
                       _buildFee(),
                       _buildTextField(_kTransferState.remarkEC,
                           "transferetype_remark".local(),
-                          maxLine: 5),
+                          hintText: "payments_remark".local(), maxLine: 5),
                     ],
                   ),
                 ),

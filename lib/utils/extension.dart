@@ -352,6 +352,27 @@ extension CoinTypeString on KCoinType {
         throw Error();
     }
   }
+
+  String feeTokenString() {
+    switch (this) {
+      case KCoinType.BSC:
+        return "BNB";
+      case KCoinType.ETH:
+        return "ETH";
+      case KCoinType.HECO:
+        return "HT";
+      case KCoinType.OKChain:
+        return "OKT";
+      case KCoinType.Matic:
+        return "MATIC";
+      case KCoinType.AVAX:
+        return "AVAX";
+      case KCoinType.Arbitrum:
+        return "ETH-ARBI";
+      default:
+        throw Error();
+    }
+  }
 }
 
 extension KCurrencyTypeString on KCurrencyType {

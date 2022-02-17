@@ -113,7 +113,7 @@ class _DappBrowserState extends State<DappBrowser> {
         name == 'signPersonalMessage' ||
         name == 'signTypedMessage') {
       String from = walletAaddress;
-      String feeToken = widget.info!.coinType!.geCoinType().coinTypeString();
+      String feeToken = widget.info!.coinType!.geCoinType().feeTokenString();
       if (name == 'signTransaction') {
         Map<String, dynamic> object = params["object"];
         BridgeParams bridge = BridgeParams.fromJson(object);

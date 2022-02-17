@@ -40,7 +40,7 @@ List<Map<String, dynamic>> currency_List = [
     "tokenType": 0,
   },
   {
-    "coinType": "Matic",
+    "coinType": "Polygon",
     "chainType": 4,
     "token": "MATIC",
     "decimals": 18,
@@ -110,7 +110,7 @@ List<Map<String, dynamic>> currency_List = [
     "tokenType": 0,
   },
   {
-    "coinType": "Matic",
+    "coinType": "Polygon",
     "chainType": 4,
     "token": "MATIC",
     "decimals": 18,

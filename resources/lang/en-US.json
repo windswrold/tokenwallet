@@ -200,5 +200,9 @@
     "newspage_versiontip": "New version tips",
     "newspage_noversiontip": "Is the latest version",
     "payment_valueshouldlessbal": "The transfer amount needs to be less than the balance",
-    "homepage_update": "Update"
+    "homepage_update": "Update",
+    "newspage_title": "Wallet Guidelines",
+    "payments_address": "Please enter payment address",
+    "payments_value": "Please enter the payment amount",
+    "payments_remark":"Please enter the note"
 }

@@ -29,7 +29,8 @@ class _NewsPageState extends State<NewsPage> {
   @override
   void initState() {
     super.initState();
-    _myTabs.add(const Tab(text: 'NFT'));
+    // _myTabs.add(const Tab(text: 'NFT'));
+    _myTabs.add(Tab(text: "newspage_title".local()));
     _myTabs.add(Tab(text: 'newspage_common'.local()));
     _initData(_page);
   }
