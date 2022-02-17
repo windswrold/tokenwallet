@@ -132,7 +132,7 @@ class KTransferState with ChangeNotifier {
             _seleindex = seleindex;
             notifyListeners();
           },
-          feeToken: _tokens!.coinType!,
+          feeToken: _walletInfo!.coinType!.geCoinType().feeTokenString(),
           chaintype: _tokens!.coinType!,
           seleindex: _seleindex,
         ));
