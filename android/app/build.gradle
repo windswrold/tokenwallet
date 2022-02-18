@@ -46,8 +46,9 @@ android {
         applicationId "com.consensus.wallet.cstoken"
         minSdkVersion 21
         targetSdkVersion 30
-        versionCode flutterVersionCode.toInteger()
-        versionName flutterVersionName
+        versionCode 2
+        versionName "1.0.1"
+        multiDexEnabled true //突破应用方法数65535的一个限制
     }
 
     buildTypes {
