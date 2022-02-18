@@ -194,7 +194,7 @@ class CurrentChooseWalletState with ChangeNotifier {
     }
     NodeModel node = NodeModel.queryNodeByChainType(coinType.index);
     LogUtil.v(
-        "dapp address ${infos.first.walletAaddress} chain ${node.content}");
+        "dapp address ${infos.first.walletAaddress} chain ${node.content} id ${node.chainID}");
     Routers.push(
         context, DappBrowser(model: model, info: infos.first, node: node));
   }
@@ -409,7 +409,7 @@ class CurrentChooseWalletState with ChangeNotifier {
           walletID, 1, netType.index, _chooseChainType!.index);
     }
     _tokens[walletID] = datas;
-    notifyListeners();
+    _calTotalAssets();
   }
 
   void _requestMyCollectionTokenAssets() async {
@@ -483,7 +483,6 @@ class CurrentChooseWalletState with ChangeNotifier {
             }
           }
         }
-        _calTotalAssets();
       }
     }
   }
