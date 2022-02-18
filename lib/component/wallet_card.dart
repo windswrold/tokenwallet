@@ -9,7 +9,7 @@ class WalletCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    String name = "CSTOKEN";
+    String name = "Consensus";
     if (wallet != null) {
       name = wallet?.walletName ?? "";
       name = name.breakWord();

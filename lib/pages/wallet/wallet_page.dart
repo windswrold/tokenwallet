@@ -236,10 +236,16 @@ class _WalletPageState extends State<WalletPage> {
                   top: 170.width,
                   child: Column(
                     children: [
-                      LoadAssetsImage(
-                        "bg/biglogo.png",
-                        fit: BoxFit.cover,
-                        height: 40.width,
+                      Container(
+                        alignment: Alignment.center,
+                        child: Text(
+                          "Consensus",
+                          style: TextStyle(
+                            color: Colors.black,
+                            fontSize: 48.font,
+                            fontWeight: FontWeightUtils.bold,
+                          ),
+                        ),
                       ),
                       Container(
                         margin: EdgeInsets.only(top: 16.width),

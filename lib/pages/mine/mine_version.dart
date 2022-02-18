@@ -69,7 +69,7 @@ class _MineVersionState extends State<MineVersion> {
             ),
           ),
           Text(
-            "CSToken",
+            "Consensus",
             style: TextStyle(
               color: ColorUtils.fromHex("#FF000000"),
               fontSize: 24.font,

@@ -48,7 +48,7 @@ class _NewsShareState extends State<NewsShare> {
                 children: [
                   LoadAssetsImage("bg/new_sharebg.png"),
                   Text(
-                    "CSTOKEN " + "newspage_sharenews".local(),
+                    "Consensus " + "newspage_sharenews".local(),
                     style: TextStyle(
                       fontSize: 24.font,
                       fontWeight: FontWeightUtils.semiBold,

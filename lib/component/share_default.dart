@@ -22,10 +22,16 @@ class ShareDefaultWidget extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              LoadAssetsImage(
-                "bg/biglogo.png",
-                height: 33,
-                width: 150,
+              Container(
+                alignment: Alignment.center,
+                child: Text(
+                  "Consensus",
+                  style: TextStyle(
+                    color: Colors.black,
+                    fontSize: 22.font,
+                    fontWeight: FontWeightUtils.bold,
+                  ),
+                ),
               ),
               10.columnWidget,
               Container(
