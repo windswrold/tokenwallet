@@ -46,6 +46,7 @@ dependencies:
   custom_pop_up_menu: ^1.2.3+1
   url_launcher: ^6.0.4 
   flutter_html: ^2.2.1
+  flutter_native_splash: ^2.0.4
   
 dev_dependencies:
   flutter_test:
@@ -69,3 +70,11 @@ flutter:
     - assets/images/mine/ 
     - assets/images/tokens/ 
 
+flutter_native_splash:
+
+  color: "#ffffff"
+  image: assets/images/bg/splash.png
+  android_gravity: center
+  web: false
+  ios: false
+  fullscreen: true
