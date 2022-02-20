@@ -63,7 +63,7 @@ class TRWallet {
 
   static String randomWalletName() {
     int random = Random().nextInt(9999);
-    return "钱包#" + random.toString();
+    return "Wallet#" + random.toString();
   }
 
   void showLockPin(

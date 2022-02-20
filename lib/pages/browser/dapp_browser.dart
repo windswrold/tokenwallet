@@ -76,6 +76,7 @@ class _DappBrowserState extends State<DappBrowser> {
     var web3 = await rootBundle.loadString('assets/data/Paytube-min.js');
     String rpcurl = widget.node?.content ?? "";
     int chainId = widget.node!.chainID!;
+    String hexChain = chainId.toRadixString(16);
     if (mounted) {
       setState(() {
         isLoadJs =
@@ -86,10 +87,15 @@ class _DappBrowserState extends State<DappBrowser> {
            var config = {
                 chainId: $chainId,
                 rpcUrl: "$rpcurl",
-                isDebug: true
+                address: "$walletAaddress"
             };
             window.ethereum = new PayTube.Provider(config);
+           
+            window.ethereum.networkVersion = '$chainId';
+            window.ethereum.chainId = '$hexChain';
+            ethereum.selectedAddress = '$walletAaddress'
             window.web3 = new PayTube.Web3(window.ethereum);
+           
             PayTube.postMessage = (jsonString) => {
               alert("$_alertTitle" + JSON.stringify(jsonString || "{}"))
             };
@@ -293,25 +299,6 @@ class _DappBrowserState extends State<DappBrowser> {
         bottom: PreferredSize(
             child: _progressBar(_lineProgress, context),
             preferredSize: const Size.fromHeight(1)),
-        // leading: Row(
-        //   children: [
-        //     Container(
-        //       padding: EdgeInsets.only(left: 8),
-        //       child: CustomPageView.getBack(() async {
-        //         bool? canGo = await _webViewController?.canGoBack();
-        //         if (canGo == true) {
-        //           _webViewController?.goBack();
-        //         } else {
-        //           Routers.goBack(context);
-        //         }
-        //       }),
-        //     ),
-        //     8.rowWidget,
-        //     CustomPageView.getCloseLeading(() {
-        //       Routers.goBack(context);
-        //     }),
-        //   ],
-        // ),
         actions: [
           CustomPopupMenu(
               menuBuilder: () => ClipRRect(

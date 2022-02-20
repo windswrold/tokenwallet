@@ -20,7 +20,6 @@ class NewsPage extends StatefulWidget {
 }
 
 class _NewsPageState extends State<NewsPage> {
-  List<Tab> _myTabs = [];
   int _currentPage = 0;
   Map<int, List<NewsModel>>? _datas = {};
   RefreshController _refreshController = RefreshController();
@@ -29,9 +28,6 @@ class _NewsPageState extends State<NewsPage> {
   @override
   void initState() {
     super.initState();
-    // _myTabs.add(const Tab(text: 'NFT'));
-    _myTabs.add(Tab(text: "newspage_title".local()));
-    _myTabs.add(Tab(text: 'newspage_common'.local()));
     _initData(_page);
   }
 
@@ -73,7 +69,7 @@ class _NewsPageState extends State<NewsPage> {
   Widget build(BuildContext context) {
     EasyLocalization.of(context);
     return DefaultTabController(
-      length: _myTabs.length,
+      length: 2,
       child: CustomPageView(
         hiddenLeading: true,
         title: Material(
@@ -83,7 +79,10 @@ class _NewsPageState extends State<NewsPage> {
                 splashColor: const Color.fromRGBO(0, 0, 0, 0),
                 highlightColor: const Color.fromRGBO(0, 0, 0, 0)),
             child: TabBar(
-              tabs: _myTabs,
+              tabs: [
+                Tab(text: "newspage_title".local(context: context)),
+                Tab(text: 'newspage_common'.local(context: context)),
+              ],
               isScrollable: true,
               indicator: const CustomUnderlineTabIndicator(
                   gradientColor: [ColorUtils.blueColor, ColorUtils.blueColor]),
