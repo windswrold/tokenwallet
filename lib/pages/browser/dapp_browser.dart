@@ -91,9 +91,9 @@ class _DappBrowserState extends State<DappBrowser> {
             };
             window.ethereum = new PayTube.Provider(config);
            
-            window.ethereum.networkVersion = '$chainId';
-            window.ethereum.chainId = '$hexChain';
-            ethereum.selectedAddress = '$walletAaddress'
+            // window.ethereum.networkVersion = '$chainId';
+            // window.ethereum.chainId = '$hexChain';
+            // ethereum.selectedAddress = '$walletAaddress'
             window.web3 = new PayTube.Web3(window.ethereum);
            
             PayTube.postMessage = (jsonString) => {

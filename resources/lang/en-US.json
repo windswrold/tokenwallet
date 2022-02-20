@@ -204,5 +204,7 @@
     "newspage_title": "Guidelines",
     "payments_address": "Please enter payment address",
     "payments_value": "Please enter the payment amount",
-    "payments_remark": "Please enter the note"
+    "payments_remark": "Please enter the note",
+    "minepage_followsystem": "FollowSystem",
+    "minepage_zh_hans": "Simplified Chinese"
 }

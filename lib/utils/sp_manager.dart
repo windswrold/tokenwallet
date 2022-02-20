@@ -70,9 +70,9 @@ class SPManager {
   static KCurrencyType getAppCurrencyMode() {
     final String mode = getAppCurrency();
     switch (mode) {
-      case '人民币(CNY)':
+      case 'CNY':
         return KCurrencyType.CNY;
-      case '美元(USD)':
+      case 'USD':
         return KCurrencyType.USD;
       default:
         return KCurrencyType.CNY;
