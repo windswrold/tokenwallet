@@ -26,11 +26,11 @@ extension Web3Result on InAppWebViewController {
     this.evaluateJavascript(source: script);
   }
 
-  void setAddress(String address, int id) {
+  void setAddress(String address, int id) async {
     address = address.toLowerCase();
-    final script = "window.ethereum.setAddress(\"$address\");";
+    final script = "window.ethereum.setAddress('$address');";
     LogUtil.v("script " + script);
-    this.evaluateJavascript(source: script);
+    await this.evaluateJavascript(source: script);
     sendResults([address], id);
   }
 }

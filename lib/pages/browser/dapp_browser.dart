@@ -73,7 +73,7 @@ class _DappBrowserState extends State<DappBrowser> {
   }
 
   _loadWeb3() async {
-    var web3 = await rootBundle.loadString('assets/data/Paytube-min.js');
+    var web3 = await rootBundle.loadString('assets/data/trust-min.js');
     String rpcurl = widget.node?.content ?? "";
     int chainId = widget.node!.chainID!;
     String hexChain = chainId.toRadixString(16);
@@ -87,17 +87,13 @@ class _DappBrowserState extends State<DappBrowser> {
            var config = {
                 chainId: $chainId,
                 rpcUrl: "$rpcurl",
-                address: "$walletAaddress"
+                address: "$walletAaddress",
+                isDebug: true
             };
-            window.ethereum = new PayTube.Provider(config);
-           
-            // window.ethereum.networkVersion = '$chainId';
-            // window.ethereum.chainId = '$hexChain';
-            // ethereum.selectedAddress = '$walletAaddress'
-            window.web3 = new PayTube.Web3(window.ethereum);
-           
-            PayTube.postMessage = (jsonString) => {
-              alert("$_alertTitle" + JSON.stringify(jsonString || "{}"))
+            window.ethereum = new trustwallet.Provider(config);
+            window.web3 = new trustwallet.Web3(window.ethereum);
+            trustwallet.postMessage = (jsonString) => {
+               alert("$_alertTitle" + JSON.stringify(jsonString || "{}"))
             };
         })();
         """;
@@ -414,6 +410,9 @@ class _DappBrowserState extends State<DappBrowser> {
                   setState(() {
                     _lineProgress = progress / 100;
                   });
+                },
+                onConsoleMessage: (controller, consoleMessage) {
+                  LogUtil.v("consoleMessage ${consoleMessage.message}");
                 },
                 onLoadError: (controller, url, code, message) {
                   LogUtil.v("onLoadError $url $message");
