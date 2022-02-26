@@ -113,7 +113,7 @@ class _HomePageState extends State<HomePage> {
 
   Widget _topView(TRWallet? wallet) {
     return Container(
-      height: 44,
+      height: 44.width,
       alignment: Alignment.center,
       color: Colors.white,
       child: Container(
@@ -262,7 +262,9 @@ class _HomePageState extends State<HomePage> {
                     child: Column(
                       children: [
                         CachedNetworkImage(
-                            imageUrl: iconUrl, width: 50, height: 50),
+                            imageUrl: iconUrl,
+                            width: 50.width,
+                            height: 50.width),
                         9.columnWidget,
                         Text(
                           title,
@@ -339,8 +341,8 @@ class _HomePageState extends State<HomePage> {
                         ClipOval(
                           child: CachedNetworkImage(
                             imageUrl: logoUrl,
-                            width: 56,
-                            height: 56,
+                            width: 56.width,
+                            height: 56.width,
                           ),
                         ),
                         10.rowWidget,

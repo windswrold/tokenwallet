@@ -15,7 +15,7 @@ class DAppRecordList extends StatelessWidget {
 
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.only(top: 15.width),
+      // padding: EdgeInsets.only(top: 15.width),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [

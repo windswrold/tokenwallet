@@ -218,7 +218,7 @@ class _CustomAlertState extends State<CustomAlert> {
   ///alertView bgView
   Widget _alertBgView(BuildContext context) {
     return Container(
-      constraints: BoxConstraints(minHeight: 158.width, maxHeight: 812.width),
+      constraints: BoxConstraints(minHeight: 0.width, maxHeight: 812.width),
       margin: EdgeInsets.only(left: 40.width, right: 40.width),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(12),
@@ -272,8 +272,8 @@ class _CustomAlertState extends State<CustomAlert> {
               child: Center(
                 child: Image.asset(
                   ASSETS_IMG + "icons/icon_lightclose.png",
-                  width: 24,
-                  height: 24,
+                  width: 24.width,
+                  height: 24.width,
                 ),
               ),
             ),
@@ -331,7 +331,7 @@ class _CustomAlertState extends State<CustomAlert> {
       padding: EdgeInsets.only(top: 16.width, left: 16.width, right: 16.width),
       alignment: Alignment.center,
       constraints:
-          BoxConstraints(minHeight: widget.contextViewMinHeight ?? 80.width),
+          BoxConstraints(minHeight: widget.contextViewMinHeight ?? 0.width),
       child: _child,
     );
   }

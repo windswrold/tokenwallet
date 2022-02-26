@@ -32,7 +32,7 @@ class _ImportsWalletState extends State<ImportsWallet> {
     if (inProduction == false) {
       // _kprovier.contentEC!.text =
       //     "40730f5ddc6b492688ce3897b9ff54e582f6ad8243a90ece21b060a46db46b44";
-       _kprovier.contentEC!.text =
+      _kprovier.contentEC!.text =
           "f335fb8d70f27351a2a20541464f87057112e3245efa8c119fc7a08742622044";
 
       // contentEC.text =

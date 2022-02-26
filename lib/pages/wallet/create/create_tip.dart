@@ -32,52 +32,57 @@ class CreateTip extends StatelessWidget {
             padding: EdgeInsets.only(
                 left: 24.width,
                 right: 24.width,
-                top: 32.width,
+                top: 24.width,
                 bottom: 40.width),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Column(
-                  children: [
-                    Text(
-                      "createwallet_tip1".local(),
-                      style: TextStyle(
-                        fontSize: 14.font,
-                        fontWeight: FontWeightUtils.regular,
-                        color: ColorUtils.fromHex("#CC000000"),
-                      ),
+                Expanded(
+                  child: SingleChildScrollView(
+                    child: Column(
+                      children: [
+                        Text(
+                          "createwallet_tip1".local(),
+                          style: TextStyle(
+                            fontSize: 14.font,
+                            fontWeight: FontWeightUtils.regular,
+                            color: ColorUtils.fromHex("#CC000000"),
+                          ),
+                        ),
+                        25.columnWidget,
+                        Text(
+                          "createwallet_tip2".local(),
+                          style: TextStyle(
+                            fontSize: 14.font,
+                            fontWeight: FontWeightUtils.regular,
+                            color: ColorUtils.fromHex("#CC000000"),
+                          ),
+                        ),
+                        25.columnWidget,
+                        Text(
+                          "createwallet_tip3".local(),
+                          style: TextStyle(
+                            fontSize: 14.font,
+                            fontWeight: FontWeightUtils.regular,
+                            color: ColorUtils.fromHex("#CC000000"),
+                          ),
+                        ),
+                        25.columnWidget,
+                        Text(
+                          "createwallet_tip4".local(),
+                          style: TextStyle(
+                            fontSize: 14.font,
+                            fontWeight: FontWeightUtils.regular,
+                            color: ColorUtils.fromHex("#CC000000"),
+                          ),
+                        ),
+                      ],
                     ),
-                    25.columnWidget,
-                    Text(
-                      "createwallet_tip2".local(),
-                      style: TextStyle(
-                        fontSize: 14.font,
-                        fontWeight: FontWeightUtils.regular,
-                        color: ColorUtils.fromHex("#CC000000"),
-                      ),
-                    ),
-                    25.columnWidget,
-                    Text(
-                      "createwallet_tip3".local(),
-                      style: TextStyle(
-                        fontSize: 14.font,
-                        fontWeight: FontWeightUtils.regular,
-                        color: ColorUtils.fromHex("#CC000000"),
-                      ),
-                    ),
-                    25.columnWidget,
-                    Text(
-                      "createwallet_tip4".local(),
-                      style: TextStyle(
-                        fontSize: 14.font,
-                        fontWeight: FontWeightUtils.regular,
-                        color: ColorUtils.fromHex("#CC000000"),
-                      ),
-                    ),
-                  ],
+                  ),
                 ),
                 NextButton(
                     bgc: ColorUtils.blueColor,
+                    margin: EdgeInsets.only(top: 10.width),
                     textStyle: TextStyle(
                       color: Colors.white,
                       fontWeight: FontWeightUtils.medium,

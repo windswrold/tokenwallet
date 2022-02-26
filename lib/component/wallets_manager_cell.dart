@@ -85,7 +85,7 @@ class WalletsManagetCell extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
                         Text(
-                          walet.walletName ?? "ssss",
+                          walet.walletName ?? "",
                           style: TextStyle(
                             fontSize: 16.width,
                             fontWeight: FontWeightUtils.medium,
@@ -94,6 +94,7 @@ class WalletsManagetCell extends StatelessWidget {
                         ),
                         Container(
                           margin: EdgeInsets.only(left: 10.width),
+                           alignment: Alignment.center,
                           padding:
                               EdgeInsets.only(left: 4.width, right: 4.width),
                           height: 20.width,
@@ -112,6 +113,7 @@ class WalletsManagetCell extends StatelessWidget {
                         Visibility(
                           visible: backupState,
                           child: Container(
+                            alignment: Alignment.center,
                             margin: EdgeInsets.only(left: 10.width),
                             padding:
                                 EdgeInsets.only(left: 4.width, right: 4.width),

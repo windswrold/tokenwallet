@@ -126,19 +126,18 @@ class _DAppSearchState extends State<DAppSearch> {
   Widget _topSearchView() {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 16.width),
-      height: 44,
+      height: 44.width,
+      alignment: Alignment.center,
       color: Colors.white,
       child: Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           CustomPageView.getCloseLeading(() {
             Routers.goBack(context);
           }),
           16.rowWidget,
           Expanded(
-            child: SizedBox(
-              height: 36,
-              child: _searchTextField(),
-            ),
+            child: _searchTextField(),
           ),
           _searchBtn(),
         ],
@@ -170,6 +169,7 @@ class _DAppSearchState extends State<DAppSearch> {
             fontWeight: FontWeightUtils.regular,
           ),
           focusedBorderColor: ColorUtils.blueColor,
+          contentPadding: EdgeInsets.symmetric(horizontal: 10.width),
           borderRadius: 22,
           fillColor: ColorUtils.fromHex("#FFF6F8FF")),
     );

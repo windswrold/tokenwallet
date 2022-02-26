@@ -109,7 +109,7 @@ class _WalletsManagerState extends State<WalletsManager> {
                   NextButton(
                       onPressed: _create,
                       height: 44,
-                      width: 160.width,
+                      width: 160,
                       bgc: ColorUtils.blueColor,
                       borderRadius: 12,
                       textStyle: TextStyle(
@@ -121,7 +121,7 @@ class _WalletsManagerState extends State<WalletsManager> {
                   NextButton(
                       onPressed: _imports,
                       height: 44,
-                      width: 160.width,
+                      width: 160,
                       borderRadius: 12,
                       textStyle: TextStyle(
                         color: ColorUtils.blueColor,

@@ -60,7 +60,7 @@ class _RecervePaymentPageState extends State<RecervePaymentPage> {
 
   Widget _topView() {
     return Container(
-      height: 44,
+      height: 44.w,
       alignment: Alignment.center,
       margin: EdgeInsets.only(top: MediaQuery.of(context).padding.top),
       padding: EdgeInsets.only(left: 16.width, right: 16.width),
@@ -75,8 +75,8 @@ class _RecervePaymentPageState extends State<RecervePaymentPage> {
             child: Center(
               child: Image.asset(
                 ASSETS_IMG + "icons/icon_back_white.png",
-                width: 24,
-                height: 24,
+                width: 24.w,
+                height: 24.w,
               ),
             ),
           ),
@@ -93,8 +93,8 @@ class _RecervePaymentPageState extends State<RecervePaymentPage> {
             child: Center(
               child: Image.asset(
                 ASSETS_IMG + "icons/icon_white_share.png",
-                width: 24,
-                height: 24,
+                width: 24.w,
+                height: 24.w,
               ),
             ),
           ),

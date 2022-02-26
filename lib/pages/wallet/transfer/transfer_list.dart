@@ -132,7 +132,7 @@ class _TransferListPageState extends State<TransferListPage>
               },
               height: 44,
               borderRadius: 12,
-              width: 142.width,
+              width: 142,
               bgc: ColorUtils.fromHex("#FF00C99A"),
               title: '',
               child: Row(
@@ -161,7 +161,7 @@ class _TransferListPageState extends State<TransferListPage>
               },
               height: 44,
               borderRadius: 12,
-              width: 142.width,
+              width: 142,
               bgc: ColorUtils.blueColor,
               title: '',
               child: Row(

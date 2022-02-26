@@ -51,7 +51,7 @@ class NextButton extends StatelessWidget {
         height: height.width,
         margin: margin,
         padding: padding,
-        width: width,
+        width: width?.width,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(borderRadius ?? 0),
           border: border,

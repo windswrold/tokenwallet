@@ -195,7 +195,7 @@ class _TransDetailPageState extends State<TransDetailPage> {
                 onPressed: () {},
                 height: 44,
                 borderRadius: 12,
-                width: 142.width,
+                width: 142,
                 bgc: ColorUtils.blueBGColor,
                 textStyle: TextStyle(
                   color: ColorUtils.blueColor,

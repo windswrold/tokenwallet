@@ -25,8 +25,8 @@ class LoadAssetsImage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Image.asset(
       ASSETS_IMG + name,
-      height: height,
-      width: width,
+      height: height?.width,
+      width: width?.width,
       fit: fit,
       color: color,
       scale: scale,
@@ -67,8 +67,8 @@ class LoadTokenAssetsImage extends StatelessWidget {
           Positioned(
             child: CachedNetworkImage(
               imageUrl: tokenurl,
-              height: height,
-              width: width,
+              height: height?.width,
+              width: width?.width,
               fit: fit,
               color: color,
               placeholder: (context, url) {
@@ -89,8 +89,8 @@ class LoadTokenAssetsImage extends StatelessWidget {
                 child: ClipOval(
                   child: CachedNetworkImage(
                     imageUrl: chainurl,
-                    height: 15,
-                    width: 15,
+                    height: 15.width,
+                    width: 15.width,
                     fit: fit,
                     color: color,
                     placeholder: (context, url) {
@@ -106,38 +106,6 @@ class LoadTokenAssetsImage extends StatelessWidget {
               )),
         ],
       ),
-    );
-  }
-}
-
-class LoadNetworkImage extends StatelessWidget {
-  LoadNetworkImage(this.name,
-      {Key? key,
-      this.width,
-      this.height,
-      this.fit = BoxFit.contain,
-      this.color,
-      this.scale,
-      this.placeholder})
-      : super(key: key);
-
-  final String? name;
-  final double? width;
-  final double? height;
-  final BoxFit fit;
-  final Color? color;
-  final double? scale;
-  final String? placeholder;
-
-  @override
-  Widget build(BuildContext context) {
-    return FadeInImage.assetNetwork(
-      image: name == null ? "" : name!,
-      placeholder: placeholder!,
-      height: height,
-      width: width,
-      fit: fit,
-      imageScale: scale!,
     );
   }
 }

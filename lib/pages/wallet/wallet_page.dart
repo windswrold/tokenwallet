@@ -61,7 +61,7 @@ class _WalletPageState extends State<WalletPage> {
   Widget _topView(TRWallet wallet) {
     final name = wallet.walletName;
     return Container(
-      height: 44,
+      height: 44.width,
       alignment: Alignment.center,
       color: Colors.white,
       child: Container(
@@ -122,10 +122,13 @@ class _WalletPageState extends State<WalletPage> {
               borderRadius: BorderRadius.circular(5),
               child: Container(
                 color: Colors.white,
+                height: 250.width,
                 child: IntrinsicWidth(
-                  child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      children: _getMenuItem()),
+                  child: SingleChildScrollView(
+                    child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: _getMenuItem()),
+                  ),
                 ),
               ),
             ),
@@ -229,11 +232,10 @@ class _WalletPageState extends State<WalletPage> {
         : CustomPageView(
             hiddenAppBar: true,
             hiddenLeading: true,
-            child: Stack(
-              alignment: AlignmentDirectional.topCenter,
+            child: Column(
               children: [
-                Positioned(
-                  top: 170.width,
+                Padding(
+                  padding: EdgeInsets.only(top: 170.height),
                   child: Column(
                     children: [
                       Container(
@@ -248,7 +250,7 @@ class _WalletPageState extends State<WalletPage> {
                         ),
                       ),
                       Container(
-                        margin: EdgeInsets.only(top: 16.width),
+                        margin: EdgeInsets.only(top: 16.height),
                         child: Text(
                           SLOGAN,
                           style: TextStyle(
@@ -261,14 +263,14 @@ class _WalletPageState extends State<WalletPage> {
                     ],
                   ),
                 ),
-                Positioned(
-                  bottom: 20.width,
+                Expanded(child: Container()),
+                Padding(
+                  padding: EdgeInsets.only(),
                   child: Column(
                     children: [
                       NextButton(
-                        margin: EdgeInsets.only(top: 16.width),
-                        height: 48.width,
-                        width: 240.width,
+                        height: 48,
+                        width: 240,
                         bgc: ColorUtils.blueColor,
                         title: 'choose_createwallet'.local(),
                         textStyle: TextStyle(
@@ -280,8 +282,8 @@ class _WalletPageState extends State<WalletPage> {
                       ),
                       NextButton(
                         margin: EdgeInsets.only(top: 16.width),
-                        height: 48.width,
-                        width: 240.width,
+                        height: 48,
+                        width: 240,
                         border: Border.all(color: ColorUtils.blueColor),
                         title: 'choose_restorewallet'.local(),
                         textStyle: TextStyle(
@@ -292,7 +294,8 @@ class _WalletPageState extends State<WalletPage> {
                         onPressed: _restore,
                       ),
                       Container(
-                        margin: EdgeInsets.only(top: 40.width),
+                        margin:
+                            EdgeInsets.only(bottom: 20.width, top: 40.width),
                         child: Text(
                           'Consensus  Wallet',
                           style: TextStyle(

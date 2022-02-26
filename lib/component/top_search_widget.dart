@@ -13,7 +13,7 @@ class TopSearchView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 44,
+      height: 44.width,
       alignment: Alignment.center,
       child: Container(
         padding: EdgeInsets.only(left: 16.width),
@@ -29,8 +29,8 @@ class TopSearchView extends StatelessWidget {
                       .tapWalletSetting(context);
                 },
                 child: Container(
-                  width: 32,
-                  height: 32,
+                  width: 32.width,
+                  height: 32.width,
                   color: ColorUtils.blueColor,
                   child: Center(
                     child: LoadAssetsImage(

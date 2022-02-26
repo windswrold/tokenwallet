@@ -59,12 +59,10 @@ class CustomPageView extends StatelessWidget {
   static Widget getCloseLeading(VoidCallback onTap) {
     return GestureDetector(
       onTap: onTap,
-      child: Center(
-        child: Image.asset(
-          ASSETS_IMG + "icons/icon_lightclose.png",
-          width: 24,
-          height: 24,
-        ),
+      child: Image.asset(
+        ASSETS_IMG + "icons/icon_lightclose.png",
+        width: 24.w,
+        height: 24.w,
       ),
     );
   }
@@ -75,12 +73,10 @@ class CustomPageView extends StatelessWidget {
       onTap: onTap,
       child: Container(
         padding: EdgeInsets.only(right: 16.width),
-        child: Center(
-          child: Image.asset(
-            ASSETS_IMG + "icons/icon_add.png",
-            width: 24,
-            height: 24,
-          ),
+        child: Image.asset(
+          ASSETS_IMG + "icons/icon_add.png",
+          width: 24.width,
+          height: 24.w,
         ),
       ),
     );
@@ -92,12 +88,10 @@ class CustomPageView extends StatelessWidget {
       behavior: HitTestBehavior.opaque,
       child: Container(
         padding: EdgeInsets.only(right: 16.width),
-        child: Center(
-          child: Image.asset(
-            ASSETS_IMG + "icons/icon_scan.png",
-            width: 24,
-            height: 24,
-          ),
+        child: Image.asset(
+          ASSETS_IMG + "icons/icon_scan.png",
+          width: 24.w,
+          height: 24.w,
         ),
       ),
     );
@@ -109,12 +103,10 @@ class CustomPageView extends StatelessWidget {
       behavior: HitTestBehavior.opaque,
       child: Container(
         padding: EdgeInsets.only(right: 16.width),
-        child: Center(
-          child: Image.asset(
-            ASSETS_IMG + "mine/mine_messages.png",
-            width: 24,
-            height: 24,
-          ),
+        child: Image.asset(
+          ASSETS_IMG + "mine/mine_messages.png",
+          width: 24.w,
+          height: 24.w,
         ),
       ),
     );
@@ -123,11 +115,11 @@ class CustomPageView extends StatelessWidget {
   static Widget getBack(VoidCallback onTap) {
     return GestureDetector(
       onTap: onTap,
-      child: Center(
+      child: Container(
         child: Image.asset(
           ASSETS_IMG + "icons/icon_back_dark.png",
-          width: 24,
-          height: 24,
+          width: 24.w,
+          height: 24.w,
         ),
       ),
     );
@@ -136,12 +128,10 @@ class CustomPageView extends StatelessWidget {
   static Widget getCustomIcon(String iconName, VoidCallback onTap) {
     return GestureDetector(
       onTap: onTap,
-      child: Center(
-        child: Image.asset(
-          ASSETS_IMG + iconName,
-          width: 24,
-          height: 24,
-        ),
+      child: Image.asset(
+        ASSETS_IMG + iconName,
+        width: 24.w,
+        height: 24.w,
       ),
     );
   }

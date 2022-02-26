@@ -115,6 +115,7 @@ class _BackupMemoState extends State<BackupMemo> {
                 NextButton(
                   onPressed: _backMemo,
                   bgc: ColorUtils.blueColor,
+                  margin: EdgeInsets.only(top: 10.width),
                   textStyle: TextStyle(
                       color: Colors.white,
                       fontSize: 16.font,

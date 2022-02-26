@@ -5,6 +5,7 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:cstoken/utils/sp_manager.dart';
+import 'package:device_preview/device_preview.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
@@ -38,15 +39,21 @@ Future<void> main() async {
   };
 
   Provider.debugCheckInvalidValueType = null;
-  runApp(EasyLocalization(
-    child: MyApp(),
-    // 支持的语言
-    supportedLocales: const [
-      Locale('en', 'US'),
-      Locale('zh', 'CN'),
+  runApp(DevicePreview(
+    enabled: inProduction,
+    tools: [
+      ...DevicePreview.defaultTools,
     ],
-    startLocale: const Locale('zh', 'CN'),
-    // 语言资源包目录
-    path: 'resources/lang',
+    builder: (context) => EasyLocalization(
+      child: MyApp(),
+      // 支持的语言
+      supportedLocales: const [
+        Locale('en', 'US'),
+        Locale('zh', 'CN'),
+      ],
+      startLocale: const Locale('zh', 'CN'),
+      // 语言资源包目录
+      path: 'resources/lang',
+    ),
   ));
 }

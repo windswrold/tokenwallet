@@ -64,7 +64,7 @@ class BackupWarningTip extends StatelessWidget {
                         bgc: ColorUtils.blueColor,
                         padding: EdgeInsets.symmetric(horizontal: 12.width),
                         margin: EdgeInsets.only(left: 15.width),
-                        height: 25.width,
+                        height: 25,
                         textStyle: TextStyle(
                           fontSize: 12.font,
                           fontWeight: FontWeightUtils.medium,

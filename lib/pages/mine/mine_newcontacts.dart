@@ -40,6 +40,10 @@ class _MineNewContactsState extends State<MineNewContacts> {
       HWToast.showText(text: "minepage_inputadds".local());
       return;
     }
+    if (_chooseType == null) {
+      return;
+    }
+
     bool isValid = _add.checkAddress(_chooseType!);
     if (isValid == false) {
       HWToast.showText(text: "input_addressinvalid".local());
@@ -69,7 +73,7 @@ class _MineNewContactsState extends State<MineNewContacts> {
 
   Widget _buildText(String text) {
     return Container(
-      width: 80.width,
+      width: 120.width,
       child: Text(
         text,
         overflow: TextOverflow.ellipsis,
