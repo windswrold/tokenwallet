@@ -1,5 +1,7 @@
+import 'dart:async';
 import 'dart:collection';
 import 'dart:convert';
+import 'package:cstoken/const/constant.dart';
 import 'package:cstoken/model/client/ethclient.dart';
 import 'package:cstoken/model/dapps_record/dapps_record.dart';
 import 'package:cstoken/model/node/node_model.dart';
@@ -38,6 +40,7 @@ class _DappBrowserState extends State<DappBrowser> {
   int? _type;
 
   InAppWebViewController? _webViewController;
+
   InAppWebViewGroupOptions options = InAppWebViewGroupOptions(
       crossPlatform: InAppWebViewOptions(
         useShouldOverrideUrlLoading: true,
@@ -47,6 +50,7 @@ class _DappBrowserState extends State<DappBrowser> {
       ),
       android: AndroidInAppWebViewOptions(
         useHybridComposition: true,
+        domStorageEnabled: true,
       ),
       ios: IOSInAppWebViewOptions(
         allowsInlineMediaPlayback: true,
@@ -263,9 +267,9 @@ class _DappBrowserState extends State<DappBrowser> {
 
   @override
   Widget build(BuildContext context) {
-    return CustomPageView(
-        // title: CustomPageView.getTitle(title: widget.model?.name ?? ""),
+    String url = widget.model?.url ?? '';
 
+    return CustomPageView(
         title: Container(
           child: Row(
             children: [
@@ -362,14 +366,7 @@ class _DappBrowserState extends State<DappBrowser> {
                 color: Colors.white,
               )
             : InAppWebView(
-                initialUrlRequest:
-                    URLRequest(url: Uri.parse(widget.model?.url ?? '')),
-                // initialUrlRequest:
-                //     URLRequest(url: Uri.parse("http://js-eth-sign.surge.sh/")),
-                // initialUrlRequest:
-                //     URLRequest(url: Uri.parse("http://192.168.0.100:3000")),
-                // initialUrlRequest: URLRequest(
-                //     url: Uri.parse("https://example.walletconnect.org/")),
+                initialUrlRequest: URLRequest(url: Uri.parse(url)),
                 initialOptions: options,
                 onWebViewCreated: (controller) {
                   _webViewController = controller;
@@ -417,8 +414,17 @@ class _DappBrowserState extends State<DappBrowser> {
                 onLoadError: (controller, url, code, message) {
                   LogUtil.v("onLoadError $url $message");
                 },
-                onLoadStart: (controller, url) {
+                onLoadStop: (controller, url) async {},
+                onLoadStart: (controller, url) async {
                   LogUtil.v("onLoadStart $url");
+                  if (isAndroid) {
+                    _webViewController!
+                        .evaluateJavascript(source: js!)
+                        .then((value) => {});
+                    _webViewController!
+                        .evaluateJavascript(source: addd!)
+                        .then((value) => {});
+                  }
                 }));
   }
 }
