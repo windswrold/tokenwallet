@@ -124,10 +124,18 @@ class _DappBrowserState extends State<DappBrowser> {
         Map<String, dynamic> object = params["object"];
         BridgeParams bridge = BridgeParams.fromJson(object);
         HWToast.showLoading();
-        int price = await _client!.getGasPrice();
+        String? price = (bridge.gasPrice == null)
+            ? (await _client!.getGasPrice()).toString()
+            : bridge.gasPrice;
+        int? maxGas = bridge.gas ??
+            await _client!.estimateGas(
+              from: from,
+              to: bridge.to,
+              data: bridge.data,
+            );
         String fee = TRWallet.configFeeValue(
             cointype: 1,
-            beanValue: bridge.gas.toString(),
+            beanValue: maxGas.toString(),
             offsetValue: price.toString());
         HWToast.hiddenAllToast();
         showModalBottomSheet(
@@ -154,11 +162,17 @@ class _DappBrowserState extends State<DappBrowser> {
                       infoCoinType: widget.info!.coinType!.geCoinType(),
                       confirmPressed: (prv) async {
                     final result = await _client!.transferOrigin(
-                        prv,
-                        bridge.to ?? "",
-                        bridge.gas,
-                        bridge.data ?? '',
-                        bridge.value ?? BigInt.zero);
+                      prv: prv,
+                      to: bridge.to ?? "",
+                      gasLimit: maxGas,
+                      data: bridge.data ?? '',
+                      amount: bridge.value ?? BigInt.zero,
+                      fee: fee,
+                      gasPrice: price,
+                      from: from,
+                      coinType:
+                          widget.info!.coinType!.geCoinType().feeTokenString(),
+                    );
 
                     _webViewController!.sendResult(result!, id);
                   }, cancelPress: () {
@@ -409,7 +423,7 @@ class _DappBrowserState extends State<DappBrowser> {
                   });
                 },
                 onConsoleMessage: (controller, consoleMessage) {
-                  LogUtil.v("consoleMessage ${consoleMessage.message}");
+                  // LogUtil.v("consoleMessage ${consoleMessage.message}");
                 },
                 onLoadError: (controller, url, code, message) {
                   LogUtil.v("onLoadError $url $message");

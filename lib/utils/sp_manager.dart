@@ -30,7 +30,7 @@ class SPManager {
   }
 
   static String getAppLanguage() {
-    int value = _sp!.getInt(_languageSET) ?? KAppLanguage.zh_cn.index;
+    int value = _sp!.getInt(_languageSET) ?? KAppLanguage.system.index;
     return value.getAppLanguageType().value;
   }
 

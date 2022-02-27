@@ -121,12 +121,21 @@ class ETHClient {
     return bytesToHex(message, include0x: true);
   }
 
-  Future<String?> transferOrigin(
-      String prv, String to, int? gasLimit, String data, BigInt amount) async {
+  Future<String?> transferOrigin({
+    required String from,
+    required String prv,
+    required String to,
+    required String data,
+    required BigInt amount,
+    int? gasLimit,
+    String? gasPrice,
+    String? fee,
+    String? coinType,
+  }) async {
     final credentials = EthPrivateKey.fromHex(prv);
     final signto = EthereumAddress.fromHex(to);
     final input = hexToBytes(data);
-    return client.sendTransaction(
+    final result = await client.sendTransaction(
         credentials,
         web3.Transaction(
             to: signto,
@@ -136,6 +145,28 @@ class ETHClient {
             data: input),
         chainId: _chainId,
         fetchChainIdFromNetworkId: false);
+
+    TransRecordModel model = TransRecordModel();
+    model.txid = result;
+    model.amount = amount.tokenString(18);
+    model.fromAdd = from;
+    model.date = DateUtil.getNowDateStr();
+    model.token = coinType;
+    model.coinType = coinType;
+    model.fee = fee;
+    model.gasPrice = gasPrice.toString();
+    model.gasLimit = gasLimit.toString();
+    model.toAdd = to;
+    model.transStatus = KTransState.pending.index;
+    model.chainid = _chainId;
+    // model.nonce = ts.nonce;
+    // model.contractTo = ts.to?.hexEip55;
+    // model.input = ts.data != null ? bytesToHex(ts.data!) : null;
+    // model.signMessage = signMessage;
+    model.repeatPushCount = 0;
+    model.transType = KTransType.transfer.index;
+    TransRecordModel.insertTrxLists([model]);
+    return result;
   }
 
   Future<String?> signTypedMessage(String prv, String jsonData) async {
@@ -148,6 +179,31 @@ class ETHClient {
     EtherAmount gas = await this.client.getGasPrice();
     int value = gas.getValueInUnit(EtherUnit.gwei).toInt();
     return max(10, value);
+  }
+
+  Future<int?> estimateGas({
+    String? from,
+    String? to,
+    String? value,
+    EtherAmount? gasPrice,
+    EtherAmount? maxPriorityFeePerGas,
+    EtherAmount? maxFeePerGas,
+    String? data,
+  }) async {
+    try {
+      BigInt maxGas = BigInt.zero;
+      maxGas = await this.client.estimateGas(
+            sender: from != null ? EthereumAddress.fromHex(from) : null,
+            to: to != null ? EthereumAddress.fromHex(to) : null,
+            data: data != null ? hexToBytes(data) : null,
+            value: value != null
+                ? EtherAmount.fromUnitAndValue(EtherUnit.ether, value)
+                : null,
+          );
+      return maxGas.toInt();
+    } catch (e) {
+      return null;
+    }
   }
 
   Future<TransactionReceipt?> getTransactionReceipt(String hash) {
