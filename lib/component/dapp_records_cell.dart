@@ -81,8 +81,8 @@ class DAppListCell extends StatelessWidget {
       child: model.imageUrl == null
           ? _cellDefaultImage(context)
           : CachedNetworkImage(
-              width: 44,
-              height: 44,
+              width: 44.width,
+              height: 44.width,
               imageUrl: model.imageUrl!,
               placeholder: (context, url) => LoadAssetsImage(
                 "icons/dapp_defaut_icon.png",

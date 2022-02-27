@@ -59,10 +59,12 @@ class CustomPageView extends StatelessWidget {
   static Widget getCloseLeading(VoidCallback onTap) {
     return GestureDetector(
       onTap: onTap,
-      child: Image.asset(
-        ASSETS_IMG + "icons/icon_lightclose.png",
-        width: 24.w,
-        height: 24.w,
+      child: Center(
+        child: Image.asset(
+          ASSETS_IMG + "icons/icon_lightclose.png",
+          width: 24.w,
+          height: 24.w,
+        ),
       ),
     );
   }
@@ -115,7 +117,7 @@ class CustomPageView extends StatelessWidget {
   static Widget getBack(VoidCallback onTap) {
     return GestureDetector(
       onTap: onTap,
-      child: Container(
+      child: Center(
         child: Image.asset(
           ASSETS_IMG + "icons/icon_back_dark.png",
           width: 24.w,

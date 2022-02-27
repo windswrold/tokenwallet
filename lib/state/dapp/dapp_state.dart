@@ -13,8 +13,12 @@ class DappDataState extends ChangeNotifier {
   List _bannerData = [];
   List get bannerData => _bannerData;
   List _myTabs = [];
-  List<Tab> get myTabs =>
-      _myTabs.map((e) => Tab(text: e["dAppTypeName"] ?? '')).toList();
+  List<Tab> get myTabs => _myTabs
+      .map((e) => Tab(
+            text: e["dAppTypeName"] ?? '',
+            height: 40.width,
+          ))
+      .toList();
 
   void getBannerData() async {
     _bannerData = await WalletServices.getdappbannerInfo();

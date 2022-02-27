@@ -72,43 +72,58 @@ class _NewsPageState extends State<NewsPage> {
       length: 2,
       child: CustomPageView(
         hiddenLeading: true,
-        title: Material(
-          color: Colors.transparent,
-          child: Theme(
-            data: ThemeData(
-                splashColor: const Color.fromRGBO(0, 0, 0, 0),
-                highlightColor: const Color.fromRGBO(0, 0, 0, 0)),
-            child: TabBar(
-              tabs: [
-                Tab(text: "newspage_title".local(context: context)),
-                Tab(text: 'newspage_common'.local(context: context)),
-              ],
-              isScrollable: true,
-              indicator: const CustomUnderlineTabIndicator(
-                  gradientColor: [ColorUtils.blueColor, ColorUtils.blueColor]),
-              indicatorWeight: 4,
-              indicatorSize: TabBarIndicatorSize.tab,
-              labelColor: ColorUtils.fromHex("#FF000000"),
-              labelStyle: TextStyle(
-                fontSize: 18.font,
-                fontWeight: FontWeightUtils.semiBold,
+        hiddenAppBar: true,
+        child: Column(
+          children: [
+            Material(
+              color: Colors.transparent,
+              child: Theme(
+                data: ThemeData(
+                    splashColor: const Color.fromRGBO(0, 0, 0, 0),
+                    highlightColor: const Color.fromRGBO(0, 0, 0, 0)),
+                child: TabBar(
+                  tabs: [
+                    Tab(
+                      text: "newspage_title".local(context: context),
+                      height: 40.width,
+                    ),
+                    Tab(
+                      text: 'newspage_common'.local(context: context),
+                      height: 40.width,
+                    ),
+                  ],
+                  isScrollable: true,
+                  indicator: const CustomUnderlineTabIndicator(gradientColor: [
+                    ColorUtils.blueColor,
+                    ColorUtils.blueColor
+                  ]),
+                  indicatorWeight: 4,
+                  indicatorSize: TabBarIndicatorSize.tab,
+                  labelColor: ColorUtils.fromHex("#FF000000"),
+                  labelStyle: TextStyle(
+                    fontSize: 18.font,
+                    fontWeight: FontWeightUtils.semiBold,
+                  ),
+                  unselectedLabelColor: ColorUtils.fromHex("#99000000"),
+                  unselectedLabelStyle: TextStyle(
+                    fontSize: 18.font,
+                    fontWeight: FontWeightUtils.regular,
+                  ),
+                  onTap: (value) {
+                    // LogUtil.v("onTap $value");
+                    // _currentPage = value;
+                    // _initData(1);
+                  },
+                ),
               ),
-              unselectedLabelColor: ColorUtils.fromHex("#99000000"),
-              unselectedLabelStyle: TextStyle(
-                fontSize: 18.font,
-                fontWeight: FontWeightUtils.regular,
-              ),
-              onTap: (value) {
-                // LogUtil.v("onTap $value");
-                // _currentPage = value;
-                // _initData(1);
-              },
             ),
-          ),
-        ),
-        child: TabBarView(
-          physics: const NeverScrollableScrollPhysics(), //禁止左右滑动
-          children: [NFTNewsPage(), LetterNewsPage()],
+            Expanded(
+              child: TabBarView(
+                physics: const NeverScrollableScrollPhysics(), //禁止左右滑动
+                children: [NFTNewsPage(), LetterNewsPage()],
+              ),
+            )
+          ],
         ),
       ),
     );

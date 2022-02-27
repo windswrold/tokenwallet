@@ -99,7 +99,8 @@ class CustomTextField extends StatefulWidget {
     Color focusedUnderLineColor = Colors.white,
     double underLineWidth = 1,
     Color fillColor = Colors.white,
-    EdgeInsetsGeometry contentPadding = EdgeInsets.zero,
+    EdgeInsetsGeometry contentPadding =
+        const EdgeInsets.fromLTRB(10, 20, 10, 20),
     String? errorText,
     Color errorTextColor = const Color(0xFFFF233E),
   }) {
@@ -152,7 +153,8 @@ class CustomTextField extends StatefulWidget {
     String? helperText,
     TextStyle? helperStyle,
     TextStyle? hintStyle,
-    EdgeInsetsGeometry contentPadding = const EdgeInsets.fromLTRB(8, 8, 8, 8),
+    EdgeInsetsGeometry contentPadding =
+        const EdgeInsets.fromLTRB(10, 20, 10, 20),
     double borderRadius = 4,
     Widget? prefixIcon,
     Widget? suffixIcon,
@@ -199,7 +201,8 @@ class CustomTextField extends StatefulWidget {
       EdgeInsetsGeometry padding = EdgeInsets.zero,
       int? maxLength,
       int maxLines = 1,
-      EdgeInsetsGeometry contentPadding = EdgeInsets.zero,
+      EdgeInsetsGeometry contentPadding =
+          const EdgeInsets.fromLTRB(10, 15, 10, 15),
       bool isPasswordText = false,
       bool isScanText = false,
       VoidCallback? onPressBack,

@@ -18,8 +18,8 @@ class _ImportsWalletState extends State<ImportsWallet> {
       CreateWalletProvider.init(leadType: KLeadType.Prvkey);
 
   final List<Tab> _myTabs = [
-    Tab(text: 'importwallet_prv'.local()),
-    Tab(text: 'importwallet_memo'.local())
+    Tab(text: 'importwallet_prv'.local(), height: 40.width),
+    Tab(text: 'importwallet_memo'.local(), height: 40.width)
   ];
 
   int _pageIndex = 0;
@@ -175,44 +175,68 @@ class _ImportsWalletState extends State<ImportsWallet> {
       child: DefaultTabController(
         length: _myTabs.length,
         child: CustomPageView(
-          title: Material(
-            color: Colors.transparent,
-            child: Theme(
-              data: ThemeData(
-                  splashColor: const Color.fromRGBO(0, 0, 0, 0),
-                  highlightColor: const Color.fromRGBO(0, 0, 0, 0)),
-              child: TabBar(
-                tabs: _myTabs,
-                isScrollable: true,
-                indicator: const CustomUnderlineTabIndicator(gradientColor: [
-                  ColorUtils.blueColor,
-                  ColorUtils.blueColor
-                ]),
-                indicatorWeight: 4,
-                indicatorSize: TabBarIndicatorSize.tab,
-                labelColor: ColorUtils.fromHex("#FF000000"),
-                labelStyle: TextStyle(
-                  fontSize: 18.font,
-                  fontWeight: FontWeightUtils.semiBold,
+            hiddenAppBar: true,
+            child: Column(
+              children: [
+                Row(
+                  children: [
+                    Container(
+                      margin: EdgeInsets.only(left: 15.width),
+                      child: CustomPageView.getBack(() {
+                        Routers.goBack(context);
+                      }),
+                    ),
+                    Expanded(
+                      child: Material(
+                        color: Colors.transparent,
+                        child: Theme(
+                          data: ThemeData(
+                              splashColor: const Color.fromRGBO(0, 0, 0, 0),
+                              highlightColor: const Color.fromRGBO(0, 0, 0, 0)),
+                          child: TabBar(
+                            tabs: _myTabs,
+                            // isScrollable: true,
+                            indicator: const CustomUnderlineTabIndicator(
+                                gradientColor: [
+                                  ColorUtils.blueColor,
+                                  ColorUtils.blueColor
+                                ]),
+                            indicatorWeight: 4,
+                            indicatorSize: TabBarIndicatorSize.tab,
+                            labelColor: ColorUtils.fromHex("#FF000000"),
+                            labelStyle: TextStyle(
+                              fontSize: 18.font,
+                              fontWeight: FontWeightUtils.semiBold,
+                            ),
+                            unselectedLabelColor:
+                                ColorUtils.fromHex("#99000000"),
+                            unselectedLabelStyle: TextStyle(
+                              fontSize: 18.font,
+                              fontWeight: FontWeightUtils.regular,
+                            ),
+                            onTap: (value) {
+                              _onTap(value);
+                            },
+                          ),
+                        ),
+                      ),
+                    ),
+                    Container(
+                      margin: EdgeInsets.only(right: 15.width),
+                      width: 24.width,
+                    ),
+                  ],
                 ),
-                unselectedLabelColor: ColorUtils.fromHex("#99000000"),
-                unselectedLabelStyle: TextStyle(
-                  fontSize: 18.font,
-                  fontWeight: FontWeightUtils.regular,
-                ),
-                onTap: (value) {
-                  _onTap(value);
-                },
-              ),
-            ),
-          ),
-          child: TabBarView(
-            physics: const NeverScrollableScrollPhysics(), //禁止左右滑动
-            children: _myTabs.map((Tab tab) {
-              return _getPageViewWidget(tab);
-            }).toList(),
-          ),
-        ),
+                Expanded(
+                  child: TabBarView(
+                    physics: const NeverScrollableScrollPhysics(), //禁止左右滑动
+                    children: _myTabs.map((Tab tab) {
+                      return _getPageViewWidget(tab);
+                    }).toList(),
+                  ),
+                )
+              ],
+            )),
       ),
     );
   }

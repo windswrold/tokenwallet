@@ -8,10 +8,10 @@ class KTransListState with ChangeNotifier {
   List<Tab> _myTabs = [];
   TimerUtil? timer;
   List<Tab> get myTabs => <Tab>[
-        Tab(text: 'transferetype_all'.local()),
-        Tab(text: 'transferetype_in'.local()),
-        Tab(text: 'transferetype_out'.local()),
-        Tab(text: 'transferetype_other'.local()),
+        Tab(text: 'transferetype_all'.local(), height: 40.width),
+        Tab(text: 'transferetype_in'.local(), height: 40.width),
+        Tab(text: 'transferetype_out'.local(), height: 40.width),
+        Tab(text: 'transferetype_other'.local(), height: 40.width),
       ];
 
   @override
@@ -56,8 +56,8 @@ class KTransListState with ChangeNotifier {
 
   void paymentClick(BuildContext context) {
     Routers.push(context, TransferPayment()).then((value) => {
-      eventBus.fire(MtransListUpdate()),
-    });
+          eventBus.fire(MtransListUpdate()),
+        });
   }
 
   void cellContentSelectRowAt(BuildContext context, int index) {}
