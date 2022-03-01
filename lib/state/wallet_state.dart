@@ -123,6 +123,17 @@ class CurrentChooseWalletState with ChangeNotifier {
     requestAssets();
   }
 
+  ///选择链类型
+  void onTapChain(BuildContext context, Function(KCoinType) onTap) {
+    showModalBottomSheet(
+        context: context,
+        backgroundColor: Colors.transparent,
+        isScrollControlled: true,
+        builder: (_) {
+          return ChainListType(onTap: onTap);
+        });
+  }
+
   void bannerTap(BuildContext context, DAppRecordsDBModel model) {
     if (model.url == null || model.url!.isEmpty) {
       return;
@@ -165,15 +176,11 @@ class CurrentChooseWalletState with ChangeNotifier {
     if (coinType != null) {
       _queryWalletInfo(context, model, coinType);
     } else {
-      showModalBottomSheet(
-          context: context,
-          backgroundColor: Colors.transparent,
-          isScrollControlled: true,
-          builder: (_) {
-            return ChainListType(onTap: (KCoinType coinType) {
-              _queryWalletInfo(context, model, coinType);
-            });
-          });
+      onTapChain(
+          context,
+          (p0) => {
+                _queryWalletInfo(context, model, p0),
+              });
     }
   }
 

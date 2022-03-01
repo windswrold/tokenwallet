@@ -9,6 +9,7 @@ import 'package:cstoken/utils/custom_toast.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 import '../../../public.dart';
+import 'custom_addtokens.dart';
 
 class SearchAddToken extends StatefulWidget {
   SearchAddToken({Key? key}) : super(key: key);
@@ -113,7 +114,7 @@ class _SearchAddTokenState extends State<SearchAddToken> {
   Widget _searchTextField() {
     return CustomTextField(
       controller: searchController,
-      maxLines: 1,
+      // maxLines: 1,
       onChange: (value) {
         _initData(1, keywords: value);
       },
@@ -165,7 +166,13 @@ class _SearchAddTokenState extends State<SearchAddToken> {
                       _initData(_page + 1, keywords: searchController.text);
                     },
                     child: _datas.length == 0
-                        ? EmptyDataPage()
+                        ? EmptyDataPage(
+                            emptyTip: "empaty_notoken".local(),
+                            bottomBtnTitle: "empaty_addtoken".local(),
+                            onTap: () {
+                              Routers.push(context, CustomAddTokens());
+                            },
+                          )
                         : ListView.builder(
                             itemCount: _datas.length,
                             itemBuilder: (BuildContext context, int index) {

@@ -28,7 +28,7 @@ class _TokenManagerState extends State<TokenManager> {
   Widget _searchTextField() {
     return CustomTextField(
       controller: searchController,
-      maxLines: 1,
+      // maxLines: 1,
       onChange: (value) async {
         LogUtil.v("value  $value");
         final walletID =

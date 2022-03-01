@@ -206,5 +206,15 @@
     "payments_value": "请输入支付数量",
     "payments_remark": "请输入备注",
     "minepage_followsystem": "跟随系统",
-    "minepage_zh_hans": "简体中文"
+    "minepage_zh_hans": "简体中文",
+    "customtokens_tokencontract": "代币合约",
+    "customtokens_tokendecimal": "代币精度",
+    "customtokens_tokendsymbol": "代币符号",
+    "customtokens_chaintype": "链类型",
+    "customtokens_pleasechaintype": "选择链类型",
+    "customtokens_pleasetokencontract": "请输入代币合约地址",
+    "customtokens_pleasetokendsymbol": "请输入代币符号",
+    "empaty_notoken": "还没有此币种哦",
+    "empaty_addtoken": "添加代币",
+    "customtokens_decimalempty": "没有精度数据"
 }

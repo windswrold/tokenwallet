@@ -226,15 +226,15 @@ class ETHClient {
 }
 
 final ContractAbi _erc20Abi = ContractAbi('ERC20', [
-  ContractFunction('approve', [
+  const ContractFunction('approve', [
     FunctionParameter('to', AddressType()),
     FunctionParameter('amount', UintType(length: 256)),
   ]),
-  ContractFunction('transfer', [
+  const ContractFunction('transfer', [
     FunctionParameter('to', AddressType()),
     FunctionParameter('amount', UintType(length: 256)),
   ]),
-  ContractFunction(
+  const ContractFunction(
       'allowance',
       [
         FunctionParameter('owner', AddressType()),

@@ -153,6 +153,28 @@ class MCollectionTokens {
     }
   }
 
+  static void newTokens(
+      {required String walletID,
+      required int coinType,
+      required String contract,
+      required String token,
+      required int decimal}) async {
+    int netType = SPManager.getNetType().index;
+    MCollectionTokens model = MCollectionTokens();
+    model.contract = contract;
+    model.token = token;
+    model.decimals = decimal;
+    model.state = 1;
+    model.owner = walletID;
+    model.kNetType = netType;
+    model.chainType = coinType;
+    model.coinType = coinType.geCoinType().coinTypeString();
+    model.tokenType = KTokenType.token.index;
+    model.tokenID = model.createTokenID(walletID);
+    model.digits = 4;
+    MCollectionTokens.insertTokens([model]);
+  }
+
   ///查询当前钱包下当前节点的所有
   static Future<List<MCollectionTokens>> findTokens(
       String owner, int kNetType) async {

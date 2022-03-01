@@ -58,17 +58,12 @@ class _MineNewContactsState extends State<MineNewContacts> {
   }
 
   void _onTapChain() {
-    showModalBottomSheet(
-        context: context,
-        backgroundColor: Colors.transparent,
-        isScrollControlled: true,
-        builder: (_) {
-          return ChainListType(onTap: (KCoinType coinType) {
-            setState(() {
-              _chooseType = coinType;
-            });
-          });
-        });
+    Provider.of<CurrentChooseWalletState>(context, listen: false)
+        .onTapChain(context, (p0) {
+      setState(() {
+        _chooseType = p0;
+      });
+    });
   }
 
   Widget _buildText(String text) {

@@ -137,8 +137,9 @@ extension StringUtil on String {
   bool checkAddress(KCoinType coinType) {
     bool isValid = false;
     try {
-      isValid =
-          EthereumAddress.fromHex(this).hexEip55.isNotEmpty ? true : false;
+      isValid = EthereumAddress.fromHex(toLowerCase()).hexEip55.isNotEmpty
+          ? true
+          : false;
     } catch (e) {
       LogUtil.v("校验失败" + e.toString());
     }

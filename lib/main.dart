@@ -40,7 +40,8 @@ Future<void> main() async {
 
   Provider.debugCheckInvalidValueType = null;
   runApp(DevicePreview(
-    enabled: !inProduction,
+    // enabled: !inProduction,
+    enabled: false,
     tools: [
       ...DevicePreview.defaultTools,
     ],
