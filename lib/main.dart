@@ -18,7 +18,7 @@ Future<void> main() async {
   await EasyLocalization.ensureInitialized();
   //状态栏颜色改为透明
   SystemUiOverlayStyle systemUiOverlayStyle =
-      const SystemUiOverlayStyle(statusBarColor: Colors.transparent);
+      const SystemUiOverlayStyle(statusBarColor: Colors.white);
   SystemChrome.setSystemUIOverlayStyle(systemUiOverlayStyle);
   if (Platform.isAndroid) {
     await AndroidInAppWebViewController.setWebContentsDebuggingEnabled(true);
@@ -40,7 +40,7 @@ Future<void> main() async {
 
   Provider.debugCheckInvalidValueType = null;
   runApp(DevicePreview(
-    enabled: inProduction,
+    enabled: !inProduction,
     tools: [
       ...DevicePreview.defaultTools,
     ],

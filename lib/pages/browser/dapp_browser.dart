@@ -66,6 +66,13 @@ class _DappBrowserState extends State<DappBrowser> {
     _loadWeb3();
   }
 
+  // void _loadWallet(String walletID, int coinType) async {
+  //   _info = (await TRWalletInfo.queryWalletInfo(walletID, coinType)).first;
+  //   walletAaddress = _info?.walletAaddress ?? "";
+  //   _node = NodeModel.queryNodeByChainType(coinType);
+  //   _client = ETHClient(_node?.content ?? "", _node?.chainID ?? 1);
+  // }
+
   @override
   void dispose() {
     super.dispose();
