@@ -212,7 +212,7 @@ class ETHClient {
           );
       return maxGas.toInt();
     } catch (e) {
-      return null;
+      HWToast.showText(text: e.toString());
     }
   }
 
