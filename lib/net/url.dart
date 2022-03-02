@@ -6,7 +6,6 @@ class RequestURLS {
   static String productUrl = "https://www.consensustoken.vip";
 
   static String getHost() {
-    LogUtil.v("getgetHost()  ${SPManager.getNetType()}");
     return SPManager.getNetType() == KNetType.Mainnet ? productUrl : testUrl;
   }
 

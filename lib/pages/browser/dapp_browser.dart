@@ -74,6 +74,7 @@ class _DappBrowserState extends State<DappBrowser> {
   }
 
   void _loadWallet(String walletID, int coinType) async {
+    HWToast.showLoading();
     setState(() {
       isLoadJs = false;
     });
@@ -82,7 +83,9 @@ class _DappBrowserState extends State<DappBrowser> {
     walletAaddress = _info?.walletAaddress ?? "";
     _node = NodeModel.queryNodeByChainType(coinType);
     _client = ETHClient(_node?.content ?? "", _node?.chainID ?? 1);
+    await Future.delayed(Duration(seconds: 3));
     _loadWeb3();
+    HWToast.hiddenAllToast();
   }
 
   @override
@@ -114,7 +117,6 @@ class _DappBrowserState extends State<DappBrowser> {
             };
         })();
         """;
-    await Future.delayed(Duration(seconds: 3));
     if (mounted) {
       setState(() {
         js = web3;
