@@ -16,26 +16,38 @@ class SPManager {
   static const String _aMOUNT_SET = "AMOUNT_SET";
   static const String _kNetType = "_kNetType";
   static const String _DAppsAuthorization = "DAppsAuthorization";
+  static const String _systemlanguageSET = 'systemLANGUAGE_SET';
 
   static KAppLanguage getAppLanguageMode() {
-    final String mode = getAppLanguage();
-    switch (mode) {
-      case '简体中文':
-        return KAppLanguage.zh_cn;
-      case 'English':
-        return KAppLanguage.en_us;
-      default:
-        return KAppLanguage.system;
+    final int mode = getAppLanguage();
+    if (mode == KAppLanguage.en_us.index) {
+      return KAppLanguage.en_us;
+    } else if (mode == KAppLanguage.zh_cn.index) {
+      return KAppLanguage.zh_cn;
+    } else {
+      return KAppLanguage.system;
     }
   }
 
-  static String getAppLanguage() {
+  static int getAppLanguage() {
     int value = _sp!.getInt(_languageSET) ?? KAppLanguage.system.index;
-    return value.getAppLanguageType().value;
+    return value;
   }
 
   static void setAppLanguage(KAppLanguage value) {
     _sp!.setInt(_languageSET, value.index);
+  }
+
+  static KAppLanguage getSystemAppLanguage() {
+    int value = _sp!.getInt(_systemlanguageSET) ?? KAppLanguage.zh_cn.index;
+    if (value == KAppLanguage.en_us.index) {
+      return KAppLanguage.en_us;
+    }
+    return KAppLanguage.zh_cn;
+  }
+
+  static void setSystemAppLanguage(KAppLanguage value) {
+    _sp!.setInt(_systemlanguageSET, value.index);
   }
 
   static String getAppCurrency() {

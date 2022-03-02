@@ -21,6 +21,7 @@ import 'package:cstoken/utils/custom_toast.dart';
 import 'package:cstoken/utils/sp_manager.dart';
 import 'package:cstoken/utils/timer_util.dart';
 import 'package:decimal/decimal.dart';
+import 'package:easy_localization/src/public_ext.dart';
 import 'package:flutter/services.dart';
 import '../public.dart';
 
@@ -132,6 +133,19 @@ class CurrentChooseWalletState with ChangeNotifier {
         builder: (_) {
           return ChainListType(onTap: onTap);
         });
+  }
+
+  void setDeviceLocale(BuildContext context) {
+    Locale first = context.deviceLocale;
+    for (var element in context.supportedLocales) {
+      if (element.languageCode.contains(first.languageCode)) {
+        LogUtil.v("element " + element.languageCode);
+        context.setLocale(element);
+        SPManager.setSystemAppLanguage(element.languageCode == "zh"
+            ? KAppLanguage.zh_cn
+            : KAppLanguage.en_us);
+      }
+    }
   }
 
   void bannerTap(BuildContext context, DAppRecordsDBModel model) {

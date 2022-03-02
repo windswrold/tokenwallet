@@ -65,12 +65,8 @@ class _MineModifySettingState extends State<MineModifySetting> {
       SPManager.setAppLanguage(index.getAppLanguageType());
       if (index == 0) {
         context.deleteSaveLocale();
-        Locale first = context.deviceLocale;
-        for (var element in context.supportedLocales) {
-          if (element.languageCode.contains(first.languageCode)) {
-            context.setLocale(element);
-          }
-        }
+        Provider.of<CurrentChooseWalletState>(context, listen: false)
+            .setDeviceLocale(context);
       } else if (index == 1) {
         context.setLocale(Locale('zh', 'CN'));
       } else {

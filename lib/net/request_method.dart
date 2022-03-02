@@ -6,6 +6,7 @@ import 'package:cstoken/net/url.dart';
 import 'package:cstoken/utils/sp_manager.dart';
 import 'package:dio/adapter.dart';
 import 'package:dio/dio.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/foundation.dart';
 // import 'package:isolate/isolate.dart';
 import '../public.dart';
@@ -65,6 +66,9 @@ class RequestMethod {
         url.contains(RequestURLS.productUrl)) {
       //按照plat统一传adr，苹果ios，语言英文en_us,繁体：zh_TW
       KAppLanguage langu = SPManager.getAppLanguageMode();
+      if (langu == KAppLanguage.system) {
+        langu = SPManager.getSystemAppLanguage();
+      }
       Map<String, dynamic> _commonParams = {
         "plat": isIOS ? "ios" : "adr",
         "lang": langu == KAppLanguage.zh_cn ? "zh_TW" : "en_us",

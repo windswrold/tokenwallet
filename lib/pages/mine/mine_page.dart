@@ -71,7 +71,7 @@ class _MinePageState extends State<MinePage> {
           });
     }));
 
-    String lanValue = SPManager.getAppLanguage();
+    String lanValue = SPManager.getAppLanguageMode().value;
     _datas.add(
         MinePageData("mine/mine_language.png", language, lanValue, onTap: () {
       Routers.push(context, MineModifySetting(setType: 1)).then((value) => {

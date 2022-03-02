@@ -34,7 +34,11 @@ class _MyAppState extends State<MyApp> {
         Locale first = context.deviceLocale;
         for (var element in context.supportedLocales) {
           if (element.languageCode.contains(first.languageCode)) {
+            LogUtil.v("element " + element.languageCode);
             context.setLocale(element);
+            SPManager.setSystemAppLanguage(element.languageCode == "zh"
+                ? KAppLanguage.zh_cn
+                : KAppLanguage.en_us);
           }
         }
       }
