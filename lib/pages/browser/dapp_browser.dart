@@ -14,6 +14,7 @@ import 'package:cstoken/utils/share_utils.dart';
 import 'package:custom_pop_up_menu/custom_pop_up_menu.dart';
 import 'package:flutter/services.dart';
 import 'package:share_plus/share_plus.dart';
+import 'package:web3dart/json_rpc.dart';
 import '../../public.dart';
 import './js_bridge_callback_bean.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
@@ -148,12 +149,21 @@ class _DappBrowserState extends State<DappBrowser> {
         String? price = (bridge.gasPrice == null)
             ? (await _client!.getGasPrice()).toString()
             : bridge.gasPrice;
-        int? maxGas = bridge.gas ??
-            await _client!.estimateGas(
-              from: from,
-              to: bridge.to,
-              data: bridge.data,
-            );
+        int? maxGas;
+        try {
+          maxGas = bridge.gas ??
+              await _client!.estimateGas(
+                from: from,
+                to: bridge.to,
+                data: bridge.data,
+              );
+        } catch (e) {
+          RPCError err = e as RPCError;
+          HWToast.showText(text: err.message);
+          _webViewController!.sendError("Canceled", id);
+          return;
+        }
+
         String fee = TRWallet.configFeeValue(
             cointype: 1,
             beanValue: maxGas.toString(),

@@ -10,6 +10,7 @@ import 'package:cstoken/utils/extension.dart';
 import 'package:cstoken/utils/log_util.dart';
 import 'package:web3dart/contracts/erc20.dart';
 import 'package:web3dart/crypto.dart';
+import 'package:web3dart/json_rpc.dart';
 import 'package:web3dart/web3dart.dart';
 import 'package:http/http.dart';
 import 'package:web3dart/web3dart.dart' as web3;
@@ -200,20 +201,16 @@ class ETHClient {
     EtherAmount? maxFeePerGas,
     String? data,
   }) async {
-    try {
-      BigInt maxGas = BigInt.zero;
-      maxGas = await this.client.estimateGas(
-            sender: from != null ? EthereumAddress.fromHex(from) : null,
-            to: to != null ? EthereumAddress.fromHex(to) : null,
-            data: data != null ? hexToBytes(data) : null,
-            value: value != null
-                ? EtherAmount.fromUnitAndValue(EtherUnit.ether, value)
-                : null,
-          );
-      return maxGas.toInt();
-    } catch (e) {
-      HWToast.showText(text: e.toString());
-    }
+    BigInt maxGas = BigInt.zero;
+    maxGas = await this.client.estimateGas(
+          sender: from != null ? EthereumAddress.fromHex(from) : null,
+          to: to != null ? EthereumAddress.fromHex(to) : null,
+          data: data != null ? hexToBytes(data) : null,
+          value: value != null
+              ? EtherAmount.fromUnitAndValue(EtherUnit.ether, value)
+              : null,
+        );
+    return maxGas.toInt();
   }
 
   Future<TransactionReceipt?> getTransactionReceipt(String hash) {
