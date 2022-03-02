@@ -10,6 +10,7 @@ import 'package:cstoken/pages/browser/js_bridge_bean.dart';
 import 'package:cstoken/pages/wallet/transfer/payment_sheet_page.dart';
 import 'package:cstoken/utils/custom_toast.dart';
 import 'package:cstoken/utils/json_util.dart';
+import 'package:cstoken/utils/share_utils.dart';
 import 'package:custom_pop_up_menu/custom_pop_up_menu.dart';
 import 'package:flutter/services.dart';
 import 'package:share_plus/share_plus.dart';
@@ -333,7 +334,7 @@ class _DappBrowserState extends State<DappBrowser> {
                               _getMenuItem("icons/item_white_share.png",
                                   "dappmenu_share".local(), () {
                                 String url = widget.model?.url ?? "";
-                                Share.share(url);
+                                ShareUtils.share(context,url);
                               }),
                               _getMenuItem(
                                   "icons/item_white_collect.png",

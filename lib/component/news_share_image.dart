@@ -1,5 +1,6 @@
 import 'package:cstoken/component/share_default.dart';
 import 'package:cstoken/model/news/news_model.dart';
+import 'package:cstoken/utils/share_utils.dart';
 import 'package:flutter_html/flutter_html.dart';
 import 'package:share_plus/share_plus.dart';
 
@@ -29,7 +30,7 @@ class _NewsShareState extends State<NewsShare> {
   void _shareImage() async {
     await Future.delayed(Duration(seconds: 1));
     final ok = await shareImage(_repaintKey);
-    Share.shareFiles([ok.absolute.path]);
+    ShareUtils.shareFiles(context, [ok.absolute.path]);
   }
 
   @override
@@ -46,7 +47,10 @@ class _NewsShareState extends State<NewsShare> {
               Stack(
                 alignment: Alignment.center,
                 children: [
-                  LoadAssetsImage("bg/new_sharebg.png"),
+                  LoadAssetsImage(
+                    "bg/new_sharebg.png",
+                    width: MediaQuery.of(context).size.width,
+                  ),
                   Text(
                     "Consensus " + "newspage_sharenews".local(),
                     style: TextStyle(

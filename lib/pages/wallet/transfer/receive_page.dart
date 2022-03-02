@@ -3,6 +3,7 @@ import 'dart:typed_data';
 
 import 'package:cstoken/component/share_default.dart';
 import 'package:cstoken/model/wallet/tr_wallet_info.dart';
+import 'package:cstoken/utils/share_utils.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
@@ -51,7 +52,7 @@ class _RecervePaymentPageState extends State<RecervePaymentPage> {
 
   void _shareImage() async {
     final ok = await shareImage(_repaintKey);
-    Share.shareFiles([ok.absolute.path]);
+    ShareUtils.shareFiles(context, [ok.absolute.path]);
     await Future.delayed(Duration(seconds: 1));
     setState(() {
       _isShare = false;
@@ -123,66 +124,68 @@ class _RecervePaymentPageState extends State<RecervePaymentPage> {
                   decoration: BoxDecoration(
                       color: Colors.white,
                       image: DecorationImage(
-                        image: AssetImage(ASSETS_IMG + "bg/big_share.png"),
-                        alignment: Alignment.topCenter,
-                      )),
-                  child: Column(
-                    children: [
-                      Padding(
-                        padding: EdgeInsets.only(top: 55.width),
-                        child: Text(
-                          walletName,
-                          style: TextStyle(
-                            fontSize: 20.font,
-                            fontWeight: FontWeightUtils.medium,
-                            color: Colors.white,
-                          ),
-                        ),
-                      ),
-                      Padding(
-                        padding: EdgeInsets.only(top: 40.width),
-                        child: Container(
-                          width: 234.width,
-                          height: 234.width,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(16),
-                            color: Colors.white,
-                          ),
-                          padding: EdgeInsets.all(20.width),
-                          child: Center(
-                            child: QrImage(
-                              data: qrCodeStr,
-                              backgroundColor: Colors.white,
+                          image: AssetImage(ASSETS_IMG + "bg/big_share.png"),
+                          alignment: Alignment.topCenter,
+                          fit: BoxFit.contain)),
+                  child: SingleChildScrollView(
+                    child: Column(
+                      children: [
+                        Padding(
+                          padding: EdgeInsets.only(top: 55.width),
+                          child: Text(
+                            walletName,
+                            style: TextStyle(
+                              fontSize: 20.font,
+                              fontWeight: FontWeightUtils.medium,
+                              color: Colors.white,
                             ),
                           ),
                         ),
-                      ),
-                      Padding(
-                        padding: EdgeInsets.only(top: 33.width),
-                        child: Text(
-                          "transferetype_receiveaddress".local(),
-                          style: TextStyle(
-                            color: ColorUtils.fromHex("#99FFFFFF"),
-                            fontSize: 13.font,
+                        Padding(
+                          padding: EdgeInsets.only(top: 40.width),
+                          child: Container(
+                            width: 234.width,
+                            height: 234.width,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(16),
+                              color: Colors.white,
+                            ),
+                            padding: EdgeInsets.all(20.width),
+                            child: Center(
+                              child: QrImage(
+                                data: qrCodeStr,
+                                backgroundColor: Colors.white,
+                              ),
+                            ),
                           ),
                         ),
-                      ),
-                      Container(
-                        padding: EdgeInsets.only(top: 4.width),
-                        width: 280.width,
-                        child: Text(
-                          qrCodeStr,
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 14.font,
+                        Padding(
+                          padding: EdgeInsets.only(top: 33.width),
+                          child: Text(
+                            "transferetype_receiveaddress".local(),
+                            style: TextStyle(
+                              color: ColorUtils.fromHex("#99FFFFFF"),
+                              fontSize: 13.font,
+                            ),
                           ),
                         ),
-                      ),
-                      Container(
-                        padding: EdgeInsets.only(top: 50.width),
-                        child: ShareDefaultWidget(),
-                      ),
-                    ],
+                        Container(
+                          padding: EdgeInsets.only(top: 4.width),
+                          width: 280.width,
+                          child: Text(
+                            qrCodeStr,
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 14.font,
+                            ),
+                          ),
+                        ),
+                        Container(
+                          padding: EdgeInsets.only(top: 50.width),
+                          child: ShareDefaultWidget(),
+                        ),
+                      ],
+                    ),
                   ),
                 ))
             : Container(

@@ -88,7 +88,6 @@ class _CustomAddTokensState extends State<CustomAddTokens> {
       return;
     }
 
-    NodeModel node = NodeModel.queryNodeByChainType(_chooseType!.index);
     TRWallet wallet =
         Provider.of<CurrentChooseWalletState>(context, listen: false)
             .currentWallet!;
