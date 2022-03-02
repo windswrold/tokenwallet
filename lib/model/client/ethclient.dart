@@ -132,41 +132,51 @@ class ETHClient {
     String? fee,
     String? coinType,
   }) async {
-    final credentials = EthPrivateKey.fromHex(prv);
-    final signto = EthereumAddress.fromHex(to);
-    final input = hexToBytes(data);
-    final result = await client.sendTransaction(
-        credentials,
-        web3.Transaction(
-            to: signto,
-            value: EtherAmount.inWei(amount),
-            gasPrice: null,
-            maxGas: gasLimit,
-            data: input),
-        chainId: _chainId,
-        fetchChainIdFromNetworkId: false);
+    try {
+      final credentials = EthPrivateKey.fromHex(prv);
+      final signto = EthereumAddress.fromHex(to);
+      final input = hexToBytes(data);
+      String result = await client.sendTransaction(
+          credentials,
+          web3.Transaction(
+              to: signto,
+              value: EtherAmount.inWei(amount),
+              gasPrice: null,
+              maxGas: gasLimit,
+              data: input),
+          chainId: _chainId,
+          fetchChainIdFromNetworkId: false);
 
-    TransRecordModel model = TransRecordModel();
-    model.txid = result;
-    model.amount = amount.tokenString(18);
-    model.fromAdd = from;
-    model.date = DateUtil.getNowDateStr();
-    model.token = coinType;
-    model.coinType = coinType;
-    model.fee = fee;
-    model.gasPrice = gasPrice.toString();
-    model.gasLimit = gasLimit.toString();
-    model.toAdd = to;
-    model.transStatus = KTransState.pending.index;
-    model.chainid = _chainId;
-    // model.nonce = ts.nonce;
-    // model.contractTo = ts.to?.hexEip55;
-    // model.input = ts.data != null ? bytesToHex(ts.data!) : null;
-    // model.signMessage = signMessage;
-    model.repeatPushCount = 0;
-    model.transType = KTransType.transfer.index;
-    TransRecordModel.insertTrxLists([model]);
-    return result;
+      TransRecordModel model = TransRecordModel();
+      model.txid = result;
+      model.amount = amount.tokenString(18);
+      model.fromAdd = from;
+      model.date = DateUtil.getNowDateStr();
+      model.token = coinType;
+      model.coinType = coinType;
+      model.fee = fee;
+      model.gasPrice = gasPrice.toString();
+      model.gasLimit = gasLimit.toString();
+      model.toAdd = to;
+      model.transStatus = KTransState.pending.index;
+      model.chainid = _chainId;
+      // model.nonce = ts.nonce;
+      // model.contractTo = ts.to?.hexEip55;
+      // model.input = ts.data != null ? bytesToHex(ts.data!) : null;
+      // model.signMessage = signMessage;
+      model.repeatPushCount = 0;
+      model.transType = KTransType.transfer.index;
+      TransRecordModel.insertTrxLists([model]);
+      return result;
+    } catch (e) {
+      LogUtil.v("transfer失败" + e.toString());
+      if (e.toString().contains('-32000')) {
+        HWToast.showText(text: "gasLow".local());
+      } else {
+        HWToast.showText(text: e.toString());
+      }
+      return null;
+    }
   }
 
   Future<String?> signTypedMessage(String prv, String jsonData) async {

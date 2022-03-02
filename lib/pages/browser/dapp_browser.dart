@@ -78,11 +78,10 @@ class _DappBrowserState extends State<DappBrowser> {
       isLoadJs = false;
     });
     _info = (await TRWalletInfo.queryWalletInfo(walletID, coinType)).first;
-    _coinType = widget.info?.coinType!.geCoinType();
+    _coinType = _info?.coinType!.geCoinType();
     walletAaddress = _info?.walletAaddress ?? "";
     _node = NodeModel.queryNodeByChainType(coinType);
     _client = ETHClient(_node?.content ?? "", _node?.chainID ?? 1);
-    // _webViewController?.removeAllUserScripts();
     _loadWeb3();
   }
 
@@ -192,7 +191,7 @@ class _DappBrowserState extends State<DappBrowser> {
                       coinType: _coinType!.feeTokenString(),
                     );
 
-                    _webViewController!.sendResult(result!, id);
+                    _webViewController!.sendResult(result ?? "", id);
                   }, cancelPress: () {
                     _webViewController!.sendError("Canceled", id);
                   });
