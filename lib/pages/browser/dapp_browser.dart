@@ -57,22 +57,34 @@ class _DappBrowserState extends State<DappBrowser> {
         allowsInlineMediaPlayback: true,
       ));
 
+  KCoinType? _coinType;
+  NodeModel? _node;
+  TRWalletInfo? _info;
+
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    walletAaddress = widget.info?.walletAaddress ?? "";
-    _client = ETHClient(widget.node?.content ?? "", widget.node?.chainID ?? 1);
     _type = widget.model!.type;
+    _coinType = widget.info?.coinType!.geCoinType();
+    walletAaddress = widget.info?.walletAaddress ?? "";
+    _node = widget.node;
+    _client = ETHClient(widget.node?.content ?? "", widget.node?.chainID ?? 1);
     _loadWeb3();
   }
 
-  // void _loadWallet(String walletID, int coinType) async {
-  //   _info = (await TRWalletInfo.queryWalletInfo(walletID, coinType)).first;
-  //   walletAaddress = _info?.walletAaddress ?? "";
-  //   _node = NodeModel.queryNodeByChainType(coinType);
-  //   _client = ETHClient(_node?.content ?? "", _node?.chainID ?? 1);
-  // }
+  void _loadWallet(String walletID, int coinType) async {
+    setState(() {
+      isLoadJs = false;
+    });
+    _info = (await TRWalletInfo.queryWalletInfo(walletID, coinType)).first;
+    _coinType = widget.info?.coinType!.geCoinType();
+    walletAaddress = _info?.walletAaddress ?? "";
+    _node = NodeModel.queryNodeByChainType(coinType);
+    _client = ETHClient(_node?.content ?? "", _node?.chainID ?? 1);
+    // _webViewController?.removeAllUserScripts();
+    _loadWeb3();
+  }
 
   @override
   void dispose() {
@@ -86,15 +98,9 @@ class _DappBrowserState extends State<DappBrowser> {
 
   _loadWeb3() async {
     var web3 = await rootBundle.loadString('assets/data/trust-min.js');
-    String rpcurl = widget.node?.content ?? "";
-    int chainId = widget.node!.chainID!;
-    String hexChain = chainId.toRadixString(16);
-    if (mounted) {
-      setState(() {
-        isLoadJs =
-            widget.model?.url?.contains("coinwind") == true ? false : true;
-        js = web3;
-        addd = """
+    String rpcurl = _node?.content ?? "";
+    int chainId = _node?.chainID ?? 0;
+    var config = """
          (function() {
            var config = {
                 chainId: $chainId,
@@ -109,6 +115,12 @@ class _DappBrowserState extends State<DappBrowser> {
             };
         })();
         """;
+    await Future.delayed(Duration(seconds: 3));
+    if (mounted) {
+      setState(() {
+        js = web3;
+        addd = config;
+        isLoadJs = true;
       });
     }
   }
@@ -127,7 +139,7 @@ class _DappBrowserState extends State<DappBrowser> {
         name == 'signPersonalMessage' ||
         name == 'signTypedMessage') {
       String from = walletAaddress;
-      String feeToken = widget.info!.coinType!.geCoinType().feeTokenString();
+      String feeToken = _coinType!.feeTokenString();
       if (name == 'signTransaction') {
         Map<String, dynamic> object = params["object"];
         BridgeParams bridge = BridgeParams.fromJson(object);
@@ -166,8 +178,7 @@ class _DappBrowserState extends State<DappBrowser> {
                 amount: (bridge.value ?? BigInt.zero).tokenString(18) +
                     " $feeToken",
                 nextAction: () {
-                  tr.showLockPin(context,
-                      infoCoinType: widget.info!.coinType!.geCoinType(),
+                  tr.showLockPin(context, infoCoinType: _coinType,
                       confirmPressed: (prv) async {
                     final result = await _client!.transferOrigin(
                       prv: prv,
@@ -178,8 +189,7 @@ class _DappBrowserState extends State<DappBrowser> {
                       fee: fee,
                       gasPrice: price,
                       from: from,
-                      coinType:
-                          widget.info!.coinType!.geCoinType().feeTokenString(),
+                      coinType: _coinType!.feeTokenString(),
                     );
 
                     _webViewController!.sendResult(result!, id);
@@ -206,8 +216,7 @@ class _DappBrowserState extends State<DappBrowser> {
             cancelPressed: () {
           _webViewController!.sendError("Canceled", id);
         }, confirmPressed: (result) async {
-          tr.showLockPin(context,
-              infoCoinType: widget.info!.coinType!.geCoinType(),
+          tr.showLockPin(context, infoCoinType: _coinType,
               confirmPressed: (prv) async {
             String? result = await _client!.signPersonalMessage(prv, data);
             _webViewController!.sendResult(result!, id);
@@ -230,8 +239,7 @@ class _DappBrowserState extends State<DappBrowser> {
             cancelPressed: () {
           _webViewController!.sendError("Canceled", id);
         }, confirmPressed: (result) {
-          tr.showLockPin(context,
-              infoCoinType: widget.info!.coinType!.geCoinType(),
+          tr.showLockPin(context, infoCoinType: _coinType,
               confirmPressed: (prv) async {
             final result = await _client!.signTypedMessage(prv, raw);
             _webViewController!.sendResult(result!, id);
@@ -241,7 +249,14 @@ class _DappBrowserState extends State<DappBrowser> {
         });
       }
     } else if (name == 'addEthereumChain') {
-      HWToast.showText(text: "dapppage_notsupport".local());
+      Map<String, dynamic> object = params["object"];
+      String hexchainId = object["chainId"];
+      hexchainId = hexchainId.replaceAll("0x", "");
+      int chainId = int.parse(hexchainId, radix: 16);
+      KCoinType type = chainId.chainGetCoinType();
+      String walletid = widget.info!.walletID!;
+      _loadWallet(walletid, type.index);
+      // HWToast.showText(text: "dapppage_notsupport".local());
     }
   }
 
@@ -292,22 +307,20 @@ class _DappBrowserState extends State<DappBrowser> {
     String url = widget.model?.url ?? '';
 
     return CustomPageView(
-        title: Container(
-          child: Row(
-            children: [
-              CustomPageView.getCloseLeading(() {
-                Routers.goBack(context);
-              }),
-              Expanded(
-                child: Center(
-                    child: CustomPageView.getTitle(
-                        title: widget.model?.name ?? "")),
-              ),
-              SizedBox(
-                width: 24,
-              )
-            ],
-          ),
+        title: Row(
+          children: [
+            CustomPageView.getCloseLeading(() {
+              Routers.goBack(context);
+            }),
+            Expanded(
+              child: Center(
+                  child:
+                      CustomPageView.getTitle(title: widget.model?.name ?? "")),
+            ),
+            const SizedBox(
+              width: 24,
+            )
+          ],
         ),
         leadBack: () async {
           bool? canGo = await _webViewController?.canGoBack();
@@ -334,7 +347,7 @@ class _DappBrowserState extends State<DappBrowser> {
                               _getMenuItem("icons/item_white_share.png",
                                   "dappmenu_share".local(), () {
                                 String url = widget.model?.url ?? "";
-                                ShareUtils.share(context,url);
+                                ShareUtils.share(context, url);
                               }),
                               _getMenuItem(
                                   "icons/item_white_collect.png",
@@ -383,14 +396,12 @@ class _DappBrowserState extends State<DappBrowser> {
                 ),
               )),
         ],
-        child: js == null || addd == null
-            ? Container(
-                color: Colors.white,
-              )
+        child: isLoadJs == false
+            ? Container()
             : InAppWebView(
                 initialUrlRequest: URLRequest(url: Uri.parse(url)),
                 initialOptions: options,
-                onWebViewCreated: (controller) {
+                onWebViewCreated: (controller) async {
                   _webViewController = controller;
                 },
                 initialUserScripts: isLoadJs == true
