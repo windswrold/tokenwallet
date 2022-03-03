@@ -46,8 +46,8 @@ android {
         applicationId "com.consensus.wallet.cstoken"
         minSdkVersion 21
         targetSdkVersion 30
-        versionCode 4
-        versionName "1.0.3"
+        versionCode 5
+        versionName "1.0.4"
         multiDexEnabled true //突破应用方法数65535的一个限制
     }
 
