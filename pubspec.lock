@@ -1097,6 +1097,13 @@ packages:
       url: "https://pub.flutter-io.cn"
     source: hosted
     version: "1.0.0"
+  trustdart:
+    dependency: "direct main"
+    description:
+      name: trustdart
+      url: "https://pub.flutter-io.cn"
+    source: hosted
+    version: "0.0.9"
   tuple:
     dependency: transitive
     description:

@@ -27,6 +27,16 @@ PODS:
   - sqflite (0.0.2):
     - Flutter
     - FMDB (>= 2.7.5)
+  - SwiftProtobuf (1.19.0)
+  - trustdart (0.0.1):
+    - Flutter
+    - TrustWalletCore
+  - TrustWalletCore (2.7.2):
+    - TrustWalletCore/Core (= 2.7.2)
+  - TrustWalletCore/Core (2.7.2):
+    - TrustWalletCore/Types
+  - TrustWalletCore/Types (2.7.2):
+    - SwiftProtobuf
   - url_launcher_ios (0.0.1):
     - Flutter
   - video_player_avfoundation (0.0.1):
@@ -49,6 +59,7 @@ DEPENDENCIES:
   - share_plus (from `.symlinks/plugins/share_plus/ios`)
   - shared_preferences_ios (from `.symlinks/plugins/shared_preferences_ios/ios`)
   - sqflite (from `.symlinks/plugins/sqflite/ios`)
+  - trustdart (from `.symlinks/plugins/trustdart/ios`)
   - url_launcher_ios (from `.symlinks/plugins/url_launcher_ios/ios`)
   - video_player_avfoundation (from `.symlinks/plugins/video_player_avfoundation/ios`)
   - wakelock (from `.symlinks/plugins/wakelock/ios`)
@@ -58,6 +69,8 @@ SPEC REPOS:
   trunk:
     - FMDB
     - OrderedSet
+    - SwiftProtobuf
+    - TrustWalletCore
     - ZLPhotoBrowser
 
 EXTERNAL SOURCES:
@@ -79,6 +92,8 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/shared_preferences_ios/ios"
   sqflite:
     :path: ".symlinks/plugins/sqflite/ios"
+  trustdart:
+    :path: ".symlinks/plugins/trustdart/ios"
   url_launcher_ios:
     :path: ".symlinks/plugins/url_launcher_ios/ios"
   video_player_avfoundation:
@@ -100,12 +115,15 @@ SPEC CHECKSUMS:
   share_plus: 056a1e8ac890df3e33cb503afffaf1e9b4fbae68
   shared_preferences_ios: aef470a42dc4675a1cdd50e3158b42e3d1232b32
   sqflite: 6d358c025f5b867b29ed92fc697fd34924e11904
+  SwiftProtobuf: 6ef3f0e422ef90d6605ca20b21a94f6c1324d6b3
+  trustdart: 6fdf048c1837d89806c55912845af3987fd8defe
+  TrustWalletCore: 60f1b66f224af996f7845c3e64123c7631658aaa
   url_launcher_ios: 02f1989d4e14e998335b02b67a7590fa34f971af
   video_player_avfoundation: e489aac24ef5cf7af82702979ed16f2a5ef84cff
   wakelock: d0fc7c864128eac40eba1617cb5264d9c940b46f
   webview_flutter_wkwebview: 005fbd90c888a42c5690919a1527ecc6649e1162
   ZLPhotoBrowser: 602d505d4f2cf7f309ce973c4353d33e85216d58
 
-PODFILE CHECKSUM: aafe91acc616949ddb318b77800a7f51bffa2a4c
+PODFILE CHECKSUM: 4e8f8b2be68aeea4c0d5beb6ff1e79fface1d048
 
 COCOAPODS: 1.11.2

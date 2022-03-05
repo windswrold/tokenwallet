@@ -7,10 +7,16 @@
 
 import 'dart:math';
 
+import 'package:cstoken/model/mnemonic/mnemonic.dart';
+import 'package:cstoken/public.dart';
 import 'package:cstoken/utils/encode.dart';
 import 'package:encrypt/encrypt.dart';
 import 'package:cstoken/main.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:trustdart/trustdart.dart';
+import 'package:bip39/bip39.dart' as bip39;
+import 'package:bip32/bip32.dart' as bip32;
+import 'package:bip32/src/utils/wif.dart' as wif;
 
 void main() {
   testWidgets('Counter increments smoke test', (WidgetTester tester) async {
@@ -31,8 +37,8 @@ void main() {
   });
 
   test("hdwallet", () async {
-    String input = "0xB74693f2DAbdb84570755E536e016d3CBDEB0810";
-    String pwd = "222222";
+    // String input = "0xB74693f2DAbdb84570755E536e016d3CBDEB0810";
+    // String pwd = "222222";
     // final iv = IV.fromLength(0);
     // pwd = pwd.padRight(32, "0");
     // final key = Key.fromUtf8(pwd);
@@ -40,9 +46,20 @@ void main() {
     // final decrypted = encrypter.encrypt(input, iv: iv);
     // print(decrypted.base64);
 
-    String enc = TREncode.encrypt(input, pwd);
-    print(enc);
-    String dec = TREncode.decrypt(enc, pwd);
-    print(dec);
+    // String enc = TREncode.encrypt(input, pwd);
+    // print(enc);
+    // String dec = TREncode.decrypt(enc, pwd);
+    // print(dec);
+    String dondo =
+        "imitate embody law mammal exotic transfer roof hope price swift ordinary uncle";
+    var seed = bip39.mnemonicToSeed(dondo);
+    var root = bip32.BIP32.fromSeed(seed);
+    var child = root.derivePath("m/44'/0'/0'/0/0");
+    final prv = child.toWIF();
+    print(prv);
+
+    final bigWif = wif.decode(prv);
+    String wifprv = TREncode.kBytesToHex(bigWif.privateKey);
+    print(wifprv);
   });
 }
