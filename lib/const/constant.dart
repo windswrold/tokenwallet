@@ -22,6 +22,8 @@ enum KCoinType {
   Matic,
   AVAX,
   Arbitrum,
+  BTC,
+  TRX,
 }
 
 enum KLeadType {
@@ -97,6 +99,81 @@ enum KDappType {
   records,
   collect,
   recordsandcollect,
+}
+
+extension ChainTypeString on KChainType {
+  String getChainType() {
+    if (this == KChainType.HD) {
+      return "wallets_manager_multichain".local();
+    } else if (this == KChainType.ETH) {
+      return "importwallet_ethchaintype".local();
+    }
+    return "";
+  }
+}
+
+extension CoinTypeString on KCoinType {
+  String coinTypeString() {
+    switch (this) {
+      case KCoinType.BSC:
+        return "BSC";
+      case KCoinType.ETH:
+        return "ETH";
+      case KCoinType.HECO:
+        return "HECO";
+      case KCoinType.OKChain:
+        return "OKChain";
+      case KCoinType.Matic:
+        return "Polygon";
+      case KCoinType.AVAX:
+        return "AVAX";
+      case KCoinType.Arbitrum:
+        return "Arbitrum";
+      case KCoinType.BTC:
+        return "BTC";
+      default:
+        throw Error();
+    }
+  }
+
+  String feeTokenString() {
+    switch (this) {
+      case KCoinType.BSC:
+        return "BNB";
+      case KCoinType.ETH:
+        return "ETH";
+      case KCoinType.HECO:
+        return "HT";
+      case KCoinType.OKChain:
+        return "OKT";
+      case KCoinType.Matic:
+        return "MATIC";
+      case KCoinType.AVAX:
+        return "AVAX";
+      case KCoinType.Arbitrum:
+        return "ETH-ARBI";
+      case KCoinType.BTC:
+        return "BTC";
+      default:
+        throw Error();
+    }
+  }
+}
+
+extension KCurrencyTypeString on KCurrencyType {
+  String get value => <String>['CNY', 'USD'][index];
+}
+
+extension KAppLanguageString on KAppLanguage {
+  String get value => <String>[
+        'minepage_followsystem'.local(),
+        'minepage_zh_hans'.local(),
+        'English'
+      ][index];
+}
+
+extension KNetTypeString on KNetType {
+  String get value => <String>['MainNet', 'TestNet'][index];
 }
 
 final bool inProduction = kReleaseMode;

@@ -332,66 +332,6 @@ extension Numextension on num {
   }
 }
 
-extension CoinTypeString on KCoinType {
-  String coinTypeString() {
-    switch (this) {
-      case KCoinType.BSC:
-        return "BSC";
-      case KCoinType.ETH:
-        return "ETH";
-      case KCoinType.HECO:
-        return "HECO";
-      case KCoinType.OKChain:
-        return "OKChain";
-      case KCoinType.Matic:
-        return "Polygon";
-      case KCoinType.AVAX:
-        return "AVAX";
-      case KCoinType.Arbitrum:
-        return "Arbitrum";
-      default:
-        throw Error();
-    }
-  }
-
-  String feeTokenString() {
-    switch (this) {
-      case KCoinType.BSC:
-        return "BNB";
-      case KCoinType.ETH:
-        return "ETH";
-      case KCoinType.HECO:
-        return "HT";
-      case KCoinType.OKChain:
-        return "OKT";
-      case KCoinType.Matic:
-        return "MATIC";
-      case KCoinType.AVAX:
-        return "AVAX";
-      case KCoinType.Arbitrum:
-        return "ETH-ARBI";
-      default:
-        throw Error();
-    }
-  }
-}
-
-extension KCurrencyTypeString on KCurrencyType {
-  String get value => <String>['CNY', 'USD'][index];
-}
-
-extension KAppLanguageString on KAppLanguage {
-  String get value => <String>[
-        'minepage_followsystem'.local(),
-        'minepage_zh_hans'.local(),
-        'English'
-      ][index];
-}
-
-extension KNetTypeString on KNetType {
-  String get value => <String>['MainNet', 'TestNet'][index];
-}
-
 class FontWeightUtils {
   ///400
   static const FontWeight regular = FontWeight.w400;

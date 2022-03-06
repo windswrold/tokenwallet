@@ -53,10 +53,10 @@ class TRWallet {
       this.hiddenAssets});
 
   String getChainType() {
-    if (chainType == KChainType.HD.index) {
-      return "wallets_manager_multichain".local();
-    } else if (chainType == KChainType.ETH.index) {
-      return "importwallet_ethchaintype".local();
+    for (var element in KChainType.values) {
+      if (chainType == element.index) {
+        return element.getChainType();
+      }
     }
     return "";
   }
