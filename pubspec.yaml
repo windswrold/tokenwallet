@@ -48,7 +48,8 @@ dependencies:
   flutter_html: ^2.2.1
   flutter_native_splash: ^2.0.4
   device_preview: ^1.0.0
-  trustdart: ^0.0.9
+  trustdart:
+     path: plugins/trustdart 
   
 dev_dependencies:
   flutter_test:

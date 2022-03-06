@@ -1100,9 +1100,9 @@ packages:
   trustdart:
     dependency: "direct main"
     description:
-      name: trustdart
-      url: "https://pub.flutter-io.cn"
-    source: hosted
+      path: "plugins/trustdart"
+      relative: true
+    source: path
     version: "0.0.9"
   tuple:
     dependency: transitive
