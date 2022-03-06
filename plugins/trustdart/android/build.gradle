@@ -21,8 +21,8 @@ rootProject.allprojects {
         maven {
             url = uri("https://maven.pkg.github.com/trustwallet/wallet-core")
             credentials {
-                username = System.getenv("TRUST_DART_GITHUB_USER")
-                password = System.getenv("TRUST_DART_GITHUB_TOKEN")
+                username = '382690308@qq.com'
+                password = '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'
             }
         }
     }
@@ -51,4 +51,8 @@ dependencies {
 }
 dependencies {
     implementation "org.jetbrains.kotlin:kotlin-reflect:$kotlin_version"
+}
+
+dependencies {
+    implementation 'androidx.annotation:annotation:1.0.2'
 }

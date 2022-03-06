@@ -35,13 +35,13 @@ class Trustdart {
   }
 
   /// generates an address for a particular coin
-  static Future<Map> generateAddress(String mnemonic, String coin, String path,
+  static Future<Map> generateAddress(String mnemonic, String coin,
       [String passphrase = ""]) async {
     try {
       final Map address =
           await _channel.invokeMethod('generateAddress', <String, String>{
         'coin': coin,
-        'path': path,
+        'path': "",
         'mnemonic': mnemonic,
         'passphrase': passphrase,
       });

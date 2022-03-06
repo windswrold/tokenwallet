@@ -58,8 +58,14 @@ void main() {
     final prv = child.toWIF();
     print(prv);
 
-    final bigWif = wif.decode(prv);
-    String wifprv = TREncode.kBytesToHex(bigWif.privateKey);
-    print(wifprv);
+    child = root.derivePath("m/44'/195'/0'/0/0");
+    print(TREncode.kBytesToHex(child.privateKey!));
+
+    child = root.derivePath("m/44'/501'/0'/0/0");
+    print(TREncode.kBytesToHex(child.privateKey!));
+
+    // final bigWif = wif.decode(prv);
+    // String wifprv = TREncode.kBytesToHex(bigWif.privateKey);
+    // print(wifprv);
   });
 }

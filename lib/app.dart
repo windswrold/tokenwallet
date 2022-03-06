@@ -1,3 +1,5 @@
+import 'package:cstoken/model/chain/btc.dart';
+import 'package:cstoken/model/chain/trx.dart';
 import 'package:cstoken/pages/tabbar/tabbar.dart';
 import 'package:cstoken/public.dart';
 import 'package:cstoken/state/wallet_state.dart';
@@ -76,8 +78,8 @@ class _MyAppState extends State<MyApp> {
     super.initState();
 
     Future.delayed(Duration(seconds: 1)).then((value) => {
-      _controller.text = "11111",
-    });
+          _controller.text = "11111",
+        });
   }
 
 //f33e86906e93690567a58af681ceabf10fe64bb9b441fe847fd5629d6f262973
@@ -161,32 +163,17 @@ class _MyAppState extends State<MyApp> {
       String dondo =
           "imitate embody law mammal exotic transfer roof hope price swift ordinary uncle";
       // dondo = "a d f d s e w q t y u l";
-      bool wallet = await Trustdart.checkMnemonic(dondo);
 
       // https://github.com/satoshilabs/slips/blob/master/slip-0044.md
       String btcPath = "m/44'/0'/0'/0/0";
       String trxPath = "m/44'/195'/0'/0/0";
       String solPath = "m/44'/501'/0'/0/0";
 
-      String btcPrivKey = await Trustdart.getPrivateKey(
-        dondo,
-        'BTC',
-        btcPath,
-      );
+      HDWallet? wallet = await BTCChain()
+          .importWallet(content: dondo, pin: "pin", kLeadType: KLeadType.Memo);
 
-      String trxPrivKey = await Trustdart.getPrivateKey(
-        dondo,
-        'TRX',
-        trxPath,
-      );
-      String solPrivKey = await Trustdart.getPrivateKey(
-        dondo,
-        'SOL',
-        solPath,
-      );
-      print("btcPrivKey $btcPrivKey");
-      print("trxPrivKey $trxPrivKey");
-      print("solPrivKey $solPrivKey");
+      HDWallet? trx = await TRXChain()
+          .importWallet(content: dondo, pin: "pin", kLeadType: KLeadType.Memo);
 
       // var seed = bip39.mnemonicToSeed(dondo);
       // var root = bip32.BIP32.fromSeed(seed,bip32.NetworkType(wif: wif, bip32: bip32));
@@ -195,43 +182,28 @@ class _MyAppState extends State<MyApp> {
       // final xxxx = TREncode.kBytesToHex(prv!, include0x: false);
       // print("btcPrivKey $xxxx");
 
-      Map btcAddress = await Trustdart.generateAddress(
-        dondo,
-        'BTC',
-        btcPath,
-      );
+      
+      // print("btcAddress $btcAddress");
+      // print("trxAddress $trxAddress");
+      // print("solAddress $solAddress");
 
-      Map trxAddress = await Trustdart.generateAddress(
-        dondo,
-        'TRX',
-        trxPath,
-      );
-      Map solAddress = await Trustdart.generateAddress(
-        dondo,
-        'SOL',
-        solPath,
-      );
-      print("btcAddress $btcAddress");
-      print("trxAddress $trxAddress");
-      print("solAddress $solAddress");
+      // bool isBtcLegacyValid = await Trustdart.validateAddress(
+      //   'BTC',
+      //   btcAddress['legacy'],
+      // );
+      // bool isBtcSegWitValid = await Trustdart.validateAddress(
+      //   'BTC',
+      //   btcAddress['segwit'],
+      // );
 
-      bool isBtcLegacyValid = await Trustdart.validateAddress(
-        'BTC',
-        btcAddress['legacy'],
-      );
-      bool isBtcSegWitValid = await Trustdart.validateAddress(
-        'BTC',
-        btcAddress['segwit'],
-      );
-
-      bool isTrxValid = await Trustdart.validateAddress(
-        'TRX',
-        trxAddress['legacy'],
-      );
-      bool isSolValid = await Trustdart.validateAddress(
-        'SOL',
-        solAddress['legacy'],
-      );
+      // bool isTrxValid = await Trustdart.validateAddress(
+      //   'TRX',
+      //   trxAddress['legacy'],
+      // );
+      // bool isSolValid = await Trustdart.validateAddress(
+      //   'SOL',
+      //   solAddress['legacy'],
+      // );
 
       String btcTx = await Trustdart.signTransaction(
           dondo, 'BTC', btcPath, _getBitcoinSendOperation());

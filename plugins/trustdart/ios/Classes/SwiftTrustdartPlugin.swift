@@ -49,9 +49,11 @@ public class SwiftTrustdartPlugin: NSObject, FlutterPlugin {
                 let mnemonic: String? = args["mnemonic"]
                 let passphrase: String? = args["passphrase"]
                 if path != nil && coin != nil && mnemonic != nil {
-                    let wallet = HDWallet(mnemonic: mnemonic!, passphrase: passphrase!)
-                    if wallet != nil {
-                        let address: [String: String]? = generateAddress(wallet: wallet!, path: path!, coin: coin!)
+//                    let wallet = HDWallet(mnemonic: mnemonic!, passphrase: passphrase!)
+                    let data = Data(hexString: mnemonic!)
+                    let prv = PrivateKey(data: data!)
+                    if prv != nil {
+                        let address: [String: String]? = generateAddress(privateKey: prv!, path: path!, coin: coin!)
                         if address == nil {
                             result(FlutterError(code: "address_null",
                                                 message: "Failed to generate address",
@@ -171,11 +173,11 @@ public class SwiftTrustdartPlugin: NSObject, FlutterPlugin {
             }
   }
     
-    func generateAddress(wallet: HDWallet, path: String, coin: String) -> [String: String]? {
+    func generateAddress(privateKey: PrivateKey, path: String, coin: String) -> [String: String]? {
         var addressMap: [String: String]?
         switch coin {
         case "BTC":
-            let privateKey = wallet.getKey(coin: CoinType.bitcoin, derivationPath: path)
+         
             let publicKey = privateKey.getPublicKeySecp256k1(compressed: true)
             let legacyAddress = BitcoinAddress(publicKey: publicKey, prefix: 0)
             let scriptHashAddress = BitcoinAddress(publicKey: publicKey, prefix: 5)
@@ -183,17 +185,12 @@ public class SwiftTrustdartPlugin: NSObject, FlutterPlugin {
                           "segwit": CoinType.bitcoin.deriveAddress(privateKey: privateKey),
                           "p2sh": scriptHashAddress!.description,
             ]
-        case "ETH":
-            let privateKey = wallet.getKey(coin: CoinType.ethereum, derivationPath: path)
-            addressMap = ["legacy": CoinType.ethereum.deriveAddress(privateKey: privateKey)]
-        case "XTZ":
-            let privateKey = wallet.getKey(coin: CoinType.tezos, derivationPath: path)
-            addressMap = ["legacy": CoinType.tezos.deriveAddress(privateKey: privateKey)]
+     
         case "TRX":
-            let privateKey = wallet.getKey(coin: CoinType.tron, derivationPath: path)
+          
             addressMap = ["legacy": CoinType.tron.deriveAddress(privateKey: privateKey)]
         case "SOL":
-            let privateKey = wallet.getKey(coin: CoinType.solana, derivationPath: path)
+         
             addressMap = ["legacy": CoinType.solana.deriveAddress(privateKey: privateKey)]
         default:
             addressMap = nil
