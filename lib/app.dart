@@ -182,7 +182,6 @@ class _MyAppState extends State<MyApp> {
       // final xxxx = TREncode.kBytesToHex(prv!, include0x: false);
       // print("btcPrivKey $xxxx");
 
-      
       // print("btcAddress $btcAddress");
       // print("trxAddress $trxAddress");
       // print("solAddress $solAddress");
@@ -229,25 +228,8 @@ class _MyAppState extends State<MyApp> {
     return MaterialApp(
       home: Scaffold(
         appBar: AppBar(
-          title: const Text('Plugin example app'),
+          title: const Text('test'),
         ),
-        // body: SingleChildScrollView(
-        //   child: Column(
-        //     children: [
-        //       Container(
-        //         height: 500,
-        //         color: Colors.red,
-        //       ),
-        //       Container(
-        //         height: 500,
-        //         color: Colors.blue,
-        //       ),
-        //       TextField(
-        //         controller: _controller,
-        //       )
-        //     ],
-        //   ),
-        // ),
         body: Center(
             child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -263,19 +245,7 @@ class _MyAppState extends State<MyApp> {
                 onPressed: () {
                   initPlatformState();
                 },
-                child: const Text('Create a new multi-coin wallet'),
-              ),
-            ),
-            Container(
-              child: TextButton(
-                style: TextButton.styleFrom(
-                  padding: const EdgeInsets.all(16.0),
-                  backgroundColor: Colors.yellow,
-                  primary: Colors.black,
-                  textStyle: const TextStyle(fontSize: 20),
-                ),
-                onPressed: () {},
-                child: const Text('Generate the default addresses.'),
+                child: const Text('Create btc trx'),
               ),
             ),
             Container(
