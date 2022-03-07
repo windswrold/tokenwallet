@@ -12,36 +12,7 @@ public class SwiftTrustdartPlugin: NSObject, FlutterPlugin {
   public func handle(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
       print(AnySigner.supportsJSON(coin: CoinType.tezos))
     switch call.method {
-            case "generateMnemonic":
-                let passphrase: String = call.arguments as! String
-                let wallet = HDWallet(strength: 128, passphrase: passphrase)
-                if wallet != nil {
-                    result(wallet!.mnemonic)
-                } else {
-                    result(FlutterError(code: "no_wallet",
-                                        message: "Could not generate wallet, why?",
-                                        details: nil))
-                }
-            case "checkMnemonic":
-                let args = call.arguments as! [String: String]
-                let mnemonic: String? = args["mnemonic"]
-                let passphrase: String? = args["passphrase"]
-                if mnemonic != nil {
-                    let wallet = HDWallet(mnemonic: mnemonic!, passphrase: passphrase!)
-                    
-                    if wallet != nil {
-                        result(true)
-                    } else {
-                        result(FlutterError(code: "no_wallet",
-                                            message: "Could not generate wallet, why?",
-                                            details: nil))
-                    }
-                } else {
-                    result(FlutterError(code: "arguments_null",
-                                        message: "[mnemonic] cannot be null",
-                                        details: nil))
-                }
-                
+           
             case "generateAddress":
                 let args = call.arguments as! [String: String]
                 let path: String? = args["path"]
@@ -91,10 +62,12 @@ public class SwiftTrustdartPlugin: NSObject, FlutterPlugin {
                 let mnemonic: String? = args["mnemonic"] as? String
                 let passphrase: String? = args["passphrase"] as? String
                 if coin != nil && path != nil && txData != nil && mnemonic != nil {
-                    let wallet = HDWallet(mnemonic: mnemonic!, passphrase: passphrase!)
+//                    let wallet = HDWallet(mnemonic: mnemonic!, passphrase: passphrase!)
+                    let data = Data(hexString: mnemonic!)
+                    let prv = PrivateKey(data: data!)
                     
-                    if wallet != nil {
-                        let txHash: String? = signTransaction(wallet: wallet!, coin: coin!, path: path!, txData: txData!)
+                    if prv != nil {
+                        let txHash: String? = signTransaction(privateKey: prv!, coin: coin!, path: path!, txData: txData!)
                         if txHash == nil {
                             result(FlutterError(code: "txhash_null",
                                                 message: "Failed to buid and sign transaction",
@@ -112,62 +85,7 @@ public class SwiftTrustdartPlugin: NSObject, FlutterPlugin {
                                         message: "[coin], [path] and [txData] cannot be null",
                                         details: nil))
                 }
-            case "getPublicKey":
-                let args = call.arguments as! [String: String]
-                let path: String? = args["path"]
-                let coin: String? = args["coin"]
-                let mnemonic: String? = args["mnemonic"]
-                let passphrase: String? = args["passphrase"]
-                if path != nil && coin != nil && mnemonic != nil {
-                    let wallet = HDWallet(mnemonic: mnemonic!, passphrase: passphrase!)
-                    
-                    if wallet != nil {
-                        let publicKey: String? = getPublicKey(wallet: wallet!, path: path!, coin: coin!)
-                        if publicKey == nil {
-                            result(FlutterError(code: "address_null",
-                                                message: "Failed to generate address",
-                                                details: nil))
-                        } else {
-                            result(publicKey)
-                        }
-                    } else {
-                        result(FlutterError(code: "no_wallet",
-                                            message: "Could not generate wallet, why?",
-                                            details: nil))
-                    }
-                } else {
-                    result(FlutterError(code: "arguments_null",
-                                        message: "[path] and [coin] and [mnemonic] cannot be null",
-                                        details: nil))
-                }
-            case "getPrivateKey":
-                let args = call.arguments as! [String: String]
-                let path: String? = args["path"]
-                let coin: String? = args["coin"]
-                let mnemonic: String? = args["mnemonic"]
-                let passphrase: String? = args["passphrase"]
-                if path != nil && coin != nil && mnemonic != nil {
-                    let wallet = HDWallet(mnemonic: mnemonic!, passphrase: passphrase!)
-                    
-                    if wallet != nil {
-                        let privateKey: String? = getPrivateKey(wallet: wallet!, path: path!, coin: coin!)
-                        if privateKey == nil {
-                            result(FlutterError(code: "address_null",
-                                                message: "Failed to generate address",
-                                                details: nil))
-                        } else {
-                            result(privateKey)
-                        }
-                    } else {
-                        result(FlutterError(code: "no_wallet",
-                                            message: "Could not generate wallet, why?",
-                                            details: nil))
-                    }
-                } else {
-                    result(FlutterError(code: "arguments_null",
-                                        message: "[path] and [coin] and [mnemonic] cannot be null",
-                                        details: nil))
-                }
+        
             default:
                 result(FlutterMethodNotImplemented)
             }
@@ -181,7 +99,7 @@ public class SwiftTrustdartPlugin: NSObject, FlutterPlugin {
             let publicKey = privateKey.getPublicKeySecp256k1(compressed: true)
             let legacyAddress = BitcoinAddress(publicKey: publicKey, prefix: 0)
             let scriptHashAddress = BitcoinAddress(publicKey: publicKey, prefix: 5)
-            let test = BitcoinAddress(publicKey: publicKey, prefix: 0x1B)
+            let test = BitcoinAddress(publicKey: publicKey, prefix: 111)
             addressMap = ["legacy": legacyAddress!.description,
                           "segwit": CoinType.bitcoin.deriveAddress(privateKey: privateKey),
                           "p2sh": scriptHashAddress!.description,
@@ -206,10 +124,6 @@ public class SwiftTrustdartPlugin: NSObject, FlutterPlugin {
         switch coin {
         case "BTC":
             isValid = CoinType.bitcoin.validate(address: address)
-        case "ETH":
-            isValid = CoinType.ethereum.validate(address: address)
-        case "XTZ":
-            isValid = CoinType.tezos.validate(address: address)
         case "TRX":
             isValid = CoinType.tron.validate(address: address)
         case "SOL":
@@ -221,39 +135,14 @@ public class SwiftTrustdartPlugin: NSObject, FlutterPlugin {
 
     }
     
-    func getPublicKey(wallet: HDWallet, path: String, coin: String) -> String? {
-        var publicKey: String?
-        switch coin {
-        case "BTC":
-            let privateKey = wallet.getKey(coin: CoinType.bitcoin, derivationPath: path)
-            publicKey = privateKey.getPublicKeySecp256k1(compressed: true).data.base64EncodedString()
-        case "ETH":
-            let privateKey = wallet.getKey(coin: CoinType.ethereum, derivationPath: path)
-            publicKey = privateKey.getPublicKeySecp256k1(compressed: true).data.base64EncodedString()
-        case "XTZ":
-            let privateKey = wallet.getKey(coin: CoinType.tezos, derivationPath: path)
-            publicKey = privateKey.getPublicKeyEd25519().data.base64EncodedString()
-        case "TRX":
-            let privateKey = wallet.getKey(coin: CoinType.tron, derivationPath: path)
-            publicKey = privateKey.getPublicKeySecp256k1(compressed: true).data.base64EncodedString()
-        case "SOL":
-            let privateKey = wallet.getKey(coin: CoinType.solana, derivationPath: path)
-            publicKey = privateKey.getPublicKeyEd25519().data.base64EncodedString()
-        default:
-            publicKey = nil
-        }
-        return publicKey;
-    }
+   
     
     func getPrivateKey(wallet: HDWallet, path: String, coin: String) -> String? {
         var privateKey: String?
         switch coin {
         case "BTC":
             privateKey = wallet.getKey(coin: CoinType.bitcoin, derivationPath: path).data.base64EncodedString()
-        case "ETH":
-            privateKey = wallet.getKey(coin: CoinType.ethereum, derivationPath: path).data.base64EncodedString()
-        case "XTZ":
-            privateKey = wallet.getKey(coin: CoinType.tezos, derivationPath: path).data.base64EncodedString()
+      
         case "TRX":
             privateKey = wallet.getKey(coin: CoinType.tron, derivationPath: path).data.base64EncodedString()
         case "SOL":
@@ -264,19 +153,15 @@ public class SwiftTrustdartPlugin: NSObject, FlutterPlugin {
         return privateKey;
     }
     
-    func signTransaction(wallet: HDWallet, coin: String, path: String, txData: [String: Any]) -> String? {
+    func signTransaction(privateKey: PrivateKey, coin: String, path: String, txData: [String: Any]) -> String? {
         var txHash: String?
         switch coin {
         case "BTC":
-            txHash = signBitcoinTransaction(wallet: wallet, path: path, txData: txData)
-        case "ETH":
-            txHash = signEthereumTransaction(wallet: wallet, path: path, txData: txData)
-        case "XTZ":
-            txHash = signTezosTransaction(wallet: wallet, path: path, txData: txData)
+            txHash = signBitcoinTransaction(privateKey: privateKey, path: path, txData: txData)
         case "TRX":
-            txHash = signTronTransaction(wallet: wallet, path: path, txData: txData)
+            txHash = signTronTransaction(privateKey: privateKey, path: path, txData: txData)
         case "SOL":
-            txHash = signSolanaTransaction(wallet: wallet, path: path, txData: txData)
+            txHash = signSolanaTransaction(privateKey: privateKey, path: path, txData: txData)
         default:
             txHash = nil
         }
@@ -291,32 +176,21 @@ public class SwiftTrustdartPlugin: NSObject, FlutterPlugin {
         return String(data: data, encoding: String.Encoding.utf8)
     }
     
-     func signTezosTransaction(wallet: HDWallet, path: String, txData:  [String: Any]) -> String? {
-        let privateKey = wallet.getKey(coin: CoinType.tezos, derivationPath: path)
-        let opJson =  objToJson(from:txData)
-        let result = AnySigner.signJSON(opJson!, key: privateKey.data, coin: CoinType.tezos)
-        return result
-      }
-
-    func signEthereumTransaction(wallet: HDWallet, path: String, txData:  [String: Any]) -> String? {
-        let privateKey = wallet.getKey(coin: CoinType.ethereum, derivationPath: path)
-        let opJson =  objToJson(from:txData)
-        let result = AnySigner.signJSON(opJson!, key: privateKey.data, coin: CoinType.ethereum)
-        return result
-      }
     
-    func signSolanaTransaction(wallet: HDWallet, path: String, txData:  [String: Any]) -> String? {
-        let privateKey = wallet.getKey(coin: CoinType.solana, derivationPath: path)
+
+    
+    func signSolanaTransaction(privateKey: PrivateKey, path: String, txData:  [String: Any]) -> String? {
+//        let privateKey = wallet.getKey(coin: CoinType.solana, derivationPath: path)
         let opJson =  objToJson(from:txData)
         let result = AnySigner.signJSON(opJson!, key: privateKey.data, coin: CoinType.solana)
         return result
       }
     
-    func signTronTransaction(wallet: HDWallet, path: String, txData:  [String: Any]) -> String? {
+    func signTronTransaction(privateKey: PrivateKey, path: String, txData:  [String: Any]) -> String? {
        let cmd = txData["cmd"] as! String
         print(txData)
         var txHash: String?
-        let privateKey = wallet.getKey(coin: CoinType.tron, derivationPath: path)
+//        let privateKey = wallet.getKey(coin: CoinType.tron, derivationPath: path)
         switch cmd {
         case "TRC20":
                 let contract = TronTransferTRC20Contract.with {
@@ -423,8 +297,9 @@ public class SwiftTrustdartPlugin: NSObject, FlutterPlugin {
         return txHash
     }
 
-    func signBitcoinTransaction(wallet: HDWallet, path: String, txData:  [String: Any]) -> String? {
-        let privateKey = wallet.getKey(coin: CoinType.bitcoin, derivationPath: path)
+    func signBitcoinTransaction(privateKey: PrivateKey, path: String, txData:  [String: Any]) -> String? {
+//        let privateKey = wallet.getKey(coin: CoinType.bitcoin, derivationPath: path)
+        print(privateKey.data.hexString)
         let utxos: [[String: Any]] = txData["utxos"] as! [[String: Any]]
         var unspent: [BitcoinUnspentTransaction] = []
         
@@ -452,6 +327,7 @@ public class SwiftTrustdartPlugin: NSObject, FlutterPlugin {
         }
         
         let output: BitcoinSigningOutput = AnySigner.sign(input: input, coin: .bitcoin)
+        print(output.error)
         return output.encoded.hexString
       }
 }

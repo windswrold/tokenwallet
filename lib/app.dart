@@ -1,5 +1,6 @@
 import 'package:cstoken/model/chain/btc.dart';
 import 'package:cstoken/model/chain/trx.dart';
+import 'package:cstoken/net/request_method.dart';
 import 'package:cstoken/pages/tabbar/tabbar.dart';
 import 'package:cstoken/public.dart';
 import 'package:cstoken/state/wallet_state.dart';
@@ -84,23 +85,36 @@ class _MyAppState extends State<MyApp> {
 
 //f33e86906e93690567a58af681ceabf10fe64bb9b441fe847fd5629d6f262973
 
-  Map _getBitcoinSendOperation() {
-    // https://blockchain.info/unspent?active=35oxCr5Edc2VjoQkX65TPzxUVGXJ7r4Uny
-    // https://blockchain.info/unspent?active=bc1qxjth4cj6j2v04s07au935547qk9tzd635hkt3n
+  Future<Map> _getBitcoinSendOperation() async {
+    String url =
+        "https://api.blockcypher.com/v1/btc/test3/addrs/mhCCMXLQ7DZDWF3qTM75uT7a7pP7cYLRXS?unspentOnly=true&includeScript=true";
+    dynamic result = await RequestMethod.manager!.requestData(Method.GET, url);
+    List txrefs = result["txrefs"];
+    List utxos = [];
+    for (var item in txrefs) {
+      Map params = {};
+      params["txid"] = item["tx_hash"];
+      params["value"] = item["value"];
+      params["script"] = item["script"];
+      params["vout"] = item["tx_output_n"];
+      utxos.add(params);
+    }
+
     return {
-      "utxos": [
-        {
-          "txid":
-              "fce42021fd2d2fa793dc3d5d6520fc853e327e5c2c638c3a0be7529c559d3536",
-          "vout": 1,
-          "value": 4500,
-          "script": "001434977ae25a9298fac1feef0b1a52be058ab13751",
-        },
-      ],
-      "toAddress": "15o5bzVX58t1NRvLchBUGuHscCs1sumr2R",
-      "amount": 3000,
-      "fees": 1000,
-      "changeAddress": "15o5bzVX58t1NRvLchBUGuHscCs1sumr2R",
+      "utxos": utxos,
+      // "utxos": [
+      //   {
+      //     "txid":
+      //         "fce42021fd2d2fa793dc3d5d6520fc853e327e5c2c638c3a0be7529c559d3536",
+      //     "vout": 1,
+      //     "value": 4500,
+      //     "script": "001434977ae25a9298fac1feef0b1a52be058ab13751",
+      //   },
+      // ],
+      "toAddress": "mhCCMXLQ7DZDWF3qTM75uT7a7pP7cYLRXS", //收款人
+      "amount": 3000, //金额
+      "fees": 3000,
+      "changeAddress": "mhCCMXLQ7DZDWF3qTM75uT7a7pP7cYLRXS", //找零地址
       "change": 500
     };
   }
@@ -169,8 +183,8 @@ class _MyAppState extends State<MyApp> {
       String trxPath = "m/44'/195'/0'/0/0";
       String solPath = "m/44'/501'/0'/0/0";
 
-      HDWallet? wallet = await BTCChain()
-          .importWallet(content: dondo, pin: "pin", kLeadType: KLeadType.Prvkey);
+      HDWallet? wallet = await BTCChain().importWallet(
+          content: dondo, pin: "pin", kLeadType: KLeadType.Prvkey);
 
       // HDWallet? trx = await TRXChain()
       //     .importWallet(content: dondo, pin: "pin", kLeadType: KLeadType.Memo);
@@ -204,15 +218,15 @@ class _MyAppState extends State<MyApp> {
       //   solAddress['legacy'],
       // );
 
-      String btcTx = await Trustdart.signTransaction(
-          dondo, 'BTC', btcPath, _getBitcoinSendOperation());
-      String trxTx = await Trustdart.signTransaction(
-          dondo, 'TRX', trxPath, _getTronOperation());
-      String solTx = await Trustdart.signTransaction(
-          dondo, 'SOL', solPath, _getSolOperation());
-      print("btcTx " + btcTx);
-      print("trxTx " + trxTx);
-      print("solTx " + solTx);
+      // String btcTx = await Trustdart.signTransaction(
+      //     dondo, 'BTC', btcPath, await _getBitcoinSendOperation());
+      // String trxTx = await Trustdart.signTransaction(
+      //     dondo, 'TRX', trxPath, _getTronOperation());
+      // String solTx = await Trustdart.signTransaction(
+      //     dondo, 'SOL', solPath, _getSolOperation());
+      // print("btcTx " + btcTx);
+      // print("trxTx " + trxTx);
+      // print("solTx " + solTx);
     } catch (e) {
       print(e);
     }
@@ -221,6 +235,17 @@ class _MyAppState extends State<MyApp> {
     // message was in flight, we want to discard the reply rather than calling
     // setState to update our non-existent appearance.
     if (!mounted) return;
+  }
+
+  _signTrans() async {
+    String dondo = "BrYma5eJYMmxqVnYxY1gJCZeBnGooUQ1eteTwpRHtmQYwwGR4zim";
+    String btcTx = await Trustdart.signTransaction(
+        dondo, 'BTC', await _getBitcoinSendOperation());
+    // String trxTx = await Trustdart.signTransaction(
+    //     dondo, 'TRX', trxPath, _getTronOperation());
+    // String solTx = await Trustdart.signTransaction(
+    //     dondo, 'SOL', solPath, _getSolOperation());
+    print("btcTx " + btcTx);
   }
 
   @override
@@ -256,8 +281,10 @@ class _MyAppState extends State<MyApp> {
                   primary: Colors.black,
                   textStyle: const TextStyle(fontSize: 20),
                 ),
-                onPressed: () {},
-                child: const Text('Sign transactions for sending.'),
+                onPressed: () {
+                  _signTrans();
+                },
+                child: const Text('Sign '),
               ),
             ),
           ],
