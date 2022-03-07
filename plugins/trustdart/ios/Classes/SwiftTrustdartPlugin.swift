@@ -181,9 +181,11 @@ public class SwiftTrustdartPlugin: NSObject, FlutterPlugin {
             let publicKey = privateKey.getPublicKeySecp256k1(compressed: true)
             let legacyAddress = BitcoinAddress(publicKey: publicKey, prefix: 0)
             let scriptHashAddress = BitcoinAddress(publicKey: publicKey, prefix: 5)
+            let test = BitcoinAddress(publicKey: publicKey, prefix: 0x1B)
             addressMap = ["legacy": legacyAddress!.description,
                           "segwit": CoinType.bitcoin.deriveAddress(privateKey: privateKey),
                           "p2sh": scriptHashAddress!.description,
+                          "test":test!.description
             ]
      
         case "TRX":

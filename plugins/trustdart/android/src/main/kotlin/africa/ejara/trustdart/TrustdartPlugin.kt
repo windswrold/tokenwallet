@@ -219,9 +219,13 @@ class TrustdartPlugin : FlutterPlugin, MethodCallHandler {
 
                 val publicKey = privateKey.getPublicKeySecp256k1(true)
                 val address = BitcoinAddress(publicKey, CoinType.BITCOIN.p2pkhPrefix())
+                val shAdd = BitcoinAddress(publicKey, CoinType.BITCOIN.p2shPrefix())
+                val test = BitcoinAddress(publicKey, 0x1b) //blockcypher bcy
                 mapOf(
                     "legacy" to address.description(),
-                    "segwit" to CoinType.BITCOIN.deriveAddress(privateKey)
+                    "segwit" to CoinType.BITCOIN.deriveAddress(privateKey),
+                    "p2sh" to shAdd.description(),
+                    "test" to test.description()
                 )
             }
 
