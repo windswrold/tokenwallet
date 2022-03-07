@@ -14,8 +14,8 @@ class ImportsWallet extends StatefulWidget {
 }
 
 class _ImportsWalletState extends State<ImportsWallet> {
-  final CreateWalletProvider _kprovier =
-      CreateWalletProvider.init(leadType: KLeadType.Prvkey);
+  final CreateWalletProvider _kprovier = CreateWalletProvider.init(
+      leadType: KLeadType.Prvkey, chainType: KChainType.ETH);
 
   final List<Tab> _myTabs = [
     Tab(text: 'importwallet_prv'.local(), height: 40.width),
@@ -45,27 +45,23 @@ class _ImportsWalletState extends State<ImportsWallet> {
     KLeadType leadType = KLeadType.Prvkey;
     if (index == 0) {
       leadType = KLeadType.Prvkey;
+      _kprovier.updateChainType(KChainType.ETH);
     } else {
       leadType = KLeadType.Restore;
+      _kprovier.updateChainType(KChainType.HD);
     }
     _kprovier.updateLeadType(leadType);
   }
 
   void _createWallet() {
-    KChainType chainType = KChainType.HD;
-    if (_pageIndex == 0) {
-      chainType = KChainType.ETH;
-    } else {
-      chainType = KChainType.HD;
-    }
-    _kprovier.createWallet(context, chainType: chainType);
+    _kprovier.createWallet(context);
   }
 
   Widget _getPageViewWidget(Tab leadtype) {
     int lead = _myTabs.indexOf(leadtype);
     List<Widget> widgets = [];
     if (lead == 0) {
-      widgets.add(const ChooseChainType());
+      widgets.add(ChooseChainType());
       widgets.add(CustomTextField.getInputTextField(context,
           padding: EdgeInsets.only(top: 16.width),
           controller: _kprovier.contentEC,

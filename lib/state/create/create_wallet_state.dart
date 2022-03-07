@@ -15,9 +15,21 @@ class CreateWalletProvider with ChangeNotifier {
   bool _pwdisClose = true;
   bool _pwdAgainisClose = true;
   KLeadType _leadType = KLeadType.Memo;
+  KChainType _chainType = KChainType.HD;
 
-  CreateWalletProvider.init({required KLeadType leadType}) {
+  TextEditingController? get contentEC => _contentEC;
+  TextEditingController get walletNameEC => _walletNameEC;
+  TextEditingController get pwdEC => _pwdEC;
+  TextEditingController get pwdAgainEC => _pwdAgainEC;
+  TextEditingController get pwdTipEC => _pwdTipEC;
+  bool get pwdisClose => _pwdisClose;
+  bool get pwdAgainisClose => _pwdAgainisClose;
+  KChainType get chainType => _chainType;
+
+  CreateWalletProvider.init(
+      {required KLeadType leadType, required KChainType chainType}) {
     _leadType = leadType;
+    _chainType = chainType;
     if (leadType == KLeadType.Prvkey || leadType == KLeadType.Restore) {
       _contentEC = TextEditingController();
     }
@@ -39,6 +51,11 @@ class CreateWalletProvider with ChangeNotifier {
       // contentEC.text =
       //     "0db163591450cd67f3febe856460460e99ef5bb70c6a98cb2a0bcb873d0526be";
     }
+  }
+
+  void updateChainType(KChainType chainType) {
+    _chainType = chainType;
+    notifyListeners();
   }
 
   @override
@@ -63,7 +80,7 @@ class CreateWalletProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  void createWallet(BuildContext context, {required KChainType chainType}) async{
+  void createWallet(BuildContext context) async {
     HWToast.showLoading();
     String memo = "";
     if (_leadType == KLeadType.Memo) {
@@ -77,7 +94,7 @@ class CreateWalletProvider with ChangeNotifier {
         pinAgain: _pwdAgainEC.text,
         pinTip: _pwdTipEC.text,
         walletName: _walletNameEC.text,
-        kChainType: chainType,
+        kChainType: _chainType,
         kLeadType: _leadType);
     if (state == false) {
       return;
@@ -88,15 +105,7 @@ class CreateWalletProvider with ChangeNotifier {
         pinAgain: _pwdAgainEC.text,
         pinTip: _pwdTipEC.text,
         walletName: _walletNameEC.text,
-        kChainType: chainType,
+        kChainType: _chainType,
         kLeadType: _leadType);
   }
-
-  TextEditingController? get contentEC => _contentEC;
-  TextEditingController get walletNameEC => _walletNameEC;
-  TextEditingController get pwdEC => _pwdEC;
-  TextEditingController get pwdAgainEC => _pwdAgainEC;
-  TextEditingController get pwdTipEC => _pwdTipEC;
-  bool get pwdisClose => _pwdisClose;
-  bool get pwdAgainisClose => _pwdAgainisClose;
 }

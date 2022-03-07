@@ -170,9 +170,9 @@ List<Map<String, dynamic>> currency_List = [
     "tokenType": 0,
   },
   {
-    "coinType": "BTC",
+    "coinType": "TRX",
     "chainType": 8,
-    "token": "BTC",
+    "token": "TRX",
     "decimals": 6,
     "contract": "",
     "digits": 6,

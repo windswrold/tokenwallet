@@ -10,8 +10,8 @@ class CreateWalletPage extends StatefulWidget {
 }
 
 class _CreateWalletPageState extends State<CreateWalletPage> {
-  final CreateWalletProvider _kprovier =
-      CreateWalletProvider.init(leadType: KLeadType.Memo);
+  final CreateWalletProvider _kprovier = CreateWalletProvider.init(
+      leadType: KLeadType.Memo, chainType: KChainType.HD);
 
   @override
   Widget build(BuildContext context) {
@@ -106,7 +106,7 @@ class _CreateWalletPageState extends State<CreateWalletPage> {
                 ),
                 NextButton(
                   onPressed: () {
-                    _kprovier.createWallet(context, chainType: KChainType.HD);
+                    _kprovier.createWallet(context);
                   },
                   bgc: ColorUtils.blueColor,
                   textStyle: TextStyle(

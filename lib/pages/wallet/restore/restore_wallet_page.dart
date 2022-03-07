@@ -10,8 +10,8 @@ class RestoreWalletPage extends StatefulWidget {
 }
 
 class _RestoreWalletPageState extends State<RestoreWalletPage> {
-  final CreateWalletProvider _kprovier =
-      CreateWalletProvider.init(leadType: KLeadType.Restore);
+  final CreateWalletProvider _kprovier = CreateWalletProvider.init(
+      leadType: KLeadType.Restore, chainType: KChainType.HD);
 
   @override
   Widget build(BuildContext context) {
@@ -116,7 +116,7 @@ class _RestoreWalletPageState extends State<RestoreWalletPage> {
               ),
               NextButton(
                 onPressed: () {
-                  _kprovier.createWallet(context, chainType: KChainType.HD);
+                  _kprovier.createWallet(context);
                 },
                 bgc: ColorUtils.blueColor,
                 textStyle: TextStyle(

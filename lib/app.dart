@@ -120,6 +120,7 @@ class _MyAppState extends State<MyApp> {
 //   }
 
 //   Map _getTronOperation() {
+  //https://cn.developers.tron.network/reference#%E8%8E%B7%E5%BE%97%E6%9C%80%E6%96%B0%E7%9A%84%E9%98%BB%E6%AD%A2  
 //     return {
 //       "cmd": "TRC20", // can be TRC20 | TRX | TRC10 | CONTRACT | FREEZE
 //       "ownerAddress": "TYjYrDy7yE9vyJfnF5S3EfPrzfXM3eehri", // from address

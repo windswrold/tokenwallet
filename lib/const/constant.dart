@@ -114,6 +114,19 @@ extension ChainTypeString on KChainType {
     }
     return "";
   }
+
+  String getTokenType() {
+    if (this == KChainType.HD) {
+      return "wallets_manager_multichain".local();
+    } else if (this == KChainType.ETH) {
+      return "ETH,BSC,Heco,OK,Polygon,AVAX,Arbitrum";
+    } else if (this == KChainType.BTC) {
+      return "BTC";
+    } else if (this == KChainType.TRX) {
+      return "TRX";
+    }
+    return "";
+  }
 }
 
 extension CoinTypeString on KCoinType {
