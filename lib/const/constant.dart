@@ -107,6 +107,10 @@ extension ChainTypeString on KChainType {
       return "wallets_manager_multichain".local();
     } else if (this == KChainType.ETH) {
       return "importwallet_ethchaintype".local();
+    } else if (this == KChainType.BTC) {
+      return "importwallet_btcchaintype".local();
+    } else if (this == KChainType.TRX) {
+      return "importwallet_trxchaintype".local();
     }
     return "";
   }
@@ -131,6 +135,8 @@ extension CoinTypeString on KCoinType {
         return "Arbitrum";
       case KCoinType.BTC:
         return "BTC";
+      case KCoinType.TRX:
+        return "TRX";
       default:
         throw Error();
     }
@@ -154,6 +160,8 @@ extension CoinTypeString on KCoinType {
         return "ETH-ARBI";
       case KCoinType.BTC:
         return "BTC";
+      case KCoinType.TRX:
+        return "TRX";
       default:
         throw Error();
     }

@@ -216,5 +216,7 @@
     "customtokens_pleasetokendsymbol": "请输入代币符号",
     "empaty_notoken": "还没有此币种哦",
     "empaty_addtoken": "添加代币",
-    "customtokens_decimalempty": "没有精度数据"
+    "customtokens_decimalempty": "没有精度数据",
+    "importwallet_btcchaintype": "BTC钱包",
+    "importwallet_trxchaintype": "TRX钱包"
 }
