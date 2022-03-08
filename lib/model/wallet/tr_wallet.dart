@@ -92,6 +92,7 @@ class TRWallet {
               content: memo!,
               pin: "",
               kLeadType: leadType!.getLeadType(),
+              kchainType: chainType!.getChainType(),
               kCoinType: infoCoinType);
           if (hdWallets.isNotEmpty) {
             String prv = hdWallets.first.prv ?? "";
@@ -220,7 +221,7 @@ class TRWallet {
           content: content,
           pin: pin,
           kLeadType: kLeadType,
-          chainType: kChainType);
+          kchainType: kChainType);
       for (var object in _hdwallets) {
         String address = object.address!;
         String key = walletID + address + object.coinType!.coinTypeString();

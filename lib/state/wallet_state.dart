@@ -453,8 +453,15 @@ class CurrentChooseWalletState with ChangeNotifier {
       MCollectionTokens map = tokens[i];
       KCoinType coinType = map.chainType!.geCoinType();
       String walletAaddress = "";
-      var info =
-          infos.where((element) => element.coinType == map.chainType).first;
+      TRWalletInfo? info;
+      if (infos.isNotEmpty) {
+        info =
+            infos.where((element) => element.coinType == map.chainType).first;
+      }
+      if (info == null) {
+        LogUtil.v("element.coinType ${map.token}");
+        continue;
+      }
       walletAaddress = info.walletAaddress!;
       Map params = {};
       if (map.isToken == false) {

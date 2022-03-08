@@ -31,94 +31,54 @@ class HDWallet {
         "HDWallet prv $prv , address $address pin $pin content $content leadType $leadType coinType $coinType");
   }
 
+  HDWallet mutableCopy() {
+    return HDWallet(
+      prv: prv,
+      address: address,
+      pin: pin,
+      content: content,
+      leadType: leadType,
+      coinType: coinType,
+    );
+  }
+
   static Future<List<HDWallet>> getHDWallet(
       {required String content,
       required String pin,
       required KLeadType kLeadType,
-      KChainType? chainType,
+      required KChainType kchainType,
       KCoinType? kCoinType}) async {
     List<HDWallet> _hdwallets = [];
     if (kLeadType == KLeadType.Memo || kLeadType == KLeadType.Restore) {
       kLeadType = KLeadType.Memo;
     }
-    if (chainType == KChainType.HD || chainType == KChainType.ETH) {
+
+    if (kchainType == KChainType.HD || kchainType == KChainType.ETH) {
       HDWallet ethWallet = (await ETHChain()
           .importWallet(content: content, pin: pin, kLeadType: kLeadType))!;
-      if (kCoinType == KCoinType.ETH) {
+      if (kCoinType == null) {
         _hdwallets.add(ethWallet);
-      }
-      if (kCoinType == KCoinType.BSC) {
-        HDWallet hdWallet = HDWallet(
-            coinType: KCoinType.BSC,
-            prv: ethWallet.prv,
-            address: ethWallet.address,
-            pin: ethWallet.pin,
-            content: ethWallet.content,
-            leadType: ethWallet.leadType);
-        _hdwallets.add(hdWallet);
-      }
-      if (kCoinType == KCoinType.HECO) {
-        HDWallet hdWallet = HDWallet(
-            coinType: KCoinType.HECO,
-            prv: ethWallet.prv,
-            address: ethWallet.address,
-            pin: ethWallet.pin,
-            content: ethWallet.content,
-            leadType: ethWallet.leadType);
-        _hdwallets.add(hdWallet);
-      }
-      if (kCoinType == KCoinType.Arbitrum) {
-        HDWallet hdWallet = HDWallet(
-            coinType: KCoinType.Arbitrum,
-            prv: ethWallet.prv,
-            address: ethWallet.address,
-            pin: ethWallet.pin,
-            content: ethWallet.content,
-            leadType: ethWallet.leadType);
-        _hdwallets.add(hdWallet);
-      }
-      if (kCoinType == KCoinType.AVAX) {
-        HDWallet hdWallet = HDWallet(
-            coinType: KCoinType.AVAX,
-            prv: ethWallet.prv,
-            address: ethWallet.address,
-            pin: ethWallet.pin,
-            content: ethWallet.content,
-            leadType: ethWallet.leadType);
-        _hdwallets.add(hdWallet);
-      }
-      if (kCoinType == KCoinType.Matic) {
-        HDWallet hdWallet = HDWallet(
-            coinType: KCoinType.Matic,
-            prv: ethWallet.prv,
-            address: ethWallet.address,
-            pin: ethWallet.pin,
-            content: ethWallet.content,
-            leadType: ethWallet.leadType);
-
-        _hdwallets.add(hdWallet);
-      }
-      if (kCoinType == KCoinType.OKChain) {
-        HDWallet hdWallet = HDWallet(
-            coinType: KCoinType.OKChain,
-            prv: ethWallet.prv,
-            address: ethWallet.address,
-            pin: ethWallet.pin,
-            content: ethWallet.content,
-            leadType: ethWallet.leadType);
-        _hdwallets.add(hdWallet);
+        _hdwallets.add(ethWallet.mutableCopy()..coinType = KCoinType.BSC);
+        _hdwallets.add(ethWallet.mutableCopy()..coinType = KCoinType.HECO);
+        _hdwallets.add(ethWallet.mutableCopy()..coinType = KCoinType.OKChain);
+        _hdwallets.add(ethWallet.mutableCopy()..coinType = KCoinType.Matic);
+        _hdwallets.add(ethWallet.mutableCopy()..coinType = KCoinType.AVAX);
+        _hdwallets.add(ethWallet.mutableCopy()..coinType = KCoinType.Arbitrum);
+      } else {
+        ethWallet.coinType = kCoinType;
+        _hdwallets.add(ethWallet);
       }
     }
 
-    if (chainType == KChainType.HD ||
-        chainType == KChainType.BTC ||
+    if (kchainType == KChainType.HD ||
+        kchainType == KChainType.BTC ||
         kCoinType == KCoinType.BTC) {
       HDWallet? hdWallet = await BTCChain()
           .importWallet(content: content, pin: pin, kLeadType: kLeadType);
       _hdwallets.add(hdWallet!);
     }
-    if (chainType == KChainType.HD ||
-        chainType == KChainType.TRX ||
+    if (kchainType == KChainType.HD ||
+        kchainType == KChainType.TRX ||
         kCoinType == KCoinType.TRX) {
       HDWallet? hdWallet = await TRXChain()
           .importWallet(content: content, pin: pin, kLeadType: kLeadType);

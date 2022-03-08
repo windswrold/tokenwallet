@@ -13,10 +13,11 @@ class ChainListType extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 420.width,
+      height: (datas.length * 50.width) + 70.width,
       decoration: const BoxDecoration(
         color: Colors.transparent,
       ),
+      constraints: BoxConstraints(maxHeight: 420.width),
       margin:
           EdgeInsets.only(left: 16.width, right: 16.width, bottom: 16.width),
       child: Column(
