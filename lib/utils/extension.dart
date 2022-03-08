@@ -9,6 +9,7 @@ import 'package:web3dart/credentials.dart';
 import '../public.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:easy_localization/src/public.dart' as ez;
+import 'package:bip32/src/utils/wif.dart' as wif;
 
 extension StringUtil on String {
   KCoinType? chainTypeGetCoinType() {
@@ -81,19 +82,24 @@ extension StringUtil on String {
     }
   }
 
-  bool checkPrv(KChainType kChainType) {
-    int len = 0;
-    switch (kChainType) {
-      case KChainType.ETH:
-        len = 64;
-        break;
-      default:
-    }
-    String regex = "^[0-9A-Fa-f]{$len}\$";
+  Future<bool> checkPrv(KChainType kChainType) async {
     try {
-      RegExp reg = RegExp(regex);
-      print("checkPrv $this hasMatch${reg.hasMatch(this)} regex $regex");
-      return reg.hasMatch(this);
+      bool result = false;
+      if (kChainType == KChainType.ETH) {
+        String regex = "^[0-9A-Fa-f]{64}\$";
+        RegExp reg = RegExp(regex);
+        print("checkPrv $this hasMatch${reg.hasMatch(this)} regex $regex");
+        result = reg.hasMatch(this);
+      }
+      if (kChainType == KChainType.BTC) {
+        final originprv = wif.decode(this);
+        result = true;
+      }
+      if (kChainType == KChainType.TRX) {
+        result = true;
+      }
+
+      return result;
     } catch (e) {
       LogUtil.v("checkPassword $e");
       return false;
@@ -244,6 +250,16 @@ extension Numextension on num {
   double get height => h;
 
   double get font => sp;
+
+  KChainType getChainType() {
+    List<KChainType> datas = KChainType.values;
+    for (var item in datas) {
+      if (item.index == this) {
+        return item;
+      }
+    }
+    return KChainType.HD;
+  }
 
   KLeadType getLeadType() {
     List<KLeadType> datas = KLeadType.values;

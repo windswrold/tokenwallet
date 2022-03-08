@@ -3,9 +3,11 @@ import 'package:flutter/material.dart';
 import '../public.dart';
 
 class ChainListType extends StatelessWidget {
-  const ChainListType({Key? key, required this.onTap}) : super(key: key);
+  const ChainListType(
+      {Key? key, required this.onTap, required, required this.datas})
+      : super(key: key);
 
-  final List<KCoinType> _datas = KCoinType.values;
+  final List<KCoinType> datas;
   final Function(KCoinType coinType) onTap;
 
   @override
@@ -28,9 +30,9 @@ class ChainListType extends StatelessWidget {
                 borderRadius: BorderRadius.circular(8),
               ),
               child: ListView.builder(
-                itemCount: _datas.length,
+                itemCount: datas.length,
                 itemBuilder: (BuildContext context, int index) {
-                  KCoinType type = _datas[index];
+                  KCoinType type = datas[index];
                   return GestureDetector(
                     behavior: HitTestBehavior.opaque,
                     onTap: () {

@@ -127,6 +127,27 @@ extension ChainTypeString on KChainType {
     }
     return "";
   }
+
+  List<KCoinType> getSuppertCoinTypes() {
+    if (this == KChainType.HD) {
+      return KCoinType.values;
+    } else if (this == KChainType.ETH) {
+      return [
+        KCoinType.ETH,
+        KCoinType.BSC,
+        KCoinType.HECO,
+        KCoinType.OKChain,
+        KCoinType.Matic,
+        KCoinType.AVAX,
+        KCoinType.Arbitrum
+      ];
+    } else if (this == KChainType.BTC) {
+      return [KCoinType.BTC];
+    } else if (this == KChainType.TRX) {
+      return [KCoinType.TRX];
+    }
+    return [];
+  }
 }
 
 extension CoinTypeString on KCoinType {

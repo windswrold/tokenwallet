@@ -104,7 +104,7 @@ class _CustomAddTokensState extends State<CustomAddTokens> {
 
   void _onTapChain() {
     Provider.of<CurrentChooseWalletState>(context, listen: false)
-        .onTapChain(context, (p0) {
+        .onTapChain(context, KChainType.ETH.getSuppertCoinTypes(), (p0) {
       setState(() {
         _chooseType = p0;
       });

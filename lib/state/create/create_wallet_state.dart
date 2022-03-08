@@ -88,7 +88,7 @@ class CreateWalletProvider with ChangeNotifier {
     } else {
       memo = _contentEC!.text;
     }
-    bool state = TRWallet.validImportValue(
+    bool state = await TRWallet.validImportValue(
         content: memo,
         pin: _pwdEC.text,
         pinAgain: _pwdAgainEC.text,

@@ -105,14 +105,14 @@ class TRWallet {
     );
   }
 
-  static bool validImportValue(
+  static Future<bool> validImportValue(
       {required String content,
       required String pin,
       required String pinAgain,
       required String pinTip,
       required String walletName,
       required KChainType kChainType,
-      required KLeadType kLeadType}) {
+      required KLeadType kLeadType}) async {
     LogUtil.v(
         "importWallet $content pin $pin kChainType $kChainType kLeadType $kLeadType");
     content = content.trim();
@@ -153,7 +153,7 @@ class TRWallet {
       return false;
     }
     if (kLeadType == KLeadType.Prvkey &&
-        content.checkPrv(kChainType) == false) {
+        (await content.checkPrv(kChainType)) == false) {
       HWToast.showText(text: "import_prvwrong".local());
       return false;
     }
@@ -175,7 +175,7 @@ class TRWallet {
       required KLeadType kLeadType}) async {
     HWToast.showLoading();
     try {
-      if (validImportValue(
+      if (await validImportValue(
               content: content,
               pin: pin,
               pinAgain: pinAgain,
@@ -237,12 +237,19 @@ class TRWallet {
           : KNetType.Mainnet;
       List<MCollectionTokens> tokens = [];
       List<MCollectionTokens> cacheTokens = [];
+      List<KCoinType> coins = kChainType.getSuppertCoinTypes();
       for (var item in currency_List) {
         MCollectionTokens token = MCollectionTokens.fromJson(item);
         token.owner = walletID;
         token.state = 1;
         token.tokenID = token.createTokenID(walletID);
-        cacheTokens.add(token);
+        if (kChainType == KChainType.HD) {
+          cacheTokens.add(token);
+        } else {
+          if (coins.contains(token.chainType!.geCoinType())) {
+            cacheTokens.add(token);
+          }
+        }
       }
       for (var item in indexTokens) {
         MCollectionTokens token = MCollectionTokens();
@@ -268,13 +275,21 @@ class TRWallet {
         token.owner = walletID;
         token.state = 1;
         token.tokenID = token.createTokenID(walletID);
-        tokens.add(token);
+
         for (var item in cacheTokens) {
           if (item.token == token.token && item.chainType == token.chainType) {
             item.iconPath = token.iconPath;
           }
         }
+        if (kChainType == KChainType.HD) {
+          tokens.add(token);
+        } else {
+          if (coins.contains(token.chainType!.geCoinType())) {
+            cacheTokens.add(token);
+          }
+        }
       }
+
       tokens.addAll(cacheTokens);
       MCollectionTokens.insertTokens(tokens);
       HWToast.hiddenAllToast();

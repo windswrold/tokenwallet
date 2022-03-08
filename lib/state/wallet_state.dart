@@ -125,13 +125,17 @@ class CurrentChooseWalletState with ChangeNotifier {
   }
 
   ///选择链类型
-  void onTapChain(BuildContext context, Function(KCoinType) onTap) {
+  void onTapChain(
+      BuildContext context, List<KCoinType> coins, Function(KCoinType) onTap) {
     showModalBottomSheet(
         context: context,
         backgroundColor: Colors.transparent,
         isScrollControlled: true,
         builder: (_) {
-          return ChainListType(onTap: onTap);
+          return ChainListType(
+            onTap: onTap,
+            datas: coins,
+          );
         });
   }
 
@@ -190,8 +194,10 @@ class CurrentChooseWalletState with ChangeNotifier {
     if (coinType != null) {
       _queryWalletInfo(context, model, coinType);
     } else {
+      ///目前是eth系
       onTapChain(
           context,
+          KChainType.ETH.getSuppertCoinTypes(),
           (p0) => {
                 _queryWalletInfo(context, model, p0),
               });
@@ -360,6 +366,7 @@ class CurrentChooseWalletState with ChangeNotifier {
                 });
               }, cancelPress: () {});
             },
+            datas: wallet.chainType!.getChainType().getSuppertCoinTypes(),
           );
         });
   }
