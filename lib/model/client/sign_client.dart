@@ -16,12 +16,12 @@ import 'package:http/http.dart';
 import 'package:web3dart/web3dart.dart' as web3;
 import 'package:eth_sig_util/eth_sig_util.dart';
 
-class ETHClient {
+class SignTransactionClient {
   final Web3Client client;
   Credentials? credentials;
   final int? _chainId;
 
-  ETHClient(String url, int chainId)
+  SignTransactionClient(String url, int chainId)
       : client = Web3Client(url, Client()),
         _chainId = chainId;
 

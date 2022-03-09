@@ -23,18 +23,24 @@ class KTransferState with ChangeNotifier {
   TextEditingController get remarkEC => _remarkEC;
 
   TRWalletInfo? _walletInfo;
+  TRWalletInfo? get walletInfo => _walletInfo;
   TRWallet? _wallet;
   ETHClient? _client;
   MCollectionTokens? _tokens;
 
   String _gasLimit = '';
-  String _gasPrice = '';
+  String _feeOffset = "20"; //gas or sat
   String _feeValue = '0.0';
   bool _isCustomFee = false;
   int _seleindex = 1;
   String _paymentAssets = "--";
   String get paymentAssets => _paymentAssets;
   String? _currencySymbolStr;
+  final double _sliderMin = 6;
+  final double _sliderMax = 135;
+  double get sliderMin => _sliderMin;
+  double get sliderMax => _sliderMax;
+  String get feeOffset => _feeOffset;
 
   String feeValue() {
     if (_tokens == null) {
@@ -43,6 +49,16 @@ class KTransferState with ChangeNotifier {
     return _feeValue +
         " " +
         _walletInfo!.coinType!.geCoinType().feeTokenString();
+  }
+
+  void sliderChange(double value) {
+    _feeOffset = value.toInt().toString();
+    String fee = TRWallet.configFeeValue(
+        cointype: _walletInfo!.coinType!,
+        beanValue: _gasLimit,
+        offsetValue: _feeOffset);
+    _feeValue = fee;
+    notifyListeners();
   }
 
   void init(BuildContext context) {
@@ -74,6 +90,7 @@ class KTransferState with ChangeNotifier {
     if (inProduction == false) {
       _addressEC.text = _walletInfo!.walletAaddress!;
     }
+    notifyListeners();
     initGasData();
   }
 
@@ -84,24 +101,27 @@ class KTransferState with ChangeNotifier {
   }
 
   void initGasData() async {
-    dynamic result = await WalletServices.getgasPrice(_tokens!.coinType!);
-    if (result == null) {
-      return;
-    }
-    Decimal offset = Decimal.fromInt(10).pow(9);
-    String fastgas = result!["gasNormalPrice"];
-    fastgas = (Decimal.parse(fastgas) / offset).toDecimal().toString();
-    String fee = "";
-    if (_tokens!.tokenType == KTokenType.native.index) {
-      _gasLimit = transferETHGasLimit.toString();
+    if (_walletInfo?.coinType == KCoinType.BTC.index) {
+      _gasLimit = "500";
     } else {
-      _gasLimit = transferERC20GasLimit.toString();
+      dynamic result = await WalletServices.getgasPrice(_tokens!.coinType!);
+      if (result == null) {
+        return;
+      }
+      Decimal offset = Decimal.fromInt(10).pow(9);
+      String fastgas = result!["gasNormalPrice"];
+      fastgas = (Decimal.parse(fastgas) / offset).toDecimal().toString();
+      if (_tokens!.tokenType == KTokenType.native.index) {
+        _gasLimit = transferETHGasLimit.toString();
+      } else {
+        _gasLimit = transferERC20GasLimit.toString();
+      }
+      _feeOffset = fastgas;
     }
-    fee = TRWallet.configFeeValue(
+    String fee = TRWallet.configFeeValue(
         cointype: _walletInfo!.coinType!,
         beanValue: _gasLimit,
-        offsetValue: fastgas);
-    _gasPrice = fastgas;
+        offsetValue: _feeOffset);
     _feeValue = fee;
     notifyListeners();
   }
@@ -125,11 +145,11 @@ class KTransferState with ChangeNotifier {
         TransfeeView(
           feeValue: _feeValue,
           gasLimit: _gasLimit,
-          gasPrice: _gasPrice,
+          gasPrice: _feeOffset,
           complationBack: (feeValue, gasPrice, gasLimit, isCustom, seleindex) {
             LogUtil.v("feeValue $feeValue $gasPrice $gasLimit $isCustom");
             _feeValue = feeValue;
-            _gasPrice = gasPrice;
+            _feeOffset = gasPrice;
             _gasLimit = gasLimit;
             _isCustomFee = _isCustomFee;
             _seleindex = seleindex;
@@ -143,7 +163,7 @@ class KTransferState with ChangeNotifier {
 
   void tapTransfer(BuildContext context) async {
     LogUtil.v(
-        "popupInfo gasPrice $_gasPrice gasLimit $_gasLimit feeValue $_feeValue iscustom $_isCustomFee");
+        "popupInfo gasPrice $_feeOffset gasLimit $_gasLimit feeValue $_feeValue iscustom $_isCustomFee");
     FocusScope.of(context).requestFocus(FocusNode());
     HWToast.showLoading();
     bool isToken = _tokens!.isToken;
@@ -166,7 +186,7 @@ class KTransferState with ChangeNotifier {
     }
     if (_feeValue == null || _feeValue.isEmpty == true) {
       _feeValue = TRWallet.configFeeValue(
-          cointype: coinType, beanValue: _gasLimit, offsetValue: _gasPrice);
+          cointype: coinType, beanValue: _gasLimit, offsetValue: _feeOffset);
     } else {
       _feeValue = _feeValue
           .trim()
@@ -184,7 +204,12 @@ class KTransferState with ChangeNotifier {
       HWToast.showText(text: "payment_valueshouldlessbal".local());
       return;
     }
-    BigInt feeBig = _feeValue.tokenInt(18);
+    BigInt feeBig = BigInt.zero;
+    if (coinType == KCoinType.BTC.index) {
+      feeBig = _feeValue.tokenInt(8);
+    } else {
+      feeBig = _feeValue.tokenInt(18);
+    }
     if (isToken == true) {
       num mainBalance = await _client!.getBalance(from);
       BigInt mainTokenBig = mainBalance.toString().tokenInt(18);
@@ -270,7 +295,7 @@ class KTransferState with ChangeNotifier {
   }) async {
     HWToast.showLoading(clickClose: true);
     int? maxGas = Decimal.parse(_gasLimit).toBigInt().toInt();
-    int? gasPrice = Decimal.parse(_gasPrice).toBigInt().toInt();
+    int? gasPrice = Decimal.parse(_feeOffset).toBigInt().toInt();
     String? result;
     result = await _client!.transfer(
         prv: prv,

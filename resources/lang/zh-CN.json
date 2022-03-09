@@ -218,5 +218,7 @@
     "empaty_addtoken": "添加代币",
     "customtokens_decimalempty": "没有精度数据",
     "importwallet_btcchaintype": "BTC钱包",
-    "importwallet_trxchaintype": "TRX钱包"
+    "importwallet_trxchaintype": "TRX钱包",
+    "payment_slow": "低",
+    "payment_high": "高"
 }

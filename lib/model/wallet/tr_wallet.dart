@@ -474,13 +474,23 @@ class TRWallet {
   }) {
     beanValue = beanValue?.replaceAll("null", "0");
     offsetValue = offsetValue?.replaceAll("null", "0");
-    Decimal gasValue =
-        Decimal.parse(beanValue ?? "0") * Decimal.fromInt(10).pow(9);
-    gasValue = gasValue * Decimal.parse(offsetValue ?? "0");
-    var feeValue = (gasValue / Decimal.fromInt(10).pow(18)).toDecimal();
-    LogUtil.v("手续费beanValue $beanValue  offsetValue $offsetValue 计算是 " +
-        feeValue.toStringAsFixed(6));
-    return feeValue.toStringAsFixed(6);
+
+    if (cointype == KCoinType.BTC.index) {
+      Decimal gasValue = Decimal.parse(beanValue ?? "0");
+      gasValue = gasValue * Decimal.parse(offsetValue ?? "0");
+      var feeValue = (gasValue / Decimal.fromInt(10).pow(8)).toDecimal();
+      LogUtil.v("手续费beanValue $beanValue  offsetValue $offsetValue 计算是 " +
+          feeValue.toStringAsFixed(6));
+      return feeValue.toStringAsFixed(6);
+    } else {
+      Decimal gasValue =
+          Decimal.parse(beanValue ?? "0") * Decimal.fromInt(10).pow(9);
+      gasValue = gasValue * Decimal.parse(offsetValue ?? "0");
+      var feeValue = (gasValue / Decimal.fromInt(10).pow(18)).toDecimal();
+      LogUtil.v("手续费beanValue $beanValue  offsetValue $offsetValue 计算是 " +
+          feeValue.toStringAsFixed(6));
+      return feeValue.toStringAsFixed(6);
+    }
   }
 }
 

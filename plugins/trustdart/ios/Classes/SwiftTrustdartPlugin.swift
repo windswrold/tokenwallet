@@ -323,6 +323,7 @@ public class SwiftTrustdartPlugin: NSObject, FlutterPlugin {
         }
         
         let output: BitcoinSigningOutput = AnySigner.sign(input: input, coin: .bitcoin)
+        print(output.encoded.count)
         print(output.error)
         return output.encoded.hexString
       }

@@ -1,3 +1,4 @@
+import 'package:cstoken/component/miner_fee.dart';
 import 'package:cstoken/model/tokens/collection_tokens.dart';
 import 'package:cstoken/net/wallet_services.dart';
 import 'package:cstoken/pages/scan/scan.dart';
@@ -28,68 +29,7 @@ class _TransferPaymentState extends State<TransferPayment> {
   }
 
   Widget _buildFee() {
-    return Container(
-      margin: EdgeInsets.only(top: 24.width),
-      alignment: Alignment.centerLeft,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            "transferetype_gas".local(),
-            style: TextStyle(
-              fontSize: 14.font,
-              color: ColorUtils.fromHex("#FF000000"),
-            ),
-          ),
-          GestureDetector(
-            behavior: HitTestBehavior.opaque,
-            onTap: () {
-              _kTransferState.tapFeeView(context);
-            },
-            child: Container(
-              margin: EdgeInsets.only(top: 8.width),
-              padding: EdgeInsets.only(left: 8.width, right: 8.width),
-              height: 48.width,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(4),
-                color: Colors.white,
-              ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Consumer<KTransferState>(builder: (_, prover, child) {
-                    return Text(
-                      prover.feeValue(),
-                      style: TextStyle(
-                        fontSize: 14.font,
-                        fontWeight: FontWeightUtils.medium,
-                        color: ColorUtils.fromHex("#FF000000"),
-                      ),
-                    );
-                  }),
-                  Row(
-                    children: [
-                      // Text(
-                      //   "≈￥10293.29",
-                      //   style: TextStyle(
-                      //     fontSize: 12.font,
-                      //     color: ColorUtils.fromHex("#99000000"),
-                      //   ),
-                      // ),
-                      LoadAssetsImage(
-                        "icons/icon_arrow_right.png",
-                        width: 16,
-                        height: 16,
-                      )
-                    ],
-                  ),
-                ],
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
+    return MinerFee();
   }
 
   Widget _buildTextField(TextEditingController controller, String title,
