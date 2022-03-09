@@ -318,12 +318,8 @@ public class SwiftTrustdartPlugin: NSObject, FlutterPlugin {
             $0.toAddress = txData["toAddress"] as! String
             $0.changeAddress = txData["changeAddress"] as! String // can be same sender address
             $0.privateKey = [privateKey.data]
-            $0.plan = BitcoinTransactionPlan.with {
-                $0.amount = txData["amount"] as! Int64
-                $0.fee = txData["fees"] as! Int64
-                $0.change = txData["change"] as! Int64
-                $0.utxos = unspent
-            }
+            $0.utxo = unspent
+            $0.byteFee = txData["byteFee"] as! Int64
         }
         
         let output: BitcoinSigningOutput = AnySigner.sign(input: input, coin: .bitcoin)

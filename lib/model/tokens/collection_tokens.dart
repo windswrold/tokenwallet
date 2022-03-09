@@ -99,6 +99,34 @@ class MCollectionTokens {
     return TREncode.SHA256(tokenID);
   }
 
+  dynamic generateBalanceParams(String walletAaddress) {
+    if (chainType == KCoinType.BTC.index) {
+      return "/addrs/$walletAaddress/balance";
+    } else if (chainType == KCoinType.TRX.index) {
+      return "";
+    } else {
+      Map params = {};
+      if (isToken == false) {
+        params["jsonrpc"] = "2.0";
+        params["method"] = "eth_getBalance";
+        params["params"] = [walletAaddress, "latest"];
+        params["id"] = tokenID;
+      } else {
+        String owner = walletAaddress;
+        String data =
+            "0x70a08231000000000000000000000000" + owner.replaceAll("0x", "");
+        params["jsonrpc"] = "2.0";
+        params["method"] = "eth_call";
+        params["params"] = [
+          {"to": contract, "data": data},
+          "latest"
+        ];
+        params["id"] = tokenID;
+      }
+      return params;
+    }
+  }
+
   Future<bool> moveItem(
       String tokenid, String walletid, int oldIndex, int newIndex) async {
     try {

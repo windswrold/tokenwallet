@@ -8,11 +8,19 @@ import 'package:web3dart/web3dart.dart';
 import 'package:http/http.dart';
 
 class ChainServices {
-  static Future<dynamic>? requestDatas(
+  static Future<dynamic> requestDatas(
       {required KCoinType? coinType, dynamic params}) async {
-    String? url = NodeModel.queryNodeByChainType(coinType!.index).content;
-    dynamic result = await RequestMethod.manager!
-        .requestData(Method.POST, url!, data: params);
+    String url = NodeModel.queryNodeByChainType(coinType!.index).content ?? "";
+    dynamic result;
+    if (coinType == KCoinType.BTC) {
+      url += (params as List).first;
+      url += "?token=51db957650794388ae078d96f331a3e8";
+      result = await RequestMethod.manager!.requestData(Method.GET, url);
+    } else {
+      result = await RequestMethod.manager!
+          .requestData(Method.POST, url, data: params);
+    }
+
     return result;
   }
 

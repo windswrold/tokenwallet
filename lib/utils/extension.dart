@@ -141,6 +141,9 @@ extension StringUtil on String {
   }
 
   bool checkAddress(KCoinType coinType) {
+    if (coinType == KCoinType.BTC) {
+      return true;
+    }
     bool isValid = false;
     try {
       isValid = EthereumAddress.fromHex(toLowerCase()).hexEip55.isNotEmpty

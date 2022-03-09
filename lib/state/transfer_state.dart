@@ -71,6 +71,9 @@ class KTransferState with ChangeNotifier {
       notifyListeners();
     });
     _client = ETHClient(node.content!, node.chainID!);
+    if (inProduction == false) {
+      _addressEC.text = _walletInfo!.walletAaddress!;
+    }
     initGasData();
   }
 

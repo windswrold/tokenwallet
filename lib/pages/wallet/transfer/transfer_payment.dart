@@ -24,10 +24,6 @@ class _TransferPaymentState extends State<TransferPayment> {
 
     WidgetsBinding.instance!.addPostFrameCallback((timeStamp) async {
       _kTransferState.init(context);
-      if (inProduction == false) {
-        _kTransferState.addressEC.text =
-            "0x4e268c89495254288b4D1Cb4bc4c010f8C009b25";
-      }
     });
   }
 

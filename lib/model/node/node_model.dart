@@ -115,6 +115,14 @@ class NodeModel {
         node.content = "https://api.avax-test.network/ext/bc/C/rpc";
       }
     }
+    if (chainType == KCoinType.BTC.index) {
+      node.chainID = 0;
+      if (KNetType.Mainnet == netType) {
+        node.content = "https://api.blockcypher.com/v1/btc/main";
+      } else {
+        node.content = "https://api.blockcypher.com/v1/btc/main";
+      }
+    }
     assert(node.content != null,
         "nodechainType " + chainType.geCoinType().coinTypeString() + "没有节点信息");
     return node;

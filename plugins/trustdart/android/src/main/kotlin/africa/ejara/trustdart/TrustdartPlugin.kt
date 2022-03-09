@@ -461,7 +461,7 @@ class TrustdartPlugin : FlutterPlugin, MethodCallHandler {
             .setHashType(BitcoinScript.hashTypeForCoin(CoinType.BITCOIN))
             .setToAddress(txData["toAddress"] as String)
             .setChangeAddress(txData["changeAddress"] as String)
-            .setByteFee(1)
+            .setByteFee((txData["byteFee"] as Int).toLong())
             .addPrivateKey(ByteString.copyFrom(privateKey.data()))
 
         for (utx in utxos) {
@@ -485,11 +485,11 @@ class TrustdartPlugin : FlutterPlugin, MethodCallHandler {
         // since we want to set our own fee
         // but such functionality is not obvious in the trustwalletcore library
         // a hack is used for now to calculate the byteFee
-        val size = output.encoded.toByteArray().size;
-        val fees = (txData["fees"] as Int).toLong()
-        val byteFee = fees.div(size) // this gives the fee per byte truncated to Long
-        // now we set new byte size
-        if (byteFee > 1) input.setByteFee(byteFee)
+//        val size = output.encoded.toByteArray().size;
+//        val fees = (txData["fees"] as Int).toLong()
+//        val byteFee = fees.div(size) // this gives the fee per byte truncated to Long
+//        // now we set new byte size
+//        if (byteFee > 1) input.setByteFee(byteFee)
         output = AnySigner.sign(input.build(), CoinType.BITCOIN, Bitcoin.SigningOutput.parser())
         return Numeric.toHexString(output.encoded.toByteArray())
     }

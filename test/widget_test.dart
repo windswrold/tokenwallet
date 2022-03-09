@@ -55,17 +55,17 @@ void main() {
     var seed = bip39.mnemonicToSeed(dondo);
     var root = bip32.BIP32.fromSeed(seed);
     var child = root.derivePath("m/44'/0'/0'/0/0");
-    final prv = child.toWIF();
+    String prv = child.toWIF();
     print(prv);
 
-    child = root.derivePath("m/44'/195'/0'/0/0");
-    print(TREncode.kBytesToHex(child.privateKey!));
+    // child = root.derivePath("m/44'/195'/0'/0/0");
+    // print(TREncode.kBytesToHex(child.privateKey!));
 
-    child = root.derivePath("m/44'/501'/0'/0/0");
-    print(TREncode.kBytesToHex(child.privateKey!));
-
-    // final bigWif = wif.decode(prv);
-    // String wifprv = TREncode.kBytesToHex(bigWif.privateKey);
-    // print(wifprv);
+    // child = root.derivePath("m/44'/501'/0'/0/0");
+    // print(TREncode.kBytesToHex(child.privateKey!));
+    prv = "Kxd5FfWEZNixbs8yg8U86DShrcYzK6f7u5zV8sYRKpWT6e4axyvC";
+    final bigWif = wif.decode(prv);
+    String wifprv = TREncode.kBytesToHex(bigWif.privateKey);
+    print(wifprv);
   });
 }

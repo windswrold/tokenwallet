@@ -445,8 +445,7 @@ class CurrentChooseWalletState with ChangeNotifier {
     if (_currentWallet == null) {
       return;
     }
-    final String walletID = _currentWallet!.walletID!;
-    Map<KCoinType, List<Map>> rpcList = {};
+    Map<KCoinType, List> rpcList = {};
     int i = 0;
     List<TRWalletInfo> infos = await _currentWallet!.queryWalletInfos();
     for (i = 0; i < tokens.length; i++) {
@@ -463,25 +462,8 @@ class CurrentChooseWalletState with ChangeNotifier {
         continue;
       }
       walletAaddress = info.walletAaddress!;
-      Map params = {};
-      if (map.isToken == false) {
-        params["jsonrpc"] = "2.0";
-        params["method"] = "eth_getBalance";
-        params["params"] = [walletAaddress, "latest"];
-        params["id"] = map.tokenID;
-      } else {
-        String owner = walletAaddress;
-        String data =
-            "0x70a08231000000000000000000000000" + owner.replaceAll("0x", "");
-        params["jsonrpc"] = "2.0";
-        params["method"] = "eth_call";
-        params["params"] = [
-          {"to": map.contract, "data": data},
-          "latest"
-        ];
-        params["id"] = map.tokenID;
-      }
-      List<Map> datas = rpcList[coinType] ?? [];
+      dynamic params = map.generateBalanceParams(walletAaddress);
+      List datas = rpcList[coinType] ?? [];
       datas.add(params);
       rpcList[coinType] = datas;
     }
@@ -489,31 +471,50 @@ class CurrentChooseWalletState with ChangeNotifier {
       return;
     }
     for (var item in rpcList.keys) {
-      List<Map> rpc = rpcList[item] ?? [];
+      List rpc = rpcList[item] ?? [];
       if (rpc.isEmpty) {
         continue;
       }
       dynamic result =
           await ChainServices.requestDatas(coinType: item, params: rpc);
-      if (result != null && result is List) {
-        for (var response in result) {
-          if (response.keys.contains("result")) {
-            String id = response["id"];
-            String? bal = response["result"] as String;
-            bal = bal.replaceFirst("0x", "");
-            bal = bal.length == 0 ? "0" : bal;
-            BigInt balBInt = BigInt.parse(bal, radix: 16);
-            for (var i = 0; i < tokens.length; i++) {
-              MCollectionTokens map = tokens[i];
-              if (id == map.tokenID) {
-                TokenPrice? price = await TokenPrice.queryTokenPrices(
-                    map.token!, currencyType ?? KCurrencyType.CNY);
-                map.balance = balBInt.tokenDouble(map.decimals!);
-                if (price != null) {
-                  map.price = double.tryParse(price.rate ?? "0.0");
+      if (item == KCoinType.BTC) {
+        if (result != null && result is Map) {
+          final final_balance = result["final_balance"] ?? 0;
+          BigInt balBInt = BigInt.from(final_balance);
+          for (var i = 0; i < tokens.length; i++) {
+            MCollectionTokens map = tokens[i];
+            TokenPrice? price = await TokenPrice.queryTokenPrices(
+                map.token!, currencyType ?? KCurrencyType.CNY);
+            map.balance = balBInt.tokenDouble(8);
+            if (price != null) {
+              map.price = double.tryParse(price.rate ?? "0.0");
+            }
+            MCollectionTokens.updateTokenData(
+                "price=${map.price},balance =${map.balance} WHERE tokenID = '${map.tokenID}'");
+          }
+        }
+      } else if (item == KCoinType.TRX) {
+      } else {
+        if (result != null && result is List) {
+          for (var response in result) {
+            if (response.keys.contains("result")) {
+              String id = response["id"];
+              String? bal = response["result"] as String;
+              bal = bal.replaceFirst("0x", "");
+              bal = bal.length == 0 ? "0" : bal;
+              BigInt balBInt = BigInt.parse(bal, radix: 16);
+              for (var i = 0; i < tokens.length; i++) {
+                MCollectionTokens map = tokens[i];
+                if (id == map.tokenID) {
+                  TokenPrice? price = await TokenPrice.queryTokenPrices(
+                      map.token!, currencyType ?? KCurrencyType.CNY);
+                  map.balance = balBInt.tokenDouble(map.decimals!);
+                  if (price != null) {
+                    map.price = double.tryParse(price.rate ?? "0.0");
+                  }
+                  MCollectionTokens.updateTokenData(
+                      "price=${map.price},balance =${map.balance} WHERE tokenID = '$id'");
                 }
-                MCollectionTokens.updateTokenData(
-                    "price=${map.price},balance =${map.balance} WHERE tokenID = '$id'");
               }
             }
           }
