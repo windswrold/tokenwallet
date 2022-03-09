@@ -2,13 +2,11 @@ import '../../public.dart';
 import 'package:bip39/bip39.dart' as bip39;
 import 'package:bip32/bip32.dart' as bip32;
 import 'package:trustdart/trustdart.dart';
-import 'package:bip32/src/utils/wif.dart' as wif;
 
 class BTCChain implements HDWalletProtocol {
   @override
   Future<String> getPublicAddress(String privateKey) async {
-    final originprv = wif.decode(privateKey);
-    String prv = TREncode.kBytesToHex(originprv.privateKey);
+    String prv = TREncode.btcWif(privateKey);
     Map params = await Trustdart.generateAddress(prv, 'BTC', "");
     String address = params['legacy'] ?? "";
     return address;

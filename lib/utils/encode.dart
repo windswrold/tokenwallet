@@ -9,6 +9,7 @@ import 'package:pointycastle/macs/hmac.dart';
 import 'package:pointycastle/pointycastle.dart';
 import 'package:web3dart/crypto.dart';
 import 'package:crypto/crypto.dart';
+import 'package:bip32/src/utils/wif.dart' as wif;
 
 class TREncode {
   static String kBytesToHex(List<int> bytes, {bool include0x = false}) {
@@ -43,6 +44,11 @@ class TREncode {
 
   static String SHA256(String input) {
     return sha256.convert(utf8.encode(input)).toString();
+  }
+
+  static String btcWif(String prv) {
+    final originprv = wif.decode(prv);
+    return kBytesToHex(originprv.privateKey);
   }
 
   static Uint8List? convertbits(Uint8List data, int frombits, int tobits,

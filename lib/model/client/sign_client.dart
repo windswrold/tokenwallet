@@ -7,6 +7,7 @@ import 'package:cstoken/model/transrecord/trans_record.dart';
 import 'package:cstoken/net/chain_services.dart';
 import 'package:cstoken/utils/custom_toast.dart';
 import 'package:cstoken/utils/date_util.dart';
+import 'package:cstoken/utils/encode.dart';
 import 'package:cstoken/utils/extension.dart';
 import 'package:cstoken/utils/log_util.dart';
 import 'package:decimal/decimal.dart';
@@ -73,6 +74,9 @@ class SignTransactionClient {
             input: input);
       }
       LogUtil.v("Transaction tx $result");
+      if (result == null || result.isEmpty) {
+        throw "交易失败";
+      }
       TransRecordModel model = TransRecordModel();
       model.txid = result;
       model.amount = amount;
@@ -176,7 +180,7 @@ class SignTransactionClient {
     required int? nonce,
     required String? input,
   }) async {
-    String unUrl = "addrs/$from?unspentOnly=true&includeScript=true";
+    String unUrl = "/addrs/$from?unspentOnly=true&includeScript=true";
     dynamic result = await ChainServices.requestDatas(
         coinType: KCoinType.BTC, params: [unUrl]);
     if (result == null) {
@@ -195,13 +199,12 @@ class SignTransactionClient {
     Map params = {
       "utxos": utxos,
       "toAddress": to, //收款人
-      "amount": amount.tokenInt(8), //金额
+      "amount": amount.tokenInt(8).toInt(), //金额
       "byteFee": gasPrice, //sat 值
       "changeAddress": from, //找零地址
     };
-    String btcTx = await Trustdart.signTransaction(prv, 'BTC', params);
-    
-
+    String originprv = TREncode.btcWif(prv);
+    String btcTx = await Trustdart.signTransaction(originprv, 'BTC', params);
   }
 
   Future<String?> signPersonalMessage(String prv, String payload) async {

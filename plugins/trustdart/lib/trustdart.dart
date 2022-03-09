@@ -114,6 +114,7 @@ class Trustdart {
       });
       return txHash;
     } catch (e) {
+      print(e);
       return '';
     }
   }
