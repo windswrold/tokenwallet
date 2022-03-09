@@ -2,7 +2,7 @@ import 'dart:async';
 import 'dart:collection';
 import 'dart:convert';
 import 'package:cstoken/const/constant.dart';
-import 'package:cstoken/model/client/ethclient.dart';
+import 'package:cstoken/model/client/sign_client.dart';
 import 'package:cstoken/model/dapps_record/dapps_record.dart';
 import 'package:cstoken/model/node/node_model.dart';
 import 'package:cstoken/model/wallet/tr_wallet_info.dart';
@@ -37,7 +37,7 @@ class _DappBrowserState extends State<DappBrowser> {
   String walletAaddress = "";
 
   final _alertTitle = "messagePayTube";
-  ETHClient? _client;
+  SignTransactionClient? _client;
   CustomPopupMenuController _controller = CustomPopupMenuController();
   int? _type;
 
@@ -70,7 +70,7 @@ class _DappBrowserState extends State<DappBrowser> {
     _coinType = widget.info?.coinType!.geCoinType();
     walletAaddress = widget.info?.walletAaddress ?? "";
     _node = widget.node;
-    _client = ETHClient(widget.node?.content ?? "", widget.node?.chainID ?? 1);
+    _client = SignTransactionClient(widget.node?.content ?? "", widget.node?.chainID ?? 1);
     _loadWeb3();
   }
 
@@ -83,7 +83,7 @@ class _DappBrowserState extends State<DappBrowser> {
     _coinType = _info?.coinType!.geCoinType();
     walletAaddress = _info?.walletAaddress ?? "";
     _node = NodeModel.queryNodeByChainType(coinType);
-    _client = ETHClient(_node?.content ?? "", _node?.chainID ?? 1);
+    _client = SignTransactionClient(_node?.content ?? "", _node?.chainID ?? 1);
     await Future.delayed(Duration(seconds: 3));
     _loadWeb3();
     HWToast.hiddenAllToast();

@@ -1,4 +1,4 @@
-import 'package:cstoken/model/client/ethclient.dart';
+import 'package:cstoken/model/client/sign_client.dart';
 import 'package:cstoken/model/node/node_model.dart';
 import 'package:cstoken/model/tokens/collection_tokens.dart';
 import 'package:cstoken/model/wallet/tr_wallet_info.dart';
@@ -10,7 +10,6 @@ import 'package:cstoken/utils/custom_toast.dart';
 import 'package:decimal/decimal.dart';
 import 'package:web3dart/web3dart.dart';
 import 'package:http/http.dart';
-
 import '../public.dart';
 
 class KTransferState with ChangeNotifier {
@@ -25,7 +24,7 @@ class KTransferState with ChangeNotifier {
   TRWalletInfo? _walletInfo;
   TRWalletInfo? get walletInfo => _walletInfo;
   TRWallet? _wallet;
-  ETHClient? _client;
+  SignTransactionClient? _client;
   MCollectionTokens? _tokens;
 
   String _gasLimit = '';
@@ -86,7 +85,7 @@ class KTransferState with ChangeNotifier {
       _paymentAssets = "≈" + _currencySymbolStr! + assets.toStringAsFixed(2);
       notifyListeners();
     });
-    _client = ETHClient(node.content!, node.chainID!);
+    _client = SignTransactionClient(node.content!, node.chainID!);
     if (inProduction == false) {
       _addressEC.text = _walletInfo!.walletAaddress!;
     }
@@ -298,6 +297,7 @@ class KTransferState with ChangeNotifier {
     int? gasPrice = Decimal.parse(_feeOffset).toBigInt().toInt();
     String? result;
     result = await _client!.transfer(
+        coinType: _walletInfo!.coinType!,
         prv: prv,
         token: _tokens!,
         amount: amount,
