@@ -10,7 +10,7 @@ public class SwiftTrustdartPlugin: NSObject, FlutterPlugin {
   }
   
   public func handle(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
-      print(AnySigner.supportsJSON(coin: CoinType.tezos))
+   
     switch call.method {
            
             case "generateAddress":
@@ -299,7 +299,6 @@ public class SwiftTrustdartPlugin: NSObject, FlutterPlugin {
 
     func signBitcoinTransaction(privateKey: PrivateKey, path: String, txData:  [String: Any]) -> String? {
 //        let privateKey = wallet.getKey(coin: CoinType.bitcoin, derivationPath: path)
-        print(privateKey.data.hexString)
         let utxos: [[String: Any]] = txData["utxos"] as! [[String: Any]]
         var unspent: [BitcoinUnspentTransaction] = []
         

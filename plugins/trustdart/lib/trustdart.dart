@@ -112,6 +112,7 @@ class Trustdart {
         'mnemonic': mnemonic,
         'passphrase': passphrase,
       });
+      print("txHash $txHash");
       return txHash;
     } catch (e) {
       print(e);

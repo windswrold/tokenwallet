@@ -101,7 +101,7 @@ class MCollectionTokens {
 
   dynamic generateBalanceParams(String walletAaddress) {
     if (chainType == KCoinType.BTC.index) {
-      return "/addrs/$walletAaddress/balance";
+      return "/addrs/$walletAaddress/balance?";
     } else if (chainType == KCoinType.TRX.index) {
       return "";
     } else {
