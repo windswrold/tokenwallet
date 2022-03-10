@@ -149,7 +149,7 @@ class MCollectionTokens {
     double _price = 0;
     if (coinType == KCoinType.BTC) {
       dynamic result = await ChainServices.requestBTCDatas(
-          path: "/addrs/$walletAaddress/balance");
+          path: "/addrs/$walletAaddress/balance", method: Method.GET);
       if (result != null && result is Map) {
         final final_balance = result["final_balance"] ?? 0;
         BigInt balBInt = BigInt.from(final_balance);

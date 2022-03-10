@@ -10,6 +10,7 @@ import 'package:cstoken/utils/custom_toast.dart';
 import 'package:cstoken/utils/date_util.dart';
 import 'package:cstoken/utils/encode.dart';
 import 'package:cstoken/utils/extension.dart';
+import 'package:cstoken/utils/json_util.dart';
 import 'package:cstoken/utils/log_util.dart';
 import 'package:decimal/decimal.dart';
 import 'package:web3dart/contracts/erc20.dart';
@@ -194,9 +195,12 @@ class SignTransactionClient {
     required int? nonce,
     required String? input,
   }) async {
-    String unUrl = "/addrs/$from?unspentOnly=true&includeScript=true&";
-    dynamic result = await ChainServices.requestDatas(
-        coinType: KCoinType.BTC, params: [unUrl]);
+    String unUrl = "/addrs/$from";
+    Map<String, dynamic> params = Map();
+    params["unspentOnly"] = true;
+    params["includeScript"] = true;
+    dynamic result = await ChainServices.requestBTCDatas(
+        path: unUrl, method: Method.GET, queryParameters: params);
     if (result == null) {
       return null;
     }
@@ -210,7 +214,7 @@ class SignTransactionClient {
       params["vout"] = item["tx_output_n"];
       utxos.add(params);
     }
-    Map params = {
+    Map btcparams = {
       "utxos": utxos,
       "toAddress": to, //收款人
       "amount": amount.tokenInt(8).toInt(), //金额
@@ -218,7 +222,23 @@ class SignTransactionClient {
       "changeAddress": from, //找零地址
     };
     String originprv = TREncode.btcWif(prv);
-    String btcTx = await Trustdart.signTransaction(originprv, 'BTC', params);
+    String btcTx = await Trustdart.signTransaction(originprv, 'BTC', btcparams);
+    if (btcTx.isEmpty) {
+      return "";
+    }
+    dynamic pushresult = await ChainServices.requestBTCDatas(
+        path: "/txs/push", method: Method.POST, data: {"tx": btcTx});
+    if (pushresult == null) {
+      return "";
+    }
+    Map pushParams = pushresult as Map;
+    if (pushParams.containsKey("error") == true) {
+      String error = pushParams["error"];
+      throw error;
+    } else {
+      String hash = pushParams["tx"]["hash"];
+      return hash;
+    }
   }
 
   Future<String?> _signTRX({
@@ -285,6 +305,29 @@ class SignTransactionClient {
       "resource": "ENERGY", // Resource type: BANDWIDTH | ENERGY
     };
     String tx = await Trustdart.signTransaction(prv, 'TRX', params);
+    if (tx.isEmpty) {
+      return "";
+    }
+
+    dynamic pushResult = await ChainServices.requestTRXDatas(
+        path: "/wallet/broadcasttransaction",
+        method: Method.POST,
+        data: JsonUtil.getObj(tx));
+    if (pushResult == null) {
+      return "";
+    }
+    Map pushMap = pushResult as Map;
+    if (pushMap.containsKey("result") == true) {
+      bool sresult = pushMap["result"];
+      if (sresult == true) {
+        String txid = pushMap["txid"];
+        return txid;
+      }
+    } else {
+      String message = pushMap["message"];
+      message = TREncode.kHexToUTF8(message);
+      throw message;
+    }
   }
 
   Future<String?> signPersonalMessage(String prv, String payload) async {

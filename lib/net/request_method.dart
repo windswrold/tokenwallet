@@ -94,7 +94,7 @@ class RequestMethod {
             cancelToken: cancelToken);
       }
       dynamic result = response.data;
-      if (response.statusCode == 200) {
+      if (response.statusCode == 200 || response.statusCode == 201) {
         // LogUtil.v("完整地址 " + response.realUri.toString());
         if (complationBlock != null) {
           complationBlock(result, 200);

@@ -25,7 +25,10 @@ class ChainServices {
   }
 
   static Future<dynamic> requestBTCDatas(
-      {required String path, Map<String, dynamic>? queryParameters}) async {
+      {required String path,
+      required Method method,
+      dynamic data,
+      Map<String, dynamic>? queryParameters}) async {
     String url =
         NodeModel.queryNodeByChainType(KCoinType.BTC.index).content ?? "";
     dynamic result;
@@ -33,7 +36,7 @@ class ChainServices {
     queryParameters ??= {};
     queryParameters["token"] = "51db957650794388ae078d96f331a3e8";
     result = await RequestMethod.manager!
-        .requestData(Method.GET, url, queryParameters: queryParameters);
+        .requestData(method, url, queryParameters: queryParameters, data: data);
     return result;
   }
 

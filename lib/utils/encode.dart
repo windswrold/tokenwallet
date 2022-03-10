@@ -29,6 +29,10 @@ class TREncode {
     return hexToBytes(hexStr);
   }
 
+  static String kHexToUTF8(String hexStr) {
+    return utf8.decode(hexToBytes(hexStr));
+  }
+
   static String encrypt(String input, String pwd) {
     pwd = pwd.padRight(32, "0");
     final key = Key.fromUtf8(pwd);
