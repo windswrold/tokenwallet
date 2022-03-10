@@ -248,16 +248,6 @@ class CurrentChooseWalletState with ChangeNotifier {
     }
     _chooseChainType = coinType;
     queryMyCollectionTokens();
-    // showModalBottomSheet(
-    //     context: context,
-    //     backgroundColor: Colors.transparent,
-    //     isScrollControlled: true,
-    //     builder: (_) {
-    //       return ChainListType(onTap: (KCoinType coinType) async {
-    //         _chooseChainType = coinType;
-    //         queryMyCollectionTokens();
-    //       });
-    //     });
   }
 
   void tapWalletSetting(BuildContext context) {
@@ -452,86 +442,6 @@ class CurrentChooseWalletState with ChangeNotifier {
       MCollectionTokens map = tokens[i];
       map.balanceOf(walletAaddress, currencyType ?? KCurrencyType.CNY);
     }
-
-    // Map<KCoinType, List> rpcList = {};
-    // int i = 0;
-    // List<TRWalletInfo> infos = await _currentWallet!.queryWalletInfos();
-    // for (i = 0; i < tokens.length; i++) {
-    //   MCollectionTokens map = tokens[i];
-    //   KCoinType coinType = map.chainType!.geCoinType();
-    //   String walletAaddress = "";
-    //   TRWalletInfo? info;
-    //   if (infos.isNotEmpty) {
-    //     info =
-    //         infos.where((element) => element.coinType == map.chainType).first;
-    //   }
-    //   if (info == null) {
-    //     LogUtil.v("element.coinType ${map.token}");
-    //     continue;
-    //   }
-    //   walletAaddress = info.walletAaddress!;
-    //   Map? params = map.generateBalanceParams(walletAaddress);
-    //   if (params == null) {
-    //     continue;
-    //   }
-    //   List datas = rpcList[coinType] ?? [];
-    //   datas.add(params);
-    //   rpcList[coinType] = datas;
-    // }
-    // if (rpcList.isEmpty) {
-    //   return;
-    // }
-    // for (var item in rpcList.keys) {
-    //   List rpc = rpcList[item] ?? [];
-    //   if (rpc.isEmpty) {
-    //     continue;
-    //   }
-    //   dynamic result =
-    //       await ChainServices.requestDatas(coinType: item, params: rpc);
-    //   if (item == KCoinType.BTC) {
-    //     if (result != null && result is Map) {
-    //       final final_balance = result["final_balance"] ?? 0;
-    //       BigInt balBInt = BigInt.from(final_balance);
-    //       for (var i = 0; i < tokens.length; i++) {
-    //         MCollectionTokens map = tokens[i];
-    //         TokenPrice? price = await TokenPrice.queryTokenPrices(
-    //             map.token!, currencyType ?? KCurrencyType.CNY);
-    //         map.balance = balBInt.tokenDouble(8);
-    //         if (price != null) {
-    //           map.price = double.tryParse(price.rate ?? "0.0");
-    //         }
-    //         MCollectionTokens.updateTokenData(
-    //             "price=${map.price},balance =${map.balance} WHERE tokenID = '${map.tokenID}'");
-    //       }
-    //     }
-    //   } else if (item == KCoinType.TRX) {
-    //   } else {
-    //     if (result != null && result is List) {
-    //       for (var response in result) {
-    //         if (response.keys.contains("result")) {
-    //           String id = response["id"];
-    //           String? bal = response["result"] as String;
-    //           bal = bal.replaceFirst("0x", "");
-    //           bal = bal.length == 0 ? "0" : bal;
-    //           BigInt balBInt = BigInt.parse(bal, radix: 16);
-    //           for (var i = 0; i < tokens.length; i++) {
-    //             MCollectionTokens map = tokens[i];
-    //             if (id == map.tokenID) {
-    //               TokenPrice? price = await TokenPrice.queryTokenPrices(
-    //                   map.token!, currencyType ?? KCurrencyType.CNY);
-    //               map.balance = balBInt.tokenDouble(map.decimals!);
-    //               if (price != null) {
-    //                 map.price = double.tryParse(price.rate ?? "0.0");
-    //               }
-    //               MCollectionTokens.updateTokenData(
-    //                   "price=${map.price},balance =${map.balance} WHERE tokenID = '$id'");
-    //             }
-    //           }
-    //         }
-    //       }
-    //     }
-    //   }
-    // }
   }
 
   void _configTimerRequest() async {

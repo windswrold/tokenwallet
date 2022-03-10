@@ -87,7 +87,7 @@ class KTransferState with ChangeNotifier {
     });
     _client = SignTransactionClient(node.content!, node.chainID!);
     if (inProduction == false) {
-      _addressEC.text = _walletInfo!.walletAaddress!;
+      _addressEC.text = "TBT69QcL1j9FrXDdQh8rbzKbciUA1Lq9AF";
     }
     notifyListeners();
     initGasData();

@@ -199,50 +199,11 @@ class TrustdartPlugin : FlutterPlugin, MethodCallHandler {
         }
     }
 
-    private fun getPublicKey(wallet: HDWallet, coin: String, path: String): String? {
-        return when (coin) {
-            "BTC" -> {
-                val privateKey = wallet.getKey(CoinType.BITCOIN, path)
-                val publicKey = privateKey.getPublicKeySecp256k1(true)
-                Base64.getEncoder().encodeToString(publicKey.data())
-            }
-            "ETH" -> {
-                val privateKey = wallet.getKey(CoinType.ETHEREUM, path)
-                val publicKey = privateKey.getPublicKeySecp256k1(true)
-                Base64.getEncoder().encodeToString(publicKey.data())
-            }
-            "XTZ" -> {
-                val privateKey = wallet.getKey(CoinType.TEZOS, path)
-                val publicKey = privateKey.getPublicKeyEd25519()
-                Base64.getEncoder().encodeToString(publicKey.data())
-            }
-            "TRX" -> {
-                val privateKey = wallet.getKey(CoinType.TRON, path)
-                val publicKey = privateKey.getPublicKeySecp256k1(true)
-                Base64.getEncoder().encodeToString(publicKey.data())
-            }
-            "SOL" -> {
-                val privateKey = wallet.getKey(CoinType.SOLANA, path)
-                val publicKey = privateKey.getPublicKeyEd25519()
-                Base64.getEncoder().encodeToString(publicKey.data())
-            }
-            else -> null
-        }
-    }
-
     private fun getPrivateKey(wallet: HDWallet, coin: String, path: String): String? {
         return when (coin) {
             "BTC" -> {
 
                 val privateKey = wallet.getKey(CoinType.BITCOIN, path)
-                Base64.getEncoder().encodeToString(privateKey.data())
-            }
-            "ETH" -> {
-                val privateKey = wallet.getKey(CoinType.ETHEREUM, path)
-                Base64.getEncoder().encodeToString(privateKey.data())
-            }
-            "XTZ" -> {
-                val privateKey = wallet.getKey(CoinType.TEZOS, path)
                 Base64.getEncoder().encodeToString(privateKey.data())
             }
             "TRX" -> {
@@ -323,7 +284,7 @@ class TrustdartPlugin : FlutterPlugin, MethodCallHandler {
                     .setOwnerAddress(txData["ownerAddress"] as String)
                     .setAssetName(txData["assetName"] as String)
                     .setToAddress(txData["toAddress"] as String)
-                    .setAmount((txData["amount"] as Int).toLong())
+                    .setAmount((txData["amount"] as String).toLong())
 
                 val blockHeader = Tron.BlockHeader.newBuilder()
                     .setTimestamp(txData["blockTime"] as Long)
@@ -352,7 +313,7 @@ class TrustdartPlugin : FlutterPlugin, MethodCallHandler {
                 val transfer = Tron.TransferContract.newBuilder()
                     .setOwnerAddress(txData["ownerAddress"] as String)
                     .setToAddress(txData["toAddress"] as String)
-                    .setAmount((txData["amount"] as Int).toLong())
+                    .setAmount((txData["amount"] as String).toLong())
 
                 val blockHeader = Tron.BlockHeader.newBuilder()
                     .setTimestamp(txData["blockTime"] as Long)
