@@ -44,7 +44,7 @@ class _MineNewContactsState extends State<MineNewContacts> {
       return;
     }
 
-    bool isValid = _add.checkAddress(_chooseType!);
+    bool isValid = await _add.checkAddress(_chooseType!);
     if (isValid == false) {
       HWToast.showText(text: "input_addressinvalid".local());
       return;

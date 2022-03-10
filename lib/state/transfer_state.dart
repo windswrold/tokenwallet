@@ -174,7 +174,7 @@ class KTransferState with ChangeNotifier {
     bool? isValid = false;
     int coinType = _walletInfo!.coinType!;
     String feeToken = coinType.geCoinType().feeTokenString();
-    isValid = to.checkAddress(coinType.geCoinType());
+    isValid = await to.checkAddress(coinType.geCoinType());
     if (isValid == false) {
       HWToast.showText(text: "input_addressinvalid".local());
       return;

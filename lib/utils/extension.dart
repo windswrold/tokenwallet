@@ -10,6 +10,7 @@ import '../public.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:easy_localization/src/public.dart' as ez;
 import 'package:bip32/src/utils/wif.dart' as wif;
+import 'package:trustdart/trustdart.dart';
 
 extension StringUtil on String {
   KCoinType? chainTypeGetCoinType() {
@@ -146,15 +147,18 @@ extension StringUtil on String {
     return contractAddress;
   }
 
-  bool checkAddress(KCoinType coinType) {
-    if (coinType == KCoinType.BTC || coinType == KCoinType.TRX) {
-      return true;
-    }
+  Future<bool> checkAddress(KCoinType coinType) async {
     bool isValid = false;
     try {
-      isValid = EthereumAddress.fromHex(toLowerCase()).hexEip55.isNotEmpty
-          ? true
-          : false;
+      if (coinType == KCoinType.BTC) {
+        return Trustdart.validateAddress("BTC", this);
+      } else if (coinType == KCoinType.TRX) {
+        return Trustdart.validateAddress("TRX", this);
+      } else {
+        isValid = EthereumAddress.fromHex(toLowerCase()).hexEip55.isNotEmpty
+            ? true
+            : false;
+      }
     } catch (e) {
       LogUtil.v("校验失败" + e.toString());
     }
