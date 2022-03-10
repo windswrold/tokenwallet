@@ -31,7 +31,11 @@ class PaymentSheet extends StatefulWidget {
   _PaymentSheetState createState() => _PaymentSheetState();
 
   static List<PaymentSheetText> getTransStyleList(
-      {String from = "", String to = "", String remark = "", String fee = ""}) {
+      {String from = "",
+      String to = "",
+      String remark = "",
+      String fee = "",
+      bool hiddenFee = false}) {
     List<PaymentSheetText> datas = [
       PaymentSheetText(
         title: "transferetype_from".local(),
@@ -41,15 +45,21 @@ class PaymentSheet extends StatefulWidget {
         title: "transferetype_to".local(),
         content: to,
       ),
-      PaymentSheetText(
-        title: "transferetype_fee".local(),
-        content: fee,
-      ),
-      PaymentSheetText(
-        title: "transferetype_remark".local(),
-        content: remark,
-      )
     ];
+
+    if (hiddenFee == false) {
+      datas.add(
+        PaymentSheetText(
+          title: "transferetype_fee".local(),
+          content: fee,
+        ),
+      );
+    }
+
+    datas.add(PaymentSheetText(
+      title: "transferetype_remark".local(),
+      content: remark,
+    ));
     return datas;
   }
 }

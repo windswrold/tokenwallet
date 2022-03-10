@@ -263,6 +263,10 @@ class WalletServices {
 
   static Future<Map?> getgasPrice(String chainType) async {
     final url = RequestURLS.getHost() + RequestURLS.getgasPrice;
+    if (chainType.toLowerCase() == "tron" || chainType.toLowerCase() == "btc") {
+      return null;
+    }
+
     Map<String, dynamic> params = {"chainType": chainType};
     dynamic result = await RequestMethod.manager!
         .requestData(Method.GET, url, queryParameters: params);

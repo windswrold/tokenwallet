@@ -183,20 +183,23 @@ class KTransferState with ChangeNotifier {
       HWToast.showText(text: "input_paymentvalue".local());
       return;
     }
-    if (_feeValue == null || _feeValue.isEmpty == true) {
-      _feeValue = TRWallet.configFeeValue(
-          cointype: coinType, beanValue: _gasLimit, offsetValue: _feeOffset);
-    } else {
-      _feeValue = _feeValue
-          .trim()
-          .replaceAll("ETH", "")
-          .replaceAll(_tokens!.token!, "")
-          .replaceAll(" ", "");
+    if (coinType != KCoinType.TRX.index) {
+      if (_feeValue == null || _feeValue.isEmpty == true) {
+        _feeValue = TRWallet.configFeeValue(
+            cointype: coinType, beanValue: _gasLimit, offsetValue: _feeOffset);
+      } else {
+        _feeValue = _feeValue
+            .trim()
+            .replaceAll("ETH", "")
+            .replaceAll(_tokens!.token!, "")
+            .replaceAll(" ", "");
+      }
+      if (double.parse(_feeValue) == 0) {
+        HWToast.showText(text: "payment_highfee".local());
+        return;
+      }
     }
-    if (double.parse(_feeValue) == 0) {
-      HWToast.showText(text: "payment_highfee".local());
-      return;
-    }
+
     BigInt amountBig = amount.tokenInt(decimals);
     BigInt balanceBig = _tokens!.balanceString.tokenInt(decimals);
     if (amountBig > balanceBig) {
@@ -209,22 +212,25 @@ class KTransferState with ChangeNotifier {
     } else {
       feeBig = _feeValue.tokenInt(18);
     }
-    if (isToken == true) {
-      num mainBalance = await _client!.getBalance(from);
-      BigInt mainTokenBig = mainBalance.toString().tokenInt(18);
-      if (feeBig > mainTokenBig) {
-        HWToast.showText(text: "paymenttip_ethnotenough".local());
-        return;
-      }
-    } else {
-      if (balanceBig == amountBig) {
-        amountBig = balanceBig - feeBig;
-      }
-      if (feeBig + amountBig > balanceBig) {
-        HWToast.showText(text: "paymenttip_ethnotenough".local());
-        return;
+    if (coinType != KCoinType.TRX.index) {
+      if (isToken == true) {
+        num mainBalance = await _client!.getBalance(from);
+        BigInt mainTokenBig = mainBalance.toString().tokenInt(18);
+        if (feeBig > mainTokenBig) {
+          HWToast.showText(text: "paymenttip_ethnotenough".local());
+          return;
+        }
+      } else {
+        if (balanceBig == amountBig) {
+          amountBig = balanceBig - feeBig;
+        }
+        if (feeBig + amountBig > balanceBig) {
+          HWToast.showText(text: "paymenttip_ethnotenough".local());
+          return;
+        }
       }
     }
+
     if (amountBig.compareTo(BigInt.zero) <= 0) {
       HWToast.showText(text: "input_paymentvaluezero".local());
       return;
@@ -262,7 +268,11 @@ class KTransferState with ChangeNotifier {
         builder: (_) {
           return PaymentSheet(
             datas: PaymentSheet.getTransStyleList(
-                from: from, to: to, remark: remark, fee: _feeValue + feeToken),
+                from: from,
+                to: to,
+                remark: remark,
+                fee: _feeValue + feeToken,
+                hiddenFee: _walletInfo?.coinType == KCoinType.TRX.index),
             amount: amount + " ${_tokens!.token!}",
             nextAction: () {
               _wallet!.showLockPin(context,
@@ -293,8 +303,8 @@ class KTransferState with ChangeNotifier {
     required String remark,
   }) async {
     HWToast.showLoading(clickClose: true);
-    int? maxGas = Decimal.parse(_gasLimit).toBigInt().toInt();
-    int? gasPrice = Decimal.parse(_feeOffset).toBigInt().toInt();
+    int? maxGas = Decimal.tryParse(_gasLimit)?.toBigInt().toInt();
+    int? gasPrice = Decimal.tryParse(_feeOffset)?.toBigInt().toInt();
     String? result;
     result = await _client!.transfer(
         coinType: _walletInfo!.coinType!,

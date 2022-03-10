@@ -170,11 +170,11 @@ class MCollectionTokens {
       } else if (tokenType == KTokenType.trc20.index) {
         Map params = generateBalanceParams(walletAaddress)!;
         dynamic result = await ChainServices.requestTRXDatas(
-            path: "wallet/triggerconstantcontract",
+            path: "/wallet/triggerconstantcontract",
             method: Method.POST,
             data: params);
         if (result != null && result is Map) {
-          String constant_result = result["constant_result"] ?? "";
+          String constant_result = (result["constant_result"] as List).first;
           if (constant_result.isNotEmpty) {
             constant_result = constant_result.replaceFirst("0x", "");
             BigInt balBInt = BigInt.parse(constant_result, radix: 16);
@@ -186,7 +186,7 @@ class MCollectionTokens {
       Map params = generateBalanceParams(walletAaddress)!;
       dynamic result =
           await ChainServices.requestDatas(coinType: coinType, params: params);
-      if (result.keys.contains("result")) {
+      if (result != null && result.keys.contains("result")) {
         String id = result["id"];
         String? bal = result["result"] as String;
         bal = bal.replaceFirst("0x", "");

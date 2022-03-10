@@ -258,16 +258,21 @@ class TRWallet {
         token.decimals = item["amountPrecision"] as int;
         token.contract = item["tokenContractAddress"] ?? "";
         token.digits = item["pricePrecision"] ?? 4;
-        token.tokenType =
-            token.contract == "0x0000000000000000000000000000000000000000"
-                ? KTokenType.native.index
-                : KTokenType.token.index;
-
         String tokenIconUrl = item["tokenIconUrl"] ?? "";
         String chainIconUrl = item["chainIconUrl"] ?? "";
         token.iconPath = tokenIconUrl + "," + chainIconUrl;
         token.coinType = item["chainType"] ?? "";
         token.chainType = token.coinType!.chainTypeGetCoinType()?.index;
+        if (token.chainType == KCoinType.BTC.index) {
+          token.tokenType = KTokenType.native.index;
+        } else if (token.chainType == KCoinType.TRX.index) {
+          token.tokenType = KTokenType.native.index;
+        } else {
+          token.tokenType =
+              token.contract == "0x0000000000000000000000000000000000000000"
+                  ? KTokenType.native.index
+                  : KTokenType.token.index;
+        }
         token.kNetType = netType.index;
         if (token.chainType == null) {
           assert(token.chainType != null, "有判断失败的数据 ");

@@ -128,7 +128,7 @@ extension ChainTypeString on KChainType {
     } else if (this == KChainType.BTC) {
       return "BTC";
     } else if (this == KChainType.TRX) {
-      return "TRX";
+      return "TRON";
     }
     return "";
   }
@@ -175,7 +175,7 @@ extension CoinTypeString on KCoinType {
       case KCoinType.BTC:
         return "BTC";
       case KCoinType.TRX:
-        return "TRX";
+        return "TRON";
       default:
         throw Error();
     }

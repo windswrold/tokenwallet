@@ -415,28 +415,6 @@ class TrustdartPlugin : FlutterPlugin, MethodCallHandler {
         return txHash;
     }
 
-    private fun signTezosTransaction(
-        wallet: HDWallet,
-        path: String,
-        txData: Map<String, Any>
-    ): String? {
-        val privateKey = wallet.getKey(CoinType.TEZOS, path)
-        val opJson = JSONObject(txData).toString();
-        val result = AnySigner.signJSON(opJson, privateKey.data(), CoinType.TEZOS.value())
-        return result
-    }
-
-    private fun signEthereumTransaction(
-        wallet: HDWallet,
-        path: String,
-        txData: Map<String, Any>
-    ): String? {
-        val privateKey = wallet.getKey(CoinType.ETHEREUM, path)
-        val opJson = JSONObject(txData).toString();
-        val result = AnySigner.signJSON(opJson, privateKey.data(), CoinType.ETHEREUM.value())
-        return result
-    }
-
     private fun signSolanaTransaction(
         privateKey: PrivateKey,
         path: String,

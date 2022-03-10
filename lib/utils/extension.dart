@@ -34,6 +34,12 @@ extension StringUtil on String {
     if (toLowerCase().contains("arbitrum")) {
       return KCoinType.Arbitrum;
     }
+    if (toLowerCase().contains("btc")) {
+      return KCoinType.BTC;
+    }
+    if (toLowerCase().contains("tron")) {
+      return KCoinType.TRX;
+    }
   }
 
   String breakWord() {

@@ -221,7 +221,7 @@ public class SwiftTrustdartPlugin: NSObject, FlutterPlugin {
             let transferAsset = TronTransferAssetContract.with {
                 $0.ownerAddress = txData["ownerAddress"] as! String
                 $0.toAddress = txData["toAddress"] as! String
-                $0.amount = txData["amount"] as! Int64
+                $0.amount = Int64(txData["amount"] as! String) ?? 0
                 $0.assetName = txData["assetName"] as! String
             }
             let input = TronSigningInput.with {
@@ -245,7 +245,7 @@ public class SwiftTrustdartPlugin: NSObject, FlutterPlugin {
             let transfer = TronTransferContract.with {
                 $0.ownerAddress = txData["ownerAddress"] as! String
                 $0.toAddress = txData["toAddress"] as! String
-                $0.amount = txData["amount"] as! Int64
+                $0.amount = Int64(txData["amount"] as! String) ?? 0
             }
             let input = TronSigningInput.with {
                 $0.transaction = TronTransaction.with {

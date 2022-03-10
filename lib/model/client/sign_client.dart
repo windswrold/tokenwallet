@@ -5,6 +5,7 @@ import 'package:cstoken/const/constant.dart';
 import 'package:cstoken/model/tokens/collection_tokens.dart';
 import 'package:cstoken/model/transrecord/trans_record.dart';
 import 'package:cstoken/net/chain_services.dart';
+import 'package:cstoken/net/request_method.dart';
 import 'package:cstoken/utils/custom_toast.dart';
 import 'package:cstoken/utils/date_util.dart';
 import 'package:cstoken/utils/encode.dart';
@@ -47,6 +48,19 @@ class SignTransactionClient {
       String? result;
       if (coinType == KCoinType.BTC.index) {
         result = await _signBtc(
+            prv: prv,
+            token: token,
+            amount: amount,
+            to: to,
+            isCustomfee: isCustomfee,
+            from: from,
+            fee: fee,
+            gasPrice: gasPrice,
+            maxGas: maxGas,
+            nonce: nonce,
+            input: input);
+      } else if (coinType == KCoinType.TRX.index) {
+        result = await _signTRX(
             prv: prv,
             token: token,
             amount: amount,
@@ -205,6 +219,72 @@ class SignTransactionClient {
     };
     String originprv = TREncode.btcWif(prv);
     String btcTx = await Trustdart.signTransaction(originprv, 'BTC', params);
+  }
+
+  Future<String?> _signTRX({
+    required String prv,
+    required MCollectionTokens token,
+    required String amount,
+    required String to,
+    required bool isCustomfee,
+    required String? from,
+    required String? fee,
+    required int? gasPrice,
+    required int? maxGas,
+    required int? nonce,
+    required String? input,
+  }) async {
+    String path = "/wallet/getnowblock";
+    dynamic result =
+        await ChainServices.requestTRXDatas(path: path, method: Method.GET);
+    if (result == null) {
+      return null;
+    }
+    Map raw_data = result["block_header"]["raw_data"];
+
+    String cmd = "";
+    String contractAddress = "";
+    dynamic assets = amount;
+    if (token.tokenType == KTokenType.native.index) {
+      cmd = "TRX";
+      assets = amount.tokenInt(6).toString();
+    } else if (token.tokenType == KTokenType.trc20.index) {
+      cmd = "TRC20";
+      contractAddress = token.contract ?? '';
+      assets = amount
+          .tokenInt(token.decimals!)
+          .toRadixString(16)
+          .padLeft(token.decimals!, "0");
+    }
+
+    Map params = {
+      "cmd": cmd, // can be TRC20 | TRX | TRC10 | CONTRACT | FREEZE
+      "ownerAddress": from, // from address
+      "toAddress": to, // to address
+      "contractAddress": contractAddress, // in case of Trc20 (Tether USDT)
+      "assetName": "", // trc10
+      "timestamp": DateTime.now()
+          .millisecondsSinceEpoch, // current timestamp (or timestamp as at signing) milliseconds
+      "amount":
+          assets, // 27 * 1000000, // "004C4B40", // "000F4240" = 1000000 sun hex 2's signed complement
+      // (https://www.rapidtables.com/convert/number/hex-to-decimal.html)
+      // for asset TRC20 | integer for any other in SUN, 1000000 SUN = 1 TRX
+      "feeLimit": 10000000,
+      // reference block data to be obtained by querying the blockchain
+      "blockTime": raw_data[
+          "timestamp"], // timestamp of block to be included milliseconds
+      "txTrieRoot": raw_data["txTrieRoot"], // trie root of block
+      "witnessAddress":
+          raw_data["witness_address"], // address of witness that signed block
+      "parentHash": raw_data["parentHash"], // parent hash of block
+      "version": raw_data["version"], // block version
+      "number": raw_data["number"], // block number
+      // freezing
+      "frozenDuration": 3, // frozen duration
+      "frozenBalance": 10000000, // frozen balance in SUN
+      "resource": "ENERGY", // Resource type: BANDWIDTH | ENERGY
+    };
+    String tx = await Trustdart.signTransaction(prv, 'TRX', params);
   }
 
   Future<String?> signPersonalMessage(String prv, String payload) async {
