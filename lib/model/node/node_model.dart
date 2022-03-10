@@ -123,6 +123,15 @@ class NodeModel {
         node.content = "https://api.blockcypher.com/v1/btc/main";
       }
     }
+    if (chainType == KCoinType.TRX.index) {
+      node.chainID = 0;
+      if (KNetType.Mainnet == netType) {
+        node.content = "https://api.trongrid.io";
+      } else {
+        node.content = "https://api.trongrid.io";
+      }
+    }
+
     assert(node.content != null,
         "nodechainType " + chainType.geCoinType().coinTypeString() + "没有节点信息");
     return node;

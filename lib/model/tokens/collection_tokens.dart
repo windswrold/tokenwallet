@@ -2,6 +2,9 @@ import 'dart:async';
 
 import 'package:cstoken/db/database.dart';
 import 'package:cstoken/db/database_config.dart';
+import 'package:cstoken/model/token_price/tokenprice.dart';
+import 'package:cstoken/net/chain_services.dart';
+import 'package:cstoken/net/request_method.dart';
 import 'package:floor/floor.dart';
 import 'package:json_annotation/json_annotation.dart';
 
@@ -99,11 +102,24 @@ class MCollectionTokens {
     return TREncode.SHA256(tokenID);
   }
 
-  dynamic generateBalanceParams(String walletAaddress) {
+  Map? generateBalanceParams(String walletAaddress) {
     if (chainType == KCoinType.BTC.index) {
-      return "/addrs/$walletAaddress/balance?";
     } else if (chainType == KCoinType.TRX.index) {
-      return "";
+      if (isToken == false) {
+      } else {
+        Map params = {};
+        if (tokenType == KTokenType.trc20.index) {
+          String contract_address = TREncode.base58HexString(contract!);
+          String owner_address = TREncode.base58HexString(walletAaddress);
+          params = {
+            "contract_address": contract_address,
+            "owner_address": owner_address,
+            "function_selector": "balanceOf(address)",
+            "parameter": owner_address.padLeft(64, "0")
+          };
+          return params;
+        }
+      }
     } else {
       Map params = {};
       if (isToken == false) {
@@ -111,7 +127,7 @@ class MCollectionTokens {
         params["method"] = "eth_getBalance";
         params["params"] = [walletAaddress, "latest"];
         params["id"] = tokenID;
-      } else {
+      } else if (tokenType == KTokenType.token.index) {
         String owner = walletAaddress;
         String data =
             "0x70a08231000000000000000000000000" + owner.replaceAll("0x", "");
@@ -125,6 +141,66 @@ class MCollectionTokens {
       }
       return params;
     }
+  }
+
+  void balanceOf(String walletAaddress, KCurrencyType currencyType) async {
+    KCoinType coinType = chainType!.geCoinType();
+    double _balance = 0;
+    double _price = 0;
+    if (coinType == KCoinType.BTC) {
+      dynamic result = await ChainServices.requestBTCDatas(
+          path: "/addrs/$walletAaddress/balance");
+      if (result != null && result is Map) {
+        final final_balance = result["final_balance"] ?? 0;
+        BigInt balBInt = BigInt.from(final_balance);
+        _balance = balBInt.tokenDouble(8);
+      }
+    } else if (coinType == KCoinType.TRX) {
+      if (isToken == false) {
+        dynamic result = await ChainServices.requestTRXDatas(
+            path: "/v1/accounts/$walletAaddress", method: Method.GET);
+        if (result != null && result is Map) {
+          bool success = result["success"] as bool;
+          if (success == true) {
+            Map data = (result["data"] as List).first;
+            BigInt bal = BigInt.from(data["balance"] ?? 0);
+            _balance = bal.tokenDouble(6);
+          }
+        }
+      } else if (tokenType == KTokenType.trc20.index) {
+        Map params = generateBalanceParams(walletAaddress)!;
+        dynamic result = await ChainServices.requestTRXDatas(
+            path: "wallet/triggerconstantcontract",
+            method: Method.POST,
+            data: params);
+        if (result != null && result is Map) {
+          String constant_result = result["constant_result"] ?? "";
+          if (constant_result.isNotEmpty) {
+            constant_result = constant_result.replaceFirst("0x", "");
+            BigInt balBInt = BigInt.parse(constant_result, radix: 16);
+            _balance = balBInt.tokenDouble(decimals!);
+          }
+        }
+      }
+    } else {
+      Map params = generateBalanceParams(walletAaddress)!;
+      dynamic result =
+          await ChainServices.requestDatas(coinType: coinType, params: params);
+      if (result.keys.contains("result")) {
+        String id = result["id"];
+        String? bal = result["result"] as String;
+        bal = bal.replaceFirst("0x", "");
+        bal = bal.length == 0 ? "0" : bal;
+        BigInt balBInt = BigInt.parse(bal, radix: 16);
+        _balance = balBInt.tokenDouble(decimals!);
+      }
+    }
+    TokenPrice? price = await TokenPrice.queryTokenPrices(token!, currencyType);
+    if (price != null) {
+      _price = double.parse(price.rate ?? "0.0");
+    }
+    MCollectionTokens.updateTokenData(
+        "price=$_price,balance =$_balance WHERE tokenID = '$tokenID'");
   }
 
   Future<bool> moveItem(

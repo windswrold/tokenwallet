@@ -50,6 +50,13 @@ packages:
       url: "https://pub.flutter-io.cn"
     source: hosted
     version: "3.0.0"
+  base_codecs:
+    dependency: "direct main"
+    description:
+      name: base_codecs
+      url: "https://pub.flutter-io.cn"
+    source: hosted
+    version: "1.0.1"
   bip32:
     dependency: "direct main"
     description:
@@ -366,7 +373,7 @@ packages:
     source: hosted
     version: "6.1.2"
   fixnum:
-    dependency: "direct main"
+    dependency: transitive
     description:
       name: fixnum
       url: "https://pub.flutter-io.cn"

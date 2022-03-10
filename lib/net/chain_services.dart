@@ -24,6 +24,36 @@ class ChainServices {
     return result;
   }
 
+  static Future<dynamic> requestBTCDatas(
+      {required String path, Map<String, dynamic>? queryParameters}) async {
+    String url =
+        NodeModel.queryNodeByChainType(KCoinType.BTC.index).content ?? "";
+    dynamic result;
+    url += path;
+    queryParameters ??= {};
+    queryParameters["token"] = "51db957650794388ae078d96f331a3e8";
+    result = await RequestMethod.manager!
+        .requestData(Method.GET, url, queryParameters: queryParameters);
+    return result;
+  }
+
+  static Future<dynamic> requestTRXDatas(
+      {required String path,
+      required Method method,
+      Map<String, dynamic>? queryParameters,
+      dynamic data}) async {
+    String url =
+        NodeModel.queryNodeByChainType(KCoinType.TRX.index).content ?? "";
+    dynamic result;
+    url += path;
+    Map<String, dynamic> headers = {
+      "token": "b0c15d0b-689b-4e74-b1dd-84bc63d368d6"
+    };
+    result = await RequestMethod.manager!.requestData(method, url,
+        queryParameters: queryParameters, header: headers, data: data);
+    return result;
+  }
+
   static Future requestTransactionReceipt(String tx, String url) async {
     String method = "eth_getTransactionReceipt";
     Map params = {

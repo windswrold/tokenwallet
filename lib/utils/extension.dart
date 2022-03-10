@@ -141,7 +141,7 @@ extension StringUtil on String {
   }
 
   bool checkAddress(KCoinType coinType) {
-    if (coinType == KCoinType.BTC) {
+    if (coinType == KCoinType.BTC || coinType == KCoinType.TRX) {
       return true;
     }
     bool isValid = false;

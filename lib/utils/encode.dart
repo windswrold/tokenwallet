@@ -10,8 +10,13 @@ import 'package:pointycastle/pointycastle.dart';
 import 'package:web3dart/crypto.dart';
 import 'package:crypto/crypto.dart';
 import 'package:bip32/src/utils/wif.dart' as wif;
+import 'package:base_codecs/base_codecs.dart';
 
 class TREncode {
+  static String base58HexString(String value) {
+    return kBytesToHex(base58CheckDecode(value));
+  }
+
   static String kBytesToHex(List<int> bytes, {bool include0x = false}) {
     return bytesToHex(bytes, include0x: include0x);
   }

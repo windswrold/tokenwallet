@@ -5,6 +5,7 @@
 // gestures. You can also use WidgetTester to find child widgets in the widget
 // tree, read text, and verify that the values of widget properties are correct.
 
+import 'dart:convert';
 import 'dart:math';
 
 import 'package:cstoken/model/mnemonic/mnemonic.dart';
@@ -17,6 +18,9 @@ import 'package:trustdart/trustdart.dart';
 import 'package:bip39/bip39.dart' as bip39;
 import 'package:bip32/bip32.dart' as bip32;
 import 'package:bip32/src/utils/wif.dart' as wif;
+import 'package:fixnum/fixnum.dart' as $fixnum;
+import 'package:web3dart/crypto.dart';
+import 'package:base_codecs/base_codecs.dart';
 
 void main() {
   testWidgets('Counter increments smoke test', (WidgetTester tester) async {
@@ -67,5 +71,11 @@ void main() {
     final bigWif = wif.decode(prv);
     String wifprv = TREncode.kBytesToHex(bigWif.privateKey);
     print(wifprv);
+
+    String value = "TP6BrDAV6Zz5U7MytoBJHimd7dBSP4RQ8Q";
+    value = TREncode.base58HexString(value);
+
+    print(value.padLeft(64,"0"));
+    // ascii.encode(string);
   });
 }

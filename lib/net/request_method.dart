@@ -76,15 +76,21 @@ class RequestMethod {
       queryParameters ??= {};
       queryParameters.addAll(_commonParams);
     }
-
+    Options? options;
+    if (header != null) {
+      options ??= Options(headers: header);
+    }
     try {
       if (Method.GET == method) {
         response = await _dio!.get(url,
-            queryParameters: queryParameters, cancelToken: cancelToken);
+            queryParameters: queryParameters,
+            cancelToken: cancelToken,
+            options: options);
       } else {
         response = await _dio!.post(url,
             data: data,
             queryParameters: queryParameters,
+            options: options,
             cancelToken: cancelToken);
       }
       dynamic result = response.data;

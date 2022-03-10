@@ -188,7 +188,6 @@ public class SwiftTrustdartPlugin: NSObject, FlutterPlugin {
     
     func signTronTransaction(privateKey: PrivateKey, path: String, txData:  [String: Any]) -> String? {
        let cmd = txData["cmd"] as! String
-        print(txData)
         var txHash: String?
 //        let privateKey = wallet.getKey(coin: CoinType.tron, derivationPath: path)
         switch cmd {

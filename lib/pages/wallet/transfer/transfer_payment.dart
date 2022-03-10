@@ -180,6 +180,20 @@ class _TransferPaymentState extends State<TransferPayment> {
                       _buildTextField(_kTransferState.remarkEC,
                           "transferetype_remark".local(),
                           hintText: "payments_remark".local(), maxLine: 5),
+                      Consumer<CurrentChooseWalletState>(
+                          builder: (_, provider, child) {
+                        return Visibility(
+                            child: Container(
+                          padding: EdgeInsets.only(top: 10.width),
+                          child: Text(
+                            "payment_trontip".local(),
+                            style: TextStyle(
+                              fontSize: 12.font,
+                              color: ColorUtils.fromHex("#FF7685A2"),
+                            ),
+                          ),
+                        ));
+                      }),
                     ],
                   ),
                 ),

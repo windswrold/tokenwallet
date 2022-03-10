@@ -13,6 +13,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:trustdart/trustdart.dart';
 import 'package:bip39/bip39.dart' as bip39;
 import 'package:bip32/bip32.dart' as bip32;
+import 'package:fixnum/fixnum.dart' as Fixnum;
 
 class MyApp extends StatefulWidget {
   //launch
@@ -109,39 +110,44 @@ class _MyAppState extends State<MyApp> {
 //     };
 //   }
 
-//   Map _getTronOperation() {
-//     https: //cn.developers.tron.network/reference#%E8%8E%B7%E5%BE%97%E6%9C%80%E6%96%B0%E7%9A%84%E9%98%BB%E6%AD%A2
-//     return {
-//       "cmd": "TRC20", // can be TRC20 | TRX | TRC10 | CONTRACT | FREEZE
-//       "ownerAddress": "TYjYrDy7yE9vyJfnF5S3EfPrzfXM3eehri", // from address
-//       "toAddress": "TJpQNJZSktSZQgEthhBapH3zmvg3RaCbKW", // to address
-//       "contractAddress":
-//           "TR7NHqjeKQxGTCi8q8ZY4pL8otSzgjLj6t", // in case of Trc20 (Tether USDT)
-//       "timestamp": DateTime.now()
-//           .millisecondsSinceEpoch, // current timestamp (or timestamp as at signing) milliseconds
-//       "amount":
-//           "000F4240", // 27 * 1000000, // "004C4B40", // "000F4240" = 1000000 sun hex 2's signed complement
-//       // (https://www.rapidtables.com/convert/number/hex-to-decimal.html)
-//       // for asset TRC20 | integer for any other in SUN, 1000000 SUN = 1 TRX
-//       "feeLimit": 10000000,
-//       // reference block data to be obtained by querying the blockchain
-//       "blockTime":
-//           1638519600000, // timestamp of block to be included milliseconds
-//       "txTrieRoot":
-//           "5807aea383e7de836af95c8b36e22654e4df33e5b92768e55fb936f8a7ae5304", // trie root of block
-//       "witnessAddress":
-//           "41e5e572797a3d479030e2596a239bd142a890a305", // address of witness that signed block
-//       "parentHash":
-//           "0000000002254183f6d15ba4115b3a5e8a8359adc663f7e6f02fa2bd51c07055", // parent hash of block
-//       "version": 23, // block version
-//       "number": 35996036, // block number
-//       // freezing
-//       "frozenDuration": 3, // frozen duration
-//       "frozenBalance": 10000000, // frozen balance in SUN
-//       "resource": "ENERGY", // Resource type: BANDWIDTH | ENERGY
-//       "assetName": "ALLOW_SAME_TOKEN_NAME"
-//     };
-//   }
+Map _getTronOperation() {
+  //https://api.shasta.trongrid.io/wallet/getnowblock
+  //https://api.shasta.trongrid.io/wallet/broadcasttransaction
+  // //curl --request GET \
+  //    --url https://api.shasta.trongrid.io/v1/accounts/TP6BrDAV6Zz5U7MytoBJHimd7dBSP4RQ8Q \
+  //    --header 'Accept: application/json'
+
+  return {
+    "cmd": "TRC20", // can be TRC20 | TRX | TRC10 | CONTRACT | FREEZE
+    "ownerAddress": "TP6BrDAV6Zz5U7MytoBJHimd7dBSP4RQ8Q", // from address
+    "toAddress": "TP6BrDAV6Zz5U7MytoBJHimd7dBSP4RQ8Q", // to address
+    "contractAddress":
+        "TR7NHqjeKQxGTCi8q8ZY4pL8otSzgjLj6t", // in case of Trc20 (Tether USDT)
+    "assetName": "ALLOW_SAME_TOKEN_NAME", // trc10
+    "timestamp": DateTime.now()
+        .millisecondsSinceEpoch, // current timestamp (or timestamp as at signing) milliseconds
+    "amount":
+        "000F4240", // 27 * 1000000, // "004C4B40", // "000F4240" = 1000000 sun hex 2's signed complement
+    // (https://www.rapidtables.com/convert/number/hex-to-decimal.html)
+    // for asset TRC20 | integer for any other in SUN, 1000000 SUN = 1 TRX
+    "feeLimit": 10000000,
+    // reference block data to be obtained by querying the blockchain
+    "blockTime":
+        1638519600000, // timestamp of block to be included milliseconds
+    "txTrieRoot":
+        "5807aea383e7de836af95c8b36e22654e4df33e5b92768e55fb936f8a7ae5304", // trie root of block
+    "witnessAddress":
+        "41e5e572797a3d479030e2596a239bd142a890a305", // address of witness that signed block
+    "parentHash":
+        "0000000002254183f6d15ba4115b3a5e8a8359adc663f7e6f02fa2bd51c07055", // parent hash of block
+    "version": 23, // block version
+    "number": 35996036, // block number
+    // freezing
+    "frozenDuration": 3, // frozen duration
+    "frozenBalance": 10000000, // frozen balance in SUN
+    "resource": "ENERGY", // Resource type: BANDWIDTH | ENERGY
+  };
+}
 
 //   Map _getSolOperation() {
 //     // return {
