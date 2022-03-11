@@ -90,6 +90,32 @@ public class SwiftTrustdartPlugin: NSObject, FlutterPlugin {
                                     message: "[coin], [path] and [txData] cannot be null",
                                     details: nil))
             }
+        case "signBTCFee":
+            let args = call.arguments as! [String: Any]
+            let txData: [String: Any]? = args["txData"] as? [String: Any]
+            if  txData != nil  {
+                
+                let data = Data(hexString: "1ed6e690d72adf846335a4f116471759a2d68041e1bad86e108848ce56d7f340")
+                let prv = PrivateKey(data: data!)
+                if prv != nil {
+                    let count: Int? = signBitcoinTransactionData(privateKey: prv!, path: "", txData: txData!)?.count
+                    if count == nil {
+                        result(FlutterError(code: "txhash_null",
+                                            message: "Failed to buid and sign transaction",
+                                            details: nil))
+                    } else {
+                        result(count)
+                    }
+                } else {
+                    result(FlutterError(code: "no_wallet",
+                                        message: "Could not generate wallet, why?",
+                                        details: nil))
+                }
+            } else {
+                result(FlutterError(code: "arguments_null",
+                                    message: "[coin], [path] and [txData] cannot be null",
+                                    details: nil))
+            }
             
         default:
             result(FlutterMethodNotImplemented)
@@ -302,10 +328,14 @@ public class SwiftTrustdartPlugin: NSObject, FlutterPlugin {
     }
     
     func signBitcoinTransaction(privateKey: PrivateKey, path: String, txData:  [String: Any]) -> String? {
-        //        let privateKey = wallet.getKey(coin: CoinType.bitcoin, derivationPath: path)
+        
+        return signBitcoinTransactionData(privateKey: privateKey, path: path, txData: txData)?.hexString
+    }
+    
+    func signBitcoinTransactionData(privateKey: PrivateKey, path: String, txData:  [String: Any]) -> Data? {
+        
         let utxos: [[String: Any]] = txData["utxos"] as! [[String: Any]]
         var unspent: [BitcoinUnspentTransaction] = []
-        
         for utx in utxos {
             unspent.append(BitcoinUnspentTransaction.with {
                 $0.outPoint.hash = Data.reverse(hexString: utx["txid"] as! String)
@@ -324,10 +354,8 @@ public class SwiftTrustdartPlugin: NSObject, FlutterPlugin {
             $0.utxo = unspent
             $0.byteFee = txData["byteFee"] as! Int64
         }
-        
         let output: BitcoinSigningOutput = AnySigner.sign(input: input, coin: .bitcoin)
-        print(output.encoded.count)
         print(output.error)
-        return output.encoded.hexString
+        return output.encoded
     }
 }

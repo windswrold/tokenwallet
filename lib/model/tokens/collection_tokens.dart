@@ -162,9 +162,11 @@ class MCollectionTokens {
         if (result != null && result is Map) {
           bool success = result["success"] as bool;
           if (success == true) {
-            Map data = (result["data"] as List).first;
-            BigInt bal = BigInt.from(data["balance"] ?? 0);
-            _balance = bal.tokenDouble(6);
+            List data = result["data"] as List;
+            if (data.isNotEmpty) {
+              BigInt bal = BigInt.from(data.first["balance"] ?? 0);
+              _balance = bal.tokenDouble(6);
+            }
           }
         }
       } else if (tokenType == KTokenType.trc20.index) {

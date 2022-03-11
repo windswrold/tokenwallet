@@ -222,6 +222,7 @@ class SignTransactionClient {
       "changeAddress": from, //找零地址
     };
     String originprv = TREncode.btcWif(prv);
+    // originprv = "1ed6e690d72adf846335a4f116471759a2d68041e1bad86e108848ce56d7f340";
     String btcTx = await Trustdart.signTransaction(originprv, 'BTC', btcparams);
     if (btcTx.isEmpty) {
       return "";

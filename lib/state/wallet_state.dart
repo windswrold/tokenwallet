@@ -436,10 +436,19 @@ class CurrentChooseWalletState with ChangeNotifier {
       return;
     }
     List<TRWalletInfo> infos = await _currentWallet!.queryWalletInfos();
-    TRWalletInfo info = infos.first;
-    String walletAaddress = info.walletAaddress ?? "";
     for (int i = 0; i < tokens.length; i++) {
       MCollectionTokens map = tokens[i];
+      String walletAaddress = "";
+      TRWalletInfo? info;
+      if (infos.isNotEmpty) {
+        info =
+            infos.where((element) => element.coinType == map.chainType).first;
+      }
+      if (info == null) {
+        LogUtil.v("element.coinType ${map.token}");
+        continue;
+      }
+      walletAaddress = info.walletAaddress!;
       map.balanceOf(walletAaddress, currencyType ?? KCurrencyType.CNY);
     }
   }
