@@ -2,6 +2,7 @@ import 'package:cstoken/db/database.dart';
 import 'package:cstoken/db/database_config.dart';
 import 'package:cstoken/model/node/node_model.dart';
 import 'package:cstoken/net/chain_services.dart';
+import 'package:cstoken/net/request_method.dart';
 import 'package:cstoken/public.dart';
 import 'package:cstoken/utils/log_util.dart';
 import 'package:floor/floor.dart';
@@ -111,38 +112,74 @@ class TransRecordModel {
   }
 
   Future<bool?> updateTransState() async {
-    String tx = txid!;
-    KCoinType coin = chainid!.chainGetCoinType();
-    NodeModel node = NodeModel.queryNodeByChainType(coin.index);
-    dynamic result =
-        await ChainServices.requestTransactionReceipt(tx, node.content ?? "");
-    if (result != null &&
-        result is Map &&
-        result.keys.contains("result") &&
-        result["result"] != null) {
-      String status = result["result"]["status"];
-      String? gasPrice = this.gasPrice;
-      String gasUsed = result["result"]["gasUsed"];
-      String block = result["result"]["blockNumber"];
-      int blockNumber =
-          int.tryParse(block.replaceAll("0x", ""), radix: 16) ?? 0;
-      BigInt? gas = BigInt.tryParse(gasUsed.replaceAll("0x", ""), radix: 16);
-      if (gasPrice != null && gasUsed != null) {
-        String fee = TRWallet.configFeeValue(
-            cointype: 1, beanValue: gas.toString(), offsetValue: gasPrice);
-        this.fee = fee;
+    String tx = txid ?? "";
+    if (tx.isEmpty) {
+      return false;
+    }
+    KCoinType coin = coinType!.chainTypeGetCoinType()!;
+    if (coin == KCoinType.BTC) {
+      dynamic result = await ChainServices.requestBTCDatas(
+          path: "/txs/$tx", method: Method.GET);
+
+      if (result != null && result is Map) {
+        BigInt feeBig = BigInt.from(result["fees"]);
+        BigInt block_height = BigInt.from(result["block_height"]);
+        fee = feeBig.tokenString(8);
+        if (block_height > BigInt.zero) {
+          transStatus = KTransState.success.index;
+          blockHeight = block_height.toInt();
+        }
+        TransRecordModel.updateTrxLists([this]);
+        return true;
       }
-      blockHeight = blockNumber;
-      if (status == "0x1") {
-        //其他置为success
+    } else if (coin == KCoinType.TRX) {
+      dynamic result = await ChainServices.requestTRXDatas(
+          path: "/wallet/gettransactioninfobyid",
+          method: Method.POST,
+          data: {"value": tx});
+      if (result != null &&
+          result is Map &&
+          result.keys.contains("blockNumber")) {
+        BigInt feeBig = BigInt.from(result["fee"]);
+        BigInt blockNumber = BigInt.from(result["blockNumber"]);
+        blockHeight = blockNumber.toInt();
+        fee = feeBig.tokenString(6);
         transStatus = KTransState.success.index;
         TransRecordModel.updateTrxLists([this]);
         return true;
-      } else {
-        //1层失败则置为失败
-        transStatus = KTransState.failere.index;
-        TransRecordModel.updateTrxLists([this]);
-        return true;
+      }
+    } else {
+      NodeModel node = NodeModel.queryNodeByChainType(coin.index);
+      dynamic result =
+          await ChainServices.requestTransactionReceipt(tx, node.content ?? "");
+      if (result != null &&
+          result is Map &&
+          result.keys.contains("result") &&
+          result["result"] != null) {
+        String status = result["result"]["status"];
+        String? gasPrice = this.gasPrice;
+        String gasUsed = result["result"]["gasUsed"];
+        String block = result["result"]["blockNumber"];
+        int blockNumber =
+            int.tryParse(block.replaceAll("0x", ""), radix: 16) ?? 0;
+        BigInt? gas = BigInt.tryParse(gasUsed.replaceAll("0x", ""), radix: 16);
+        if (gasPrice != null && gasUsed != null) {
+          String fee = TRWallet.configFeeValue(
+              cointype: 1, beanValue: gas.toString(), offsetValue: gasPrice);
+          this.fee = fee;
+        }
+        blockHeight = blockNumber;
+        if (status == "0x1") {
+          //其他置为success
+          transStatus = KTransState.success.index;
+          TransRecordModel.updateTrxLists([this]);
+          return true;
+        } else {
+          //1层失败则置为失败
+          transStatus = KTransState.failere.index;
+          TransRecordModel.updateTrxLists([this]);
+          return true;
+        }
       }
     }
   }

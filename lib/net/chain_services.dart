@@ -12,15 +12,8 @@ class ChainServices {
       {required KCoinType? coinType, dynamic params}) async {
     String url = NodeModel.queryNodeByChainType(coinType!.index).content ?? "";
     dynamic result;
-    if (coinType == KCoinType.BTC) {
-      url += (params as List).first;
-      url += "token=51db957650794388ae078d96f331a3e8";
-      result = await RequestMethod.manager!.requestData(Method.GET, url);
-    } else {
-      result = await RequestMethod.manager!
-          .requestData(Method.POST, url, data: params);
-    }
-
+    result = await RequestMethod.manager!
+        .requestData(Method.POST, url, data: params);
     return result;
   }
 
