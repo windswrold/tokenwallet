@@ -212,6 +212,7 @@ class WalletServices {
   static Future<List> gettokenList(int page, int pagesize,
       {String? tokenName,
       String? tokenContractAddress,
+      String? chainType,
       bool? defaultFlag}) async {
     final url = RequestURLS.getHost() + RequestURLS.gettokenList;
     Map<String, dynamic> params = {"pageSize": pagesize, "pageNum": page};
@@ -224,6 +225,9 @@ class WalletServices {
     if (defaultFlag != null) {
       params["defaultFlag"] = defaultFlag == true ? "1" : "0";
     }
+    if (chainType != null) {
+      params["chainType"] = chainType.toLowerCase();
+    }
 
     dynamic result = await RequestMethod.manager!
         .requestData(Method.GET, url, queryParameters: params);
@@ -234,9 +238,14 @@ class WalletServices {
     return [];
   }
 
-  static Future<List> getpopularToken() async {
+  static Future<List> getpopularToken({String? chainType}) async {
     final url = RequestURLS.getHost() + RequestURLS.getpopularToken;
-    dynamic result = await RequestMethod.manager!.requestData(Method.GET, url);
+    Map<String, dynamic>? params;
+    if (chainType != null) {
+      params ??= {"chainType": chainType.toLowerCase()};
+    }
+    dynamic result = await RequestMethod.manager!
+        .requestData(Method.GET, url, queryParameters: params);
     if (result != null && result["code"] == 200) {
       List data = result["result"]["page"] ?? [];
       return data;

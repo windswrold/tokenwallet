@@ -218,8 +218,9 @@
     "empaty_addtoken": "添加代币",
     "customtokens_decimalempty": "没有精度数据",
     "importwallet_btcchaintype": "BTC钱包",
-    "importwallet_trxchaintype": "TRX钱包",
+    "importwallet_trxchaintype": "TRON钱包",
     "payment_slow": "低",
     "payment_high": "高",
-    "payment_trontip": "波场网络规定，向未激活的TRX地址转账时，须在转出地址中保证至少剩余0.1TRX作为手续费，否则会转账失败."
+    "payment_trontip": "波场网络规定，向未激活的TRX地址转账时，须在转出地址中保证至少剩余0.1TRX作为手续费，否则会转账失败.",
+    "paymenttip_sameaddress": "在Tron网络下，你不能向自己转账"
 }

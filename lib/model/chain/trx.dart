@@ -17,7 +17,7 @@ class TRXChain implements HDWalletProtocol {
       required String pin,
       required KLeadType kLeadType}) async {
     var prv;
-    var address;
+    String address;
     if (kLeadType == KLeadType.Memo) {
       prv = await privateKeyFromMnemonic(content);
     } else if (kLeadType == KLeadType.KeyStore) {
@@ -26,6 +26,9 @@ class TRXChain implements HDWalletProtocol {
       prv = content;
     }
     address = await getPublicAddress(prv);
+    if (address.isEmpty) {
+      return null;
+    }
     HDWallet wallet = HDWallet(
         coinType: KCoinType.TRX,
         prv: prv,

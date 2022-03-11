@@ -183,7 +183,15 @@ class KTransferState with ChangeNotifier {
       HWToast.showText(text: "input_paymentvalue".local());
       return;
     }
+    BigInt amountBig = amount.tokenInt(decimals);
+    BigInt balanceBig = _tokens!.balanceString.tokenInt(decimals);
+    if (amountBig > balanceBig) {
+      HWToast.showText(text: "payment_valueshouldlessbal".local());
+      return;
+    }
+
     if (coinType != KCoinType.TRX.index) {
+      //trx 系消耗的是能量
       if (_feeValue == null || _feeValue.isEmpty == true) {
         _feeValue = TRWallet.configFeeValue(
             cointype: coinType, beanValue: _gasLimit, offsetValue: _feeOffset);
@@ -198,21 +206,12 @@ class KTransferState with ChangeNotifier {
         HWToast.showText(text: "payment_highfee".local());
         return;
       }
-    }
-
-    BigInt amountBig = amount.tokenInt(decimals);
-    BigInt balanceBig = _tokens!.balanceString.tokenInt(decimals);
-    if (amountBig > balanceBig) {
-      HWToast.showText(text: "payment_valueshouldlessbal".local());
-      return;
-    }
-    BigInt feeBig = BigInt.zero;
-    if (coinType == KCoinType.BTC.index) {
-      feeBig = _feeValue.tokenInt(8);
-    } else {
-      feeBig = _feeValue.tokenInt(18);
-    }
-    if (coinType != KCoinType.TRX.index) {
+      BigInt feeBig = BigInt.zero;
+      if (coinType == KCoinType.BTC.index) {
+        feeBig = _feeValue.tokenInt(8);
+      } else {
+        feeBig = _feeValue.tokenInt(18);
+      }
       if (isToken == true) {
         num mainBalance = await _client!.getBalance(from);
         BigInt mainTokenBig = mainBalance.toString().tokenInt(18);
@@ -228,6 +227,13 @@ class KTransferState with ChangeNotifier {
           HWToast.showText(text: "paymenttip_ethnotenough".local());
           return;
         }
+      }
+    } else {
+      //trx不能转给自己
+      //判断新地址
+      if (from == to) {
+        HWToast.showText(text: "paymenttip_sameaddress".local());
+        return;
       }
     }
 

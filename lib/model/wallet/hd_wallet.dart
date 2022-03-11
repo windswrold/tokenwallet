@@ -75,14 +75,18 @@ class HDWallet {
         kCoinType == KCoinType.BTC) {
       HDWallet? hdWallet = await BTCChain()
           .importWallet(content: content, pin: pin, kLeadType: kLeadType);
-      _hdwallets.add(hdWallet!);
+      if (hdWallet != null) {
+        _hdwallets.add(hdWallet);
+      }
     }
     if (kchainType == KChainType.HD ||
         kchainType == KChainType.TRX ||
         kCoinType == KCoinType.TRX) {
       HDWallet? hdWallet = await TRXChain()
           .importWallet(content: content, pin: pin, kLeadType: kLeadType);
-      _hdwallets.add(hdWallet!);
+      if (hdWallet != null) {
+        _hdwallets.add(hdWallet);
+      }
     }
 
     // btc

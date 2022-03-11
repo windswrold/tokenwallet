@@ -222,6 +222,10 @@ class TRWallet {
           pin: pin,
           kLeadType: kLeadType,
           kchainType: kChainType);
+      if (_hdwallets.isEmpty) {
+        HWToast.showText(text: "import_prvwrong".local());
+        return;
+      }
       for (var object in _hdwallets) {
         String address = object.address!;
         String key = walletID + address + object.coinType!.coinTypeString();
@@ -231,8 +235,12 @@ class TRWallet {
         infos.coinType = object.coinType!.index;
         TRWalletInfo.insertWallets([infos]);
       }
-      List indexTokens =
-          await WalletServices.gettokenList(1, 20, defaultFlag: true);
+      String? chainType;
+      if (kChainType != KChainType.HD) {
+        chainType = kChainType.getTokenType();
+      }
+      List indexTokens = await WalletServices.gettokenList(1, 20,
+          defaultFlag: true, chainType: chainType);
       KNetType netType = RequestURLS.getHost() == RequestURLS.testUrl
           ? KNetType.Testnet
           : KNetType.Mainnet;

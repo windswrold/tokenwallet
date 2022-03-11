@@ -3,99 +3,104 @@ import UIKit
 import WalletCore
 
 public class SwiftTrustdartPlugin: NSObject, FlutterPlugin {
-  public static func register(with registrar: FlutterPluginRegistrar) {
-    let channel = FlutterMethodChannel(name: "trustdart", binaryMessenger: registrar.messenger())
-    let instance = SwiftTrustdartPlugin()
-    registrar.addMethodCallDelegate(instance, channel: channel)
-  }
-  
-  public func handle(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
-   
-    switch call.method {
-           
-            case "generateAddress":
-                let args = call.arguments as! [String: String]
-                let path: String? = args["path"]
-                let coin: String? = args["coin"]
-                let mnemonic: String? = args["mnemonic"]
-                let passphrase: String? = args["passphrase"]
-                if path != nil && coin != nil && mnemonic != nil {
-//                    let wallet = HDWallet(mnemonic: mnemonic!, passphrase: passphrase!)
-                    let data = Data(hexString: mnemonic!)
-                    let prv = PrivateKey(data: data!)
-                    if prv != nil {
-                        let address: [String: String]? = generateAddress(privateKey: prv!, path: path!, coin: coin!)
-                        if address == nil {
-                            result(FlutterError(code: "address_null",
-                                                message: "Failed to generate address",
-                                                details: nil))
-                        } else {
-                            result(address)
-                        }
-                    } else {
-                        result(FlutterError(code: "no_wallet",
-                                            message: "Could not generate wallet, why?",
-                                            details: nil))
-                    }
-                } else {
-                    result(FlutterError(code: "arguments_null",
-                                        message: "[path] and [coin] and [mnemonic] cannot be null",
-                                        details: nil))
-                }
-            case "validateAddress":
-                let args = call.arguments as! [String: String]
-                let address: String? = args["address"]
-                let coin: String? = args["coin"]
-                if address != nil && coin != nil {
-                    let isValid: Bool = validateAddress(address: address!, coin: coin!)
-                    result(isValid)
-                } else {
-                    result(FlutterError(code: "arguments_null",
-                                        message: "[address] and [coin] cannot be null",
-                                        details: nil))
-                }
-            case "signTransaction":
-                let args = call.arguments as! [String: Any]
-                let coin: String? = args["coin"] as? String
-                let path: String? = args["path"] as? String
-                let txData: [String: Any]? = args["txData"] as? [String: Any]
-                let mnemonic: String? = args["mnemonic"] as? String
-                let passphrase: String? = args["passphrase"] as? String
-                if coin != nil && path != nil && txData != nil && mnemonic != nil {
-//                    let wallet = HDWallet(mnemonic: mnemonic!, passphrase: passphrase!)
-                    let data = Data(hexString: mnemonic!)
-                    let prv = PrivateKey(data: data!)
-                    
-                    if prv != nil {
-                        let txHash: String? = signTransaction(privateKey: prv!, coin: coin!, path: path!, txData: txData!)
-                        if txHash == nil {
-                            result(FlutterError(code: "txhash_null",
-                                                message: "Failed to buid and sign transaction",
-                                                details: nil))
-                        } else {
-                            result(txHash)
-                        }
-                    } else {
-                        result(FlutterError(code: "no_wallet",
-                                            message: "Could not generate wallet, why?",
-                                            details: nil))
-                    }
-                } else {
-                    result(FlutterError(code: "arguments_null",
-                                        message: "[coin], [path] and [txData] cannot be null",
-                                        details: nil))
-                }
+    public static func register(with registrar: FlutterPluginRegistrar) {
+        let channel = FlutterMethodChannel(name: "trustdart", binaryMessenger: registrar.messenger())
+        let instance = SwiftTrustdartPlugin()
+        registrar.addMethodCallDelegate(instance, channel: channel)
+    }
+    
+    public func handle(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
         
-            default:
-                result(FlutterMethodNotImplemented)
+        switch call.method {
+            
+        case "generateAddress":
+            let args = call.arguments as! [String: String]
+            let path: String? = args["path"]
+            let coin: String? = args["coin"]
+            let mnemonic: String? = args["mnemonic"]
+            let _: String? = args["passphrase"]
+            if path != nil && coin != nil && mnemonic != nil {
+                
+                let prv : PrivateKey?
+                do {
+                    let data = try Data(hexString: mnemonic!)
+                    prv = data == nil ? nil :PrivateKey(data: data!)
+                } catch  _{
+                    
+                }
+                if prv != nil {
+                    let address: [String: String]? = generateAddress(privateKey: prv!, path: path!, coin: coin!)
+                    if address == nil {
+                        result(FlutterError(code: "address_null",
+                                            message: "Failed to generate address",
+                                            details: nil))
+                    } else {
+                        result(address)
+                    }
+                } else {
+                    result(FlutterError(code: "no_wallet",
+                                        message: "Could not generate wallet, why?",
+                                        details: nil))
+                }
+            } else {
+                result(FlutterError(code: "arguments_null",
+                                    message: "[path] and [coin] and [mnemonic] cannot be null",
+                                    details: nil))
             }
-  }
+        case "validateAddress":
+            let args = call.arguments as! [String: String]
+            let address: String? = args["address"]
+            let coin: String? = args["coin"]
+            if address != nil && coin != nil {
+                let isValid: Bool = validateAddress(address: address!, coin: coin!)
+                result(isValid)
+            } else {
+                result(FlutterError(code: "arguments_null",
+                                    message: "[address] and [coin] cannot be null",
+                                    details: nil))
+            }
+        case "signTransaction":
+            let args = call.arguments as! [String: Any]
+            let coin: String? = args["coin"] as? String
+            let path: String? = args["path"] as? String
+            let txData: [String: Any]? = args["txData"] as? [String: Any]
+            let mnemonic: String? = args["mnemonic"] as? String
+            let passphrase: String? = args["passphrase"] as? String
+            if coin != nil && path != nil && txData != nil && mnemonic != nil {
+                //                    let wallet = HDWallet(mnemonic: mnemonic!, passphrase: passphrase!)
+                let data = Data(hexString: mnemonic!)
+                let prv = PrivateKey(data: data!)
+                
+                if prv != nil {
+                    let txHash: String? = signTransaction(privateKey: prv!, coin: coin!, path: path!, txData: txData!)
+                    if txHash == nil {
+                        result(FlutterError(code: "txhash_null",
+                                            message: "Failed to buid and sign transaction",
+                                            details: nil))
+                    } else {
+                        result(txHash)
+                    }
+                } else {
+                    result(FlutterError(code: "no_wallet",
+                                        message: "Could not generate wallet, why?",
+                                        details: nil))
+                }
+            } else {
+                result(FlutterError(code: "arguments_null",
+                                    message: "[coin], [path] and [txData] cannot be null",
+                                    details: nil))
+            }
+            
+        default:
+            result(FlutterMethodNotImplemented)
+        }
+    }
     
     func generateAddress(privateKey: PrivateKey, path: String, coin: String) -> [String: String]? {
         var addressMap: [String: String]?
         switch coin {
         case "BTC":
-         
+            
             let publicKey = privateKey.getPublicKeySecp256k1(compressed: true)
             let legacyAddress = BitcoinAddress(publicKey: publicKey, prefix: 0)
             let scriptHashAddress = BitcoinAddress(publicKey: publicKey, prefix: 5)
@@ -105,12 +110,12 @@ public class SwiftTrustdartPlugin: NSObject, FlutterPlugin {
                           "p2sh": scriptHashAddress!.description,
                           "test":test!.description
             ]
-     
+            
         case "TRX":
-          
+            
             addressMap = ["legacy": CoinType.tron.deriveAddress(privateKey: privateKey)]
         case "SOL":
-         
+            
             addressMap = ["legacy": CoinType.solana.deriveAddress(privateKey: privateKey)]
         default:
             addressMap = nil
@@ -132,17 +137,17 @@ public class SwiftTrustdartPlugin: NSObject, FlutterPlugin {
             isValid = false
         }
         return isValid
-
+        
     }
     
-   
+    
     
     func getPrivateKey(wallet: HDWallet, path: String, coin: String) -> String? {
         var privateKey: String?
         switch coin {
         case "BTC":
             privateKey = wallet.getKey(coin: CoinType.bitcoin, derivationPath: path).data.base64EncodedString()
-      
+            
         case "TRX":
             privateKey = wallet.getKey(coin: CoinType.tron, derivationPath: path).data.base64EncodedString()
         case "SOL":
@@ -166,7 +171,7 @@ public class SwiftTrustdartPlugin: NSObject, FlutterPlugin {
             txHash = nil
         }
         return txHash
-
+        
     }
     
     private func objToJson(from object:Any) -> String? {
@@ -177,46 +182,46 @@ public class SwiftTrustdartPlugin: NSObject, FlutterPlugin {
     }
     
     
-
+    
     
     func signSolanaTransaction(privateKey: PrivateKey, path: String, txData:  [String: Any]) -> String? {
-//        let privateKey = wallet.getKey(coin: CoinType.solana, derivationPath: path)
+        //        let privateKey = wallet.getKey(coin: CoinType.solana, derivationPath: path)
         let opJson =  objToJson(from:txData)
         let result = AnySigner.signJSON(opJson!, key: privateKey.data, coin: CoinType.solana)
         return result
-      }
+    }
     
     func signTronTransaction(privateKey: PrivateKey, path: String, txData:  [String: Any]) -> String? {
-       let cmd = txData["cmd"] as! String
+        let cmd = txData["cmd"] as! String
         var txHash: String?
-//        let privateKey = wallet.getKey(coin: CoinType.tron, derivationPath: path)
+        //        let privateKey = wallet.getKey(coin: CoinType.tron, derivationPath: path)
         switch cmd {
         case "TRC20":
-                let contract = TronTransferTRC20Contract.with {
-                    $0.ownerAddress = txData["ownerAddress"] as! String
-                    $0.toAddress = txData["toAddress"] as! String
-                    $0.contractAddress = txData["contractAddress"] as! String
-                    $0.amount = Data(hexString: txData["amount"] as! String)!
-                }
-                
-                let input = TronSigningInput.with {
-                    $0.transaction = TronTransaction.with {
-                        $0.feeLimit = txData["feeLimit"] as! Int64
-                        $0.transferTrc20Contract = contract
-                        $0.timestamp = txData["timestamp"] as! Int64
-                        $0.blockHeader = TronBlockHeader.with {
-                            $0.timestamp = txData["blockTime"] as! Int64
-                            $0.number = txData["number"] as! Int64
-                            $0.version = txData["version"] as! Int32
-                            $0.txTrieRoot = Data(hexString: txData["txTrieRoot"] as! String)!
-                            $0.parentHash = Data(hexString: txData["parentHash"] as! String)!
-                            $0.witnessAddress = Data(hexString: txData["witnessAddress"] as! String)!
-                        }
+            let contract = TronTransferTRC20Contract.with {
+                $0.ownerAddress = txData["ownerAddress"] as! String
+                $0.toAddress = txData["toAddress"] as! String
+                $0.contractAddress = txData["contractAddress"] as! String
+                $0.amount = Data(hexString: txData["amount"] as! String)!
+            }
+            
+            let input = TronSigningInput.with {
+                $0.transaction = TronTransaction.with {
+                    $0.feeLimit = txData["feeLimit"] as! Int64
+                    $0.transferTrc20Contract = contract
+                    $0.timestamp = txData["timestamp"] as! Int64
+                    $0.blockHeader = TronBlockHeader.with {
+                        $0.timestamp = txData["blockTime"] as! Int64
+                        $0.number = txData["number"] as! Int64
+                        $0.version = txData["version"] as! Int32
+                        $0.txTrieRoot = Data(hexString: txData["txTrieRoot"] as! String)!
+                        $0.parentHash = Data(hexString: txData["parentHash"] as! String)!
+                        $0.witnessAddress = Data(hexString: txData["witnessAddress"] as! String)!
                     }
-                    $0.privateKey = privateKey.data
                 }
-                let output: TronSigningOutput = AnySigner.sign(input: input, coin: CoinType.tron)
-                txHash = output.json
+                $0.privateKey = privateKey.data
+            }
+            let output: TronSigningOutput = AnySigner.sign(input: input, coin: CoinType.tron)
+            txHash = output.json
         case "TRC10":
             let transferAsset = TronTransferAssetContract.with {
                 $0.ownerAddress = txData["ownerAddress"] as! String
@@ -295,9 +300,9 @@ public class SwiftTrustdartPlugin: NSObject, FlutterPlugin {
         }
         return txHash
     }
-
+    
     func signBitcoinTransaction(privateKey: PrivateKey, path: String, txData:  [String: Any]) -> String? {
-//        let privateKey = wallet.getKey(coin: CoinType.bitcoin, derivationPath: path)
+        //        let privateKey = wallet.getKey(coin: CoinType.bitcoin, derivationPath: path)
         let utxos: [[String: Any]] = txData["utxos"] as! [[String: Any]]
         var unspent: [BitcoinUnspentTransaction] = []
         
@@ -324,5 +329,5 @@ public class SwiftTrustdartPlugin: NSObject, FlutterPlugin {
         print(output.encoded.count)
         print(output.error)
         return output.encoded.hexString
-      }
+    }
 }

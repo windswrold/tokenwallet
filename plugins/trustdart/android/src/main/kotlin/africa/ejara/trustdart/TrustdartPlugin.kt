@@ -51,8 +51,13 @@ class TrustdartPlugin : FlutterPlugin, MethodCallHandler {
                 val passphrase: String? = call.argument("passphrase")
                 if (path != null && coin != null && mnemonic != null) {
 //          val wallet: HDWallet = HDWallet(mnemonic, passphrase)
-                    val bytes = Numeric.hexStringToByteArray(mnemonic)
-                    val prv = PrivateKey(bytes);
+                    val prv : PrivateKey?
+                    try  {
+                        val bytes = Numeric.hexStringToByteArray(mnemonic)
+                        prv = PrivateKey(bytes);
+                    } finally {
+
+                    }
                     if (prv != null) {
                         val address: Map<String, String?>? = generateAddress(prv, path, coin)
                         if (address == null) result.error(

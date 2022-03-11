@@ -33,16 +33,20 @@ class _SearchAddTokenState extends State<SearchAddToken> {
 
   void _initData(int page, {String? keywords}) async {
     HWToast.showLoading();
-    final walletID =
+    final TRWallet trWallet =
         Provider.of<CurrentChooseWalletState>(context, listen: false)
-            .currentWallet!
-            .walletID!;
+            .currentWallet!;
+    String? chainType = trWallet.chainType == KChainType.HD.index
+        ? null
+        : trWallet.chainType!.getChainType().getTokenType();
+    String walletID = trWallet.walletID!;
+
     _page = page;
     List indexTokens = [];
     bool popular = false;
     if (keywords == null || keywords.isEmpty) {
       popular = true;
-      indexTokens = await WalletServices.getpopularToken();
+      indexTokens = await WalletServices.getpopularToken(chainType: chainType);
     } else {
       if (keywords.checkAddress(KCoinType.ETH) == true) {
         indexTokens = await WalletServices.gettokenList(page, 20,
