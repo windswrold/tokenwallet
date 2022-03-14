@@ -38,7 +38,7 @@ class _SearchAddTokenState extends State<SearchAddToken> {
             .currentWallet!;
     String? chainType = trWallet.chainType == KChainType.HD.index
         ? null
-        : trWallet.chainType!.getChainType().getTokenType();
+        : trWallet.chainType!.getChainType().getNetTokenType();
     String walletID = trWallet.walletID!;
     _page = page;
     List indexTokens = [];

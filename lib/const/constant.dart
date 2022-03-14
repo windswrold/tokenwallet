@@ -128,6 +128,18 @@ extension ChainTypeString on KChainType {
     return "";
   }
 
+  String? getNetTokenType() {
+    if (this == KChainType.HD) {
+    } else if (this == KChainType.ETH) {
+      return "ETH";
+    } else if (this == KChainType.BTC) {
+      return "BTC";
+    } else if (this == KChainType.TRX) {
+      return "TRON";
+    }
+    return null;
+  }
+
   List<KCoinType> getSuppertCoinTypes() {
     if (this == KChainType.HD) {
       return KCoinType.values;
