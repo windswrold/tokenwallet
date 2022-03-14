@@ -494,6 +494,21 @@ class SignTransactionClient {
     return erc20.balanceOf(EthereumAddress.fromHex(address));
   }
 
+  static String getEIP721Balance(String address, String contract) {
+    final contractAddress = EthereumAddress.fromHex(contract);
+    final dc = DeployedContract(_erc721Abi, contractAddress);
+    final function = dc.function('balanceOf');
+    return bytesToHex(function.encodeCall([EthereumAddress.fromHex(address)]));
+  }
+
+  static String getEIP1155Balance(String address, String contract, String tid) {
+    final contractAddress = EthereumAddress.fromHex(contract);
+    final dc = DeployedContract(_erc1155Abi, contractAddress);
+    final function = dc.function('balanceOf');
+    return bytesToHex(function
+        .encodeCall([EthereumAddress.fromHex(address), BigInt.parse(tid)]));
+  }
+
   int? get ChainID => _chainId;
 }
 
@@ -523,6 +538,8 @@ final ContractAbi _erc721Abi = ContractAbi('ERC721', [
     FunctionParameter('id', UintType(length: 256)),
     FunctionParameter('data', DynamicBytes()),
   ]),
+  const ContractFunction(
+      'balanceOf', [FunctionParameter('from', AddressType())]),
 ], []);
 
 final ContractAbi _erc1155Abi = ContractAbi('ERC721', [
@@ -532,5 +549,9 @@ final ContractAbi _erc1155Abi = ContractAbi('ERC721', [
     FunctionParameter('_id', UintType(length: 256)),
     FunctionParameter('_value', UintType(length: 256)),
     FunctionParameter('_data', DynamicBytes()),
+  ]),
+  const ContractFunction('balanceOf', [
+    FunctionParameter('from', AddressType()),
+    FunctionParameter('_id', UintType(length: 256)),
   ]),
 ], []);

@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:cstoken/db/database.dart';
 import 'package:cstoken/db/database_config.dart';
+import 'package:cstoken/model/client/sign_client.dart';
 import 'package:cstoken/model/token_price/tokenprice.dart';
 import 'package:cstoken/net/chain_services.dart';
 import 'package:cstoken/net/request_method.dart';
@@ -132,6 +133,25 @@ class MCollectionTokens {
         String owner = walletAaddress;
         String data =
             "0x70a08231000000000000000000000000" + owner.replaceAll("0x", "");
+        params["jsonrpc"] = "2.0";
+        params["method"] = "eth_call";
+        params["params"] = [
+          {"to": contract, "data": data},
+          "latest"
+        ];
+        params["id"] = tokenID;
+      } else if (tokenType == KTokenType.eip721.index) {
+        String data =
+            SignTransactionClient.getEIP721Balance(walletAaddress, contract!);
+        params["method"] = "eth_call";
+        params["params"] = [
+          {"to": contract, "data": data},
+          "latest"
+        ];
+        params["id"] = tokenID;
+      } else if (tokenType == KTokenType.eip1155.index) {
+        String data = SignTransactionClient.getEIP1155Balance(
+            walletAaddress, contract!, tid!);
         params["jsonrpc"] = "2.0";
         params["method"] = "eth_call";
         params["params"] = [

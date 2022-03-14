@@ -19,6 +19,8 @@ import 'package:bip39/bip39.dart' as bip39;
 import 'package:bip32/bip32.dart' as bip32;
 import 'package:bip32/src/utils/wif.dart' as wif;
 import 'package:fixnum/fixnum.dart' as $fixnum;
+import 'package:web3dart/contracts.dart';
+import 'package:web3dart/credentials.dart';
 import 'package:web3dart/crypto.dart';
 import 'package:base_codecs/base_codecs.dart';
 
@@ -60,7 +62,7 @@ void main() {
     var root = bip32.BIP32.fromSeed(seed);
     var child = root.derivePath("m/44'/0'/0'/0/0");
     String prv = child.toWIF();
-    print(prv);
+    // print(prv);
 
     // child = root.derivePath("m/44'/195'/0'/0/0");
     // print(TREncode.kBytesToHex(child.privateKey!));
@@ -70,12 +72,53 @@ void main() {
     prv = "Kxd5FfWEZNixbs8yg8U86DShrcYzK6f7u5zV8sYRKpWT6e4axyvC";
     final bigWif = wif.decode(prv);
     String wifprv = TREncode.kBytesToHex(bigWif.privateKey);
-    print(wifprv);
+    // print(wifprv);
 
     String value = "TP6BrDAV6Zz5U7MytoBJHimd7dBSP4RQ8Q";
     value = TREncode.base58HexString(value);
 
-    print(value.padLeft(64,"0"));
+    // print(value.padLeft(64, "0"));
+    final contractAddress =
+        EthereumAddress.fromHex("0x88b48f654c30e99bc2e4a1559b4dcf1ad93fa656");
+    final contract = DeployedContract(_erc1155Abi, contractAddress);
+    final function = contract.function('balanceOf');
+    final abi = bytesToHex(function.encodeCall([
+      contractAddress,
+      BigInt.parse(
+          "50122364812794259909901293353502058643127092878053915726483470122051514138625")
+    ]));
+    print(abi);
+
+    final contract2 = DeployedContract(_erc721Abi, contractAddress);
+    final function2 = contract2.function('balanceOf');
+    final abi2 = bytesToHex(function2.encodeCall([contractAddress]));
+    print(abi2);
+
     // ascii.encode(string);
   });
 }
+
+final ContractAbi _erc721Abi = ContractAbi('ERC721', [
+  const ContractFunction('safeTransferFrom', [
+    FunctionParameter('from', AddressType()),
+    FunctionParameter('to', AddressType()),
+    FunctionParameter('id', UintType(length: 256)),
+    FunctionParameter('data', DynamicBytes()),
+  ]),
+  const ContractFunction(
+      'balanceOf', [FunctionParameter('from', AddressType())]),
+], []);
+
+final ContractAbi _erc1155Abi = ContractAbi('ERC721', [
+  const ContractFunction('safeTransferFrom', [
+    FunctionParameter('_from', AddressType()),
+    FunctionParameter('_to', AddressType()),
+    FunctionParameter('_id', UintType(length: 256)),
+    FunctionParameter('_value', UintType(length: 256)),
+    FunctionParameter('_data', DynamicBytes()),
+  ]),
+  const ContractFunction('balanceOf', [
+    FunctionParameter('from', AddressType()),
+    FunctionParameter('_id', UintType(length: 256)),
+  ]),
+], []);
