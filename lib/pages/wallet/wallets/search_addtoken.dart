@@ -40,7 +40,6 @@ class _SearchAddTokenState extends State<SearchAddToken> {
         ? null
         : trWallet.chainType!.getChainType().getTokenType();
     String walletID = trWallet.walletID!;
-
     _page = page;
     List indexTokens = [];
     bool popular = false;
@@ -48,12 +47,16 @@ class _SearchAddTokenState extends State<SearchAddToken> {
       popular = true;
       indexTokens = await WalletServices.getpopularToken(chainType: chainType);
     } else {
-      if (keywords.checkAddress(KCoinType.ETH) == true) {
+      if (await keywords.checkAddress(KCoinType.ETH) == true) {
         indexTokens = await WalletServices.gettokenList(page, 20,
-            tokenName: null, tokenContractAddress: keywords);
+            tokenName: null,
+            tokenContractAddress: keywords,
+            chainType: chainType);
       } else {
         indexTokens = await WalletServices.gettokenList(page, 20,
-            tokenName: keywords, tokenContractAddress: null);
+            tokenName: keywords,
+            tokenContractAddress: null,
+            chainType: chainType);
       }
     }
 

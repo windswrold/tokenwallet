@@ -19,12 +19,14 @@ class _CustomAddTokensState extends State<CustomAddTokens> {
   final TextEditingController _tokenDeciimalEC = TextEditingController();
 
   KCoinType? _chooseType;
+  TRWallet? _wallet;
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-
+    _wallet = Provider.of<CurrentChooseWalletState>(context, listen: false)
+        .currentWallet!;
     _tokenContractEC.addListener(() {
       _initData();
     });
@@ -44,14 +46,13 @@ class _CustomAddTokensState extends State<CustomAddTokens> {
     if (_contract.isEmpty) {
       return;
     }
-    if (_contract.checkAddress(KCoinType.ETH) == false) {
+    if (await _contract.checkAddress(_chooseType!) == false) {
       _tokenSymbolEC.clear();
       _tokenDeciimalEC.clear();
       return;
     }
-    NodeModel node = NodeModel.queryNodeByChainType(_chooseType!.index);
     Map? result = await ChainServices.requestTokenInfo(
-        url: node.content!, contract: _contract);
+        type: _chooseType!, contract: _contract, walletAaddress: '');
     if (result == null) {
       _tokenSymbolEC.clear();
       _tokenDeciimalEC.clear();
@@ -75,7 +76,7 @@ class _CustomAddTokensState extends State<CustomAddTokens> {
       HWToast.showText(text: "customtokens_pleasetokencontract".local());
       return;
     }
-    if (_contract.checkAddress(KCoinType.ETH) == false) {
+    if (await _contract.checkAddress(_chooseType!) == false) {
       HWToast.showText(text: "input_addressinvalid".local());
       return;
     }
@@ -88,23 +89,22 @@ class _CustomAddTokensState extends State<CustomAddTokens> {
       return;
     }
 
-    TRWallet wallet =
-        Provider.of<CurrentChooseWalletState>(context, listen: false)
-            .currentWallet!;
     MCollectionTokens.newTokens(
-        walletID: wallet.walletID!,
+        walletID: _wallet!.walletID!,
         coinType: _chooseType!.index,
         contract: _contract,
         token: _symbol,
         decimal: int.parse(_decimal));
+   
     HWToast.showText(text: "wallet_inputok".local());
     Future.delayed(const Duration(seconds: 2))
         .then((value) => {Routers.goBackWithParams(context, {})});
   }
 
   void _onTapChain() {
-    Provider.of<CurrentChooseWalletState>(context, listen: false)
-        .onTapChain(context, KChainType.ETH.getSuppertCoinTypes(), (p0) {
+    Provider.of<CurrentChooseWalletState>(context, listen: false).onTapChain(
+        context, _wallet!.chainType!.getChainType().getTokensSuppertCoinTypes(),
+        (p0) {
       setState(() {
         _chooseType = p0;
       });

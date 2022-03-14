@@ -148,6 +148,19 @@ extension ChainTypeString on KChainType {
     }
     return [];
   }
+
+  List<KCoinType> getTokensSuppertCoinTypes() {
+    if (this == KChainType.HD) {
+      List<KCoinType> tokens = KChainType.ETH.getSuppertCoinTypes();
+      tokens.add(KCoinType.TRX);
+      return tokens;
+    } else if (this == KChainType.ETH) {
+      return KChainType.ETH.getSuppertCoinTypes();
+    } else if (this == KChainType.TRX) {
+      return [KCoinType.TRX];
+    }
+    return [];
+  }
 }
 
 extension CoinTypeString on KCoinType {

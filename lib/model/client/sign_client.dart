@@ -498,15 +498,18 @@ class SignTransactionClient {
     final contractAddress = EthereumAddress.fromHex(contract);
     final dc = DeployedContract(_erc721Abi, contractAddress);
     final function = dc.function('balanceOf');
-    return bytesToHex(function.encodeCall([EthereumAddress.fromHex(address)]));
+    return bytesToHex(function.encodeCall([EthereumAddress.fromHex(address)]),
+        include0x: true);
   }
 
   static String getEIP1155Balance(String address, String contract, String tid) {
     final contractAddress = EthereumAddress.fromHex(contract);
     final dc = DeployedContract(_erc1155Abi, contractAddress);
     final function = dc.function('balanceOf');
-    return bytesToHex(function
-        .encodeCall([EthereumAddress.fromHex(address), BigInt.parse(tid)]));
+    return bytesToHex(
+        function
+            .encodeCall([EthereumAddress.fromHex(address), BigInt.parse(tid)]),
+        include0x: true);
   }
 
   int? get ChainID => _chainId;

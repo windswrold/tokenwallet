@@ -158,21 +158,27 @@ class _WalletPageState extends State<WalletPage> {
               ],
             ),
           ),
-          GestureDetector(
-            behavior: HitTestBehavior.opaque,
-            onTap: _tapAssets,
-            child: Container(
-              width: 45,
-              height: 45,
-              child: Center(
-                child: LoadAssetsImage(
-                  "icons/icon_asset_add.png",
-                  width: 16,
-                  height: 16,
+          Consumer<CurrentChooseWalletState>(builder: (_, provider, child) {
+            return Visibility(
+              visible:
+                  provider.currentWallet?.chainType != KChainType.BTC.index,
+              child: GestureDetector(
+                behavior: HitTestBehavior.opaque,
+                onTap: _tapAssets,
+                child: Container(
+                  width: 45,
+                  height: 45,
+                  child: Center(
+                    child: LoadAssetsImage(
+                      "icons/icon_asset_add.png",
+                      width: 16,
+                      height: 16,
+                    ),
+                  ),
                 ),
               ),
-            ),
-          ),
+            );
+          }),
         ],
       ),
     );

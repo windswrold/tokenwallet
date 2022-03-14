@@ -54,18 +54,18 @@ class MCollectionTokens {
 
   static MCollectionTokens fromJson(Map<String, dynamic> json) =>
       MCollectionTokens(
-        owner: json['owner'] as String?,
-        contract: json['contract'] as String?,
-        token: json['token'] as String?,
-        coinType: json['coinType'] as String?,
-        state: json['state'] as int?,
-        decimals: json['decimals'] as int?,
-        digits: json['digits'] as int?,
-        iconPath: json["iconPath"] as String?,
-        chainType: json["chainType"] as int?,
-        kNetType: json["kNetType"] as int?,
-        tokenType: json["tokenType"] as int?,
-      );
+          owner: json['owner'] as String?,
+          contract: json['contract'] as String?,
+          token: json['token'] as String?,
+          coinType: json['coinType'] as String?,
+          state: json['state'] as int?,
+          decimals: json['decimals'] as int?,
+          digits: json['digits'] as int?,
+          iconPath: json["iconPath"] as String?,
+          chainType: json["chainType"] as int?,
+          kNetType: json["kNetType"] as int?,
+          tokenType: json["tokenType"] as int?,
+          tid: json["tid"] as String?);
 
   Map<String, dynamic> toJson() {
     return <String, dynamic>{
@@ -287,6 +287,7 @@ class MCollectionTokens {
       required String token,
       required int decimal}) async {
     int netType = SPManager.getNetType().index;
+    KCoinType type = coinType.geCoinType();
     MCollectionTokens model = MCollectionTokens();
     model.contract = contract;
     model.token = token;
@@ -295,8 +296,12 @@ class MCollectionTokens {
     model.owner = walletID;
     model.kNetType = netType;
     model.chainType = coinType;
-    model.coinType = coinType.geCoinType().coinTypeString();
-    model.tokenType = KTokenType.token.index;
+    model.coinType = type.coinTypeString();
+    if (type == KCoinType.TRX) {
+      model.tokenType = KTokenType.trc20.index;
+    } else {
+      model.tokenType = KTokenType.token.index;
+    }
     model.tokenID = model.createTokenID(walletID);
     model.digits = 4;
     MCollectionTokens.insertTokens([model]);
