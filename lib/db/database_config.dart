@@ -9,6 +9,10 @@ class DataBaseConfig {
     if (fbase != null) {
       return fbase;
     } else {
+      final migration1to2 = Migration(1, 2, (migdatabase) async {
+        await migdatabase
+            .execute('ALTER TABLE tokens_table  ADD COLUMN tid TEXT');
+      });
       final callback = Callback(
         onOpen: (openDB) async {
           LogUtil.v("数据库打开成功 " + openDB.path);
@@ -23,6 +27,7 @@ class DataBaseConfig {
       );
       fbase = await $FloorFlutterDatabase
           .databaseBuilder('tr_database.db')
+          .addMigrations([migration1to2])
           .addCallback(callback)
           .build();
 

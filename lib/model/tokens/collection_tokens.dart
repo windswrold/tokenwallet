@@ -31,24 +31,25 @@ class MCollectionTokens {
   int? kNetType; //0 是主网 非0是测试网
   int? index; //排序
   int? tokenType;
+  String? tid; //nft
 
-  MCollectionTokens({
-    this.tokenID,
-    this.owner,
-    this.contract,
-    this.token,
-    this.coinType,
-    this.state,
-    this.decimals,
-    this.price,
-    this.balance,
-    this.digits,
-    this.iconPath,
-    this.chainType,
-    this.index,
-    this.kNetType,
-    this.tokenType,
-  });
+  MCollectionTokens(
+      {this.tokenID,
+      this.owner,
+      this.contract,
+      this.token,
+      this.coinType,
+      this.state,
+      this.decimals,
+      this.price,
+      this.balance,
+      this.digits,
+      this.iconPath,
+      this.chainType,
+      this.index,
+      this.kNetType,
+      this.tokenType,
+      this.tid});
 
   static MCollectionTokens fromJson(Map<String, dynamic> json) =>
       MCollectionTokens(
@@ -77,7 +78,7 @@ class MCollectionTokens {
       'iconPath': this.iconPath,
       'chainType': this.chainType,
       'kNetType': this.kNetType,
-      'tokenType': this.tokenType
+      'tokenType': this.tokenType,
     };
   }
 

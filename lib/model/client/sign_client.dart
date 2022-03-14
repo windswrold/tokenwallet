@@ -124,20 +124,19 @@ class SignTransactionClient {
     }
   }
 
-  Future<String> _signEth({
-    required String prv,
-    required MCollectionTokens token,
-    required String amount,
-    required String to,
-    required bool isCustomfee,
-    required String? data,
-    required String? from,
-    required String? fee,
-    required int? gasPrice,
-    required int? maxGas,
-    required int? nonce,
-    required String? input,
-  }) async {
+  Future<String?> _signEth(
+      {required String prv,
+      required MCollectionTokens token,
+      required String amount,
+      required String to,
+      required bool isCustomfee,
+      required String? data,
+      required String? from,
+      required String? fee,
+      required int? gasPrice,
+      required int? maxGas,
+      required int? nonce,
+      required String? input}) async {
     final credentials = EthPrivateKey.fromHex(prv);
     Transaction? ts;
     if (token.isToken == false) {
@@ -156,30 +155,80 @@ class SignTransactionClient {
             : Uint8List.fromList(utf8.encode(data ?? "")),
       );
     } else {
-      final contractAddress = EthereumAddress.fromHex(token.contract!);
-      final contract = DeployedContract(_erc20Abi, contractAddress);
-      final transfer = contract.function('transfer');
-      ts = web3.Transaction.callContract(
-        contract: contract,
-        function: transfer,
-        parameters: [
-          EthereumAddress.fromHex(to),
-          amount.tokenInt(token.decimals!)
-        ],
-        gasPrice: gasPrice == null
-            ? null
-            : EtherAmount.fromUnitAndValue(EtherUnit.gwei, gasPrice),
-        maxGas: isCustomfee == true ? maxGas : null,
-        nonce: nonce ??
-            await client.getTransactionCount(credentials.address,
-                atBlock: const BlockNum.pending()),
-      );
+      EthereumAddress? contractAddress;
+      DeployedContract? contract;
+      ContractFunction? function;
+      if (token.tokenType == KTokenType.token.index) {
+        contractAddress = EthereumAddress.fromHex(token.contract!);
+        contract = DeployedContract(_erc20Abi, contractAddress);
+        function = contract.function('transfer');
+        ts = web3.Transaction.callContract(
+          contract: contract,
+          function: function,
+          parameters: [
+            EthereumAddress.fromHex(to),
+            amount.tokenInt(token.decimals!)
+          ],
+          gasPrice: gasPrice == null
+              ? null
+              : EtherAmount.fromUnitAndValue(EtherUnit.gwei, gasPrice),
+          maxGas: isCustomfee == true ? maxGas : null,
+          nonce: nonce ??
+              await client.getTransactionCount(credentials.address,
+                  atBlock: const BlockNum.pending()),
+        );
+      } else if (token.tokenType == KTokenType.eip721.index) {
+        contractAddress = EthereumAddress.fromHex(token.contract!);
+        contract = DeployedContract(_erc721Abi, contractAddress);
+        function = contract.function('safeTransferFrom');
+        ts = web3.Transaction.callContract(
+          contract: contract,
+          function: function,
+          parameters: [
+            EthereumAddress.fromHex(from!),
+            EthereumAddress.fromHex(to),
+            BigInt.parse(token.tid!),
+            Uint8List.fromList(utf8.encode(data ?? ""))
+          ],
+          gasPrice: gasPrice == null
+              ? null
+              : EtherAmount.fromUnitAndValue(EtherUnit.gwei, gasPrice),
+          maxGas: isCustomfee == true ? maxGas : null,
+          nonce: nonce ??
+              await client.getTransactionCount(credentials.address,
+                  atBlock: const BlockNum.pending()),
+        );
+      } else if (token.tokenType == KTokenType.eip1155.index) {
+        contractAddress = EthereumAddress.fromHex(token.contract!);
+        contract = DeployedContract(_erc1155Abi, contractAddress);
+        function = contract.function('safeTransferFrom');
+        ts = web3.Transaction.callContract(
+          contract: contract,
+          function: function,
+          parameters: [
+            EthereumAddress.fromHex(from!),
+            EthereumAddress.fromHex(to),
+            BigInt.parse(token.tid!),
+            BigInt.parse(amount),
+            Uint8List.fromList(utf8.encode(data ?? ""))
+          ],
+          gasPrice: gasPrice == null
+              ? null
+              : EtherAmount.fromUnitAndValue(EtherUnit.gwei, gasPrice),
+          maxGas: isCustomfee == true ? maxGas : null,
+          nonce: nonce ??
+              await client.getTransactionCount(credentials.address,
+                  atBlock: const BlockNum.pending()),
+        );
+      }
+
+      Uint8List signedTransaction = await client.signTransaction(
+          credentials, ts!,
+          chainId: _chainId, fetchChainIdFromNetworkId: false);
+      final signMessage = bytesToHex(signedTransaction, include0x: true);
+      final result = await client.sendRawTransaction(signedTransaction);
+      return result;
     }
-    Uint8List signedTransaction = await client.signTransaction(credentials, ts,
-        chainId: _chainId, fetchChainIdFromNetworkId: false);
-    final signMessage = bytesToHex(signedTransaction, include0x: true);
-    final result = await client.sendRawTransaction(signedTransaction);
-    return result;
   }
 
   Future<String?> _signBtc({
@@ -465,4 +514,23 @@ final ContractAbi _erc20Abi = ContractAbi('ERC20', [
       ],
       outputs: [FunctionParameter('', UintType(length: 256))],
       mutability: StateMutability.view)
+], []);
+
+final ContractAbi _erc721Abi = ContractAbi('ERC721', [
+  const ContractFunction('safeTransferFrom', [
+    FunctionParameter('from', AddressType()),
+    FunctionParameter('to', AddressType()),
+    FunctionParameter('id', UintType(length: 256)),
+    FunctionParameter('data', DynamicBytes()),
+  ]),
+], []);
+
+final ContractAbi _erc1155Abi = ContractAbi('ERC721', [
+  const ContractFunction('safeTransferFrom', [
+    FunctionParameter('_from', AddressType()),
+    FunctionParameter('_to', AddressType()),
+    FunctionParameter('_id', UintType(length: 256)),
+    FunctionParameter('_value', UintType(length: 256)),
+    FunctionParameter('_data', DynamicBytes()),
+  ]),
 ], []);

@@ -74,12 +74,7 @@ enum KTransState {
   pending, //l1转账打包中 l2 loading 然后l2
 }
 
-enum KTokenType {
-  native,
-  token,
-  trc10,
-  trc20,
-}
+enum KTokenType { native, token, trc10, trc20, eip721, eip1155 }
 
 enum KNetType { Mainnet, Testnet }
 
