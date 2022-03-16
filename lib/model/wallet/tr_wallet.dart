@@ -237,7 +237,7 @@ class TRWallet {
       }
       String? chainType;
       if (kChainType != KChainType.HD) {
-        chainType = kChainType.getTokenType();
+        chainType = kChainType.getNetTokenType();
       }
       List indexTokens = await WalletServices.gettokenList(1, 20,
           defaultFlag: true, chainType: chainType);

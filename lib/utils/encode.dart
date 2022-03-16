@@ -17,6 +17,10 @@ class TREncode {
     return kBytesToHex(base58CheckDecode(value));
   }
 
+  static String base58EncodeString(String value) {
+    return base58CheckEncode(hexToBytes(value));
+  }
+
   static String kBytesToHex(List<int> bytes, {bool include0x = false}) {
     return bytesToHex(bytes, include0x: include0x);
   }

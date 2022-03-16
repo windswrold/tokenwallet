@@ -9,6 +9,7 @@ import 'package:cstoken/utils/custom_toast.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 import '../../../public.dart';
+import 'custom_addnft.dart';
 import 'custom_addtokens.dart';
 
 class SearchAddToken extends StatefulWidget {
@@ -179,6 +180,10 @@ class _SearchAddTokenState extends State<SearchAddToken> {
                             onTap: () {
                               Routers.push(context, CustomAddTokens());
                             },
+                            // subBottomBtnTitle: "empaty_addnft".local(),
+                            // subOnTap: () {
+                            //   Routers.push(context, CustomAddNft());
+                            // },
                           )
                         : ListView.builder(
                             itemCount: _datas.length,

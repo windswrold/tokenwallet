@@ -1,8 +1,10 @@
 import 'dart:convert';
 
 import 'package:cstoken/model/node/node_model.dart';
+import 'package:cstoken/model/transrecord/trans_record.dart';
 import 'package:cstoken/net/request_method.dart';
 import 'package:cstoken/public.dart';
+import 'package:cstoken/utils/date_util.dart';
 import 'package:web3dart/crypto.dart';
 import 'package:web3dart/web3dart.dart';
 import 'package:http/http.dart';
@@ -48,6 +50,93 @@ class ChainServices {
     result = await RequestMethod.manager!.requestData(method, url,
         queryParameters: queryParameters, header: headers, data: data);
     return result;
+  }
+
+  // static Future<List<TransRecordModel>> requestTransRecord({
+  //   required int chainType,
+  //   required int kTransDataType,
+  //   required String from,
+  //   required int page,
+  //   required String symbol,
+  //   required String? contract,
+  //   required int decimal,
+  // }) async {}
+
+  static Future<List<TransRecordModel>> requestTRXTranslist({
+    required int kTransDataType,
+    required String from,
+    required int page,
+    required String symbol,
+    required String? contract,
+    required int decimal,
+  }) async {
+    List<TransRecordModel> datas = [];
+    String path = "";
+    Map<String, dynamic> params = {};
+    if (kTransDataType == KTransDataType.ts_other.index) {
+      return datas;
+    }
+    if (kTransDataType == KTransDataType.ts_in.index) {
+      params["only_to"] = true; //转入
+    }
+    if (kTransDataType == KTransDataType.ts_out.index) {
+      params["only_from"] = true;
+    }
+    if (contract != null && contract.isNotEmpty) {
+      path = "/v1/accounts/$from/transactions/trc20";
+      params["contract_address"] = contract;
+    } else {
+      path = "/v1/accounts/$from/transactions";
+    }
+
+    dynamic result = await requestTRXDatas(
+        path: path, method: Method.GET, queryParameters: params);
+    if (result != null && result is Map) {
+      List data = result["data"] ?? [];
+      bool success = result["success"];
+      if (success != true) {
+        return datas;
+      }
+      for (var item in data) {
+        String from = "";
+        String to = "";
+        String value = "";
+        String time = "";
+        String transaction_id = "";
+        if (contract != null && contract.isNotEmpty) {
+          //trc20
+          from = item["from"];
+          to = item["to"];
+          value = item["value"];
+          time = item["block_timestamp"].toString();
+          transaction_id = item["transaction_id"];
+        } else {
+          transaction_id = item["txID"];
+          Map raw_data = item["raw_data"];
+          time = raw_data["timestamp"];
+          List contractList = raw_data["contract"];
+          Map valueParams = contractList.first["parameter"]["value"];
+          value = valueParams["amount"].toString();
+          from = TREncode.base58EncodeString(valueParams["owner_address"]);
+          to = TREncode.base58EncodeString(valueParams["to_address"]);
+        }
+        TransRecordModel model = TransRecordModel();
+        model.fromAdd = from;
+        model.toAdd = to;
+        model.amount = BigInt.parse(value).tokenString(decimal);
+        model.txid = transaction_id;
+        model.date = DateUtil.formatDateMs(int.parse(time));
+        model.coinType = KCoinType.TRX.coinTypeString();
+        model.token = symbol;
+        model.transStatus = KTransState.success.index;
+        model.chainid = 0;
+        model.transType = KTransType.transfer.index;
+        datas.add(model);
+      }
+      TransRecordModel.insertTrxLists(datas);
+    }
+
+    return datas;
   }
 
   static Future requestTransactionReceipt(String tx, String url) async {

@@ -2,12 +2,19 @@ import '../public.dart';
 
 class EmptyDataPage extends StatelessWidget {
   const EmptyDataPage(
-      {Key? key, this.emptyTip, this.bottomBtnTitle, this.onTap})
+      {Key? key,
+      this.emptyTip,
+      this.bottomBtnTitle,
+      this.onTap,
+      this.subBottomBtnTitle,
+      this.subOnTap})
       : super(key: key);
 
   final String? emptyTip;
   final String? bottomBtnTitle;
   final VoidCallback? onTap;
+  final String? subBottomBtnTitle;
+  final VoidCallback? subOnTap;
 
   @override
   Widget build(BuildContext context) {
@@ -28,20 +35,37 @@ class EmptyDataPage extends StatelessWidget {
               ),
             ),
             Visibility(
-                visible: bottomBtnTitle != null,
-                child: NextButton(
-                    onPressed: () {
-                      if (onTap != null) {
-                        onTap!();
-                      }
-                    },
-                    bgc: ColorUtils.blueColor,
-                    margin: EdgeInsets.only(top: 20.width),
-                    textStyle: TextStyle(
-                      color: Colors.white,
-                      fontSize: 16.font,
-                    ),
-                    title: bottomBtnTitle ?? ""))
+              visible: bottomBtnTitle != null,
+              child: NextButton(
+                  onPressed: () {
+                    if (onTap != null) {
+                      onTap!();
+                    }
+                  },
+                  bgc: ColorUtils.blueColor,
+                  margin: EdgeInsets.only(top: 20.width),
+                  textStyle: TextStyle(
+                    color: Colors.white,
+                    fontSize: 16.font,
+                  ),
+                  title: bottomBtnTitle ?? ""),
+            ),
+            Visibility(
+              visible: subBottomBtnTitle != null,
+              child: NextButton(
+                  onPressed: () {
+                    if (subOnTap != null) {
+                      subOnTap!();
+                    }
+                  },
+                  bgc: ColorUtils.blueColor,
+                  margin: EdgeInsets.only(top: 20.width),
+                  textStyle: TextStyle(
+                    color: Colors.white,
+                    fontSize: 16.font,
+                  ),
+                  title: subBottomBtnTitle ?? ""),
+            ),
           ],
         ));
   }

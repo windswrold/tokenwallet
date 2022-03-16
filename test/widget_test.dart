@@ -76,8 +76,11 @@ void main() {
 
     String value = "TP6BrDAV6Zz5U7MytoBJHimd7dBSP4RQ8Q";
     value = TREncode.base58HexString(value);
+    print(value);
+    value = base58CheckEncode(
+        hexToBytes("418feb95b65129f0101b6b5d1b6cd01d3ff72fb9d7"));
+    print(value);
 
-    // print(value.padLeft(64, "0"));
     final contractAddress =
         EthereumAddress.fromHex("0x88b48f654c30e99bc2e4a1559b4dcf1ad93fa656");
     final contract = DeployedContract(_erc1155Abi, contractAddress);
