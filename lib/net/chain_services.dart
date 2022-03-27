@@ -139,6 +139,62 @@ class ChainServices {
     return datas;
   }
 
+  static Future<List<TransRecordModel>> requestBTCTranslist({
+    required int kTransDataType,
+    required String from,
+    required int page,
+    required String symbol,
+    required String? contract,
+    required int decimal,
+  }) async {
+    List<TransRecordModel> datas = [];
+    String path = "/addrs/$from/full";
+    int limit = 20;
+    // int before = before * page;
+    // int after = before * page + limit;
+
+    Map<String, dynamic> params = {};
+    if (kTransDataType == KTransDataType.ts_other.index) {
+      return datas;
+    }
+
+    dynamic result = await requestBTCDatas(
+        path: path, method: Method.GET, queryParameters: params);
+    if (result != null && result is Map) {
+      List data = result["txs"] ?? [];
+      for (var item in data) {
+        String from = "";
+        String to = "";
+        String value = "";
+        String time = "";
+        String transaction_id = "";
+
+        transaction_id = item["hash"];
+        time = item["received"];
+
+        // value = valueParams["amount"].toString();
+        // from = TREncode.base58EncodeString(valueParams["owner_address"]);
+        // to = TREncode.base58EncodeString(valueParams["to_address"]);
+
+        TransRecordModel model = TransRecordModel();
+        model.fromAdd = from;
+        model.toAdd = to;
+        model.amount = BigInt.parse(value).tokenString(decimal);
+        model.txid = transaction_id;
+        model.date = DateUtil.formatDateMs(int.parse(time));
+        model.coinType = KCoinType.TRX.coinTypeString();
+        model.token = symbol;
+        model.transStatus = KTransState.success.index;
+        model.chainid = 0;
+        model.transType = KTransType.transfer.index;
+        datas.add(model);
+      }
+      TransRecordModel.insertTrxLists(datas);
+    }
+
+    return datas;
+  }
+
   static Future requestTransactionReceipt(String tx, String url) async {
     String method = "eth_getTransactionReceipt";
     Map params = {
