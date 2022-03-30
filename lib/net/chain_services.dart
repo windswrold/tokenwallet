@@ -26,14 +26,35 @@ class ChainServices {
       required Method method,
       dynamic data,
       Map<String, dynamic>? queryParameters}) async {
-    String url =
+    String host =
         NodeModel.queryNodeByChainType(KCoinType.BTC.index).content ?? "";
-    dynamic result;
-    url += path;
-    queryParameters ??= {};
-    queryParameters["token"] = "51db957650794388ae078d96f331a3e8";
-    result = await RequestMethod.manager!
+    String url = RequestURLS.getHost();
+    if (method == Method.GET) {
+      url += RequestURLS.blockcypherGet;
+      queryParameters ??= {};
+      queryParameters["url"] = host + path + queryParameters.url();
+      queryParameters["time"] = DateUtil.getNowDateMs();
+      queryParameters["secret"] = "";
+    } else {
+      url += RequestURLS.blockcypherPost;
+      String content = JsonUtil.encodeObj(data) ?? "";
+      queryParameters ??= {};
+      queryParameters["url"] =
+          host + path + (queryParameters != null ? queryParameters.url() : "");
+      queryParameters["time"] = DateUtil.getNowDateMs();
+      queryParameters["secret"] = "";
+      queryParameters["content"] = content;
+    }
+
+    dynamic result = await RequestMethod.manager!
         .requestData(method, url, queryParameters: queryParameters, data: data);
+    if (result != null && result is Map) {
+      int code = result["code"];
+      if (code == 200) {
+        String object = result["result"];
+        return JsonUtil.getObj(object);
+      }
+    }
     return result;
   }
 
@@ -51,7 +72,6 @@ class ChainServices {
       queryParameters["url"] = host + path + queryParameters.url();
       queryParameters["time"] = DateUtil.getNowDateMs();
       queryParameters["secret"] = "";
-      queryParameters["plat"] = isIOS ? "ios" : "adr";
     } else {
       url += RequestURLS.trxPost;
       String content = JsonUtil.encodeObj(data) ?? "";
@@ -60,7 +80,6 @@ class ChainServices {
           host + path + (queryParameters != null ? queryParameters.url() : "");
       queryParameters["time"] = DateUtil.getNowDateMs();
       queryParameters["secret"] = "";
-      queryParameters["plat"] = isIOS ? "ios" : "adr";
       queryParameters["content"] = content;
     }
     dynamic result = await RequestMethod.manager!

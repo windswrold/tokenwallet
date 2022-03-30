@@ -59,7 +59,11 @@ class RequestURLS {
   ///chainType
   static String getgasPrice = "/app/wallet/gasPrice";
 
-  static String trxGet = "/app/trx/secret/trxGet";
+  static String trxGet = "/app/secret/trxGet";
 
-  static String trxPost = "/app/trx/secret/trxPost";
+  static String trxPost = "/app/secret/trxPost";
+
+  static String blockcypherGet = "/app/secret/blockcypherGet";
+
+  static String blockcypherPost = "/app/secret/blockcypherPost";
 }
