@@ -29,16 +29,7 @@ class _ImportsWalletState extends State<ImportsWallet> {
     // TODO: implement initState
     super.initState();
 
-    if (inProduction == false) {
-      // _kprovier.contentEC!.text =
-      //     "40730f5ddc6b492688ce3897b9ff54e582f6ad8243a90ece21b060a46db46b44";
-      // _kprovier.contentEC!.text =
-      //     "f335fb8d70f27351a2a20541464f87057112e3245efa8c119fc7a08742622044";
-      _kprovier.contentEC!.text =
-        "569794babb7de76447493b71b4e52e54b0c69d55e8c9ab7b9c806033692e7189";
-      // contentEC.text =
-      //     "0db163591450cd67f3febe856460460e99ef5bb70c6a98cb2a0bcb873d0526be";
-    }
+    if (inProduction == false) {}
   }
 
   void _onTap(int index) {
