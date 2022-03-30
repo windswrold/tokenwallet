@@ -285,18 +285,18 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  Widget _nftHot() {
+  Widget _dappHot() {
     return Container(
       alignment: Alignment.center,
       padding: EdgeInsets.symmetric(horizontal: 16.width),
-      margin: EdgeInsets.only(bottom: 50.w),
+      margin: EdgeInsets.only(bottom: 20.w),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
             "homepage_hot".local(),
             style: TextStyle(
-              fontSize: 16.font,
+              fontSize: 15.font,
               fontWeight: FontWeightUtils.semiBold,
               color: ColorUtils.fromHex("#FF000000"),
             ),
@@ -390,6 +390,115 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
+  Widget _nftHot() {
+    return Container(
+      alignment: Alignment.center,
+      padding: EdgeInsets.symmetric(horizontal: 16.width),
+      margin: EdgeInsets.only(bottom: 20.w),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            "热门藏品".local(),
+            style: TextStyle(
+              fontSize: 15.font,
+              fontWeight: FontWeightUtils.semiBold,
+              color: ColorUtils.fromHex("#363636"),
+            ),
+          ),
+          Container(
+            height: 225.w,
+            margin: EdgeInsets.only(top: 15.width),
+            child: ListView.builder(
+              itemCount: _hotDatas.length,
+              scrollDirection: Axis.horizontal,
+              itemBuilder: (BuildContext context, int index) {
+                Map result = _hotDatas[index];
+                String logoUrl = result["logoUrl"] ?? "";
+                String title = result["title"] ?? "";
+                String introduction = result["introduction"] ?? "";
+                String jumpLiks = result["jumpLiks"] ?? "";
+                String chainType = result["chainType"] ?? "";
+                return GestureDetector(
+                  behavior: HitTestBehavior.opaque,
+                  onTap: () {
+                    DAppRecordsDBModel model = DAppRecordsDBModel();
+                    model.url = jumpLiks;
+                    model.chainType = chainType;
+                    model.imageUrl = logoUrl;
+                    model.name = title;
+                    model.description = introduction;
+                    Provider.of<CurrentChooseWalletState>(context,
+                            listen: false)
+                        .bannerTap(context, model);
+                  },
+                  child: Container(
+                    width: 155.width,
+                    height: 225.w,
+                    margin: EdgeInsets.only(right: 20.width),
+                    child: Stack(
+                      alignment: AlignmentDirectional.topCenter,
+                      children: [
+                        Container(
+                          color: Colors.white,
+                          margin: EdgeInsets.only(top: 40.w),
+                          alignment: Alignment.center,
+                        ),
+                        Positioned(
+                          top: 0,
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              ClipRRect(
+                                borderRadius: BorderRadius.circular(16),
+                                child: CachedNetworkImage(
+                                  imageUrl: logoUrl,
+                                  width: 125.width,
+                                  height: 125.width,
+                                ),
+                              ),
+                              Container(
+                                width: 180.width,
+                                child: Text(
+                                  title,
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: TextStyle(
+                                    fontSize: 18.font,
+                                    fontWeight: FontWeightUtils.semiBold,
+                                    color: ColorUtils.fromHex("#FF000000"),
+                                  ),
+                                ),
+                              ),
+                              Container(
+                                width: 180.width,
+                                child: Text(
+                                  introduction,
+                                  maxLines: 2,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: TextStyle(
+                                    fontSize: 12.font,
+                                    fontWeight: FontWeightUtils.semiBold,
+                                    color: ColorUtils.fromHex("#FF000000"),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                );
+              },
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     EasyLocalization.of(context);
@@ -417,6 +526,7 @@ class _HomePageState extends State<HomePage> {
                     HomeBanner(
                       datas: _banners,
                     ),
+                    _dappHot(),
                     _nftHot(),
                   ],
                 ),

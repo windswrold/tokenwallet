@@ -361,6 +361,17 @@ extension Numextension on num {
   }
 }
 
+extension UrlPatch on Map {
+  String url() {
+    String a = '?';
+    forEach((key, value) {
+      a += key + '=' + value.toString() + '&';
+    });
+    a = a.replaceRange(a.length - 1, a.length, '');
+    return a;
+  }
+}
+
 class FontWeightUtils {
   ///400
   static const FontWeight regular = FontWeight.w400;

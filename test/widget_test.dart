@@ -10,6 +10,7 @@ import 'dart:math';
 
 import 'package:cstoken/model/mnemonic/mnemonic.dart';
 import 'package:cstoken/public.dart';
+import 'package:cstoken/utils/date_util.dart';
 import 'package:cstoken/utils/encode.dart';
 import 'package:encrypt/encrypt.dart';
 import 'package:cstoken/main.dart';
@@ -43,6 +44,8 @@ void main() {
   });
 
   test("hdwallet", () async {
+    int ms = DateUtil.getNowDateMs();
+    print(ms);
     // String input = "0xB74693f2DAbdb84570755E536e016d3CBDEB0810";
     // String pwd = "222222";
     // final iv = IV.fromLength(0);

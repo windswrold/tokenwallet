@@ -140,7 +140,7 @@ class TransRecordModel {
       if (result != null &&
           result is Map &&
           result.keys.contains("blockNumber")) {
-        BigInt feeBig = BigInt.from(result["fee"]);
+        BigInt feeBig = BigInt.from(result["fee"] ?? 0);
         BigInt blockNumber = BigInt.from(result["blockNumber"]);
         blockHeight = blockNumber.toInt();
         fee = feeBig.tokenString(6);

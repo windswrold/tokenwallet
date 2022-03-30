@@ -3,8 +3,10 @@ import 'dart:convert';
 import 'package:cstoken/model/node/node_model.dart';
 import 'package:cstoken/model/transrecord/trans_record.dart';
 import 'package:cstoken/net/request_method.dart';
+import 'package:cstoken/net/url.dart';
 import 'package:cstoken/public.dart';
 import 'package:cstoken/utils/date_util.dart';
+import 'package:cstoken/utils/json_util.dart';
 import 'package:web3dart/crypto.dart';
 import 'package:web3dart/web3dart.dart';
 import 'package:http/http.dart';
@@ -40,16 +42,37 @@ class ChainServices {
       required Method method,
       Map<String, dynamic>? queryParameters,
       dynamic data}) async {
-    String url =
+    String host =
         NodeModel.queryNodeByChainType(KCoinType.TRX.index).content ?? "";
-    dynamic result;
-    url += path;
-    Map<String, dynamic> headers = {
-      "token": "289637ce-c32c-4b76-9459-06f55cc2a648" //
-    };
-    result = await RequestMethod.manager!.requestData(method, url,
-        queryParameters: queryParameters, header: headers, data: data);
-    return result;
+    String url = RequestURLS.getHost();
+    if (method == Method.GET) {
+      url += RequestURLS.trxGet;
+      queryParameters ??= {};
+      queryParameters["url"] = host + path + queryParameters.url();
+      queryParameters["time"] = DateUtil.getNowDateMs();
+      queryParameters["secret"] = "";
+      queryParameters["plat"] = isIOS ? "ios" : "adr";
+    } else {
+      url += RequestURLS.trxPost;
+      String content = JsonUtil.encodeObj(data) ?? "";
+      queryParameters ??= {};
+      queryParameters["url"] =
+          host + path + (queryParameters != null ? queryParameters.url() : "");
+      queryParameters["time"] = DateUtil.getNowDateMs();
+      queryParameters["secret"] = "";
+      queryParameters["plat"] = isIOS ? "ios" : "adr";
+      queryParameters["content"] = content;
+    }
+    dynamic result = await RequestMethod.manager!
+        .requestData(method, url, queryParameters: queryParameters, data: data);
+    if (result != null && result is Map) {
+      int code = result["code"];
+      if (code == 200) {
+        String object = result["result"];
+        return JsonUtil.getObj(object);
+      }
+    }
+    return null;
   }
 
   // static Future<List<TransRecordModel>> requestTransRecord({
