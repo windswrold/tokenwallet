@@ -7,6 +7,7 @@ import 'package:cstoken/model/dapps_record/dapps_record.dart';
 import 'package:cstoken/model/wallet/tr_wallet_info.dart';
 import 'package:cstoken/net/wallet_services.dart';
 import 'package:cstoken/pages/browser/dapp_browser.dart';
+import 'package:cstoken/pages/home/home_hotnft.dart';
 import 'package:cstoken/pages/mine/mine_message.dart';
 import 'package:cstoken/utils/date_util.dart';
 import 'package:easy_localization/easy_localization.dart';
@@ -398,23 +399,44 @@ class _HomePageState extends State<HomePage> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            "热门藏品".local(),
-            style: TextStyle(
-              fontSize: 15.font,
-              fontWeight: FontWeightUtils.semiBold,
-              color: ColorUtils.fromHex("#363636"),
-            ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                "homepage_nfthot".local(),
+                style: TextStyle(
+                  fontSize: 15.font,
+                  fontWeight: FontWeightUtils.semiBold,
+                  color: ColorUtils.fromHex("#363636"),
+                ),
+              ),
+              GestureDetector(
+                behavior: HitTestBehavior.opaque,
+                onTap: () {
+                  Routers.push(context, HomeHotNft());
+                },
+                child: Text(
+                  "homepage_more".local(),
+                  style: TextStyle(
+                    fontSize: 12.font,
+                    fontWeight: FontWeightUtils.regular,
+                    color: ColorUtils.fromHex("#000000").withOpacity(0.8),
+                  ),
+                ),
+              ),
+            ],
           ),
           Container(
             height: 225.w,
-            margin: EdgeInsets.only(top: 15.width),
+            margin: EdgeInsets.only(top: 12.width),
             child: ListView.builder(
               itemCount: _hotDatas.length,
               scrollDirection: Axis.horizontal,
               itemBuilder: (BuildContext context, int index) {
                 Map result = _hotDatas[index];
                 String logoUrl = result["logoUrl"] ?? "";
+                logoUrl =
+                    "https://gimg2.baidu.com/image_search/src=http%3A%2F%2F5b0988e595225.cdn.sohucs.com%2Fq_70%2Cc_zoom%2Cw_640%2Fimages%2F20191213%2Ffdd17e15f2e643628bb13cd1c464b61d.gif&refer=http%3A%2F%2F5b0988e595225.cdn.sohucs.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=auto?sec=1651244300&t=395b4af52b0109e46869cfd63b299220";
                 String title = result["title"] ?? "";
                 String introduction = result["introduction"] ?? "";
                 String jumpLiks = result["jumpLiks"] ?? "";
@@ -440,9 +462,12 @@ class _HomePageState extends State<HomePage> {
                       alignment: AlignmentDirectional.topCenter,
                       children: [
                         Container(
-                          color: Colors.white,
                           margin: EdgeInsets.only(top: 40.w),
                           alignment: Alignment.center,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(12),
+                            color: Colors.white,
+                          ),
                         ),
                         Positioned(
                           top: 0,
@@ -456,31 +481,38 @@ class _HomePageState extends State<HomePage> {
                                   imageUrl: logoUrl,
                                   width: 125.width,
                                   height: 125.width,
+                                  fit: BoxFit.cover,
                                 ),
                               ),
                               Container(
-                                width: 180.width,
+                                margin: EdgeInsets.only(top: 8.w),
+                                width: 130.width,
+                                alignment: Alignment.center,
                                 child: Text(
                                   title,
-                                  maxLines: 1,
+                                  maxLines: 2,
                                   overflow: TextOverflow.ellipsis,
                                   style: TextStyle(
-                                    fontSize: 18.font,
+                                    fontSize: 15.font,
                                     fontWeight: FontWeightUtils.semiBold,
                                     color: ColorUtils.fromHex("#FF000000"),
                                   ),
                                 ),
                               ),
                               Container(
-                                width: 180.width,
+                                margin: EdgeInsets.only(top: 8.w),
+                                width: 130.width,
+                                alignment: Alignment.center,
                                 child: Text(
                                   introduction,
                                   maxLines: 2,
                                   overflow: TextOverflow.ellipsis,
+                                  textAlign: TextAlign.center,
                                   style: TextStyle(
-                                    fontSize: 12.font,
-                                    fontWeight: FontWeightUtils.semiBold,
-                                    color: ColorUtils.fromHex("#FF000000"),
+                                    fontSize: 11.font,
+                                    fontWeight: FontWeightUtils.regular,
+                                    color: ColorUtils.fromHex("#FF000000")
+                                        .withOpacity(0.6),
                                   ),
                                 ),
                               ),

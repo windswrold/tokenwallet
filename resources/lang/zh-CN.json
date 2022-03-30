@@ -225,5 +225,8 @@
     "paymenttip_sameaddress": "在Tron网络下，你不能向自己转账",
     "empaty_addnft": "添加NFT",
     "customtokens_nftcontract": "NFT地址",
-    "customtokens_nftid": "ID"
+    "customtokens_nftid": "ID",
+    "homepage_nfthot": "热门藏品",
+    "homepage_more": "更多 >",
+    "homepage_latest": "最新锻造"
 }
