@@ -226,7 +226,7 @@ class WalletServices {
       params["defaultFlag"] = defaultFlag == true ? "1" : "0";
     }
     if (chainType != null) {
-      params["chainType"] = chainType.toLowerCase();
+      params["chainSeries"] = chainType.toLowerCase();
     }
 
     dynamic result = await RequestMethod.manager!
@@ -242,7 +242,7 @@ class WalletServices {
     final url = RequestURLS.getHost() + RequestURLS.getpopularToken;
     Map<String, dynamic>? params;
     if (chainType != null) {
-      params ??= {"chainType": chainType.toLowerCase()};
+      params ??= {"chainSeries": chainType.toLowerCase()};
     }
     dynamic result = await RequestMethod.manager!
         .requestData(Method.GET, url, queryParameters: params);

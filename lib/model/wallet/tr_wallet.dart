@@ -213,9 +213,6 @@ class TRWallet {
       // TRWallet? chooseTR = await TRWallet.queryChooseWallet();
       TRWallet.insertWallet(trWallet);
       TRWallet.updateWalletChoose(trWallet);
-      // if (chooseTR == null) {
-      //   trWallet.isChoose = true;
-      // } else {}
       //开始生成地址信息
       List<HDWallet> _hdwallets = await HDWallet.getHDWallet(
           content: content,

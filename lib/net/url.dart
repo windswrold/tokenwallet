@@ -66,4 +66,6 @@ class RequestURLS {
   static String blockcypherGet = "/app/secret/blockcypherGet";
 
   static String blockcypherPost = "/app/secret/blockcypherPost";
+
+  static String ethGet = "/app/secret/ethGet";
 }
