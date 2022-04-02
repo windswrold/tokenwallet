@@ -284,4 +284,21 @@ class WalletServices {
       return data;
     }
   }
+
+  static Future<List> getNftList(
+      {int pageNum = 1, bool popularFlag = false}) async {
+    final url = RequestURLS.getHost() + RequestURLS.nftList;
+    Map<String, dynamic>? params = {};
+    params["pageNum"] = pageNum.toString();
+    params["pageSize"] = "10";
+    params["popularFlag"] = popularFlag == false ? "0" : "1";
+    params["defaultFlag"] = "1";
+    dynamic result = await RequestMethod.manager!
+        .requestData(Method.GET, url, queryParameters: params);
+    if (result != null && result["code"] == 200) {
+      List data = result["result"]["page"]["list"] ?? [];
+      return data;
+    }
+    return [];
+  }
 }

@@ -52,6 +52,8 @@ class _TransferListContentState extends State<TransferListContent>
   }
 
   void _initData() async {
+
+    
     List<TransRecordModel> datas = await TransRecordModel.queryTrxList(
         trWalletInfo?.walletAaddress ?? "",
         tokens?.token ?? "",

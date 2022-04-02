@@ -30,6 +30,7 @@ class _HomePageState extends State<HomePage> {
   List _apps = [];
   List _banners = [];
   List _hotDatas = [];
+  List _hotNFTS = [];
   @override
   void initState() {
     super.initState();
@@ -83,6 +84,7 @@ class _HomePageState extends State<HomePage> {
     _initApp();
     _initBanner();
     _initHotDatas();
+    _initHotNFTS();
     Provider.of<CurrentChooseWalletState>(context, listen: false)
         .initNFTIndex();
     Future.delayed(Duration(seconds: 3)).then((value) => {
@@ -109,6 +111,13 @@ class _HomePageState extends State<HomePage> {
     List apps = await WalletServices.getindexpopularItem();
     setState(() {
       _hotDatas = apps;
+    });
+  }
+
+  _initHotNFTS() async {
+    List apps = await WalletServices.getNftList(popularFlag: true);
+    setState(() {
+      _hotNFTS = apps;
     });
   }
 
@@ -430,30 +439,15 @@ class _HomePageState extends State<HomePage> {
             height: 225.w,
             margin: EdgeInsets.only(top: 12.width),
             child: ListView.builder(
-              itemCount: _hotDatas.length,
+              itemCount: _hotNFTS.length,
               scrollDirection: Axis.horizontal,
               itemBuilder: (BuildContext context, int index) {
-                Map result = _hotDatas[index];
-                String logoUrl = result["logoUrl"] ?? "";
-                logoUrl =
-                    "https://gimg2.baidu.com/image_search/src=http%3A%2F%2F5b0988e595225.cdn.sohucs.com%2Fq_70%2Cc_zoom%2Cw_640%2Fimages%2F20191213%2Ffdd17e15f2e643628bb13cd1c464b61d.gif&refer=http%3A%2F%2F5b0988e595225.cdn.sohucs.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=auto?sec=1651244300&t=395b4af52b0109e46869cfd63b299220";
-                String title = result["title"] ?? "";
-                String introduction = result["introduction"] ?? "";
-                String jumpLiks = result["jumpLiks"] ?? "";
-                String chainType = result["chainType"] ?? "";
+                Map result = _hotNFTS[index];
+                String logoUrl = result["icon_url"] ?? "";
+                String title = result["contract_name"] ?? "";
                 return GestureDetector(
                   behavior: HitTestBehavior.opaque,
-                  onTap: () {
-                    DAppRecordsDBModel model = DAppRecordsDBModel();
-                    model.url = jumpLiks;
-                    model.chainType = chainType;
-                    model.imageUrl = logoUrl;
-                    model.name = title;
-                    model.description = introduction;
-                    Provider.of<CurrentChooseWalletState>(context,
-                            listen: false)
-                        .bannerTap(context, model);
-                  },
+                  onTap: () {},
                   child: Container(
                     width: 155.width,
                     height: 225.w,
@@ -504,7 +498,7 @@ class _HomePageState extends State<HomePage> {
                                 width: 130.width,
                                 alignment: Alignment.center,
                                 child: Text(
-                                  introduction,
+                                  "",
                                   maxLines: 2,
                                   overflow: TextOverflow.ellipsis,
                                   textAlign: TextAlign.center,

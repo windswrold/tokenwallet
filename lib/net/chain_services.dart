@@ -185,9 +185,6 @@ class ChainServices {
     required int kTransDataType,
     required String from,
     required int page,
-    required String symbol,
-    required String? contract,
-    required int decimal,
   }) async {
     List<TransRecordModel> datas = [];
     String path = "/addrs/$from/full";
@@ -218,18 +215,18 @@ class ChainServices {
         // from = TREncode.base58EncodeString(valueParams["owner_address"]);
         // to = TREncode.base58EncodeString(valueParams["to_address"]);
 
-        TransRecordModel model = TransRecordModel();
-        model.fromAdd = from;
-        model.toAdd = to;
-        model.amount = BigInt.parse(value).tokenString(decimal);
-        model.txid = transaction_id;
-        model.date = DateUtil.formatDateMs(int.parse(time));
-        model.coinType = KCoinType.TRX.coinTypeString();
-        model.token = symbol;
-        model.transStatus = KTransState.success.index;
-        model.chainid = 0;
-        model.transType = KTransType.transfer.index;
-        datas.add(model);
+        // TransRecordModel model = TransRecordModel();
+        // model.fromAdd = from;
+        // model.toAdd = to;
+        // model.amount = BigInt.parse(value).tokenString(decimal);
+        // model.txid = transaction_id;
+        // model.date = DateUtil.formatDateMs(int.parse(time));
+        // model.coinType = KCoinType.TRX.coinTypeString();
+        // model.token = symbol;
+        // model.transStatus = KTransState.success.index;
+        // model.chainid = 0;
+        // model.transType = KTransType.transfer.index;
+        // datas.add(model);
       }
       TransRecordModel.insertTrxLists(datas);
     }

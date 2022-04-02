@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cstoken/component/custom_refresher.dart';
+import 'package:cstoken/net/wallet_services.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 import '../../public.dart';
@@ -14,12 +15,33 @@ class HomeHotNft extends StatefulWidget {
 class _HomeHotNftState extends State<HomeHotNft> {
   RefreshController _controller = RefreshController();
 
-  Widget _buildCell() {
-    String logoUrl =
-        "https://gimg2.baidu.com/image_search/src=http%3A%2F%2F5b0988e595225.cdn.sohucs.com%2Fq_70%2Cc_zoom%2Cw_640%2Fimages%2F20191213%2Ffdd17e15f2e643628bb13cd1c464b61d.gif&refer=http%3A%2F%2F5b0988e595225.cdn.sohucs.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=auto?sec=1651244300&t=395b4af52b0109e46869cfd63b299220";
-    String title = "ContainerContainerContainerContainer";
-    String from = "opensea";
-    String desc = "ContainerContainerContainerContainer";
+  List _hotNFTS = [];
+  int _currentPage = 1;
+
+  @override
+  void initState() {
+    super.initState();
+    _initHotNFTS(_currentPage);
+  }
+
+  void _initHotNFTS(int page) async {
+    _currentPage = page;
+    List apps = await WalletServices.getNftList(pageNum: _currentPage);
+    setState(() {
+      if (page == 1) {
+        _hotNFTS.clear();
+      }
+      _hotNFTS.addAll(apps);
+    });
+    _controller.refreshCompleted();
+    _controller.loadComplete();
+  }
+
+  Widget _buildCell(Map model) {
+    String logoUrl = model["icon_url"] ?? "";
+    String title = model["contract_name"] ?? "";
+    String from = model["from_source"] ?? "";
+    String desc = model["nft_desc"] ?? "";
 
     return Container(
       height: 152.width,
@@ -59,23 +81,26 @@ class _HomeHotNftState extends State<HomeHotNft> {
                   ),
                 ),
               ),
-              Container(
-                padding: EdgeInsets.symmetric(horizontal: 4.width),
-                margin: EdgeInsets.only(top: 8.width),
-                height: 20.width,
-                alignment: Alignment.center,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(4),
-                  color: ColorUtils.blueBGColor,
-                ),
-                child: Text(
-                  "title",
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  style: TextStyle(
-                    color: ColorUtils.blueColor,
-                    fontSize: 12.font,
-                    fontWeight: FontWeightUtils.medium,
+              Visibility(
+                visible: from.isNotEmpty,
+                child: Container(
+                  padding: EdgeInsets.symmetric(horizontal: 4.width),
+                  margin: EdgeInsets.only(top: 8.width),
+                  height: 20.width,
+                  alignment: Alignment.center,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(4),
+                    color: ColorUtils.blueBGColor,
+                  ),
+                  child: Text(
+                    from,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(
+                      color: ColorUtils.blueColor,
+                      fontSize: 12.font,
+                      fontWeight: FontWeightUtils.medium,
+                    ),
                   ),
                 ),
               ),
@@ -107,40 +132,47 @@ class _HomeHotNftState extends State<HomeHotNft> {
       title: CustomPageView.getTitle(title: "homepage_nfthot".local()),
       child: Column(
         children: [
-          Container(
-            height: 50.width,
-            padding: EdgeInsets.symmetric(horizontal: 16.width),
-            decoration: BoxDecoration(
-                border: Border(
-                    bottom: BorderSide(
-              color: ColorUtils.fromHex("#B2B2B2"),
-              width: 0.5,
-            ))),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Container(
-                  child: Text(
-                    "homepage_latest".local(),
-                    style: TextStyle(
-                      color: ColorUtils.fromHex("#000000"),
-                      fontSize: 16.font,
-                      fontWeight: FontWeightUtils.semiBold,
-                    ),
-                  ),
-                ),
-                CustomPageView.getCustomIcon("icons/icon_three.png", () {})
-              ],
-            ),
-          ),
+          // Container(
+          //   height: 50.width,
+          //   padding: EdgeInsets.symmetric(horizontal: 16.width),
+          //   decoration: BoxDecoration(
+          //       border: Border(
+          //           bottom: BorderSide(
+          //     color: ColorUtils.fromHex("#B2B2B2"),
+          //     width: 0.5,
+          //   ))),
+          //   child: Row(
+          //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          //     children: [
+          //       Container(
+          //         child: Text(
+          //           "homepage_latest".local(),
+          //           style: TextStyle(
+          //             color: ColorUtils.fromHex("#000000"),
+          //             fontSize: 16.font,
+          //             fontWeight: FontWeightUtils.semiBold,
+          //           ),
+          //         ),
+          //       ),
+          //       CustomPageView.getCustomIcon("icons/icon_three.png", () {})
+          //     ],
+          //   ),
+          // ),
           Expanded(
               child: Padding(
                   padding: EdgeInsets.symmetric(horizontal: 16.width),
                   child: CustomRefresher(
+                      onRefresh: () {
+                        _initHotNFTS(1);
+                      },
+                      onLoading: () {
+                        _initHotNFTS(_currentPage + 1);
+                      },
                       child: ListView.builder(
-                        itemCount: 10,
+                        itemCount: _hotNFTS.length,
                         itemBuilder: (BuildContext context, int index) {
-                          return _buildCell();
+                          Map value = _hotNFTS[index];
+                          return _buildCell(value);
                         },
                       ),
                       refreshController: _controller)))

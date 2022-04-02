@@ -68,4 +68,8 @@ class RequestURLS {
   static String blockcypherPost = "/app/secret/blockcypherPost";
 
   static String ethGet = "/app/secret/ethGet";
+
+  static String nftList = "/app/nft/nftList";
+
+  static String userNftList = "/app/nft/userNftList";
 }
