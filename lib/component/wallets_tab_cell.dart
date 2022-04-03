@@ -14,17 +14,18 @@ class WalletsTabList extends StatelessWidget {
       padding: EdgeInsets.symmetric(horizontal: 16.width),
       child: Consumer<CurrentChooseWalletState>(
         builder: (_, provider, child) {
-          return provider.tokens.length == 0
+          int homeTokenType = provider.homeTokenType;
+          List<MCollectionTokens> datas =
+              homeTokenType == 0 ? provider.tokens : provider.nftTokens;
+          return datas.isEmpty
               ? EmptyDataPage()
               : ListView.builder(
-                  itemCount: provider.tokens.length,
+                  itemCount: datas.length,
                   itemBuilder: (BuildContext context, int index) {
                     final currencySymbolStr = provider.currencySymbolStr;
-
-                    MCollectionTokens collectToken = provider.tokens[index];
+                    MCollectionTokens collectToken = datas[index];
                     String imgname = collectToken.iconPath ?? "";
                     String token = collectToken.token ?? "";
-
                     String tokenPrice =
                         "≈$currencySymbolStr" + collectToken.priceString;
                     String balance =

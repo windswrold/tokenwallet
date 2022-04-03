@@ -1,8 +1,10 @@
 import 'package:cstoken/model/news/news_model.dart';
 import 'package:cstoken/model/token_price/tokenprice.dart';
+import 'package:cstoken/model/tokens/collection_tokens.dart';
 import 'package:cstoken/net/request_method.dart';
 import 'package:cstoken/net/url.dart';
 import 'package:cstoken/public.dart';
+import 'package:decimal/decimal.dart';
 
 class WalletServices {
   static Future<List> getdappbannerInfo() async {
@@ -298,6 +300,40 @@ class WalletServices {
     if (result != null && result["code"] == 200) {
       List data = result["result"]["page"]["list"] ?? [];
       return data;
+    }
+    return [];
+  }
+
+  static Future<List<MCollectionTokens>> getUserNftList(
+      {required String address}) async {
+    final url = RequestURLS.getHost() + RequestURLS.userNftList;
+    Map<String, dynamic>? params = {};
+    params["address"] = address;
+    dynamic result = await RequestMethod.manager!
+        .requestData(Method.GET, url, queryParameters: params);
+    if (result != null && result["code"] == 200) {
+      List data = result["result"]["page"] ?? [];
+      List<MCollectionTokens> values = [];
+      for (var item in data) {
+        String chainTypeName = item["chainTypeName"];
+        String contractAddress = item["contractAddress"];
+        String id = item["nftId"].toString();
+        String url = item["url"];
+        String nftTypeName = item["nftTypeName"];
+        Decimal sumCount =
+            Decimal.tryParse(item["sumCount"].toString()) ?? Decimal.zero;
+        MCollectionTokens model = MCollectionTokens();
+        model.contract = contractAddress;
+        model.tid = id;
+        model.iconPath = url;
+        model.tokenType = nftTypeName == "721"
+            ? KTokenType.eip721.index
+            : KTokenType.eip1155.index;
+        model.balance = sumCount.toDouble();
+        model.coinType = chainTypeName.chainTypeGetCoinType()!.coinTypeString();
+        values.add(model);
+      }
+      return values;
     }
     return [];
   }

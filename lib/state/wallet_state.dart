@@ -51,6 +51,11 @@ class CurrentChooseWalletState with ChangeNotifier {
   int _tokenIndex = 0;
   TRWalletInfo? _walletinfo;
   TRWalletInfo? get walletinfo => _walletinfo;
+  int _homeTokenType = 0;
+  int get homeTokenType => _homeTokenType;
+  Map<String?, List<MCollectionTokens>> _nftTokens = {};
+  List<MCollectionTokens> get nftTokens =>
+      _currentWallet == null ? [] : _nftTokens[_currentWallet?.walletID] ?? [];
 
   MCollectionTokens? chooseTokens() {
     if (tokens.length > _tokenIndex) {
@@ -87,6 +92,7 @@ class CurrentChooseWalletState with ChangeNotifier {
     _currentWallet = await TRWallet.queryChooseWallet();
     _currencyType = SPManager.getAppCurrencyMode();
     initNFTIndex();
+    initNFTTokens();
     requestAssets();
     // _configTimerRequest();
     notifyListeners();
@@ -114,6 +120,28 @@ class CurrentChooseWalletState with ChangeNotifier {
       return;
     }
     _nftIndexInfo[_currentWallet!.walletID!] = result;
+    notifyListeners();
+  }
+
+  void initNFTTokens() async {
+    if (_currentWallet == null) {
+      return;
+    }
+    String? ethAdress;
+    String? chainType;
+    List<TRWalletInfo> infos =
+        await _currentWallet!.queryWalletInfos(coinType: KCoinType.ETH);
+    if (infos.isEmpty) {
+      return;
+    }
+    ethAdress = infos.first.walletAaddress;
+    chainType = infos.first.coinType!.geCoinType().coinTypeString();
+    if (ethAdress == null) {
+      return;
+    }
+    List<MCollectionTokens> result =
+        await WalletServices.getUserNftList(address: ethAdress);
+    _nftTokens[_currentWallet!.walletID!] = result;
     notifyListeners();
   }
 
@@ -259,7 +287,10 @@ class CurrentChooseWalletState with ChangeNotifier {
     Routers.push(context, WalletsSetting(wallet: _currentWallet!));
   }
 
-  void onIndexChanged(BuildContext context, int index) {}
+  void onIndexChanged(BuildContext context, int index) {
+    _homeTokenType = index;
+    notifyListeners();
+  }
 
   Future<bool> updateChoose(BuildContext context,
       {required TRWallet wallet}) async {
@@ -275,6 +306,7 @@ class CurrentChooseWalletState with ChangeNotifier {
     _tokenIndex = 0;
     TRWallet.updateWallets(wallets);
     initNFTIndex();
+    initNFTTokens();
     requestAssets();
     notifyListeners();
     return true;

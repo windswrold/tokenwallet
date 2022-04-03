@@ -76,7 +76,7 @@ class _WalletPageState extends State<WalletPage> {
     );
   }
 
-  List<Widget> _getMenuItem() {
+  List<Widget> _getMenuItem(TRWallet wallet) {
     Widget _getItem(KCoinType? e) {
       return GestureDetector(
         behavior: HitTestBehavior.translucent,
@@ -100,7 +100,9 @@ class _WalletPageState extends State<WalletPage> {
       );
     }
 
-    List<Widget> datas = KCoinType.values
+    List<Widget> datas = wallet.chainType!
+        .getChainType()
+        .getSuppertCoinTypes()
         .map(
           (e) => _getItem(e),
         )
@@ -109,7 +111,7 @@ class _WalletPageState extends State<WalletPage> {
     return datas;
   }
 
-  Widget _helperView() {
+  Widget _helperView(TRWallet wallet) {
     return Container(
       height: 45.width,
       color: ColorUtils.backgroudColor,
@@ -122,12 +124,14 @@ class _WalletPageState extends State<WalletPage> {
               borderRadius: BorderRadius.circular(5),
               child: Container(
                 color: Colors.white,
-                height: 250.width,
+                constraints: BoxConstraints(
+                  maxHeight: 250.width,
+                ),
                 child: IntrinsicWidth(
                   child: SingleChildScrollView(
                     child: Column(
                         crossAxisAlignment: CrossAxisAlignment.stretch,
-                        children: _getMenuItem()),
+                        children: _getMenuItem(wallet)),
                   ),
                 ),
               ),
@@ -198,7 +202,7 @@ class _WalletPageState extends State<WalletPage> {
               children: [
                 _topView(wallet),
                 WalletSwipe(),
-                _helperView(),
+                _helperView(wallet),
                 Expanded(
                   child: CustomRefresher(
                       onRefresh: () {
