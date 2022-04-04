@@ -289,6 +289,9 @@ class CurrentChooseWalletState with ChangeNotifier {
 
   void onIndexChanged(BuildContext context, int index) {
     _homeTokenType = index;
+    if (index == 1) {
+      initNFTTokens();
+    }
     notifyListeners();
   }
 

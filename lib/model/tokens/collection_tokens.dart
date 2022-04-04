@@ -91,7 +91,7 @@ class MCollectionTokens {
   String get priceString => StringUtil.dataFormat(price ??= 0, 2);
 
   String get balanceString =>
-      StringUtil.dataFormat(this.balance ?? 0.0, this.digits!);
+      StringUtil.dataFormat(this.balance ?? 0.0, (this.digits ?? 4));
 
   String createTokenID(String walletID) {
     String tokenID = (kNetType.toString() +

@@ -80,6 +80,7 @@ enum KNetType { Mainnet, Testnet }
 
 enum KTransType {
   transfer,
+  
 }
 
 enum KTransDataType {
