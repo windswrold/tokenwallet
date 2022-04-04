@@ -7,6 +7,7 @@ import 'package:cstoken/model/node/node_model.dart';
 import 'package:cstoken/model/tokens/collection_tokens.dart';
 import 'package:cstoken/model/transrecord/trans_record.dart';
 import 'package:cstoken/model/wallet/tr_wallet_info.dart';
+import 'package:cstoken/net/chain_services.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 import '../../../public.dart';
@@ -24,25 +25,26 @@ class _TransferListContentState extends State<TransferListContent>
   RefreshController refreshController = RefreshController();
 
   List<TransRecordModel> _dappListData = [];
-  MCollectionTokens? tokens;
-  TRWalletInfo? trWalletInfo;
+  MCollectionTokens? _tokens;
+  TRWalletInfo? _trWalletInfo;
   StreamSubscription? _transupTE;
-  int? chainid;
+  String? _fingerprint;
+  int? _before;
   void initState() {
     // TODO: implement initState
     super.initState();
 
+    //刷新包
     _transupTE = eventBus.on<MtransListUpdate>().listen((event) {
-      _initData();
+      _initData(isRefresh: true);
     });
-
-    tokens = Provider.of<CurrentChooseWalletState>(context, listen: false)
+    _tokens = Provider.of<CurrentChooseWalletState>(context, listen: false)
         .chooseTokens();
-    trWalletInfo = Provider.of<CurrentChooseWalletState>(context, listen: false)
-        .walletinfo;
-    chainid = NodeModel.queryNodeByChainType(trWalletInfo!.coinType!).chainID;
+    _trWalletInfo =
+        Provider.of<CurrentChooseWalletState>(context, listen: false)
+            .walletinfo;
     LogUtil.v("initState " + widget.type.toString());
-    _initData();
+    _initData(isRefresh: true);
   }
 
   @override
@@ -51,29 +53,71 @@ class _TransferListContentState extends State<TransferListContent>
     super.dispose();
   }
 
-  void _initData() async {
+  void _initData({required bool isRefresh}) async {
+    if (isRefresh == true) {
+      _fingerprint = null;
+      _before = null;
+    }
+    KCoinType coinType = _trWalletInfo!.coinType!.geCoinType();
+    KTransDataType kTransDataType = KTransDataType.ts_all;
+    for (var element in KTransDataType.values) {
+      if (widget.type == element.index) {
+        kTransDataType = element;
+        break;
+      }
+    }
 
-    
-    List<TransRecordModel> datas = await TransRecordModel.queryTrxList(
-        trWalletInfo?.walletAaddress ?? "",
-        tokens?.token ?? "",
-        chainid!,
-        widget.type);
+    String from = _trWalletInfo?.walletAaddress ?? "";
+    String symbol = _tokens!.token ?? "";
+    String? contract = _tokens?.contract;
+    int decimal = _tokens?.decimals ?? 0;
+    List<TransRecordModel> datas = [];
+    if (coinType == KCoinType.TRX) {
+      datas = await ChainServices.requestTRXTranslist(
+          kTransDataType: kTransDataType,
+          from: from,
+          fingerprint: _fingerprint,
+          symbol: symbol,
+          contract: contract,
+          decimal: decimal,
+          onComplation: (String? fingerprint) {
+            _fingerprint = fingerprint;
+          });
+    } else if (coinType == KCoinType.BTC) {
+      datas = await ChainServices.requestBTCTranslist(
+          kTransDataType: kTransDataType, from: from, before: _before);
+      if (datas.isNotEmpty) {
+        _before = datas.last.blockHeight;
+      }
+    }
     setState(() {
-      _dappListData = datas;
+      if (isRefresh == true) {
+        _dappListData.clear();
+      }
+      _dappListData.addAll(datas);
     });
     refreshController.loadComplete();
     refreshController.refreshCompleted(resetFooterState: true);
+    if (coinType == KCoinType.TRX) {
+      if (_fingerprint == null) {
+        refreshController.loadNoData();
+      }
+    }
+    if (datas.isEmpty) {
+      refreshController.loadNoData();
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     return CustomRefresher(
         onRefresh: () {
-          _initData();
+          _initData(isRefresh: true);
         },
-        enableFooter: false,
-        child: _dappListData.length == 0
+        onLoading: () {
+          _initData(isRefresh: false);
+        },
+        child: _dappListData.isEmpty
             ? EmptyDataPage()
             : ListView.builder(
                 itemCount: _dappListData.length,
@@ -81,7 +125,7 @@ class _TransferListContentState extends State<TransferListContent>
                   TransRecordModel model = _dappListData[index];
                   return TransferListCell(
                     model: model,
-                    from: trWalletInfo?.walletAaddress ?? "",
+                    from: _trWalletInfo?.walletAaddress ?? "",
                   );
                 },
               ),

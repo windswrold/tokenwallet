@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:math';
 
 import 'package:cstoken/model/node/node_model.dart';
 import 'package:cstoken/model/transrecord/trans_record.dart';
@@ -7,6 +8,7 @@ import 'package:cstoken/net/url.dart';
 import 'package:cstoken/public.dart';
 import 'package:cstoken/utils/date_util.dart';
 import 'package:cstoken/utils/json_util.dart';
+import 'package:decimal/decimal.dart';
 import 'package:web3dart/crypto.dart';
 import 'package:web3dart/web3dart.dart';
 import 'package:http/http.dart';
@@ -94,35 +96,56 @@ class ChainServices {
     return null;
   }
 
-  // static Future<List<TransRecordModel>> requestTransRecord({
-  //   required int chainType,
-  //   required int kTransDataType,
-  //   required String from,
-  //   required int page,
-  //   required String symbol,
-  //   required String? contract,
-  //   required int decimal,
-  // }) async {}
-
-  static Future<List<TransRecordModel>> requestTRXTranslist({
-    required int kTransDataType,
+  static Future<List<TransRecordModel>> requestTransRecord({
+    required KCoinType kCoinType,
+    required KTransDataType kTransDataType,
     required String from,
-    required int page,
+    required dynamic page,
     required String symbol,
     required String? contract,
     required int decimal,
   }) async {
+    if (kCoinType == KCoinType.TRX) {
+      // return requestTRXTranslist(
+      //     kTransDataType: kTransDataType,
+      //     from: from,
+      //     page: page,
+      //     symbol: symbol,
+      //     contract: contract,
+      //     decimal: decimal);
+    } else if (kCoinType == KCoinType.BTC) {
+      // return requestBTCTranslist(
+      //   kTransDataType: kTransDataType,
+      //   from: from,
+      //   page: page,
+      // );
+    }
+    return [];
+  }
+
+  static Future<List<TransRecordModel>> requestTRXTranslist(
+      {required KTransDataType kTransDataType,
+      required String from,
+      required String? fingerprint,
+      required String symbol,
+      required String? contract,
+      required int decimal,
+      required Function(String? fingerprint) onComplation}) async {
     List<TransRecordModel> datas = [];
     String path = "";
     Map<String, dynamic> params = {};
-    if (kTransDataType == KTransDataType.ts_other.index) {
-      return datas;
+    if (kTransDataType == KTransDataType.ts_other) {
+      return [];
     }
-    if (kTransDataType == KTransDataType.ts_in.index) {
+    if (kTransDataType == KTransDataType.ts_in) {
       params["only_to"] = true; //转入
     }
-    if (kTransDataType == KTransDataType.ts_out.index) {
+    if (kTransDataType == KTransDataType.ts_out) {
       params["only_from"] = true;
+    }
+    params["search_internal"] = false;
+    if (fingerprint != null) {
+      params["fingerprint"] = fingerprint;
     }
     if (contract != null && contract.isNotEmpty) {
       path = "/v1/accounts/$from/transactions/trc20";
@@ -130,21 +153,28 @@ class ChainServices {
     } else {
       path = "/v1/accounts/$from/transactions";
     }
-
-    dynamic result = await requestTRXDatas(
+    dynamic result = await ChainServices.requestTRXDatas(
         path: path, method: Method.GET, queryParameters: params);
     if (result != null && result is Map) {
       List data = result["data"] ?? [];
       bool success = result["success"];
       if (success != true) {
-        return datas;
+        return [];
+      }
+      Map meta = result["meta"];
+      if (meta.containsKey("fingerprint")) {
+        String fp = meta["fingerprint"];
+        onComplation(fp);
+      } else {
+        onComplation(null);
       }
       for (var item in data) {
         String from = "";
         String to = "";
-        String value = "";
+        String value = "0";
         String time = "";
         String transaction_id = "";
+        int? blockNumber;
         if (contract != null && contract.isNotEmpty) {
           //trc20
           from = item["from"];
@@ -153,85 +183,161 @@ class ChainServices {
           time = item["block_timestamp"].toString();
           transaction_id = item["transaction_id"];
         } else {
+          blockNumber = item["blockNumber"];
           transaction_id = item["txID"];
           Map raw_data = item["raw_data"];
-          time = raw_data["timestamp"];
+          time = raw_data["timestamp"].toString();
           List contractList = raw_data["contract"];
+          String type = contractList.first["type"];
           Map valueParams = contractList.first["parameter"]["value"];
-          value = valueParams["amount"].toString();
           from = TREncode.base58EncodeString(valueParams["owner_address"]);
-          to = TREncode.base58EncodeString(valueParams["to_address"]);
+          if (type == "TransferContract") {
+            value = valueParams["amount"].toString();
+            to = TREncode.base58EncodeString(valueParams["to_address"]);
+          } else if (type == "TriggerSmartContract") {
+            to = TREncode.base58EncodeString(valueParams["contract_address"]);
+          } else {
+            continue;
+          }
         }
         TransRecordModel model = TransRecordModel();
+        model.txid = transaction_id;
         model.fromAdd = from;
         model.toAdd = to;
         model.amount = BigInt.parse(value).tokenString(decimal);
-        model.txid = transaction_id;
         model.date = DateUtil.formatDateMs(int.parse(time));
         model.coinType = KCoinType.TRX.coinTypeString();
         model.token = symbol;
         model.transStatus = KTransState.success.index;
         model.chainid = 0;
         model.transType = KTransType.transfer.index;
+        model.blockHeight = blockNumber;
         datas.add(model);
       }
-      TransRecordModel.insertTrxLists(datas);
+      // TransRecordModel.insertTrxLists(datas);
     }
-
     return datas;
   }
 
-  static Future<List<TransRecordModel>> requestBTCTranslist({
-    required int kTransDataType,
-    required String from,
-    required int page,
-  }) async {
+  static Future<List<TransRecordModel>> requestBTCTranslist(
+      {required KTransDataType kTransDataType,
+      required String from,
+      required int? before}) async {
     List<TransRecordModel> datas = [];
     String path = "/addrs/$from/full";
-    int limit = 20;
-    // int before = before * page;
-    // int after = before * page + limit;
-
     Map<String, dynamic> params = {};
-    if (kTransDataType == KTransDataType.ts_other.index) {
+    params["txlimit"] = 40;
+    if (before != null) {
+      params["before"] = before;
+    }
+    if (kTransDataType == KTransDataType.ts_other) {
       return datas;
     }
-
     dynamic result = await requestBTCDatas(
         path: path, method: Method.GET, queryParameters: params);
     if (result != null && result is Map) {
       List data = result["txs"] ?? [];
       for (var item in data) {
-        String from = "";
-        String to = "";
-        String value = "";
         String time = "";
         String transaction_id = "";
-
         transaction_id = item["hash"];
-        time = item["received"];
-
-        // value = valueParams["amount"].toString();
-        // from = TREncode.base58EncodeString(valueParams["owner_address"]);
-        // to = TREncode.base58EncodeString(valueParams["to_address"]);
-
-        // TransRecordModel model = TransRecordModel();
-        // model.fromAdd = from;
-        // model.toAdd = to;
-        // model.amount = BigInt.parse(value).tokenString(decimal);
-        // model.txid = transaction_id;
-        // model.date = DateUtil.formatDateMs(int.parse(time));
-        // model.coinType = KCoinType.TRX.coinTypeString();
-        // model.token = symbol;
-        // model.transStatus = KTransState.success.index;
-        // model.chainid = 0;
-        // model.transType = KTransType.transfer.index;
-        // datas.add(model);
+        time = item["received"] ?? "";
+        int fees = item["fees"] ?? 0;
+        int block_height = item["block_height"];
+        List inputs = item["inputs"];
+        List outputs = item["outputs"];
+        Map state = _checkTransType(from, inputs, outputs);
+        String trx_amount = state["a"] as String;
+        bool isOut = state["o"] as int == 0 ? false : true;
+        TransRecordModel model = TransRecordModel();
+        model.txid = transaction_id;
+        model.toAdd = isOut == false ? from : state["d"];
+        model.fromAdd = isOut == true ? from : state["d"];
+        model.date = time;
+        model.amount = BigInt.parse(trx_amount).tokenString(8);
+        model.fee = BigInt.from(fees).tokenString(8);
+        model.transStatus = KTransState.success.index;
+        model.coinType = KCoinType.BTC.coinTypeString();
+        model.token = "BTC";
+        model.blockHeight = block_height;
+        model.chainid = 0;
+        model.transType = KTransType.transfer.index;
+        if (kTransDataType == KTransDataType.ts_all) {
+          datas.add(model);
+        } else if (kTransDataType == KTransDataType.ts_out && isOut == true) {
+          datas.add(model);
+        } else if (kTransDataType == KTransDataType.ts_in && isOut == false) {
+          datas.add(model);
+        }
       }
-      TransRecordModel.insertTrxLists(datas);
+      // TransRecordModel.insertTrxLists(datas);
     }
 
     return datas;
+  }
+
+  static Map _checkTransType(String from, List inputs, List outputs) {
+    //根据input里数组有没有自己判断转入转出
+    //转入时在input取转入的地址，在out取自己地址对应的金额,
+    //转出时在out里去转出的地址，在intput里取转出地址的金额
+    Map params = Map();
+    int out = 0; //默认转入
+    String toAddress = "coinbase";
+    BigInt value = BigInt.zero;
+    //判断转入转出
+    if (inputs.isNotEmpty) {
+      for (var input in inputs) {
+        List addresses = input["addresses"] as List;
+        for (var adds in addresses) {
+          if (adds != null && from.toLowerCase() == adds.toLowerCase()) {
+            out = 1; //转出
+            value = BigInt.from(input["output_value"]);
+            break;
+          }
+        }
+      }
+    }
+    //找出地址金额
+    if (out == 0) {
+      if (inputs.isNotEmpty) {
+        for (var input in inputs) {
+          List addresses = input["addresses"] as List;
+          for (var adds in addresses) {
+            if (adds != null) {
+              toAddress = adds;
+              break;
+            }
+          }
+        }
+      }
+      for (var output in outputs) {
+        List addresses = output["addresses"];
+        for (var add in addresses) {
+          if (add == "false") {
+            continue;
+          }
+          if (add.toLowerCase() == from.toLowerCase()) {
+            value = BigInt.from(output["value"]);
+            break;
+          }
+        }
+      }
+    } else {
+      for (var output in outputs) {
+        List addresses = output["addresses"];
+        for (var add in addresses) {
+          if (add == "false") {
+            continue;
+          }
+          toAddress = add;
+          break;
+        }
+      }
+    }
+    params["d"] = toAddress;
+    params["a"] = value.toString();
+    params["o"] = out;
+    return params;
   }
 
   static Future requestTransactionReceipt(String tx, String url) async {
