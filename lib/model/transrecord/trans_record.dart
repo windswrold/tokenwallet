@@ -185,7 +185,8 @@ class TransRecordModel {
   }
 
   static Future<List<TransRecordModel>> queryTrxList(
-      String from, String symbol, int chainid, int kTransDataType) async {
+      String from, String symbol, int chainid, int kTransDataType,
+      {required int limit, required int offset}) async {
     try {
       LogUtil.v(
           "queryTrxList from $from symbol $symbol chainid $chainid kTransDataType $kTransDataType");
@@ -194,19 +195,19 @@ class TransRecordModel {
       List<TransRecordModel> dbs = [];
       if (KTransDataType.ts_all.index == kTransDataType) {
         dbs = await database?.transListDao
-                .queryAllTrxList(from, symbol, chainid) ??
+                .queryAllTrxList(from, symbol, chainid, limit, offset) ??
             [];
       } else if (KTransDataType.ts_out.index == kTransDataType) {
         dbs = await database?.transListDao
-                .queryOutTrxList(from, symbol, chainid) ??
+                .queryOutTrxList(from, symbol, chainid, limit, offset) ??
             [];
       } else if (KTransDataType.ts_in.index == kTransDataType) {
         dbs = await database?.transListDao
-                .queryInTrxList(from, symbol, chainid) ??
+                .queryInTrxList(from, symbol, chainid, limit, offset) ??
             [];
       } else if (KTransDataType.ts_other.index == kTransDataType) {
         dbs = await database?.transListDao
-                .queryOtherTrxList(from, symbol, chainid) ??
+                .queryOtherTrxList(from, symbol, chainid, limit, offset) ??
             [];
       }
       return dbs;
@@ -273,33 +274,27 @@ abstract class TransRecordModelDao {
   //or toAdd =:fromAdd
   @Query('SELECT * FROM ' +
       tableName +
-      ' WHERE (fromAdd = :fromAdd or toAdd =:fromAdd )  and token = :token and chainid = :chainid ORDER BY date DESC')
+      ' WHERE (fromAdd = :fromAdd COLLATE NOCASE or toAdd =:fromAdd COLLATE NOCASE )  and token = :token and chainid = :chainid ORDER BY date DESC limit :limit offset :offset')
   Future<List<TransRecordModel>> queryAllTrxList(
-      String fromAdd, String token, int chainid);
+      String fromAdd, String token, int chainid, int limit, int offset);
 
   @Query('SELECT * FROM ' +
       tableName +
-      ' WHERE (fromAdd = :fromAdd )  and token = :token and chainid = :chainid ORDER BY date DESC')
+      ' WHERE (fromAdd = :fromAdd COLLATE NOCASE)  and token = :token and chainid = :chainid ORDER BY date DESC limit :limit offset :offset')
   Future<List<TransRecordModel>> queryOutTrxList(
-      String fromAdd, String token, int chainid);
+      String fromAdd, String token, int chainid, int limit, int offset);
 
   @Query('SELECT * FROM ' +
       tableName +
-      ' WHERE (toAdd = :fromAdd )  and token = :token and chainid = :chainid ORDER BY date DESC')
+      ' WHERE (toAdd = :fromAdd COLLATE NOCASE)  and token = :token and chainid = :chainid ORDER BY date DESC limit :limit offset :offset')
   Future<List<TransRecordModel>> queryInTrxList(
-      String fromAdd, String token, int chainid);
+      String fromAdd, String token, int chainid, int limit, int offset);
 
   @Query('SELECT * FROM ' +
       tableName +
-      ' WHERE (fromAdd = :fromAdd or toAdd =:fromAdd  )  and token = :token and chainid = :chainid and transStatus = 0  ORDER BY date DESC')
+      ' WHERE (fromAdd = :fromAdd COLLATE NOCASE or toAdd =:fromAdd  COLLATE NOCASE)  and token = :token and chainid = :chainid and transStatus = 0 ORDER BY date DESC limit :limit offset :offset')
   Future<List<TransRecordModel>> queryOtherTrxList(
-      String fromAdd, String token, int chainid);
-
-  @Query('SELECT * FROM ' +
-      tableName +
-      ' WHERE (fromAdd = :fromAdd )  and token = :token and chainid = :chainid and transType =:transType ORDER BY date DESC')
-  Future<List<TransRecordModel>> queryTrxListWithType(
-      String fromAdd, String token, int chainid, int transType);
+      String fromAdd, String token, int chainid, int limit, int offset);
 
   @Query('SELECT * FROM ' +
       tableName +
@@ -314,9 +309,6 @@ abstract class TransRecordModelDao {
 
   @delete
   Future<void> deleteTrxList(TransRecordModel model);
-
-  @update
-  Future<void> updateTrxList(TransRecordModel model);
 
   @update
   Future<void> updateTrxLists(List<TransRecordModel> models);

@@ -81,6 +81,7 @@ class _TransferListContentState extends State<TransferListContent>
           kTransDataType: kTransDataType,
           from: from,
           fingerprint: _fingerprint,
+          page: _page,
           symbol: symbol,
           contract: contract,
           decimal: decimal,
@@ -89,7 +90,10 @@ class _TransferListContentState extends State<TransferListContent>
           });
     } else if (coinType == KCoinType.BTC) {
       datas = await ChainServices.requestBTCTranslist(
-          kTransDataType: kTransDataType, from: from, before: _before);
+          kTransDataType: kTransDataType,
+          from: from,
+          before: _before,
+          page: _page);
       if (datas.isNotEmpty) {
         _before = datas.last.blockHeight;
       }

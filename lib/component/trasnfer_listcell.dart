@@ -73,12 +73,18 @@ class TransferListCell extends StatelessWidget {
               Column(
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
-                  Text(
-                    value,
-                    style: TextStyle(
-                      color: ColorUtils.fromHex("#FF000000"),
-                      fontSize: 14.font,
-                      fontWeight: FontWeightUtils.semiBold,
+                  Container(
+                    width: 150.width,
+                    alignment: Alignment.centerRight,
+                    child: Text(
+                      value,
+                      textAlign: TextAlign.right,
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyle(
+                        color: ColorUtils.fromHex("#FF000000"),
+                        fontSize: 14.font,
+                        fontWeight: FontWeightUtils.semiBold,
+                      ),
                     ),
                   ),
                   2.columnWidget,

@@ -221,14 +221,12 @@ class SignTransactionClient {
                   atBlock: const BlockNum.pending()),
         );
       }
-
-      Uint8List signedTransaction = await client.signTransaction(
-          credentials, ts!,
-          chainId: _chainId, fetchChainIdFromNetworkId: false);
-      final signMessage = bytesToHex(signedTransaction, include0x: true);
-      final result = await client.sendRawTransaction(signedTransaction);
-      return result;
     }
+    Uint8List signedTransaction = await client.signTransaction(credentials, ts!,
+        chainId: _chainId, fetchChainIdFromNetworkId: false);
+    final signMessage = bytesToHex(signedTransaction, include0x: true);
+    final result = await client.sendRawTransaction(signedTransaction);
+    return result;
   }
 
   Future<String?> _signBtc({

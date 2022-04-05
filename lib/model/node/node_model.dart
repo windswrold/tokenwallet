@@ -12,13 +12,17 @@ class NodeModel {
   bool? isChoose;
   int? netType; //类型
   int? chainID;
+  String? blockExplorerURL;
+  String? blockExplorerURLAPI;
 
   NodeModel(
       {this.content,
       this.chainType,
       this.isChoose,
       this.netType,
-      this.chainID}); //ID
+      this.chainID,
+      this.blockExplorerURL,
+      this.blockExplorerURLAPI}); //ID
 
   static void configNodeData() async {}
 
@@ -51,6 +55,12 @@ class NodeModel {
         host = "https://api.arbiscan.io";
       } else {
         host = "https://api-testnet.arbiscan.io";
+      }
+    } else if (kCoinType == KCoinType.Matic) {
+      if (KNetType.Mainnet == netType) {
+        host = "https://api.polygonscan.com";
+      } else {
+        host = "https://api-testnet.polygonscan.com";
       }
     }
     return host;
@@ -243,18 +253,9 @@ abstract class NodeDao {
   @Insert(onConflict: OnConflictStrategy.replace)
   Future<void> insertNodeDatas(List<NodeModel> list);
 
-  @Insert(onConflict: OnConflictStrategy.replace)
-  Future<void> insertNodeData(NodeModel model);
-
-  @Query('SELECT * FROM $tableName WHERE  isChoose = :isChoose')
-  Future<List<NodeModel>> queryChooseNode(bool isChoose);
-
   @Query(
       'SELECT * FROM $tableName WHERE chainType = :chainType and isChoose = :isChoose')
   Future<List<NodeModel>> queryNodeByChainType(int chainType, bool isChoose);
-
-  @update
-  Future<void> updateNode(NodeModel model);
 
   @update
   Future<void> updateNodes(List<NodeModel> models);

@@ -104,26 +104,14 @@ class ChainServices {
       dynamic data}) async {
     String host = NodeModel.getBlockExploreApi(kCoinType);
     queryParameters ??= {};
-    if (kCoinType == KCoinType.BSC) {
-      queryParameters["apikey"] = "GK3C39199V556I849N46RSPPCJAGYA7RNG";
-    } else if (kCoinType == KCoinType.Arbitrum) {
-      queryParameters["apikey"] = "WUFC43UEE3FCW1SKT3QYE4REHNTA24S1Y9";
-    } else if (kCoinType == KCoinType.AVAX) {
-      queryParameters["apikey"] = "S15E9AHU2SG5J3JJXVFZYH4P2I5DA4744Q";
-    } else if (kCoinType == KCoinType.HECO) {
-      queryParameters["apikey"] = "R9UASFXFRCY24SRGJQ6QM22DH4WX26PNSU";
-    } else if (kCoinType == KCoinType.ETH) {
-      queryParameters["apikey"] = "TMBXD4DKBMRDWT8IBEZMJGPRHS7ZZN3UGK";
-    }
-
     String url = host + path;
-    // queryParameters["url"] = url;
-    // queryParameters["time"] = DateUtil.getNowDateMs();
-    // queryParameters["secret"] = "";
-
-    dynamic result = await RequestMethod.manager!.requestData(Method.GET, url,
+    String netHost = RequestURLS.getHost() + RequestURLS.ethGet;
+    queryParameters["url"] = url + queryParameters.url();
+    queryParameters["time"] = DateUtil.getNowDateMs();
+    queryParameters["secret"] = "";
+    dynamic result = await RequestMethod.manager!.requestData(
+        Method.GET, netHost,
         queryParameters: queryParameters, data: data);
-    return result;
     if (result != null && result is Map) {
       int code = result["code"];
       if (code == 200) {
@@ -131,34 +119,22 @@ class ChainServices {
         return JsonUtil.getObj(object);
       }
     }
-    return null;
-  }
+    return result;
 
-  static Future<List<TransRecordModel>> requestTransRecord({
-    required KCoinType kCoinType,
-    required KTransDataType kTransDataType,
-    required String from,
-    required dynamic page,
-    required String symbol,
-    required String? contract,
-    required int decimal,
-  }) async {
-    if (kCoinType == KCoinType.TRX) {
-      // return requestTRXTranslist(
-      //     kTransDataType: kTransDataType,
-      //     from: from,
-      //     page: page,
-      //     symbol: symbol,
-      //     contract: contract,
-      //     decimal: decimal);
-    } else if (kCoinType == KCoinType.BTC) {
-      // return requestBTCTranslist(
-      //   kTransDataType: kTransDataType,
-      //   from: from,
-      //   page: page,
-      // );
-    }
-    return [];
+    // if (kCoinType == KCoinType.BSC) {
+    //   queryParameters["apikey"] = "GK3C39199V556I849N46RSPPCJAGYA7RNG";
+    // } else if (kCoinType == KCoinType.Arbitrum) {
+    //   queryParameters["apikey"] = "WUFC43UEE3FCW1SKT3QYE4REHNTA24S1Y9";
+    // } else if (kCoinType == KCoinType.AVAX) {
+    //   queryParameters["apikey"] = "S15E9AHU2SG5J3JJXVFZYH4P2I5DA4744Q";
+    // } else if (kCoinType == KCoinType.HECO) {
+    //   queryParameters["apikey"] = "R9UASFXFRCY24SRGJQ6QM22DH4WX26PNSU";
+    // } else if (kCoinType == KCoinType.ETH) {
+    //   queryParameters["apikey"] = "TMBXD4DKBMRDWT8IBEZMJGPRHS7ZZN3UGK";
+    // }
+    // dynamic result = await RequestMethod.manager!.requestData(Method.GET, url,
+    //     queryParameters: queryParameters, data: data);
+    // return result;
   }
 
   static Future<List<TransRecordModel>> requestETHTranslist(
@@ -169,15 +145,15 @@ class ChainServices {
     List<TransRecordModel> datas = [];
     Map<String, dynamic> params = {};
     KCoinType coinType = tokens.chainType!.geCoinType();
-    if (kTransDataType == KTransDataType.ts_other) {
-      return [];
-    }
+    NodeModel model = NodeModel.queryNodeByChainType(coinType.index);
+    int? chainid = model.chainID;
     int? decimal = tokens.decimals;
     String? symbol = tokens.token;
     params["module"] = "account";
     params["address"] = from;
     params["page"] = page;
     params["offset"] = 20;
+    params["sort"] = "desc";
     if (tokens.isToken == false) {
       params["action"] = "txlist";
     } else {
@@ -190,7 +166,6 @@ class ChainServices {
       String status = result["status"];
       if (status == "1") {
         List object = result["result"];
-
         for (var item in object) {
           String blockNumber = item["blockNumber"];
           String timeStamp = item["timeStamp"];
@@ -216,28 +191,33 @@ class ChainServices {
           model.coinType = coinType.coinTypeString();
           model.token = symbol;
           model.transStatus = KTransState.success.index;
-          model.chainid = 0;
           model.transType = KTransType.transfer.index;
           model.blockHeight = int.tryParse(blockNumber);
-          if (kTransDataType == KTransDataType.ts_all) {
-            datas.add(model);
-          } else if (kTransDataType == KTransDataType.ts_out &&
-              model.isOut(from)) {
-            datas.add(model);
-          } else if (kTransDataType == KTransDataType.ts_in &&
-              model.isOut(from) == false) {
-            datas.add(model);
-          }
+          model.chainid = chainid;
+          datas.add(model);
+          // if (kTransDataType == KTransDataType.ts_all) {
+          //   datas.add(model);
+          // } else if (kTransDataType == KTransDataType.ts_out &&
+          //     model.isOut(from)) {
+          //   datas.add(model);
+          // } else if (kTransDataType == KTransDataType.ts_in &&
+          //     model.isOut(from) == false) {
+          //   datas.add(model);
+          // }
         }
+        TransRecordModel.insertTrxLists(datas);
       }
     }
-    return datas;
+    return TransRecordModel.queryTrxList(
+        from, symbol ?? "ETH", chainid ?? 0, kTransDataType.index,
+        limit: 10, offset: ((page - 1) * 10));
   }
 
   static Future<List<TransRecordModel>> requestTRXTranslist(
       {required KTransDataType kTransDataType,
       required String from,
       required String? fingerprint,
+      required int page,
       required String symbol,
       required String? contract,
       required int decimal,
@@ -325,14 +305,17 @@ class ChainServices {
         model.blockHeight = blockNumber;
         datas.add(model);
       }
-      // TransRecordModel.insertTrxLists(datas);
+      TransRecordModel.insertTrxLists(datas);
     }
-    return datas;
+
+    return TransRecordModel.queryTrxList(from, symbol, 0, kTransDataType.index,
+        limit: 10, offset: ((page - 1) * 10));
   }
 
   static Future<List<TransRecordModel>> requestBTCTranslist(
       {required KTransDataType kTransDataType,
       required String from,
+      required int page,
       required int? before}) async {
     List<TransRecordModel> datas = [];
     String path = "/addrs/$from/full";
@@ -373,18 +356,19 @@ class ChainServices {
         model.blockHeight = block_height;
         model.chainid = 0;
         model.transType = KTransType.transfer.index;
-        if (kTransDataType == KTransDataType.ts_all) {
-          datas.add(model);
-        } else if (kTransDataType == KTransDataType.ts_out && isOut == true) {
-          datas.add(model);
-        } else if (kTransDataType == KTransDataType.ts_in && isOut == false) {
-          datas.add(model);
-        }
+        datas.add(model);
+        // if (kTransDataType == KTransDataType.ts_all) {
+        //   datas.add(model);
+        // } else if (kTransDataType == KTransDataType.ts_out && isOut == true) {
+        //   datas.add(model);
+        // } else if (kTransDataType == KTransDataType.ts_in && isOut == false) {
+        //   datas.add(model);
+        // }
       }
-      // TransRecordModel.insertTrxLists(datas);
+      TransRecordModel.insertTrxLists(datas);
     }
-
-    return datas;
+    return TransRecordModel.queryTrxList(from, "BTC", 0, kTransDataType.index,
+        limit: 10, offset: ((page - 1) * 10));
   }
 
   static Map _checkTransType(String from, List inputs, List outputs) {
