@@ -317,15 +317,19 @@ class WalletServices {
       for (var item in data) {
         String chainTypeName = item["chainTypeName"];
         String contractAddress = item["contractAddress"];
-        String id = item["nftId"].toString();
+        String id = item["nftId"];
         String url = item["url"];
         String nftTypeName = item["nftTypeName"];
         Decimal sumCount =
             Decimal.tryParse(item["sumCount"].toString()) ?? Decimal.zero;
         MCollectionTokens model = MCollectionTokens();
         model.contract = contractAddress;
+        model.digits = 0;
+        model.chainType = chainTypeName.chainTypeGetCoinType()!.index;
         model.tid = id;
         model.iconPath = url;
+        model.decimals = 0;
+        model.token = "";
         model.tokenType = nftTypeName == "721"
             ? KTokenType.eip721.index
             : KTokenType.eip1155.index;

@@ -39,8 +39,11 @@ class CurrentChooseWalletState with ChangeNotifier {
   Map<String?, String> _totalAssets = {}; //总资产数额
 
   Map<String?, List<MCollectionTokens>> _tokens = {};
-  List<MCollectionTokens> get tokens =>
-      _currentWallet == null ? [] : _tokens[_currentWallet?.walletID] ?? [];
+  List<MCollectionTokens> get tokens => _currentWallet == null
+      ? []
+      : _homeTokenType == 0
+          ? (_tokens[_currentWallet?.walletID] ?? [])
+          : nftTokens;
   KCoinType? _chooseChainType;
   String get chooseChain => _chooseChainType == null
       ? "walletmanager_asset_all".local()

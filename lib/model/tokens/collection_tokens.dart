@@ -210,15 +210,15 @@ class MCollectionTokens {
       dynamic result =
           await ChainServices.requestDatas(coinType: coinType, params: params);
       if (result != null && result.keys.contains("result")) {
-        String id = result["id"];
         String? bal = result["result"] as String;
         bal = bal.replaceFirst("0x", "");
         bal = bal.length == 0 ? "0" : bal;
         BigInt balBInt = BigInt.parse(bal, radix: 16);
-        _balance = balBInt.tokenDouble(decimals!);
+        _balance = balBInt.tokenDouble(decimals ?? 0);
       }
     }
-    TokenPrice? price = await TokenPrice.queryTokenPrices(token!, currencyType);
+    TokenPrice? price =
+        await TokenPrice.queryTokenPrices(token ?? "", currencyType);
     if (price != null) {
       _price = double.parse(price.rate ?? "0.0");
     }

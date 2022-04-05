@@ -505,8 +505,10 @@ class SignTransactionClient {
     final dc = DeployedContract(_erc1155Abi, contractAddress);
     final function = dc.function('balanceOf');
     return bytesToHex(
-        function
-            .encodeCall([EthereumAddress.fromHex(address), BigInt.parse(tid)]),
+        function.encodeCall([
+          EthereumAddress.fromHex(address),
+          BigInt.tryParse(tid) ?? BigInt.zero
+        ]),
         include0x: true);
   }
 
