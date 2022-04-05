@@ -195,7 +195,7 @@ class ChainServices {
           String blockNumber = item["blockNumber"];
           String timeStamp = item["timeStamp"];
           String hash = item["hash"];
-          String from = item["from"];
+          String fromADD = item["from"];
           String to = item["to"];
           BigInt value = BigInt.parse(item["value"]);
           BigInt gasPrice = BigInt.parse(item["gasPrice"] ?? "0");
@@ -207,7 +207,7 @@ class ChainServices {
 
           TransRecordModel model = TransRecordModel();
           model.txid = hash;
-          model.fromAdd = from;
+          model.fromAdd = fromADD;
           model.toAdd = to;
           model.fee = fee;
           model.amount =
@@ -219,7 +219,15 @@ class ChainServices {
           model.chainid = 0;
           model.transType = KTransType.transfer.index;
           model.blockHeight = int.tryParse(blockNumber);
-          datas.add(model);
+          if (kTransDataType == KTransDataType.ts_all) {
+            datas.add(model);
+          } else if (kTransDataType == KTransDataType.ts_out &&
+              model.isOut(from)) {
+            datas.add(model);
+          } else if (kTransDataType == KTransDataType.ts_in &&
+              model.isOut(from) == false) {
+            datas.add(model);
+          }
         }
       }
     }
