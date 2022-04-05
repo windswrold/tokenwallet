@@ -317,11 +317,18 @@ class WalletServices {
       for (var item in data) {
         String chainTypeName = item["chainTypeName"];
         String contractAddress = item["contractAddress"];
-        String id = item["nftId"];
+        String id = item["nftId"].toString();
+        String token = item["contract_name"] ?? "";
         String url = item["url"];
         String nftTypeName = item["nftTypeName"];
         Decimal sumCount =
             Decimal.tryParse(item["sumCount"].toString()) ?? Decimal.zero;
+
+        // contractAddress = "0x2c30b60038394755c9ab4285fa59d722153a63e5";
+        // id = "446160950877979480142007162702782189984542661413";
+        // sumCount = Decimal.fromInt(10);
+        // chainTypeName = "ETH";
+
         MCollectionTokens model = MCollectionTokens();
         model.contract = contractAddress;
         model.digits = 0;
@@ -329,7 +336,7 @@ class WalletServices {
         model.tid = id;
         model.iconPath = url;
         model.decimals = 0;
-        model.token = "";
+        model.token = token;
         model.tokenType = nftTypeName == "721"
             ? KTokenType.eip721.index
             : KTokenType.eip1155.index;

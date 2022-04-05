@@ -218,6 +218,7 @@ extension StringUtil on String {
   BigInt tokenInt(int decimals) {
     Decimal value = Decimal.parse(this);
     value = value * Decimal.fromInt(10).pow(decimals);
+    return value.toBigInt();
     return BigInt.parse(value.toString());
   }
 }
