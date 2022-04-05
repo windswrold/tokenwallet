@@ -63,6 +63,8 @@ class RequestURLS {
 
   static String trxPost = "/app/secret/trxPost";
 
+  static String ethPost = "/app/secret/ethPost";
+
   static String blockcypherGet = "/app/secret/blockcypherGet";
 
   static String blockcypherPost = "/app/secret/blockcypherPost";

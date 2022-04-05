@@ -22,6 +22,40 @@ class NodeModel {
 
   static void configNodeData() async {}
 
+  static String getBlockExploreApi(KCoinType kCoinType) {
+    String host = "";
+    KNetType netType = SPManager.getNetType();
+    if (kCoinType == KCoinType.BSC) {
+      host = "https://api.bscscan.com";
+      if (KNetType.Testnet == netType) {
+        host = "https://api-testnet.bscscan.com";
+      }
+    } else if (kCoinType == KCoinType.ETH) {
+      if (KNetType.Mainnet == netType) {
+        host = "https://api.etherscan.io";
+      } else {
+        host = "https://api-rinkeby.etherscan.io";
+      }
+    } else if (kCoinType == KCoinType.HECO) {
+      host = "https://api.hecoinfo.com";
+      if (netType == KNetType.Testnet) {
+        host = "https://api-testnet.hecoinfo.com";
+      }
+    } else if (kCoinType == KCoinType.AVAX) {
+      host = "https://api.snowtrace.io";
+      if (netType == KNetType.Testnet) {
+        host = "https://api-testnet.snowtrace.io";
+      }
+    } else if (kCoinType == KCoinType.Arbitrum) {
+      if (KNetType.Mainnet == netType) {
+        host = "https://api.arbiscan.io";
+      } else {
+        host = "https://api-testnet.arbiscan.io";
+      }
+    }
+    return host;
+  }
+
   // static Future<bool> insertNodeDatas(List<NodeModel> list) async {
   //   try {
   //     FlutterDatabase? database = await BaseModel.getDataBae();

@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:math';
 
 import 'package:cstoken/model/node/node_model.dart';
+import 'package:cstoken/model/tokens/collection_tokens.dart';
 import 'package:cstoken/model/transrecord/trans_record.dart';
 import 'package:cstoken/net/request_method.dart';
 import 'package:cstoken/net/url.dart';
@@ -96,6 +97,43 @@ class ChainServices {
     return null;
   }
 
+  static Future<dynamic> requestETHDatas(
+      {required KCoinType kCoinType,
+      required String path,
+      Map<String, dynamic>? queryParameters,
+      dynamic data}) async {
+    String host = NodeModel.getBlockExploreApi(kCoinType);
+    queryParameters ??= {};
+    if (kCoinType == KCoinType.BSC) {
+      queryParameters["apikey"] = "GK3C39199V556I849N46RSPPCJAGYA7RNG";
+    } else if (kCoinType == KCoinType.Arbitrum) {
+      queryParameters["apikey"] = "WUFC43UEE3FCW1SKT3QYE4REHNTA24S1Y9";
+    } else if (kCoinType == KCoinType.AVAX) {
+      queryParameters["apikey"] = "S15E9AHU2SG5J3JJXVFZYH4P2I5DA4744Q";
+    } else if (kCoinType == KCoinType.HECO) {
+      queryParameters["apikey"] = "R9UASFXFRCY24SRGJQ6QM22DH4WX26PNSU";
+    } else if (kCoinType == KCoinType.ETH) {
+      queryParameters["apikey"] = "TMBXD4DKBMRDWT8IBEZMJGPRHS7ZZN3UGK";
+    }
+
+    String url = host + path;
+    // queryParameters["url"] = url;
+    // queryParameters["time"] = DateUtil.getNowDateMs();
+    // queryParameters["secret"] = "";
+
+    dynamic result = await RequestMethod.manager!.requestData(Method.GET, url,
+        queryParameters: queryParameters, data: data);
+    return result;
+    if (result != null && result is Map) {
+      int code = result["code"];
+      if (code == 200) {
+        String object = result["result"];
+        return JsonUtil.getObj(object);
+      }
+    }
+    return null;
+  }
+
   static Future<List<TransRecordModel>> requestTransRecord({
     required KCoinType kCoinType,
     required KTransDataType kTransDataType,
@@ -121,6 +159,71 @@ class ChainServices {
       // );
     }
     return [];
+  }
+
+  static Future<List<TransRecordModel>> requestETHTranslist(
+      {required MCollectionTokens tokens,
+      required KTransDataType kTransDataType,
+      required String from,
+      required int page}) async {
+    List<TransRecordModel> datas = [];
+    Map<String, dynamic> params = {};
+    KCoinType coinType = tokens.chainType!.geCoinType();
+    if (kTransDataType == KTransDataType.ts_other) {
+      return [];
+    }
+    int? decimal = tokens.decimals;
+    String? symbol = tokens.token;
+    params["module"] = "account";
+    params["address"] = from;
+    params["page"] = page;
+    params["offset"] = 20;
+    if (tokens.isToken == false) {
+      params["action"] = "txlist";
+    } else {
+      params["action"] = "tokentx";
+      params["contractaddress"] = tokens.contract;
+    }
+    dynamic result = await requestETHDatas(
+        kCoinType: coinType, path: "/api", queryParameters: params);
+    if (result != null && result is Map) {
+      String status = result["status"];
+      if (status == "1") {
+        List object = result["result"];
+
+        for (var item in object) {
+          String blockNumber = item["blockNumber"];
+          String timeStamp = item["timeStamp"];
+          String hash = item["hash"];
+          String from = item["from"];
+          String to = item["to"];
+          BigInt value = BigInt.parse(item["value"]);
+          BigInt gasPrice = BigInt.parse(item["gasPrice"] ?? "0");
+          String gasUsed = item["gasUsed"] ?? "0";
+          String fee = TRWallet.configFeeValue(
+              cointype: coinType.index,
+              beanValue: gasUsed,
+              offsetValue: gasPrice.tokenString(9));
+
+          TransRecordModel model = TransRecordModel();
+          model.txid = hash;
+          model.fromAdd = from;
+          model.toAdd = to;
+          model.fee = fee;
+          model.amount =
+              decimal == null ? value.toString() : value.tokenString(decimal);
+          model.date = DateUtil.formatDateMs(int.parse(timeStamp) * 1000);
+          model.coinType = coinType.coinTypeString();
+          model.token = symbol;
+          model.transStatus = KTransState.success.index;
+          model.chainid = 0;
+          model.transType = KTransType.transfer.index;
+          model.blockHeight = int.tryParse(blockNumber);
+          datas.add(model);
+        }
+      }
+    }
+    return datas;
   }
 
   static Future<List<TransRecordModel>> requestTRXTranslist(

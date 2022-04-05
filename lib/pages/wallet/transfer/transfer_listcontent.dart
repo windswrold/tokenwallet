@@ -30,6 +30,7 @@ class _TransferListContentState extends State<TransferListContent>
   StreamSubscription? _transupTE;
   String? _fingerprint;
   int? _before;
+  int _page = 1;
   void initState() {
     // TODO: implement initState
     super.initState();
@@ -57,6 +58,9 @@ class _TransferListContentState extends State<TransferListContent>
     if (isRefresh == true) {
       _fingerprint = null;
       _before = null;
+      _page = 1;
+    } else {
+      _page += 1;
     }
     KCoinType coinType = _trWalletInfo!.coinType!.geCoinType();
     KTransDataType kTransDataType = KTransDataType.ts_all;
@@ -89,6 +93,12 @@ class _TransferListContentState extends State<TransferListContent>
       if (datas.isNotEmpty) {
         _before = datas.last.blockHeight;
       }
+    } else {
+      datas = await ChainServices.requestETHTranslist(
+          kTransDataType: kTransDataType,
+          from: from,
+          page: _page,
+          tokens: _tokens!);
     }
     setState(() {
       if (isRefresh == true) {
