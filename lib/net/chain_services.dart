@@ -105,36 +105,36 @@ class ChainServices {
     String host = NodeModel.getBlockExploreApi(kCoinType);
     queryParameters ??= {};
     String url = host + path;
-    String netHost = RequestURLS.getHost() + RequestURLS.ethGet;
-    queryParameters["url"] = url + queryParameters.url();
-    queryParameters["time"] = DateUtil.getNowDateMs();
-    queryParameters["secret"] = "";
-    dynamic result = await RequestMethod.manager!.requestData(
-        Method.GET, netHost,
-        queryParameters: queryParameters, data: data);
-    if (result != null && result is Map) {
-      int code = result["code"];
-      if (code == 200) {
-        String object = result["result"];
-        return JsonUtil.getObj(object);
+    if (kCoinType == KCoinType.ETH) {
+      String netHost = RequestURLS.getHost() + RequestURLS.ethGet;
+      queryParameters["url"] = url + queryParameters.url();
+      queryParameters["time"] = DateUtil.getNowDateMs();
+      queryParameters["secret"] = "";
+      dynamic result = await RequestMethod.manager!.requestData(
+          Method.GET, netHost,
+          queryParameters: queryParameters, data: data);
+      if (result != null && result is Map) {
+        int code = result["code"];
+        if (code == 200) {
+          String object = result["result"];
+          return JsonUtil.getObj(object);
+        }
       }
+      return result;
+    } else {
+      if (kCoinType == KCoinType.BSC) {
+        queryParameters["apikey"] = "GK3C39199V556I849N46RSPPCJAGYA7RNG";
+      } else if (kCoinType == KCoinType.Arbitrum) {
+        queryParameters["apikey"] = "WUFC43UEE3FCW1SKT3QYE4REHNTA24S1Y9";
+      } else if (kCoinType == KCoinType.AVAX) {
+        queryParameters["apikey"] = "S15E9AHU2SG5J3JJXVFZYH4P2I5DA4744Q";
+      } else if (kCoinType == KCoinType.HECO) {
+        queryParameters["apikey"] = "R9UASFXFRCY24SRGJQ6QM22DH4WX26PNSU";
+      }
+      dynamic result = await RequestMethod.manager!.requestData(Method.GET, url,
+          queryParameters: queryParameters, data: data);
+      return result;
     }
-    return result;
-
-    // if (kCoinType == KCoinType.BSC) {
-    //   queryParameters["apikey"] = "GK3C39199V556I849N46RSPPCJAGYA7RNG";
-    // } else if (kCoinType == KCoinType.Arbitrum) {
-    //   queryParameters["apikey"] = "WUFC43UEE3FCW1SKT3QYE4REHNTA24S1Y9";
-    // } else if (kCoinType == KCoinType.AVAX) {
-    //   queryParameters["apikey"] = "S15E9AHU2SG5J3JJXVFZYH4P2I5DA4744Q";
-    // } else if (kCoinType == KCoinType.HECO) {
-    //   queryParameters["apikey"] = "R9UASFXFRCY24SRGJQ6QM22DH4WX26PNSU";
-    // } else if (kCoinType == KCoinType.ETH) {
-    //   queryParameters["apikey"] = "TMBXD4DKBMRDWT8IBEZMJGPRHS7ZZN3UGK";
-    // }
-    // dynamic result = await RequestMethod.manager!.requestData(Method.GET, url,
-    //     queryParameters: queryParameters, data: data);
-    // return result;
   }
 
   static Future<List<TransRecordModel>> requestETHTranslist(
