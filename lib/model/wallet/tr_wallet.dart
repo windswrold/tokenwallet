@@ -271,7 +271,13 @@ class TRWallet {
         if (token.chainType == KCoinType.BTC.index) {
           token.tokenType = KTokenType.native.index;
         } else if (token.chainType == KCoinType.TRX.index) {
-          token.tokenType = KTokenType.native.index;
+          if (token.contract == null ||
+              token.contract!.isEmpty ||
+              token.contract == "0x0000000000000000000000000000000000000000") {
+            token.tokenType = KTokenType.native.index;
+          } else {
+            token.tokenType = KTokenType.trc20.index;
+          }
         } else {
           token.tokenType =
               token.contract == "0x0000000000000000000000000000000000000000"
