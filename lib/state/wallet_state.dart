@@ -97,7 +97,7 @@ class CurrentChooseWalletState with ChangeNotifier {
     initNFTIndex();
     initNFTTokens();
     requestAssets();
-    // _configTimerRequest();
+    _configTimerRequest();
     notifyListeners();
     return _currentWallet;
   }
