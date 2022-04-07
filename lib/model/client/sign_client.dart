@@ -512,6 +512,15 @@ class SignTransactionClient {
         include0x: true);
   }
 
+  static String get721TokenURI(String contract, String tid) {
+    final contractAddress = EthereumAddress.fromHex(contract);
+    final dc = DeployedContract(_erc721Abi, contractAddress);
+    final function = dc.function('tokenURI');
+    return bytesToHex(
+        function.encodeCall([BigInt.tryParse(tid) ?? BigInt.zero]),
+        include0x: true);
+  }
+
   int? get ChainID => _chainId;
 }
 
@@ -540,6 +549,9 @@ final ContractAbi _erc721Abi = ContractAbi('ERC721', [
     FunctionParameter('to', AddressType()),
     FunctionParameter('id', UintType(length: 256)),
     FunctionParameter('data', DynamicBytes()),
+  ]),
+  const ContractFunction('tokenURI', [
+    FunctionParameter('tokenId', UintType(length: 256)),
   ]),
   const ContractFunction(
       'balanceOf', [FunctionParameter('from', AddressType())]),

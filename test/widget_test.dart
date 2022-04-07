@@ -7,7 +7,9 @@
 
 import 'dart:convert';
 import 'dart:math';
+import 'dart:typed_data';
 
+import 'package:cstoken/model/client/sign_client.dart';
 import 'package:cstoken/model/mnemonic/mnemonic.dart';
 import 'package:cstoken/public.dart';
 import 'package:cstoken/utils/date_util.dart';
@@ -84,21 +86,32 @@ void main() {
         hexToBytes("418feb95b65129f0101b6b5d1b6cd01d3ff72fb9d7"));
     print(value);
 
-    final contractAddress =
-        EthereumAddress.fromHex("0x88b48f654c30e99bc2e4a1559b4dcf1ad93fa656");
-    final contract = DeployedContract(_erc1155Abi, contractAddress);
-    final function = contract.function('balanceOf');
-    final abi = bytesToHex(function.encodeCall([
-      contractAddress,
-      BigInt.parse(
-          "50122364812794259909901293353502058643127092878053915726483470122051514138625")
-    ]));
-    print(abi);
+    String content_hash =
+        '39bdc34790465b6203363d9d98d925fc46fabb9f4c09ade4cac32c97da234423';
+    // String cid = bytesToHex(base58CheckDecode("1220" + content_hash));
+    String cid = base58BitcoinEncode(hexToBytes("1220" + content_hash));
+    print("cid " + cid);
 
-    final contract2 = DeployedContract(_erc721Abi, contractAddress);
-    final function2 = contract2.function('balanceOf');
-    final abi2 = bytesToHex(function2.encodeCall([contractAddress]));
-    print(abi2);
+    // final contractAddress =
+    //     EthereumAddress.fromHex("0x88b48f654c30e99bc2e4a1559b4dcf1ad93fa656");
+    // final contract = DeployedContract(_erc1155Abi, contractAddress);
+    // final function = contract.function('balanceOf');
+    // final abi = bytesToHex(function.encodeCall([
+    //   contractAddress,
+    //   BigInt.parse(
+    //       "50122364812794259909901293353502058643127092878053915726483470122051514138625")
+    // ]));
+    // print(abi);
+
+    // final contract2 = DeployedContract(_erc721Abi, contractAddress);
+    // final function2 = contract2.function('balanceOf');
+    // final abi2 = bytesToHex(function2.encodeCall([contractAddress]));
+    // print(abi2);
+
+    String string = SignTransactionClient.get721TokenURI(
+        "0x064e16771A4864561f767e4Ef4a6989fc4045aE7", "78932");
+    print("string");
+    print(string);
 
     // ascii.encode(string);
   });

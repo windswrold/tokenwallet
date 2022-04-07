@@ -475,8 +475,11 @@ class ChainServices {
       if (symbolResult == null || decimalResult == null) {
         return null;
       }
-
-      String subsymbolResult = (symbolResult["constant_result"] as List).first;
+      dynamic constant_result = symbolResult["constant_result"];
+      if (constant_result == null) {
+        return null;
+      }
+      String subsymbolResult = (constant_result as List).first;
       String subdecimalResult =
           (decimalResult["constant_result"] as List).first;
       if (subsymbolResult.isNotEmpty && subdecimalResult.isNotEmpty) {
