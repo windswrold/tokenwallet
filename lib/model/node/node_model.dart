@@ -172,7 +172,7 @@ class NodeModel {
       if (KNetType.Mainnet == netType) {
         node.content = "https://api.trongrid.io";
       } else {
-        node.content = "https://api.shasta.trongrid.io";
+        node.content = "https://nile.trongrid.io";
       }
     }
 

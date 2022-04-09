@@ -197,7 +197,11 @@ class MCollectionTokens {
             method: Method.POST,
             data: params);
         if (result != null && result is Map) {
-          String constant_result = (result["constant_result"] as List).first;
+          dynamic stant_result = result["constant_result"];
+          if (stant_result == null) {
+            return null;
+          }
+          String constant_result = (stant_result as List).first;
           if (constant_result.isNotEmpty) {
             constant_result = constant_result.replaceFirst("0x", "");
             BigInt balBInt = BigInt.parse(constant_result, radix: 16);

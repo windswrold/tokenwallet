@@ -72,9 +72,6 @@ class _TransferListContentState extends State<TransferListContent>
     }
 
     String from = _trWalletInfo?.walletAaddress ?? "";
-    String symbol = _tokens!.token ?? "";
-    String? contract = _tokens?.contract;
-    int decimal = _tokens?.decimals ?? 0;
     List<TransRecordModel> datas = [];
     if (coinType == KCoinType.TRX) {
       datas = await ChainServices.requestTRXTranslist(
@@ -82,12 +79,10 @@ class _TransferListContentState extends State<TransferListContent>
           from: from,
           fingerprint: _fingerprint,
           page: _page,
-          symbol: symbol,
-          contract: contract,
-          decimal: decimal,
           onComplation: (String? fingerprint) {
             _fingerprint = fingerprint;
-          });
+          },
+          tokens: _tokens!);
     } else if (coinType == KCoinType.BTC) {
       datas = await ChainServices.requestBTCTranslist(
           kTransDataType: kTransDataType,

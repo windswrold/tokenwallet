@@ -50,6 +50,7 @@ dependencies:
   device_preview: ^1.0.0
   base_codecs: ^1.0.1
   gzx_dropdown_menu: ^3.1.0
+  gestures: ^1.0.0
   trustdart:
      path: plugins/trustdart 
   

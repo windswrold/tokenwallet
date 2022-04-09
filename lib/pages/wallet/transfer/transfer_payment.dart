@@ -123,12 +123,16 @@ class _TransferPaymentState extends State<TransferPayment> {
                   child: Column(
                     children: [
                       _buildTextField(
-                          _kTransferState.addressEC, "transferetype_to".local(),
-                          hintText: "payments_address".local(),
-                          suffixIcon: CustomPageView.getCustomIcon(
-                              "icons/icon_addcontact.png", () {
-                            _kTransferState.goContract(context);
-                          })),
+                        _kTransferState.addressEC,
+                        "transferetype_to".local(),
+                        hintText: "payments_address".local(),
+                        suffixIcon: Padding(
+                            padding: EdgeInsets.only(right: 10.width),
+                            child: CustomPageView.getCustomIcon(
+                                "icons/icon_addcontact.png", () {
+                              _kTransferState.goContract(context);
+                            })),
+                      ),
                       Consumer<CurrentChooseWalletState>(
                           builder: (_, provider, child) {
                         return _buildTextField(_kTransferState.valueEC,
@@ -183,16 +187,18 @@ class _TransferPaymentState extends State<TransferPayment> {
                       Consumer<CurrentChooseWalletState>(
                           builder: (_, provider, child) {
                         return Visibility(
+                            visible: provider.walletinfo?.coinType ==
+                                KCoinType.TRX.index,
                             child: Container(
-                          padding: EdgeInsets.only(top: 10.width),
-                          child: Text(
-                            "payment_trontip".local(),
-                            style: TextStyle(
-                              fontSize: 12.font,
-                              color: ColorUtils.fromHex("#FF7685A2"),
-                            ),
-                          ),
-                        ));
+                              padding: EdgeInsets.only(top: 10.width),
+                              child: Text(
+                                "payment_trontip".local(),
+                                style: TextStyle(
+                                  fontSize: 12.font,
+                                  color: ColorUtils.fromHex("#FF7685A2"),
+                                ),
+                              ),
+                            ));
                       }),
                     ],
                   ),

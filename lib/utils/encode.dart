@@ -14,11 +14,19 @@ import 'package:base_codecs/base_codecs.dart';
 
 class TREncode {
   static String base58HexString(String value) {
-    return kBytesToHex(base58CheckDecode(value));
+    try {
+      return kBytesToHex(base58CheckDecode(value));
+    } catch (e) {
+      return "";
+    }
   }
 
   static String base58EncodeString(String value) {
-    return base58CheckEncode(hexToBytes(value));
+    try {
+      return base58CheckEncode(hexToBytes(value));
+    } catch (e) {
+      return "";
+    }
   }
 
   static String kBytesToHex(List<int> bytes, {bool include0x = false}) {

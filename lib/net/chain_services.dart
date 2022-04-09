@@ -214,13 +214,11 @@ class ChainServices {
   }
 
   static Future<List<TransRecordModel>> requestTRXTranslist(
-      {required KTransDataType kTransDataType,
+      {required MCollectionTokens tokens,
+      required KTransDataType kTransDataType,
       required String from,
       required String? fingerprint,
       required int page,
-      required String symbol,
-      required String? contract,
-      required int decimal,
       required Function(String? fingerprint) onComplation}) async {
     List<TransRecordModel> datas = [];
     String path = "";
@@ -238,11 +236,15 @@ class ChainServices {
     if (fingerprint != null) {
       params["fingerprint"] = fingerprint;
     }
-    if (contract != null && contract.isNotEmpty) {
+    String contract = "";
+    int decimal = tokens.decimals!;
+    String symbol = tokens.token!;
+    if (tokens.tokenType == KTokenType.native.index) {
+      path = "/v1/accounts/$from/transactions";
+    } else {
+      contract = tokens.contract!;
       path = "/v1/accounts/$from/transactions/trc20";
       params["contract_address"] = contract;
-    } else {
-      path = "/v1/accounts/$from/transactions";
     }
     dynamic result = await ChainServices.requestTRXDatas(
         path: path, method: Method.GET, queryParameters: params);

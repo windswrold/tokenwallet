@@ -92,8 +92,8 @@ class TRWallet {
               content: memo!,
               pin: "",
               kLeadType: leadType!.getLeadType(),
-              kchainType: chainType!.getChainType(),
-              kCoinType: infoCoinType);
+              kCoinType: infoCoinType,
+              kchainType: null);
           if (hdWallets.isNotEmpty) {
             String prv = hdWallets.first.prv ?? "";
             confirmPressed(prv);
@@ -271,9 +271,7 @@ class TRWallet {
         if (token.chainType == KCoinType.BTC.index) {
           token.tokenType = KTokenType.native.index;
         } else if (token.chainType == KCoinType.TRX.index) {
-          if (token.contract == null ||
-              token.contract!.isEmpty ||
-              token.contract == "0x0000000000000000000000000000000000000000") {
+          if (token.contract == "0x0000000000000000000000000000000000000000") {
             token.tokenType = KTokenType.native.index;
           } else {
             token.tokenType = KTokenType.trc20.index;

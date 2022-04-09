@@ -46,7 +46,7 @@ class HDWallet {
       {required String content,
       required String pin,
       required KLeadType kLeadType,
-      required KChainType kchainType,
+      required KChainType? kchainType,
       KCoinType? kCoinType}) async {
     List<HDWallet> _hdwallets = [];
     if (kLeadType == KLeadType.Memo || kLeadType == KLeadType.Restore) {
