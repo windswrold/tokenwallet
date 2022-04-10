@@ -37,11 +37,15 @@ class CurrentChooseWalletState with ChangeNotifier {
   Map<String, Map> _nftIndexInfo = {};
   Map? get nftIndexInfo =>
       _currentWallet == null ? null : _nftIndexInfo[_currentWallet?.walletID];
-  Map<String?, String> _totalAssets = {}; //总资产数额
+  Map<String?, String> _totalTokenAssets = {}; //总资产数额
+  Map<String?, String> _totalNFTAssets = {}; //总资产数额
 
   Map<String?, List<MCollectionTokens>> _tokens = {};
-  List<MCollectionTokens> get tokens =>
-      _currentWallet == null ? [] : (_tokens[_currentWallet?.walletID] ?? []);
+  List<MCollectionTokens> get tokens => _homeTokenType == 0
+      ? _currentWallet == null
+          ? []
+          : (_tokens[_currentWallet?.walletID] ?? [])
+      : nftInfos;
 
   KCoinType? _chooseChainType;
   String get chooseChain => _chooseChainType == null
@@ -55,9 +59,14 @@ class CurrentChooseWalletState with ChangeNotifier {
   TRWalletInfo? get walletinfo => _walletinfo;
   int _homeTokenType = 0;
   int get homeTokenType => _homeTokenType;
-  Map<String?, List> _nftTokens = {};
-  List get nftTokens =>
-      _currentWallet == null ? [] : _nftTokens[_currentWallet?.walletID] ?? [];
+  Map<String?, List> _nftContracts = {};
+  List get nftContracts => _currentWallet == null
+      ? []
+      : _nftContracts[_currentWallet?.walletID] ?? [];
+
+  Map<String?, List<MCollectionTokens>> _nftInfos = {};
+  List<MCollectionTokens> get nftInfos =>
+      _currentWallet == null ? [] : _nftInfos[_currentWallet?.walletID] ?? [];
 
   MCollectionTokens? chooseTokens() {
     if (tokens.length > _tokenIndex) {
@@ -69,14 +78,24 @@ class CurrentChooseWalletState with ChangeNotifier {
     }
   }
 
-  String? totalAssets() {
+  String? totalTokenAssets() {
     if (_currentWallet == null) {
       return "0.00";
     }
     if (_currentWallet!.hiddenAssets == true) {
       return "****";
     }
-    return _totalAssets[_currentWallet?.walletID] ?? "0.00";
+    return _totalTokenAssets[_currentWallet?.walletID] ?? "0.00";
+  }
+
+  String? totalNFTAssets() {
+    if (_currentWallet == null) {
+      return "0.00";
+    }
+    if (_currentWallet!.hiddenAssets == true) {
+      return "****";
+    }
+    return _totalNFTAssets[_currentWallet?.walletID] ?? "0.00";
   }
 
   @override
@@ -96,7 +115,7 @@ class CurrentChooseWalletState with ChangeNotifier {
     initNFTIndex();
     initNFTTokens();
     requestAssets();
-    // _configTimerRequest();
+    _configTimerRequest();
     notifyListeners();
     return _currentWallet;
   }
@@ -142,7 +161,7 @@ class CurrentChooseWalletState with ChangeNotifier {
       return;
     }
     List result = await WalletServices.getUserNftList(address: ethAdress);
-    _nftTokens[_currentWallet!.walletID!] = result;
+    _nftContracts[_currentWallet!.walletID!] = result;
     notifyListeners();
   }
 
@@ -288,6 +307,33 @@ class CurrentChooseWalletState with ChangeNotifier {
     Routers.push(context, WalletsSetting(wallet: _currentWallet!));
   }
 
+  void tapNFTInfo(BuildContext context, Map nftInfo) {
+    List datas = nftInfo["nftId"];
+    String chainTypeName = nftInfo["chainTypeName"];
+    String contractAddress = nftInfo["contractAddress"];
+    final String walletID = _currentWallet!.walletID!;
+    List<MCollectionTokens> _datas = [];
+    for (var item in datas) {
+      KCoinType coinType = chainTypeName.chainTypeGetCoinType()!;
+      String url = nftInfo["url"] ?? '';
+      MCollectionTokens model = MCollectionTokens();
+      model.contract = contractAddress;
+      model.digits = 0;
+      model.chainType = coinType.index;
+      model.tid = item.toString();
+      model.iconPath = url;
+      model.decimals = 0;
+      model.token = "";
+      model.tokenType = KTokenType.eip721.index;
+      model.balance = 0.0;
+      model.coinType = chainTypeName.chainTypeGetCoinType()!.coinTypeString();
+      model.tokenID = model.createTokenID(walletID);
+      _datas.add(model);
+    }
+    _nftInfos[walletID] = _datas;
+    Routers.push(context, NFTListData(model: nftInfo));
+  }
+
   void onIndexChanged(BuildContext context, int index) {
     _homeTokenType = index;
     if (index == 1) {
@@ -325,10 +371,7 @@ class CurrentChooseWalletState with ChangeNotifier {
         .first;
     _walletinfo = infos;
     LogUtil.v("updateTokenChoose infos " + infos.walletAaddress!);
-    if (pushTransList == false) {
-      Map nft = nftTokens[index];
-      Routers.push(context, NFTListData(model: nft));
-    } else {
+    if (pushTransList == true) {
       Routers.push(context, TransferListPage());
     }
   }
@@ -523,12 +566,23 @@ class CurrentChooseWalletState with ChangeNotifier {
   void _calTotalAssets() {
     final String? walletID = _currentWallet!.walletID;
     Decimal sumAssets = Decimal.zero;
-    for (int i = 0; i < tokens.length; i++) {
-      MCollectionTokens map = tokens[i];
+    List<MCollectionTokens> userTokens = _tokens[walletID] ?? [];
+    for (int i = 0; i < userTokens.length; i++) {
+      MCollectionTokens map = userTokens[i];
       sumAssets += Decimal.tryParse(map.assets) ?? Decimal.zero;
     }
     String total = sumAssets == Decimal.zero ? "0.00" : sumAssets.toString();
-    _totalAssets[walletID] = total;
+    _totalTokenAssets[walletID] = total;
+
+    Decimal sumnftAssets = Decimal.zero;
+    List<MCollectionTokens> userNFTTokens = _nftInfos[walletID] ?? [];
+    for (int i = 0; i < userNFTTokens.length; i++) {
+      MCollectionTokens map = userNFTTokens[i];
+      sumnftAssets += Decimal.tryParse(map.assets) ?? Decimal.zero;
+    }
+    String totalnft =
+        sumnftAssets == Decimal.zero ? "0.00" : sumnftAssets.toString();
+    _totalNFTAssets[walletID] = totalnft;
     notifyListeners();
   }
 }

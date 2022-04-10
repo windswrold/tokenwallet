@@ -1,6 +1,7 @@
 import 'package:cstoken/component/empty_data.dart';
 import 'package:cstoken/model/tokens/collection_tokens.dart';
 import 'package:cstoken/pages/wallet/transfer/transfer_list.dart';
+import 'package:cstoken/pages/wallet/wallets/nft_listdata.dart';
 import 'package:flutter_swipe_action_cell/core/cell.dart';
 
 import '../public.dart';
@@ -171,7 +172,7 @@ class WalletsTabList extends StatelessWidget {
     return GestureDetector(
       behavior: HitTestBehavior.opaque,
       onTap: () {
-        provider.updateTokenChoose(context, index, pushTransList: false);
+        provider.tapNFTInfo(context, nftInfo);
       },
       child: Container(
         height: 68.width,
@@ -220,7 +221,7 @@ class WalletsTabList extends StatelessWidget {
         builder: (_, provider, child) {
           int homeTokenType = provider.homeTokenType;
           List<dynamic> datas =
-              homeTokenType == 0 ? provider.tokens : provider.nftTokens;
+              homeTokenType == 0 ? provider.tokens : provider.nftContracts;
           return datas.isEmpty
               ? EmptyDataPage()
               : ListView.builder(

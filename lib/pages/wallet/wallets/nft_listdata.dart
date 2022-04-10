@@ -1,4 +1,5 @@
 import 'package:cstoken/component/custom_refresher.dart';
+import 'package:cstoken/model/tokens/collection_tokens.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 import '../../../public.dart';
@@ -101,16 +102,14 @@ class _NFTListDataState extends State<NFTListData> {
     );
   }
 
-  Widget _buildCell(dynamic infos) {
+  Widget _buildCell(
+      MCollectionTokens infos, int index, CurrentChooseWalletState provider) {
     return GestureDetector(
       behavior: HitTestBehavior.opaque,
       onTap: () {
-        Routers.push(
-            context,
-            NFTInfo(
-              nftModel: widget.model,
-              tokenid: infos.toString(),
-            ));
+        provider.updateTokenChoose(context, index, pushTransList: false);
+        Routers.push(context,
+            NFTInfo(nftModel: widget.model, tokenid: infos.toString()));
       },
       child: Container(
         height: 75.width,
@@ -134,7 +133,7 @@ class _NFTListDataState extends State<NFTListData> {
                 10.rowWidget,
                 Container(
                   child: Text(
-                    infos.toString(),
+                    infos.tid.toString(),
                     style: TextStyle(
                       fontSize: 14.font,
                       color: Color.fromARGB(255, 183, 183, 183),
@@ -156,7 +155,6 @@ class _NFTListDataState extends State<NFTListData> {
 
   @override
   Widget build(BuildContext context) {
-    List datas = widget.model["nftId"];
     return CustomPageView(
       title: CustomPageView.getTitle(title: "homepage_nftinfo".local()),
       child: Column(
@@ -180,11 +178,15 @@ class _NFTListDataState extends State<NFTListData> {
             ),
           ),
           Expanded(
-            child: ListView.builder(
-              itemCount: datas.length,
-              itemBuilder: (BuildContext context, int index) {
-                dynamic infos = datas[index];
-                return _buildCell(infos);
+            child: Consumer<CurrentChooseWalletState>(
+              builder: (_, value, child) {
+                return ListView.builder(
+                  itemCount: value.nftInfos.length,
+                  itemBuilder: (BuildContext context, int index) {
+                    MCollectionTokens infos = value.nftInfos[index];
+                    return _buildCell(infos, index, value);
+                  },
+                );
               },
             ),
           ),

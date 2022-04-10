@@ -1,6 +1,7 @@
 import 'package:cstoken/component/empty_data.dart';
 import 'package:cstoken/model/client/sign_client.dart';
 import 'package:cstoken/net/chain_services.dart';
+import 'package:cstoken/pages/wallet/transfer/transfer_payment.dart';
 import 'package:cstoken/utils/custom_toast.dart';
 
 import '../../../public.dart';
@@ -32,6 +33,7 @@ class _NFTInfoState extends State<NFTInfo> {
         SignTransactionClient.get721TokenURI(contractAddress, widget.tokenid);
     dynamic result =
         await ChainServices.requestNFTInfo(coinType: coinType, qparams: params);
+
     HWToast.hiddenAllToast();
     if (result == null || result is! Map) {
       return;
@@ -82,7 +84,9 @@ class _NFTInfoState extends State<NFTInfo> {
             ),
             margin: EdgeInsets.only(
                 left: 16.width, right: 16.width, bottom: 16.width),
-            onPressed: () {},
+            onPressed: () {
+              Routers.push(context, TransferPayment());
+            },
             title: "homepage_send".local(),
           ),
         ],

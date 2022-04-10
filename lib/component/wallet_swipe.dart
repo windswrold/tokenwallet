@@ -99,7 +99,7 @@ class WalletSwipe extends StatelessWidget {
                   ),
                   children: [
                     TextSpan(
-                      text: kprovider.totalAssets(),
+                      text: kprovider.totalTokenAssets(),
                       style: TextStyle(
                         fontSize: 32.font,
                         fontWeight: FontWeightUtils.bold,
@@ -209,7 +209,7 @@ class WalletSwipe extends StatelessWidget {
                   ),
                   children: [
                     TextSpan(
-                      text: kprovider.totalAssets(),
+                      text: kprovider.totalNFTAssets(),
                       style: TextStyle(
                         fontSize: 32.font,
                         fontWeight: FontWeightUtils.bold,

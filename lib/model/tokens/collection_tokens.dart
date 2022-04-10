@@ -221,11 +221,13 @@ class MCollectionTokens {
         _balance = balBInt.tokenDouble(decimals ?? 0);
       }
     }
-    TokenPrice? price =
+    TokenPrice? priceModel =
         await TokenPrice.queryTokenPrices(token ?? "", currencyType);
-    if (price != null) {
-      _price = double.parse(price.rate ?? "0.0");
+    if (priceModel != null) {
+      _price = double.parse(priceModel.rate ?? "0.0");
     }
+    balance = _balance;
+    price = _price;
     MCollectionTokens.updateTokenData(
         "price=$_price,balance =$_balance WHERE tokenID = '$tokenID'");
   }
