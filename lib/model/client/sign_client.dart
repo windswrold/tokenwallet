@@ -512,13 +512,22 @@ class SignTransactionClient {
         include0x: true);
   }
 
-  static String get721TokenURI(String contract, String tid) {
+  static Map get721TokenURI(String contract, String tid) {
     final contractAddress = EthereumAddress.fromHex(contract);
     final dc = DeployedContract(_erc721Abi, contractAddress);
     final function = dc.function('tokenURI');
-    return bytesToHex(
+    String data = bytesToHex(
         function.encodeCall([BigInt.tryParse(tid) ?? BigInt.zero]),
         include0x: true);
+    return {
+      "jsonrpc": "2.0",
+      "id": tid,
+      "method": "eth_call",
+      "params": [
+        {"to": contract, "data": data},
+        "latest"
+      ]
+    };
   }
 
   int? get ChainID => _chainId;

@@ -546,4 +546,52 @@ class ChainServices {
       return object;
     }
   }
+
+  static Future<Map?> requestNFTInfo(
+      {required KCoinType coinType, required dynamic qparams}) async {
+    dynamic result = await requestDatas(coinType: coinType, params: qparams);
+    if (result == null) {
+      return null;
+    }
+    Map params = result as Map;
+    if (params.keys.contains("result") && params["result"].length > 2) {
+      String result = params["result"] as String;
+      result = result.replaceAll("0x", "");
+      if (result.length >= 192) {
+        int length = int.parse(result.substring(64, 128), radix: 16);
+        result = result.substring(128, 128 + length * 2);
+        result = utf8.decoder.convert(hexToBytes(result));
+        result = result.replaceAll(" ", "").trim();
+        LogUtil.v("info  $result");
+        return requestIPFSInfo(cid: result);
+      }
+    }
+  }
+
+  static Future<Map?> requestIPFSInfo({required String cid}) async {
+    cid = cid.replaceAll("ipfs://", "");
+    String url = "https://ipfs.io/ipfs/$cid";
+    dynamic result = await RequestMethod.manager!.requestData(Method.GET, url);
+    // result = {
+    //   "name": "Oil Money Cash Money #100",
+    //   "description": "The First Of Many Huge Upcoming Arabian NFT Projects",
+    //   "image":
+    //       "https://ipfs.io/ipfs/bafybeigpl7wahfiu5rnoyzswd6cdy7thqwcmdrmk4fuou2fqnhiq7rkboa",
+    //   "attributes": [
+    //     {"trait_type": "BackGround", "value": "Dubai"},
+    //     {"trait_type": "Body", "value": "BrownSkin"},
+    //     {"trait_type": "Eye and Nose", "value": "EyeNose3"},
+    //     {"trait_type": "Mouth", "value": "Mouth2"},
+    //     {"trait_type": "Hair", "value": "Hair18"},
+    //     {"trait_type": "Clothes", "value": "Modern18"},
+    //     {"trait_type": "SunGlasses", "value": "NoGlasses"},
+    //     {"trait_type": "Koffiye", "value": "Koffiye2"}
+    //   ],
+    //   "dna": "c11218626632768cb1b644f2f34dcc25a27f4c8b",
+    //   "edition": 100,
+    //   "date": 1649545958658,
+    //   "compiler": "HashLips Art Engine - codeSTACKr Modified"
+    // };
+    return result;
+  }
 }

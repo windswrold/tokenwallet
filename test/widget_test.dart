@@ -108,7 +108,7 @@ void main() {
     // final abi2 = bytesToHex(function2.encodeCall([contractAddress]));
     // print(abi2);
 
-    String string = SignTransactionClient.get721TokenURI(
+    Map string = SignTransactionClient.get721TokenURI(
         "0x064e16771A4864561f767e4Ef4a6989fc4045aE7", "78932");
     print("string");
     print(string);

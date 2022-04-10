@@ -161,18 +161,17 @@ class WalletsTabList extends StatelessWidget {
     );
   }
 
-  Widget _nftCell(BuildContext context, MCollectionTokens collectToken,
-      String currencySymbolStr, CurrentChooseWalletState provider, int index) {
-    String imgname = collectToken.iconPath ?? "";
-    String token = collectToken.token ?? "";
-    String balance = provider.currentWallet?.hiddenAssets == true
-        ? "****"
-        : collectToken.balanceString;
-
+  Widget _nftCell(BuildContext context, Map nftInfo, String currencySymbolStr,
+      CurrentChooseWalletState provider, int index) {
+    String imgname = nftInfo["url"] ?? "";
+    List nftId = nftInfo["nftId"];
+    int sum = nftId.length;
+    String name = nftInfo["contractAddress"] ?? "";
+    name = name.contractAddress();
     return GestureDetector(
       behavior: HitTestBehavior.opaque,
       onTap: () {
-        provider.updateTokenChoose(context, index);
+        provider.updateTokenChoose(context, index, pushTransList: false);
       },
       child: Container(
         height: 68.width,
@@ -190,7 +189,7 @@ class WalletsTabList extends StatelessWidget {
                 LoadTokenAssetsImage(imgname, width: 36, height: 36),
                 8.rowWidget,
                 Text(
-                  token,
+                  name,
                   style: TextStyle(
                     fontWeight: FontWeightUtils.medium,
                     fontSize: 16.font,
@@ -200,7 +199,7 @@ class WalletsTabList extends StatelessWidget {
               ],
             ),
             Text(
-              balance,
+              sum.toString(),
               style: TextStyle(
                 fontWeight: FontWeightUtils.bold,
                 fontSize: 18.font,
@@ -220,7 +219,7 @@ class WalletsTabList extends StatelessWidget {
       child: Consumer<CurrentChooseWalletState>(
         builder: (_, provider, child) {
           int homeTokenType = provider.homeTokenType;
-          List<MCollectionTokens> datas =
+          List<dynamic> datas =
               homeTokenType == 0 ? provider.tokens : provider.nftTokens;
           return datas.isEmpty
               ? EmptyDataPage()
@@ -228,7 +227,7 @@ class WalletsTabList extends StatelessWidget {
                   itemCount: datas.length,
                   itemBuilder: (BuildContext context, int index) {
                     final currencySymbolStr = provider.currencySymbolStr;
-                    MCollectionTokens collectToken = datas[index];
+                    dynamic collectToken = datas[index];
                     return homeTokenType == 0
                         ? _assetsCell(context, collectToken, currencySymbolStr,
                             provider, index)

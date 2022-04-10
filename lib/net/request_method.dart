@@ -16,8 +16,8 @@ enum Method {
   POST,
 }
 
-int _connectTimeout = 15 * 1000; //15s
-int _receiveTimeout = 15 * 1000; //15s
+int _connectTimeout = 30 * 1000; //15s
+int _receiveTimeout = 30 * 1000; //15s
 int _sendTimeout = 10 * 1000; //10s
 
 typedef complationBlock = void Function(dynamic result, int? code);

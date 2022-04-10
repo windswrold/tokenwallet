@@ -5,7 +5,8 @@ import '../../../public.dart';
 import 'nft_info.dart';
 
 class NFTListData extends StatefulWidget {
-  NFTListData({Key? key}) : super(key: key);
+  NFTListData({Key? key, required this.model}) : super(key: key);
+  final Map model;
 
   @override
   State<NFTListData> createState() => _NFTListDataState();
@@ -15,6 +16,11 @@ class _NFTListDataState extends State<NFTListData> {
   RefreshController _refreshController = RefreshController();
 
   Widget _buildHeader() {
+    String nftTypeName = widget.model["nftTypeName"];
+    String contract = widget.model["contractAddress"];
+    String name = widget.model["contractAddress"];
+    name = name.contractAddress();
+    String imgname = widget.model["url"] ?? "";
     return Container(
       color: Colors.white,
       height: 90.width,
@@ -22,14 +28,14 @@ class _NFTListDataState extends State<NFTListData> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
-          LoadTokenAssetsImage("name", width: 50, height: 50),
+          LoadTokenAssetsImage(imgname, width: 50, height: 50),
           10.rowWidget,
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Text(
-                "datadata",
+                name,
                 style: TextStyle(
                   fontWeight: FontWeightUtils.semiBold,
                   fontSize: 16.font,
@@ -42,12 +48,13 @@ class _NFTListDataState extends State<NFTListData> {
                   Container(
                     padding: EdgeInsets.symmetric(horizontal: 5.width),
                     alignment: Alignment.center,
+                    height: 25.width,
                     decoration: BoxDecoration(
                         border: Border.all(
                       color: Color.fromARGB(255, 210, 210, 210),
                     )),
                     child: Text(
-                      "data",
+                      "ERC" + nftTypeName,
                       style: TextStyle(
                         fontSize: 14.font,
                         color: Color.fromARGB(255, 183, 183, 183),
@@ -55,11 +62,34 @@ class _NFTListDataState extends State<NFTListData> {
                     ),
                   ),
                   10.rowWidget,
-                  Text(
-                    "data",
-                    style: TextStyle(
-                      fontSize: 14.font,
-                      color: Color.fromARGB(255, 183, 183, 183),
+                  GestureDetector(
+                    behavior: HitTestBehavior.opaque,
+                    onTap: () {
+                      contract.copy();
+                    },
+                    child: RichText(
+                      maxLines: 3,
+                      textAlign: TextAlign.left,
+                      text: TextSpan(
+                        text: contract.contractAddress(),
+                        style: TextStyle(
+                          color: Color.fromARGB(255, 183, 183, 183),
+                          fontSize: 14.font,
+                          fontWeight: FontWeight.w400,
+                        ),
+                        children: [
+                          WidgetSpan(
+                            child: Padding(
+                              padding: EdgeInsets.only(left: 9.width),
+                              child: LoadAssetsImage(
+                                "icons/icon_copy.png",
+                                width: 16,
+                                height: 16,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 ],
@@ -71,11 +101,16 @@ class _NFTListDataState extends State<NFTListData> {
     );
   }
 
-  Widget _buildCell() {
+  Widget _buildCell(dynamic infos) {
     return GestureDetector(
       behavior: HitTestBehavior.opaque,
       onTap: () {
-        Routers.push(context, NFTInfo());
+        Routers.push(
+            context,
+            NFTInfo(
+              nftModel: widget.model,
+              tokenid: infos.toString(),
+            ));
       },
       child: Container(
         height: 75.width,
@@ -99,7 +134,7 @@ class _NFTListDataState extends State<NFTListData> {
                 10.rowWidget,
                 Container(
                   child: Text(
-                    "data",
+                    infos.toString(),
                     style: TextStyle(
                       fontSize: 14.font,
                       color: Color.fromARGB(255, 183, 183, 183),
@@ -121,6 +156,7 @@ class _NFTListDataState extends State<NFTListData> {
 
   @override
   Widget build(BuildContext context) {
+    List datas = widget.model["nftId"];
     return CustomPageView(
       title: CustomPageView.getTitle(title: "homepage_nftinfo".local()),
       child: Column(
@@ -144,15 +180,14 @@ class _NFTListDataState extends State<NFTListData> {
             ),
           ),
           Expanded(
-              child: CustomRefresher(
-                  enableFooter: false,
-                  child: ListView.builder(
-                    itemCount: 10,
-                    itemBuilder: (BuildContext context, int index) {
-                      return _buildCell();
-                    },
-                  ),
-                  refreshController: _refreshController)),
+            child: ListView.builder(
+              itemCount: datas.length,
+              itemBuilder: (BuildContext context, int index) {
+                dynamic infos = datas[index];
+                return _buildCell(infos);
+              },
+            ),
+          ),
         ],
       ),
     );

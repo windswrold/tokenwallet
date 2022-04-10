@@ -16,6 +16,7 @@ import 'package:cstoken/pages/wallet/create/create_wallet_page.dart';
 import 'package:cstoken/pages/wallet/transfer/receive_page.dart';
 import 'package:cstoken/pages/wallet/transfer/transfer_list.dart';
 import 'package:cstoken/pages/wallet/transfer/transfer_payment.dart';
+import 'package:cstoken/pages/wallet/wallets/nft_listdata.dart';
 import 'package:cstoken/pages/wallet/wallets/wallets_setting.dart';
 import 'package:cstoken/utils/custom_toast.dart';
 import 'package:cstoken/utils/sp_manager.dart';
@@ -39,11 +40,9 @@ class CurrentChooseWalletState with ChangeNotifier {
   Map<String?, String> _totalAssets = {}; //总资产数额
 
   Map<String?, List<MCollectionTokens>> _tokens = {};
-  List<MCollectionTokens> get tokens => _currentWallet == null
-      ? []
-      : _homeTokenType == 0
-          ? (_tokens[_currentWallet?.walletID] ?? [])
-          : nftTokens;
+  List<MCollectionTokens> get tokens =>
+      _currentWallet == null ? [] : (_tokens[_currentWallet?.walletID] ?? []);
+
   KCoinType? _chooseChainType;
   String get chooseChain => _chooseChainType == null
       ? "walletmanager_asset_all".local()
@@ -56,8 +55,8 @@ class CurrentChooseWalletState with ChangeNotifier {
   TRWalletInfo? get walletinfo => _walletinfo;
   int _homeTokenType = 0;
   int get homeTokenType => _homeTokenType;
-  Map<String?, List<MCollectionTokens>> _nftTokens = {};
-  List<MCollectionTokens> get nftTokens =>
+  Map<String?, List> _nftTokens = {};
+  List get nftTokens =>
       _currentWallet == null ? [] : _nftTokens[_currentWallet?.walletID] ?? [];
 
   MCollectionTokens? chooseTokens() {
@@ -97,7 +96,7 @@ class CurrentChooseWalletState with ChangeNotifier {
     initNFTIndex();
     initNFTTokens();
     requestAssets();
-    _configTimerRequest();
+    // _configTimerRequest();
     notifyListeners();
     return _currentWallet;
   }
@@ -142,8 +141,7 @@ class CurrentChooseWalletState with ChangeNotifier {
     if (ethAdress == null) {
       return;
     }
-    List<MCollectionTokens> result =
-        await WalletServices.getUserNftList(address: ethAdress);
+    List result = await WalletServices.getUserNftList(address: ethAdress);
     _nftTokens[_currentWallet!.walletID!] = result;
     notifyListeners();
   }
@@ -321,18 +319,18 @@ class CurrentChooseWalletState with ChangeNotifier {
   void updateTokenChoose(BuildContext context, int index,
       {bool pushTransList = true}) async {
     _tokenIndex = index;
-
     final String walletID = _currentWallet!.walletID!;
     TRWalletInfo infos = (await TRWalletInfo.queryWalletInfo(
             walletID, chooseTokens()!.chainType!))
         .first;
     _walletinfo = infos;
     LogUtil.v("updateTokenChoose infos " + infos.walletAaddress!);
-    if (pushTransList == true) {
+    if (pushTransList == false) {
+      Map nft = nftTokens[index];
+      Routers.push(context, NFTListData(model: nft));
+    } else {
       Routers.push(context, TransferListPage());
     }
-
-    // LogUtil.v("updateTokenChoose _tokenIndex $_tokenIndex ");
   }
 
   void walletcellTapReceive(BuildContext context, int index) async {
