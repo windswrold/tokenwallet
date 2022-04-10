@@ -82,11 +82,15 @@ class BackupWarningTip extends StatelessWidget {
               child: GestureDetector(
                 behavior: HitTestBehavior.opaque,
                 onTap: tapClose,
-                child: Center(
-                  child: LoadAssetsImage(
-                    "icons/icon_circle_close.png",
-                    width: 16,
-                    height: 16,
+                child: SizedBox(
+                  width: 30.width,
+                  height: 30.width,
+                  child: Center(
+                    child: LoadAssetsImage(
+                      "icons/icon_circle_close.png",
+                      width: 16,
+                      height: 16,
+                    ),
                   ),
                 ),
               )),

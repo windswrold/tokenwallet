@@ -99,12 +99,15 @@ class _TransferListContentState extends State<TransferListContent>
           page: _page,
           tokens: _tokens!);
     }
-    setState(() {
-      if (isRefresh == true) {
-        _dappListData.clear();
-      }
-      _dappListData.addAll(datas);
-    });
+    if (mounted) {
+      setState(() {
+        if (isRefresh == true) {
+          _dappListData.clear();
+        }
+        _dappListData.addAll(datas);
+      });
+    }
+
     refreshController.loadComplete();
     refreshController.refreshCompleted(resetFooterState: true);
     if (coinType == KCoinType.TRX) {

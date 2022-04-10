@@ -228,5 +228,7 @@
     "customtokens_nftid": "ID",
     "homepage_nfthot": "热门藏品",
     "homepage_more": "更多 >",
-    "homepage_latest": "最新锻造"
+    "homepage_latest": "最新锻造",
+    "homepage_nftinfo": "NFT详情",
+    "homepage_send": "发送"
 }
