@@ -576,7 +576,7 @@ class ChainServices {
     //   "name": "Oil Money Cash Money #100",
     //   "description": "The First Of Many Huge Upcoming Arabian NFT Projects",
     //   "image":
-    //       "https://ipfs.io/ipfs/bafybeigpl7wahfiu5rnoyzswd6cdy7thqwcmdrmk4fuou2fqnhiq7rkboa",
+    //       "https://gimg2.baidu.com/image_search/src=http%3A%2F%2Ffile02.16sucai.com%2Fd%2Ffile%2F2014%2F0827%2Fc0c92bd51bb72e6d12d5b877dce338e8.jpg&refer=http%3A%2F%2Ffile02.16sucai.com&app=2002&size=f9999",
     //   "attributes": [
     //     {"trait_type": "BackGround", "value": "Dubai"},
     //     {"trait_type": "Body", "value": "BrownSkin"},
