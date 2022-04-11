@@ -1,5 +1,6 @@
 import 'package:cstoken/component/empty_data.dart';
 import 'package:cstoken/model/tokens/collection_tokens.dart';
+import 'package:cstoken/pages/wallet/transfer/receive_page.dart';
 import 'package:cstoken/pages/wallet/transfer/transfer_list.dart';
 import 'package:cstoken/pages/wallet/wallets/nft_listdata.dart';
 import 'package:flutter_swipe_action_cell/core/cell.dart';
@@ -174,40 +175,75 @@ class WalletsTabList extends StatelessWidget {
       onTap: () {
         provider.tapNFTInfo(context, nftInfo);
       },
-      child: Container(
-        height: 68.width,
-        margin: EdgeInsets.only(bottom: 8.width),
-        padding: EdgeInsets.symmetric(horizontal: 12.width),
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(8),
-          color: Colors.white,
-        ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Row(
-              children: [
-                LoadTokenAssetsImage(imgname, width: 36, height: 36),
-                8.rowWidget,
-                Text(
-                  name,
-                  style: TextStyle(
-                    fontWeight: FontWeightUtils.medium,
-                    fontSize: 16.font,
-                    color: ColorUtils.fromHex("#FF000000"),
-                  ),
+      child: SwipeActionCell(
+        key: ObjectKey(nftInfo),
+        leadingActions: [
+          SwipeAction(
+              color: Colors.transparent,
+              content: Container(
+                alignment: Alignment.center,
+                margin: EdgeInsets.only(bottom: 8.width),
+                decoration: const BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.only(
+                      topRight: Radius.circular(8),
+                      bottomRight: Radius.circular(8)),
                 ),
-              ],
-            ),
-            Text(
-              sum.toString(),
-              style: TextStyle(
-                fontWeight: FontWeightUtils.bold,
-                fontSize: 18.font,
-                color: ColorUtils.fromHex("#FF000000"),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    LoadAssetsImage(
+                      "icons/icon_add_unable.png",
+                      width: 28,
+                      height: 28,
+                    ),
+                    Text('homepage_receivenft'.local(),
+                        style: TextStyle(
+                            color: ColorUtils.fromHex("#FF00C99A"),
+                            fontSize: 12.font,
+                            fontWeight: FontWeightUtils.regular))
+                  ],
+                ),
               ),
-            )
-          ],
+              onTap: (handler) async {
+                provider.walletcellTapReceive(context, index, tapNFT: true);
+              }),
+        ],
+        child: Container(
+          height: 68.width,
+          margin: EdgeInsets.only(bottom: 8.width),
+          padding: EdgeInsets.symmetric(horizontal: 12.width),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(8),
+            color: Colors.white,
+          ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Row(
+                children: [
+                  LoadTokenAssetsImage(imgname, width: 36, height: 36),
+                  8.rowWidget,
+                  Text(
+                    name,
+                    style: TextStyle(
+                      fontWeight: FontWeightUtils.medium,
+                      fontSize: 16.font,
+                      color: ColorUtils.fromHex("#FF000000"),
+                    ),
+                  ),
+                ],
+              ),
+              Text(
+                sum.toString(),
+                style: TextStyle(
+                  fontWeight: FontWeightUtils.bold,
+                  fontSize: 18.font,
+                  color: ColorUtils.fromHex("#FF000000"),
+                ),
+              )
+            ],
+          ),
         ),
       ),
     );

@@ -376,8 +376,19 @@ class CurrentChooseWalletState with ChangeNotifier {
     }
   }
 
-  void walletcellTapReceive(BuildContext context, int index) async {
-    updateTokenChoose(context, index, pushTransList: false);
+  void walletcellTapReceive(BuildContext context, int index,
+      {bool tapNFT = false}) async {
+    if (tapNFT == false) {
+      updateTokenChoose(context, index, pushTransList: false);
+    } else {
+      final String walletID = _currentWallet!.walletID!;
+      String chainType = nftContracts[index]["chainTypeName"] ?? '';
+      TRWalletInfo infos = (await TRWalletInfo.queryWalletInfo(
+              walletID, chainType.chainTypeGetCoinType()!.index))
+          .first;
+      _walletinfo = infos;
+    }
+
     Routers.push(context, RecervePaymentPage());
   }
 

@@ -228,5 +228,8 @@
     "customtokens_nftid": "ID",
     "homepage_nfthot": "Popular NFT",
     "homepage_more": "More >",
-    "homepage_latest": "Latest forging"
+    "homepage_latest": "Latest forging",
+    "homepage_nftinfo": "NFT Details",
+    "homepage_send": "Send",
+    "homepage_receivenft": "Accept Collection"
 }
