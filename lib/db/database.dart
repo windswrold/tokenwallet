@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:cstoken/model/contacts/contact_address.dart';
 import 'package:cstoken/model/dapps_record/dapps_record.dart';
+import 'package:cstoken/model/nft/nft_model.dart';
 import 'package:cstoken/model/token_price/tokenprice.dart';
 import 'package:cstoken/model/tokens/collection_tokens.dart';
 import 'package:cstoken/model/transrecord/trans_record.dart';
@@ -13,7 +14,7 @@ part 'database.g.dart';
 //flutter packages pub run build_runner build
 // updateTokenData
 // findTokensBySQL
-const int dbCurrentVersion = 2;
+const int dbCurrentVersion = 3;
 
 @Database(version: dbCurrentVersion, entities: [
   TRWallet,
@@ -23,6 +24,7 @@ const int dbCurrentVersion = 2;
   TokenPrice,
   MCollectionTokens,
   TransRecordModel,
+  NFTModel
 ])
 abstract class FlutterDatabase extends FloorDatabase {
   WalletDao get walletDao;
@@ -32,4 +34,5 @@ abstract class FlutterDatabase extends FloorDatabase {
   TokenPriceDao get tokenPriceDao;
   MCollectionTokenDao get tokensDao;
   TransRecordModelDao get transListDao;
+  NFTModelDao get nftDao;
 }

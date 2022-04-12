@@ -150,21 +150,16 @@ class CurrentChooseWalletState with ChangeNotifier {
     if (_currentWallet == null) {
       return;
     }
-    String? ethAdress;
-    String? chainType;
-    List<TRWalletInfo> infos =
-        await _currentWallet!.queryWalletInfos(coinType: KCoinType.ETH);
-    if (infos.isEmpty) {
-      return;
+    List<NFTModel> nftModels = [];
+    final String walletID = _currentWallet!.walletID!;
+    KNetType netType = SPManager.getNetType();
+    if (_chooseChainType == null) {
+      nftModels = await NFTModel.findStateTokens(walletID, 1, netType.index);
+    } else {
+      nftModels = await NFTModel.findStateChainTokens(walletID, 1,
+          netType.index, _chooseChainType!.coinTypeString().toLowerCase());
     }
-    ethAdress = infos.first.walletAaddress;
-    chainType = infos.first.coinType!.geCoinType().coinTypeString();
-    if (ethAdress == null) {
-      return;
-    }
-    List<NFTModel> result =
-        await WalletServices.getUserNftList(address: ethAdress);
-    _nftContracts[_currentWallet!.walletID!] = result;
+    _nftContracts[_currentWallet!.walletID!] = nftModels;
     notifyListeners();
   }
 
@@ -299,6 +294,7 @@ class CurrentChooseWalletState with ChangeNotifier {
     }
     _chooseChainType = coinType;
     queryMyCollectionTokens();
+    initNFTTokens();
   }
 
   void tapWalletSetting(BuildContext context) {
@@ -311,7 +307,10 @@ class CurrentChooseWalletState with ChangeNotifier {
   }
 
   void tapNFTInfo(BuildContext context, NFTModel nftInfo) {
-    List datas = nftInfo.nftId ?? [];
+    List datas = [];
+    if (nftInfo.nftId!.isNotEmpty) {
+      datas = nftInfo.nftId!.split(",");
+    }
     String chainTypeName = nftInfo.chainTypeName ?? "";
     String contractAddress = nftInfo.contractAddress ?? "";
     final String walletID = _currentWallet!.walletID!;

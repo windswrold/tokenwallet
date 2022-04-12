@@ -75,10 +75,12 @@ class _$FlutterDatabase extends FlutterDatabase {
 
   TransRecordModelDao? _transListDaoInstance;
 
+  NFTModelDao? _nftDaoInstance;
+
   Future<sqflite.Database> open(String path, List<Migration> migrations,
       [Callback? callback]) async {
     final databaseOptions = sqflite.OpenDatabaseOptions(
-      version: 2,
+      version: 3,
       onConfigure: (database) async {
         await database.execute('PRAGMA foreign_keys = ON');
         await callback?.onConfigure?.call(database);
@@ -107,6 +109,8 @@ class _$FlutterDatabase extends FlutterDatabase {
             'CREATE TABLE IF NOT EXISTS `tokens_table` (`tokenID` TEXT, `owner` TEXT, `contract` TEXT, `token` TEXT, `coinType` TEXT, `chainType` INTEGER, `state` INTEGER, `iconPath` TEXT, `decimals` INTEGER, `price` REAL, `balance` REAL, `digits` INTEGER, `kNetType` INTEGER, `index` INTEGER, `tokenType` INTEGER, `tid` TEXT, PRIMARY KEY (`tokenID`))');
         await database.execute(
             'CREATE TABLE IF NOT EXISTS `translist_table` (`txid` TEXT, `toAdd` TEXT, `fromAdd` TEXT, `date` TEXT, `amount` TEXT, `remarks` TEXT, `fee` TEXT, `gasPrice` TEXT, `gasLimit` TEXT, `transStatus` INTEGER, `token` TEXT, `coinType` TEXT, `chainid` INTEGER, `nonce` INTEGER, `contractTo` TEXT, `input` TEXT, `signMessage` TEXT, `repeatPushCount` INTEGER, `blockHeight` INTEGER, `transType` INTEGER, PRIMARY KEY (`txid`))');
+        await database.execute(
+            'CREATE TABLE IF NOT EXISTS `nft_model_table` (`tokenID` TEXT, `owner` TEXT, `chainTypeName` TEXT, `contractAddress` TEXT, `contractName` TEXT, `nftId` TEXT, `nftTypeName` TEXT, `url` TEXT, `state` INTEGER, `kNetType` INTEGER, PRIMARY KEY (`tokenID`))');
 
         await callback?.onCreate?.call(database, version);
       },
@@ -151,6 +155,11 @@ class _$FlutterDatabase extends FlutterDatabase {
   TransRecordModelDao get transListDao {
     return _transListDaoInstance ??=
         _$TransRecordModelDao(database, changeListener);
+  }
+
+  @override
+  NFTModelDao get nftDao {
+    return _nftDaoInstance ??= _$NFTModelDao(database, changeListener);
   }
 }
 
@@ -1037,5 +1046,154 @@ class _$TransRecordModelDao extends TransRecordModelDao {
   @override
   Future<void> deleteTrxList(TransRecordModel model) async {
     await _transRecordModelDeletionAdapter.delete(model);
+  }
+}
+
+class _$NFTModelDao extends NFTModelDao {
+  _$NFTModelDao(this.database, this.changeListener)
+      : _queryAdapter = QueryAdapter(database),
+        _nFTModelInsertionAdapter = InsertionAdapter(
+            database,
+            'nft_model_table',
+            (NFTModel item) => <String, Object?>{
+                  'tokenID': item.tokenID,
+                  'owner': item.owner,
+                  'chainTypeName': item.chainTypeName,
+                  'contractAddress': item.contractAddress,
+                  'contractName': item.contractName,
+                  'nftId': item.nftId,
+                  'nftTypeName': item.nftTypeName,
+                  'url': item.url,
+                  'state': item.state,
+                  'kNetType': item.kNetType
+                }),
+        _nFTModelUpdateAdapter = UpdateAdapter(
+            database,
+            'nft_model_table',
+            ['tokenID'],
+            (NFTModel item) => <String, Object?>{
+                  'tokenID': item.tokenID,
+                  'owner': item.owner,
+                  'chainTypeName': item.chainTypeName,
+                  'contractAddress': item.contractAddress,
+                  'contractName': item.contractName,
+                  'nftId': item.nftId,
+                  'nftTypeName': item.nftTypeName,
+                  'url': item.url,
+                  'state': item.state,
+                  'kNetType': item.kNetType
+                }),
+        _nFTModelDeletionAdapter = DeletionAdapter(
+            database,
+            'nft_model_table',
+            ['tokenID'],
+            (NFTModel item) => <String, Object?>{
+                  'tokenID': item.tokenID,
+                  'owner': item.owner,
+                  'chainTypeName': item.chainTypeName,
+                  'contractAddress': item.contractAddress,
+                  'contractName': item.contractName,
+                  'nftId': item.nftId,
+                  'nftTypeName': item.nftTypeName,
+                  'url': item.url,
+                  'state': item.state,
+                  'kNetType': item.kNetType
+                });
+
+  final sqflite.DatabaseExecutor database;
+
+  final StreamController<String> changeListener;
+
+  final QueryAdapter _queryAdapter;
+
+  final InsertionAdapter<NFTModel> _nFTModelInsertionAdapter;
+
+  final UpdateAdapter<NFTModel> _nFTModelUpdateAdapter;
+
+  final DeletionAdapter<NFTModel> _nFTModelDeletionAdapter;
+
+  @override
+  Future<List<NFTModel>> findAllNFTS(String owner) async {
+    return _queryAdapter.queryList(
+        'SELECT * FROM nft_model_table WHERE owner = ?1',
+        mapper: (Map<String, Object?> row) => NFTModel(
+            tokenID: row['tokenID'] as String?,
+            owner: row['owner'] as String?,
+            chainTypeName: row['chainTypeName'] as String?,
+            contractAddress: row['contractAddress'] as String?,
+            contractName: row['contractName'] as String?,
+            nftId: row['nftId'] as String?,
+            nftTypeName: row['nftTypeName'] as String?,
+            url: row['url'] as String?,
+            state: row['state'] as int?,
+            kNetType: row['kNetType'] as int?),
+        arguments: [owner]);
+  }
+
+  @override
+  Future<List<NFTModel>> findNFTS(String owner, int kNetType) async {
+    return _queryAdapter.queryList(
+        'SELECT * FROM nft_model_table WHERE owner = ?1 and kNetType=?2',
+        mapper: (Map<String, Object?> row) => NFTModel(
+            tokenID: row['tokenID'] as String?,
+            owner: row['owner'] as String?,
+            chainTypeName: row['chainTypeName'] as String?,
+            contractAddress: row['contractAddress'] as String?,
+            contractName: row['contractName'] as String?,
+            nftId: row['nftId'] as String?,
+            nftTypeName: row['nftTypeName'] as String?,
+            url: row['url'] as String?,
+            state: row['state'] as int?,
+            kNetType: row['kNetType'] as int?),
+        arguments: [owner, kNetType]);
+  }
+
+  @override
+  Future<List<NFTModel>> findChainNFTS(
+      String owner, int kNetType, String chainType) async {
+    return _queryAdapter.queryList(
+        'SELECT * FROM nft_model_table WHERE owner = ?1 and kNetType=?2 and chainTypeName=?3',
+        mapper: (Map<String, Object?> row) => NFTModel(tokenID: row['tokenID'] as String?, owner: row['owner'] as String?, chainTypeName: row['chainTypeName'] as String?, contractAddress: row['contractAddress'] as String?, contractName: row['contractName'] as String?, nftId: row['nftId'] as String?, nftTypeName: row['nftTypeName'] as String?, url: row['url'] as String?, state: row['state'] as int?, kNetType: row['kNetType'] as int?),
+        arguments: [owner, kNetType, chainType]);
+  }
+
+  @override
+  Future<List<NFTModel>> findStateNFTS(
+      String owner, int state, int kNetType) async {
+    return _queryAdapter.queryList(
+        'SELECT * FROM nft_model_table WHERE owner = ?1 and state = ?2 and kNetType=?3',
+        mapper: (Map<String, Object?> row) => NFTModel(tokenID: row['tokenID'] as String?, owner: row['owner'] as String?, chainTypeName: row['chainTypeName'] as String?, contractAddress: row['contractAddress'] as String?, contractName: row['contractName'] as String?, nftId: row['nftId'] as String?, nftTypeName: row['nftTypeName'] as String?, url: row['url'] as String?, state: row['state'] as int?, kNetType: row['kNetType'] as int?),
+        arguments: [owner, state, kNetType]);
+  }
+
+  @override
+  Future<List<NFTModel>> findStateChainNFTS(
+      String owner, int state, int kNetType, String chainType) async {
+    return _queryAdapter.queryList(
+        'SELECT * FROM nft_model_table WHERE owner = ?1 and state = ?2 and kNetType=?3 and chainTypeName =?4',
+        mapper: (Map<String, Object?> row) => NFTModel(tokenID: row['tokenID'] as String?, owner: row['owner'] as String?, chainTypeName: row['chainTypeName'] as String?, contractAddress: row['contractAddress'] as String?, contractName: row['contractName'] as String?, nftId: row['nftId'] as String?, nftTypeName: row['nftTypeName'] as String?, url: row['url'] as String?, state: row['state'] as int?, kNetType: row['kNetType'] as int?),
+        arguments: [owner, state, kNetType, chainType]);
+  }
+
+  @override
+  Future<void> updateNFTSData(String sql) async {
+    await _queryAdapter
+        .queryNoReturn('UPDATE nft_model_table SET ?1', arguments: [sql]);
+  }
+
+  @override
+  Future<void> insertNFTS(List<NFTModel> models) async {
+    await _nFTModelInsertionAdapter.insertList(
+        models, OnConflictStrategy.replace);
+  }
+
+  @override
+  Future<void> updateNFTS(List<NFTModel> models) async {
+    await _nFTModelUpdateAdapter.updateList(models, OnConflictStrategy.abort);
+  }
+
+  @override
+  Future<void> deleteNFTS(List<NFTModel> models) async {
+    await _nFTModelDeletionAdapter.deleteList(models);
   }
 }

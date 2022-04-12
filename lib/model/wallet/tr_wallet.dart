@@ -7,6 +7,7 @@ import 'package:cstoken/model/assets/currency_list.dart';
 import 'package:cstoken/model/chain/bsc.dart';
 import 'package:cstoken/model/chain/eth.dart';
 import 'package:cstoken/model/chain/heco.dart';
+import 'package:cstoken/model/nft/nft_model.dart';
 import 'package:cstoken/model/tokens/collection_tokens.dart';
 import 'package:cstoken/model/wallet/tr_wallet_info.dart';
 import 'package:cstoken/net/url.dart';
@@ -223,8 +224,12 @@ class TRWallet {
         HWToast.showText(text: "import_prvwrong".local());
         return;
       }
+      String usernftAddress = "";
       for (var object in _hdwallets) {
         String address = object.address!;
+        if (object.coinType == KCoinType.BSC) {
+          usernftAddress = address;
+        }
         String key = walletID + address + object.coinType!.coinTypeString();
         TRWalletInfo infos = TRWalletInfo(key: key);
         infos.walletID = walletID;
@@ -238,14 +243,15 @@ class TRWallet {
       }
       List indexTokens = await WalletServices.gettokenList(1, 20,
           defaultFlag: true, chainType: chainType);
-     
-      // List result = await WalletServices.getUserNftList(address: ethAdress);
-      
+      List defaultNFT =
+          await WalletServices.getUserNftList(address: usernftAddress);
+
       KNetType netType = RequestURLS.getHost() == RequestURLS.testUrl
           ? KNetType.Testnet
           : KNetType.Mainnet;
       List<MCollectionTokens> tokens = [];
       List<MCollectionTokens> cacheTokens = [];
+      List<NFTModel> nftDatas = [];
       List<KCoinType> coins = kChainType.getSuppertCoinTypes();
       for (var item in currency_List) {
         MCollectionTokens token = MCollectionTokens.fromJson(item);
@@ -308,8 +314,17 @@ class TRWallet {
         }
       }
 
+      for (var item in defaultNFT) {
+        NFTModel nftModel = NFTModel.fromJson(item);
+        nftModel.owner = walletID;
+        nftModel.state = 1;
+        nftModel.tokenID = nftModel.createTokenID(walletID);
+        nftModel.kNetType = netType.index;
+        nftDatas.add(nftModel);
+      }
       tokens.addAll(cacheTokens);
       MCollectionTokens.insertTokens(tokens);
+      NFTModel.insertTokens(nftDatas);
       HWToast.hiddenAllToast();
       Provider.of<CurrentChooseWalletState>(context, listen: false)
           .loadWallet();

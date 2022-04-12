@@ -338,8 +338,7 @@ class WalletServices {
     return host;
   }
 
-  static Future<List<NFTModel>> getUserNftList(
-      {required String address}) async {
+  static Future<List> getUserNftList({required String address}) async {
     final url = RequestURLS.getHost() + RequestURLS.userNftList;
     Map<String, dynamic>? params = {};
     params["address"] = address;
@@ -382,8 +381,8 @@ class WalletServices {
       //     "sumCount": 0,
       //   }
       // ]);
-      List<NFTModel> models = data.map((e) => NFTModel.fromJson(e)).toList();
-      return models;
+      // List<NFTModel> models = data.map((e) => NFTModel.fromJson(e)).toList();
+      return data;
     }
     return [];
   }

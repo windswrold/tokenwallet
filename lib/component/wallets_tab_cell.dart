@@ -167,7 +167,10 @@ class WalletsTabList extends StatelessWidget {
   Widget _nftCell(BuildContext context, NFTModel nftInfo,
       String currencySymbolStr, CurrentChooseWalletState provider, int index) {
     String imgname = nftInfo.url ?? "";
-    List nftId = nftInfo.nftId ?? [];
+    List nftId = [];
+    if (nftInfo.nftId!.isNotEmpty) {
+      nftId = nftInfo.nftId!.split(",");
+    }
     int sum = nftId.length;
     String name = nftInfo.contractName ?? "";
     name = name.contractAddress();

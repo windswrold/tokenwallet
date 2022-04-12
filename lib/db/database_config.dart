@@ -13,6 +13,10 @@ class DataBaseConfig {
         await migdatabase
             .execute('ALTER TABLE tokens_table  ADD COLUMN tid TEXT');
       });
+      final migration2to3 = Migration(2, 3, (migdatabase) async {
+        await migdatabase.execute(
+            'CREATE TABLE IF NOT EXISTS `nft_model_table` (`tokenID` TEXT, `owner` TEXT, `chainTypeName` TEXT, `contractAddress` TEXT, `contractName` TEXT, `nftId` TEXT, `nftTypeName` TEXT, `url` TEXT, `state` INTEGER, `kNetType` INTEGER, PRIMARY KEY (`tokenID`))');
+      });
       final callback = Callback(
         onOpen: (openDB) async {
           LogUtil.v("数据库打开成功 " + openDB.path);
@@ -27,7 +31,7 @@ class DataBaseConfig {
       );
       fbase = await $FloorFlutterDatabase
           .databaseBuilder('tr_database.db')
-          .addMigrations([migration1to2])
+          .addMigrations([migration1to2, migration2to3])
           .addCallback(callback)
           .build();
 

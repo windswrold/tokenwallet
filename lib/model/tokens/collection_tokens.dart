@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:cstoken/db/database.dart';
 import 'package:cstoken/db/database_config.dart';
 import 'package:cstoken/model/client/sign_client.dart';
+import 'package:cstoken/model/nft/nft_model.dart';
 import 'package:cstoken/model/token_price/tokenprice.dart';
 import 'package:cstoken/net/chain_services.dart';
 import 'package:cstoken/net/request_method.dart';
