@@ -1,4 +1,5 @@
 import 'package:cstoken/component/empty_data.dart';
+import 'package:cstoken/model/nft/nft_model.dart';
 import 'package:cstoken/model/tokens/collection_tokens.dart';
 import 'package:cstoken/pages/wallet/transfer/receive_page.dart';
 import 'package:cstoken/pages/wallet/transfer/transfer_list.dart';
@@ -163,12 +164,12 @@ class WalletsTabList extends StatelessWidget {
     );
   }
 
-  Widget _nftCell(BuildContext context, Map nftInfo, String currencySymbolStr,
-      CurrentChooseWalletState provider, int index) {
-    String imgname = nftInfo["url"] ?? "";
-    List nftId = nftInfo["nftId"];
+  Widget _nftCell(BuildContext context, NFTModel nftInfo,
+      String currencySymbolStr, CurrentChooseWalletState provider, int index) {
+    String imgname = nftInfo.url ?? "";
+    List nftId = nftInfo.nftId ?? [];
     int sum = nftId.length;
-    String name = nftInfo["project_name"] ?? "";
+    String name = nftInfo.contractName ?? "";
     name = name.contractAddress();
     return GestureDetector(
       behavior: HitTestBehavior.opaque,
@@ -222,8 +223,7 @@ class WalletsTabList extends StatelessWidget {
             children: [
               Row(
                 children: [
-                  LoadTokenAssetsImage(imgname,
-                      width: 36, height: 36),
+                  LoadTokenAssetsImage(imgname, width: 36, height: 36),
                   8.rowWidget,
                   Text(
                     name,

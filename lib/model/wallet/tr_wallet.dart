@@ -238,6 +238,9 @@ class TRWallet {
       }
       List indexTokens = await WalletServices.gettokenList(1, 20,
           defaultFlag: true, chainType: chainType);
+     
+      // List result = await WalletServices.getUserNftList(address: ethAdress);
+      
       KNetType netType = RequestURLS.getHost() == RequestURLS.testUrl
           ? KNetType.Testnet
           : KNetType.Mainnet;

@@ -1,4 +1,5 @@
 import 'package:cstoken/component/custom_refresher.dart';
+import 'package:cstoken/model/nft/nft_model.dart';
 import 'package:cstoken/model/tokens/collection_tokens.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
@@ -7,7 +8,7 @@ import 'nft_info.dart';
 
 class NFTListData extends StatefulWidget {
   NFTListData({Key? key, required this.model}) : super(key: key);
-  final Map model;
+  final NFTModel model;
 
   @override
   State<NFTListData> createState() => _NFTListDataState();
@@ -17,11 +18,11 @@ class _NFTListDataState extends State<NFTListData> {
   RefreshController _refreshController = RefreshController();
 
   Widget _buildHeader() {
-    String nftTypeName = widget.model["nftTypeName"];
-    String contract = widget.model["contractAddress"];
-    String name = widget.model["contractAddress"];
+    String nftTypeName = widget.model.nftTypeName ?? "";
+    String contract = widget.model.contractAddress ?? "";
+    String name = widget.model.contractName ?? "";
     name = name.contractAddress();
-    String imgname = widget.model["url"] ?? "";
+    String imgname = widget.model.url ?? "";
     return Container(
       color: Colors.white,
       height: 90.width,

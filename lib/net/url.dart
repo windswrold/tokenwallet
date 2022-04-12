@@ -78,4 +78,6 @@ class RequestURLS {
   static String transitGet = "/app/secret/transitGet";
 
   static String getImage = "/app/secret/getImage";
+
+  static String hotNftList = "/app/nft/hotNftList";
 }

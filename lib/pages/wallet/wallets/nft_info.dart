@@ -1,5 +1,6 @@
 import 'package:cstoken/component/empty_data.dart';
 import 'package:cstoken/model/client/sign_client.dart';
+import 'package:cstoken/model/nft/nft_model.dart';
 import 'package:cstoken/net/chain_services.dart';
 import 'package:cstoken/net/wallet_services.dart';
 import 'package:cstoken/pages/wallet/transfer/transfer_payment.dart';
@@ -10,7 +11,7 @@ import '../../../public.dart';
 class NFTInfo extends StatefulWidget {
   NFTInfo({Key? key, required this.nftModel, required this.tokenid})
       : super(key: key);
-  final Map nftModel;
+  final NFTModel nftModel;
   final String tokenid;
 
   @override
@@ -27,8 +28,8 @@ class _NFTInfoState extends State<NFTInfo> {
 
   void _getNftInfo() async {
     HWToast.showLoading();
-    String contractAddress = widget.nftModel["contractAddress"];
-    String chainTypeName = widget.nftModel["chainTypeName"];
+    String contractAddress = widget.nftModel.contractAddress ?? "";
+    String chainTypeName = widget.nftModel.chainTypeName ?? "";
     KCoinType coinType = chainTypeName.chainTypeGetCoinType()!;
     Map params =
         SignTransactionClient.get721TokenURI(contractAddress, widget.tokenid);

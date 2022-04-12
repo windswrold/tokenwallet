@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:cstoken/component/chain_listtype.dart';
 import 'package:cstoken/model/dapps_record/dapps_record.dart';
+import 'package:cstoken/model/nft/nft_model.dart';
 import 'package:cstoken/model/node/node_model.dart';
 import 'package:cstoken/model/token_price/tokenprice.dart';
 import 'package:cstoken/model/tokens/collection_tokens.dart';
@@ -59,8 +60,8 @@ class CurrentChooseWalletState with ChangeNotifier {
   TRWalletInfo? get walletinfo => _walletinfo;
   int _homeTokenType = 0;
   int get homeTokenType => _homeTokenType;
-  Map<String?, List> _nftContracts = {};
-  List get nftContracts => _currentWallet == null
+  Map<String?, List<NFTModel>> _nftContracts = {};
+  List<NFTModel> get nftContracts => _currentWallet == null
       ? []
       : _nftContracts[_currentWallet?.walletID] ?? [];
 
@@ -161,7 +162,8 @@ class CurrentChooseWalletState with ChangeNotifier {
     if (ethAdress == null) {
       return;
     }
-    List result = await WalletServices.getUserNftList(address: ethAdress);
+    List<NFTModel> result =
+        await WalletServices.getUserNftList(address: ethAdress);
     _nftContracts[_currentWallet!.walletID!] = result;
     notifyListeners();
   }
@@ -308,15 +310,15 @@ class CurrentChooseWalletState with ChangeNotifier {
     Routers.push(context, WalletsSetting(wallet: _currentWallet!));
   }
 
-  void tapNFTInfo(BuildContext context, Map nftInfo) {
-    List datas = nftInfo["nftId"];
-    String chainTypeName = nftInfo["chainTypeName"];
-    String contractAddress = nftInfo["contractAddress"];
+  void tapNFTInfo(BuildContext context, NFTModel nftInfo) {
+    List datas = nftInfo.nftId ?? [];
+    String chainTypeName = nftInfo.chainTypeName ?? "";
+    String contractAddress = nftInfo.contractAddress ?? "";
     final String walletID = _currentWallet!.walletID!;
+    String url = nftInfo.url ?? "";
     List<MCollectionTokens> _datas = [];
     for (var item in datas) {
       KCoinType coinType = chainTypeName.chainTypeGetCoinType()!;
-      String url = nftInfo["url"] ?? '';
       MCollectionTokens model = MCollectionTokens();
       model.contract = contractAddress;
       model.digits = 0;
@@ -383,7 +385,7 @@ class CurrentChooseWalletState with ChangeNotifier {
       updateTokenChoose(context, index, pushTransList: false);
     } else {
       final String walletID = _currentWallet!.walletID!;
-      String chainType = nftContracts[index]["chainTypeName"] ?? '';
+      String chainType = nftContracts[index].chainTypeName ?? "";
       TRWalletInfo infos = (await TRWalletInfo.queryWalletInfo(
               walletID, chainType.chainTypeGetCoinType()!.index))
           .first;

@@ -1,4 +1,5 @@
 import 'package:cstoken/model/news/news_model.dart';
+import 'package:cstoken/model/nft/nft_model.dart';
 import 'package:cstoken/model/token_price/tokenprice.dart';
 import 'package:cstoken/model/tokens/collection_tokens.dart';
 import 'package:cstoken/net/request_method.dart';
@@ -337,7 +338,8 @@ class WalletServices {
     return host;
   }
 
-  static Future<List<dynamic>> getUserNftList({required String address}) async {
+  static Future<List<NFTModel>> getUserNftList(
+      {required String address}) async {
     final url = RequestURLS.getHost() + RequestURLS.userNftList;
     Map<String, dynamic>? params = {};
     params["address"] = address;
@@ -346,42 +348,58 @@ class WalletServices {
     if (result != null && result["code"] == 200) {
       List data = result["result"]["page"] ?? [];
 
-      data.addAll([
-        {
-          "chainTypeName": "eth",
-          "contractAddress": "0x064e16771A4864561f767e4Ef4a6989fc4045aE7",
-          "id": 2,
-          "nftId": [78932],
-          "nftTypeName": "721",
-          "sumCount": 0,
-        },
-        {
-          "chainTypeName": "eth",
-          "contractAddress": "0xbf3181c23f25cc8ad5d326a3a313f80e9162c8d2",
-          "id": 2,
-          "nftId": [100],
-          "nftTypeName": "721",
-          "sumCount": 0,
-        },
-        {
-          "chainTypeName": "eth",
-          "contractAddress": "0x4b2e42c23c7a85ff7874cbdad65b3421e5197c76",
-          "id": 2,
-          "nftId": [0],
-          "nftTypeName": "721",
-          "sumCount": 0,
-        },
-        {
-          "chainTypeName": "eth",
-          "contractAddress": "0x064e16771A4864561f767e4Ef4a6989fc4045aE7",
-          "id": 2,
-          "nftId": [78932],
-          "nftTypeName": "721",
-          "sumCount": 0,
-        }
-      ]);
+      // data.addAll([
+      //   {
+      //     "chainTypeName": "eth",
+      //     "contractAddress": "0x064e16771A4864561f767e4Ef4a6989fc4045aE7",
+      //     "id": 2,
+      //     "nftId": [78932],
+      //     "nftTypeName": "721",
+      //     "sumCount": 0,
+      //   },
+      //   {
+      //     "chainTypeName": "eth",
+      //     "contractAddress": "0xbf3181c23f25cc8ad5d326a3a313f80e9162c8d2",
+      //     "id": 2,
+      //     "nftId": [100],
+      //     "nftTypeName": "721",
+      //     "sumCount": 0,
+      //   },
+      //   {
+      //     "chainTypeName": "eth",
+      //     "contractAddress": "0x4b2e42c23c7a85ff7874cbdad65b3421e5197c76",
+      //     "id": 2,
+      //     "nftId": [0],
+      //     "nftTypeName": "721",
+      //     "sumCount": 0,
+      //   },
+      //   {
+      //     "chainTypeName": "eth",
+      //     "contractAddress": "0x064e16771A4864561f767e4Ef4a6989fc4045aE7",
+      //     "id": 2,
+      //     "nftId": [78932],
+      //     "nftTypeName": "721",
+      //     "sumCount": 0,
+      //   }
+      // ]);
+      List<NFTModel> models = data.map((e) => NFTModel.fromJson(e)).toList();
+      return models;
+    }
+    return [];
+  }
 
-      return data;
+  static Future<List<NFTModel>> getHotNftList(
+      {required String address, required int pageNum}) async {
+    final url = RequestURLS.getHost() + RequestURLS.hotNftList;
+    Map<String, dynamic>? params = {};
+    params["pageSize"] = 20;
+    params["pageNum"] = pageNum.toString();
+    dynamic result = await RequestMethod.manager!
+        .requestData(Method.GET, url, queryParameters: params);
+    if (result != null && result["code"] == 200) {
+      List data = result["result"]["page"] ?? [];
+      List<NFTModel> models = data.map((e) => NFTModel.fromJson(e)).toList();
+      return models;
     }
     return [];
   }
