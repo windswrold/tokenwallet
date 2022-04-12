@@ -6,6 +6,7 @@ import 'package:cstoken/model/tokens/collection_tokens.dart';
 import 'package:cstoken/model/transrecord/trans_record.dart';
 import 'package:cstoken/net/request_method.dart';
 import 'package:cstoken/net/url.dart';
+import 'package:cstoken/net/wallet_services.dart';
 import 'package:cstoken/public.dart';
 import 'package:cstoken/utils/date_util.dart';
 import 'package:cstoken/utils/json_util.dart';
@@ -556,46 +557,8 @@ class ChainServices {
         result = utf8.decoder.convert(hexToBytes(result));
         result = result.replaceAll(" ", "").trim();
         LogUtil.v("info  $result");
-        // result = "bafybeigpl7wahfiu5rnoyzswd6cdy7thqwcmdrmk4fuou2fqnhiq7rkboa";
-        return requestIPFSInfo(cid: result);
+        return WalletServices.requestIPFSInfo(cid: result);
       }
     }
-  }
-
-  static Future<Map?> requestIPFSInfo({required String cid}) async {
-    cid = cid.replaceAll("ipfs://", "");
-    String remote = "https://ipfs.io/ipfs/$cid";
-    String url = RequestURLS.getHost() + RequestURLS.transitGet;
-    Map<String, dynamic> queryParameters = TREncode.convertRemoteParams(remote);
-    dynamic result = await RequestMethod.manager!
-        .requestData(Method.GET, url, queryParameters: queryParameters);
-    if (result != null && result is Map) {
-      int code = result["code"];
-      if (code == 200) {
-        String object = result["result"];
-        return JsonUtil.getObj(object);
-      }
-    }
-    // result = {
-    //   "name": "Oil Money Cash Money #100",
-    //   "description": "The First Of Many Huge Upcoming Arabian NFT Projects",
-    //   "image":
-    //       "https://gimg2.baidu.com/image_search/src=http%3A%2F%2Ffile02.16sucai.com%2Fd%2Ffile%2F2014%2F0827%2Fc0c92bd51bb72e6d12d5b877dce338e8.jpg&refer=http%3A%2F%2Ffile02.16sucai.com&app=2002&size=f9999",
-    //   "attributes": [
-    //     {"trait_type": "BackGround", "value": "Dubai"},
-    //     {"trait_type": "Body", "value": "BrownSkin"},
-    //     {"trait_type": "Eye and Nose", "value": "EyeNose3"},
-    //     {"trait_type": "Mouth", "value": "Mouth2"},
-    //     {"trait_type": "Hair", "value": "Hair18"},
-    //     {"trait_type": "Clothes", "value": "Modern18"},
-    //     {"trait_type": "SunGlasses", "value": "NoGlasses"},
-    //     {"trait_type": "Koffiye", "value": "Koffiye2"}
-    //   ],
-    //   "dna": "c11218626632768cb1b644f2f34dcc25a27f4c8b",
-    //   "edition": 100,
-    //   "date": 1649545958658,
-    //   "compiler": "HashLips Art Engine - codeSTACKr Modified"
-    // };
-    return result;
   }
 }

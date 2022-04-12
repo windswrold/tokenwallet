@@ -223,7 +223,7 @@ class WalletsTabList extends StatelessWidget {
               Row(
                 children: [
                   LoadTokenAssetsImage(imgname,
-                      width: 36, height: 36, isNft: true),
+                      width: 36, height: 36),
                   8.rowWidget,
                   Text(
                     name,

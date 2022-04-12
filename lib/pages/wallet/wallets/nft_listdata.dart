@@ -29,7 +29,7 @@ class _NFTListDataState extends State<NFTListData> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
-          LoadTokenAssetsImage(imgname, width: 50, height: 50, isNft: true),
+          LoadTokenAssetsImage(imgname, width: 50, height: 50),
           10.rowWidget,
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -133,7 +133,6 @@ class _NFTListDataState extends State<NFTListData> {
                   "name",
                   width: 50,
                   height: 50,
-                  isNft: true,
                 ),
                 10.rowWidget,
                 Container(

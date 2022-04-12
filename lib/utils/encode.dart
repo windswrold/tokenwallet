@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:typed_data';
 
+import 'package:cstoken/utils/log_util.dart';
 import 'package:encrypt/encrypt.dart';
 import 'package:pointycastle/digests/ripemd160.dart';
 import 'package:pointycastle/digests/sha256.dart';
@@ -80,9 +81,11 @@ class TREncode {
     queryParameters["url"] = url;
     queryParameters["time"] = DateUtil.getNowDateMs();
     queryParameters["secret"] = "";
+    queryParameters["plat"] = "ios";
     if (content != null) {
       queryParameters["content"] = content;
     }
+    LogUtil.v(queryParameters);
     return queryParameters;
   }
 

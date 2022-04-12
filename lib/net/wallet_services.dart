@@ -4,6 +4,7 @@ import 'package:cstoken/model/tokens/collection_tokens.dart';
 import 'package:cstoken/net/request_method.dart';
 import 'package:cstoken/net/url.dart';
 import 'package:cstoken/public.dart';
+import 'package:cstoken/utils/json_util.dart';
 import 'package:decimal/decimal.dart';
 
 class WalletServices {
@@ -304,6 +305,38 @@ class WalletServices {
     return [];
   }
 
+  static Future<Map?> requestIPFSInfo({required String cid}) async {
+    cid = cid.replaceAll("ipfs://", "");
+    if (cid.isValidUrl() == false) {
+      cid = "https://ipfs.io/ipfs/$cid";
+    }
+    String url = RequestURLS.getHost() + RequestURLS.transitGet;
+    Map<String, dynamic> queryParameters = TREncode.convertRemoteParams(cid);
+    dynamic result = await RequestMethod.manager!
+        .requestData(Method.GET, url, queryParameters: queryParameters);
+    if (result != null && result is Map) {
+      int code = result["code"];
+      if (code == 200) {
+        String object = result["result"];
+        return JsonUtil.getObj(object);
+      }
+    }
+    return result;
+  }
+
+  static String getIpfsImageUrl(String ipfsUrl) {
+    ipfsUrl = ipfsUrl.replaceAll("ipfs://", "");
+    if (ipfsUrl.isValidUrl() == false) {
+      ipfsUrl = "https://ipfs.io/ipfs/$ipfsUrl";
+    }
+    String url = RequestURLS.getHost() + RequestURLS.getImage;
+    Map<String, dynamic> queryParameters =
+        TREncode.convertRemoteParams(ipfsUrl);
+    String host = url + queryParameters.url();
+    LogUtil.v("getIpfsImageUrl $host");
+    return host;
+  }
+
   static Future<List<dynamic>> getUserNftList({required String address}) async {
     final url = RequestURLS.getHost() + RequestURLS.userNftList;
     Map<String, dynamic>? params = {};
@@ -313,69 +346,40 @@ class WalletServices {
     if (result != null && result["code"] == 200) {
       List data = result["result"]["page"] ?? [];
 
-      // data.addAll([
-      //   {
-      //     "chainTypeName": "eth",
-      //     "contractAddress": "0x064e16771A4864561f767e4Ef4a6989fc4045aE7",
-      //     "id": 2,
-      //     "nftId": [78932],
-      //     "nftTypeName": "721",
-      //     "sumCount": 0,
-      //   },
-      //   {
-      //     "chainTypeName": "eth",
-      //     "contractAddress": "0xbf3181c23f25cc8ad5d326a3a313f80e9162c8d2",
-      //     "id": 2,
-      //     "nftId": [100],
-      //     "nftTypeName": "721",
-      //     "sumCount": 0,
-      //   },
-      //   {
-      //     "chainTypeName": "eth",
-      //     "contractAddress": "0x4b2e42c23c7a85ff7874cbdad65b3421e5197c76",
-      //     "id": 2,
-      //     "nftId": [0],
-      //     "nftTypeName": "721",
-      //     "sumCount": 0,
-      //   },
-      //   {
-      //     "chainTypeName": "eth",
-      //     "contractAddress": "0x064e16771A4864561f767e4Ef4a6989fc4045aE7",
-      //     "id": 2,
-      //     "nftId": [78932],
-      //     "nftTypeName": "721",
-      //     "sumCount": 0,
-      //   }
-      // ]);
-
-      // String chainTypeName = item["chainTypeName"];
-      // String contractAddress = item["contractAddress"];
-      // String id = item["nftId"].toString();
-      // String token = item["contract_name"] ?? "";
-      // String url = item["url"];
-      // String nftTypeName = item["nftTypeName"];
-      // Decimal sumCount =
-      //     Decimal.tryParse(item["sumCount"].toString()) ?? Decimal.zero;
-
-      // contractAddress = "0x2c30b60038394755c9ab4285fa59d722153a63e5";
-      // id = "446160950877979480142007162702782189984542661413";
-      // sumCount = Decimal.fromInt(10);
-      // chainTypeName = "ETH";
-
-      // MCollectionTokens model = MCollectionTokens();
-      // model.contract = contractAddress;
-      // model.digits = 0;
-      // model.chainType = chainTypeName.chainTypeGetCoinType()!.index;
-      // model.tid = id;
-      // model.iconPath = url;
-      // model.decimals = 0;
-      // model.token = token;
-      // model.tokenType = nftTypeName == "721"
-      //     ? KTokenType.eip721.index
-      //     : KTokenType.eip1155.index;
-      // model.balance = sumCount.toDouble();
-      // model.coinType = chainTypeName.chainTypeGetCoinType()!.coinTypeString();
-      // values.add(model);
+      data.addAll([
+        {
+          "chainTypeName": "eth",
+          "contractAddress": "0x064e16771A4864561f767e4Ef4a6989fc4045aE7",
+          "id": 2,
+          "nftId": [78932],
+          "nftTypeName": "721",
+          "sumCount": 0,
+        },
+        {
+          "chainTypeName": "eth",
+          "contractAddress": "0xbf3181c23f25cc8ad5d326a3a313f80e9162c8d2",
+          "id": 2,
+          "nftId": [100],
+          "nftTypeName": "721",
+          "sumCount": 0,
+        },
+        {
+          "chainTypeName": "eth",
+          "contractAddress": "0x4b2e42c23c7a85ff7874cbdad65b3421e5197c76",
+          "id": 2,
+          "nftId": [0],
+          "nftTypeName": "721",
+          "sumCount": 0,
+        },
+        {
+          "chainTypeName": "eth",
+          "contractAddress": "0x064e16771A4864561f767e4Ef4a6989fc4045aE7",
+          "id": 2,
+          "nftId": [78932],
+          "nftTypeName": "721",
+          "sumCount": 0,
+        }
+      ]);
 
       return data;
     }

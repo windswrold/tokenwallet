@@ -1,6 +1,7 @@
 import 'package:cstoken/component/empty_data.dart';
 import 'package:cstoken/model/client/sign_client.dart';
 import 'package:cstoken/net/chain_services.dart';
+import 'package:cstoken/net/wallet_services.dart';
 import 'package:cstoken/pages/wallet/transfer/transfer_payment.dart';
 import 'package:cstoken/utils/custom_toast.dart';
 
@@ -56,15 +57,17 @@ class _NFTInfoState extends State<NFTInfo> {
                   children: [
                     Expanded(
                       child: LoadTokenAssetsImage(
-                        _infos!["image"] ?? '',
+                        WalletServices.getIpfsImageUrl(
+                          _infos!["image"] ?? '',
+                        ),
                         isNft: true,
                       ),
                     ),
                     Expanded(
                       child: Container(
                         alignment: Alignment.topLeft,
-                        padding:
-                            EdgeInsets.only(left: 16.width, right: 16.width),
+                        padding: EdgeInsets.only(
+                            left: 16.width, right: 16.width, top: 16.width),
                         child: Text(
                           _infos!["description"] ?? '',
                           style: TextStyle(

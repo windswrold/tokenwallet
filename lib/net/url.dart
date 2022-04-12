@@ -76,4 +76,6 @@ class RequestURLS {
   static String userNftList = "/app/nft/userNftList";
 
   static String transitGet = "/app/secret/transitGet";
+
+  static String getImage = "/app/secret/getImage";
 }
