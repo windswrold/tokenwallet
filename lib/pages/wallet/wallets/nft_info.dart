@@ -57,6 +57,7 @@ class _NFTInfoState extends State<NFTInfo> {
                     Expanded(
                       child: LoadTokenAssetsImage(
                         _infos!["image"] ?? '',
+                        isNft: true,
                       ),
                     ),
                     Expanded(

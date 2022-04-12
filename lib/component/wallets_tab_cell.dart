@@ -168,7 +168,7 @@ class WalletsTabList extends StatelessWidget {
     String imgname = nftInfo["url"] ?? "";
     List nftId = nftInfo["nftId"];
     int sum = nftId.length;
-    String name = nftInfo["contractAddress"] ?? "";
+    String name = nftInfo["project_name"] ?? "";
     name = name.contractAddress();
     return GestureDetector(
       behavior: HitTestBehavior.opaque,
@@ -222,7 +222,8 @@ class WalletsTabList extends StatelessWidget {
             children: [
               Row(
                 children: [
-                  LoadTokenAssetsImage(imgname, width: 36, height: 36),
+                  LoadTokenAssetsImage(imgname,
+                      width: 36, height: 36, isNft: true),
                   8.rowWidget,
                   Text(
                     name,

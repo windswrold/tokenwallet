@@ -12,6 +12,8 @@ import 'package:crypto/crypto.dart';
 import 'package:bip32/src/utils/wif.dart' as wif;
 import 'package:base_codecs/base_codecs.dart';
 
+import 'date_util.dart';
+
 class TREncode {
   static String base58HexString(String value) {
     try {
@@ -70,6 +72,18 @@ class TREncode {
   static String btcWif(String prv) {
     final originprv = wif.decode(prv);
     return kBytesToHex(originprv.privateKey);
+  }
+
+  static Map<String, dynamic> convertRemoteParams(String url,
+      {String? content}) {
+    Map<String, dynamic> queryParameters = {};
+    queryParameters["url"] = url;
+    queryParameters["time"] = DateUtil.getNowDateMs();
+    queryParameters["secret"] = "";
+    if (content != null) {
+      queryParameters["content"] = content;
+    }
+    return queryParameters;
   }
 
   static Uint8List? convertbits(Uint8List data, int frombits, int tobits,

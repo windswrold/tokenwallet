@@ -444,7 +444,7 @@ class _HomePageState extends State<HomePage> {
               itemBuilder: (BuildContext context, int index) {
                 Map result = _hotNFTS[index];
                 String logoUrl = result["icon_url"] ?? "";
-                String title = result["contract_name"] ?? "";
+                String title = result["project_name"] ?? "";
                 return GestureDetector(
                   behavior: HitTestBehavior.opaque,
                   onTap: () {},
@@ -469,13 +469,18 @@ class _HomePageState extends State<HomePage> {
                             mainAxisAlignment: MainAxisAlignment.center,
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
-                              ClipRRect(
-                                borderRadius: BorderRadius.circular(16),
+                              Container(
+                                decoration: BoxDecoration(
+                                  border:
+                                      Border.all(color: ColorUtils.lineColor),
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(16),
+                                ),
                                 child: CachedNetworkImage(
                                   imageUrl: logoUrl,
                                   width: 125.width,
                                   height: 125.width,
-                                  fit: BoxFit.cover,
+                                  fit: BoxFit.contain,
                                 ),
                               ),
                               Container(

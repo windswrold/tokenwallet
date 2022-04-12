@@ -35,18 +35,15 @@ class ChainServices {
     if (method == Method.GET) {
       url += RequestURLS.blockcypherGet;
       queryParameters ??= {};
-      queryParameters["url"] = host + path + queryParameters.url();
-      queryParameters["time"] = DateUtil.getNowDateMs();
-      queryParameters["secret"] = "";
+      queryParameters =
+          TREncode.convertRemoteParams(host + path + queryParameters.url());
     } else {
       url += RequestURLS.blockcypherPost;
       String content = JsonUtil.encodeObj(data) ?? "";
       queryParameters ??= {};
-      queryParameters["url"] =
-          host + path + (queryParameters != null ? queryParameters.url() : "");
-      queryParameters["time"] = DateUtil.getNowDateMs();
-      queryParameters["secret"] = "";
-      queryParameters["content"] = content;
+      queryParameters = TREncode.convertRemoteParams(
+          host + path + (queryParameters != null ? queryParameters.url() : ""),
+          content: content);
     }
 
     dynamic result = await RequestMethod.manager!
@@ -72,18 +69,15 @@ class ChainServices {
     if (method == Method.GET) {
       url += RequestURLS.trxGet;
       queryParameters ??= {};
-      queryParameters["url"] = host + path + queryParameters.url();
-      queryParameters["time"] = DateUtil.getNowDateMs();
-      queryParameters["secret"] = "";
+      queryParameters =
+          TREncode.convertRemoteParams(host + path + queryParameters.url());
     } else {
       url += RequestURLS.trxPost;
       String content = JsonUtil.encodeObj(data) ?? "";
       queryParameters ??= {};
-      queryParameters["url"] =
-          host + path + (queryParameters != null ? queryParameters.url() : "");
-      queryParameters["time"] = DateUtil.getNowDateMs();
-      queryParameters["secret"] = "";
-      queryParameters["content"] = content;
+      queryParameters = TREncode.convertRemoteParams(
+          host + path + queryParameters.url(),
+          content: content);
     }
     dynamic result = await RequestMethod.manager!
         .requestData(method, url, queryParameters: queryParameters, data: data);
@@ -107,9 +101,8 @@ class ChainServices {
     String url = host + path;
     if (kCoinType == KCoinType.ETH) {
       String netHost = RequestURLS.getHost() + RequestURLS.ethGet;
-      queryParameters["url"] = url + queryParameters.url();
-      queryParameters["time"] = DateUtil.getNowDateMs();
-      queryParameters["secret"] = "";
+      queryParameters =
+          TREncode.convertRemoteParams(url + queryParameters.url());
       dynamic result = await RequestMethod.manager!.requestData(
           Method.GET, netHost,
           queryParameters: queryParameters, data: data);
@@ -563,6 +556,7 @@ class ChainServices {
         result = utf8.decoder.convert(hexToBytes(result));
         result = result.replaceAll(" ", "").trim();
         LogUtil.v("info  $result");
+        // result = "bafybeigpl7wahfiu5rnoyzswd6cdy7thqwcmdrmk4fuou2fqnhiq7rkboa";
         return requestIPFSInfo(cid: result);
       }
     }
@@ -570,8 +564,18 @@ class ChainServices {
 
   static Future<Map?> requestIPFSInfo({required String cid}) async {
     cid = cid.replaceAll("ipfs://", "");
-    String url = "https://ipfs.io/ipfs/$cid";
-    dynamic result = await RequestMethod.manager!.requestData(Method.GET, url);
+    String remote = "https://ipfs.io/ipfs/$cid";
+    String url = RequestURLS.getHost() + RequestURLS.transitGet;
+    Map<String, dynamic> queryParameters = TREncode.convertRemoteParams(remote);
+    dynamic result = await RequestMethod.manager!
+        .requestData(Method.GET, url, queryParameters: queryParameters);
+    if (result != null && result is Map) {
+      int code = result["code"];
+      if (code == 200) {
+        String object = result["result"];
+        return JsonUtil.getObj(object);
+      }
+    }
     // result = {
     //   "name": "Oil Money Cash Money #100",
     //   "description": "The First Of Many Huge Upcoming Arabian NFT Projects",

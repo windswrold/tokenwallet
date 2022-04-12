@@ -44,6 +44,7 @@ class LoadTokenAssetsImage extends StatelessWidget {
     this.fit = BoxFit.contain,
     this.color,
     this.scale,
+    this.isNft = false,
   }) : super(key: key);
 
   final String name;
@@ -52,14 +53,21 @@ class LoadTokenAssetsImage extends StatelessWidget {
   final BoxFit? fit;
   final Color? color;
   final double? scale;
+  final bool isNft;
 
   @override
   Widget build(BuildContext context) {
     String tokenurl = "";
     String chainurl = "";
+    String defaultImage = "tokens/token_default.png";
     if (name.contains(",") == true) {
       tokenurl = name.split(",").first;
       chainurl = name.split(",").last;
+    } else {
+      tokenurl = name;
+    }
+    if (isNft == true) {
+      defaultImage = "tokens/nft_default.png";
     }
     return Container(
       child: Stack(
@@ -72,11 +80,11 @@ class LoadTokenAssetsImage extends StatelessWidget {
               fit: fit,
               color: color,
               placeholder: (context, url) {
-                return LoadAssetsImage("tokens/token_default.png",
+                return LoadAssetsImage(defaultImage,
                     width: width, height: height);
               },
               errorWidget: (context, url, error) {
-                return LoadAssetsImage("tokens/token_default.png",
+                return LoadAssetsImage(defaultImage,
                     width: width, height: height);
               },
             ),
@@ -94,11 +102,11 @@ class LoadTokenAssetsImage extends StatelessWidget {
                     fit: fit,
                     color: color,
                     placeholder: (context, url) {
-                      return LoadAssetsImage("tokens/token_default.png",
+                      return LoadAssetsImage(defaultImage,
                           width: width, height: height);
                     },
                     errorWidget: (context, url, error) {
-                      return LoadAssetsImage("tokens/token_default.png",
+                      return LoadAssetsImage(defaultImage,
                           width: width, height: height);
                     },
                   ),

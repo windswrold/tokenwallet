@@ -39,7 +39,7 @@ class _HomeHotNftState extends State<HomeHotNft> {
 
   Widget _buildCell(Map model) {
     String logoUrl = model["icon_url"] ?? "";
-    String title = model["contract_name"] ?? "";
+    String title = model["project_name"] ?? "";
     String from = model["from_source"] ?? "";
     String desc = model["nft_desc"] ?? "";
 
@@ -55,11 +55,12 @@ class _HomeHotNftState extends State<HomeHotNft> {
         children: [
           ClipRRect(
             borderRadius: BorderRadius.circular(16),
-            child: CachedNetworkImage(
-              imageUrl: logoUrl,
+            child: LoadTokenAssetsImage(
+              logoUrl,
               width: 100.width,
               height: 120.width,
               fit: BoxFit.cover,
+              isNft: true,
             ),
           ),
           13.rowWidget,
