@@ -53,7 +53,15 @@ class HDWallet {
       kLeadType = KLeadType.Memo;
     }
 
-    if (kchainType == KChainType.HD || kchainType == KChainType.ETH) {
+    if (kchainType == KChainType.HD ||
+        kchainType == KChainType.ETH ||
+        kCoinType == KCoinType.ETH ||
+        kCoinType == KCoinType.BSC ||
+        kCoinType == KCoinType.HECO ||
+        kCoinType == KCoinType.OKChain ||
+        kCoinType == KCoinType.Matic ||
+        kCoinType == KCoinType.AVAX ||
+        kCoinType == KCoinType.Arbitrum) {
       HDWallet ethWallet = (await ETHChain()
           .importWallet(content: content, pin: pin, kLeadType: kLeadType))!;
       if (kCoinType == null) {
