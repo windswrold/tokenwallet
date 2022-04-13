@@ -381,11 +381,13 @@ class CurrentChooseWalletState with ChangeNotifier {
       {bool pushTransList = true}) async {
     _tokenIndex = index;
     final String walletID = _currentWallet!.walletID!;
-    TRWalletInfo infos = (await TRWalletInfo.queryWalletInfo(
-            walletID, chooseTokens()!.chainType!))
-        .first;
-    _walletinfo = infos;
-    LogUtil.v("updateTokenChoose infos " + infos.walletAaddress!);
+    List infos = (await TRWalletInfo.queryWalletInfo(
+        walletID, chooseTokens()!.chainType!));
+    if (infos.isEmpty || infos == null) {
+      return;
+    }
+    _walletinfo = infos.first;
+    LogUtil.v("updateTokenChoose infos " + infos.first.walletAaddress!);
     if (pushTransList == true) {
       Routers.push(context, TransferListPage());
     }
@@ -547,16 +549,17 @@ class CurrentChooseWalletState with ChangeNotifier {
     for (int i = 0; i < tokens.length; i++) {
       MCollectionTokens map = tokens[i];
       String walletAaddress = "";
-      TRWalletInfo? info;
+      List? info;
       if (infos.isNotEmpty) {
-        info =
-            infos.where((element) => element.coinType == map.chainType).first;
+        info = infos
+            .where((element) => element.coinType == map.chainType)
+            .toList();
       }
-      if (info == null) {
+      if (info == null || info.isEmpty) {
         LogUtil.v("element.coinType ${map.token}");
         continue;
       }
-      walletAaddress = info.walletAaddress!;
+      walletAaddress = info.first.walletAaddress!;
       map.balanceOf(walletAaddress, currencyType ?? KCurrencyType.CNY);
     }
   }
