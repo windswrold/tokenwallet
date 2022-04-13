@@ -115,7 +115,7 @@ class CurrentChooseWalletState with ChangeNotifier {
     _currentWallet = await TRWallet.queryChooseWallet();
     _currencyType = SPManager.getAppCurrencyMode();
     initNFTIndex();
-    initNFTTokens();
+
     requestAssets();
     _configTimerRequest();
     notifyListeners();
@@ -503,6 +503,7 @@ class CurrentChooseWalletState with ChangeNotifier {
   void requestAssets() async {
     queryMyCollectionTokens();
     _requestMyCollectionTokenAssets();
+    initNFTTokens();
   }
 
   void queryMyCollectionTokens() async {

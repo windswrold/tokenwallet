@@ -231,5 +231,7 @@
     "homepage_latest": "最新锻造",
     "homepage_nftinfo": "NFT详情",
     "homepage_send": "发送",
-    "homepage_receivenft": "接受藏品"
+    "homepage_receivenft": "接受藏品",
+    "tokensetting_addnfts": "添加藏品",
+    "tokensetting_searchnfttip": "输入藏品名称或合约地址"
 }

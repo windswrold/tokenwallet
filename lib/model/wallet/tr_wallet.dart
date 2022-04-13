@@ -189,7 +189,8 @@ class TRWallet {
         return;
       }
 
-      final walletID = TREncode.SHA256(content.replaceAll(" ", "") + "CSTOKEM");
+      final walletID = TREncode.SHA256(
+          content.replaceAll(" ", "") + "CSTOKEM" + kChainType.getChainType());
       TRWallet? oldWallets = await TRWallet.queryWalletByWalletID(walletID);
       if (oldWallets != null) {
         LogUtil.v("查找到有已经导入的钱包");

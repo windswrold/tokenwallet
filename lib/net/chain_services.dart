@@ -143,63 +143,107 @@ class ChainServices {
     int? chainid = model.chainID;
     int? decimal = tokens.decimals;
     String? symbol = tokens.token;
-    params["module"] = "account";
-    params["address"] = from;
-    params["page"] = page;
-    params["offset"] = 20;
-    params["sort"] = "desc";
-    if (tokens.isToken == false) {
-      params["action"] = "txlist";
-    } else {
-      params["action"] = "tokentx";
-      params["contractaddress"] = tokens.contract;
-    }
-    dynamic result = await requestETHDatas(
-        kCoinType: coinType, path: "/api", queryParameters: params);
-    if (result != null && result is Map) {
-      String status = result["status"];
-      if (status == "1") {
-        List object = result["result"];
-        for (var item in object) {
-          String blockNumber = item["blockNumber"];
-          String timeStamp = item["timeStamp"];
-          String hash = item["hash"];
-          String fromADD = item["from"];
-          String to = item["to"];
-          BigInt value = BigInt.parse(item["value"]);
-          BigInt gasPrice = BigInt.parse(item["gasPrice"] ?? "0");
-          String gasUsed = item["gasUsed"] ?? "0";
-          String fee = TRWallet.configFeeValue(
-              cointype: coinType.index,
-              beanValue: gasUsed,
-              offsetValue: gasPrice.tokenString(9));
+    if (coinType == KCoinType.OKChain) {
+      params["offset"] = (page - 1) * 20;
+      params["limit"] = 20;
+      dynamic result = await requestOKLink(
+          path: "/addresses/${from.toLowerCase()}/transactions",
+          queryParameters: params);
+      if (result != null && result is Map) {
+        int code = result["code"];
+        if (code == 0) {
+          List hits = result["data"]["hits"];
+          for (var item in hits) {
+            String blockNumber = item["blockHeight"].toString();
+            String timeStamp = item["blocktime"].toString();
+            String hash = item["hash"];
+            String fromADD = (item["from"] as List).first;
+            String to = ((item["to"] as List).first)["address"];
+            Decimal value = Decimal.parse(item["value"].toString());
+            BigInt gasPrice = BigInt.from(item["gasPrice"] ?? 0);
+            BigInt gasUsed = BigInt.from(item["gasUsed"] ?? 0);
+            String fee = TRWallet.configFeeValue(
+                cointype: coinType.index,
+                beanValue: gasUsed.toString(),
+                offsetValue: gasPrice.tokenString(9));
 
-          TransRecordModel model = TransRecordModel();
-          model.txid = hash;
-          model.fromAdd = fromADD;
-          model.toAdd = to;
-          model.fee = fee;
-          model.amount =
-              decimal == null ? value.toString() : value.tokenString(decimal);
-          model.date = DateUtil.formatDateMs(int.parse(timeStamp) * 1000);
-          model.coinType = coinType.coinTypeString();
-          model.token = symbol;
-          model.transStatus = KTransState.success.index;
-          model.transType = KTransType.transfer.index;
-          model.blockHeight = int.tryParse(blockNumber);
-          model.chainid = chainid;
-          datas.add(model);
-          // if (kTransDataType == KTransDataType.ts_all) {
-          //   datas.add(model);
-          // } else if (kTransDataType == KTransDataType.ts_out &&
-          //     model.isOut(from)) {
-          //   datas.add(model);
-          // } else if (kTransDataType == KTransDataType.ts_in &&
-          //     model.isOut(from) == false) {
-          //   datas.add(model);
-          // }
+            TransRecordModel model = TransRecordModel();
+            model.txid = hash;
+            model.fromAdd = fromADD;
+            model.toAdd = to;
+            model.fee = fee;
+            model.amount = value.toString();
+            model.date = DateUtil.formatDateMs(int.parse(timeStamp));
+            model.coinType = coinType.coinTypeString();
+            model.token = symbol;
+            model.transStatus = KTransState.success.index;
+            model.transType = KTransType.transfer.index;
+            model.blockHeight = int.tryParse(blockNumber);
+            model.chainid = chainid;
+            datas.add(model);
+          }
+          TransRecordModel.insertTrxLists(datas);
         }
-        TransRecordModel.insertTrxLists(datas);
+      }
+    } else {
+      params["module"] = "account";
+      params["address"] = from;
+      params["page"] = page;
+      params["offset"] = 20;
+      params["sort"] = "desc";
+      if (tokens.isToken == false) {
+        params["action"] = "txlist";
+      } else {
+        params["action"] = "tokentx";
+        params["contractaddress"] = tokens.contract;
+      }
+      dynamic result = await requestETHDatas(
+          kCoinType: coinType, path: "/api", queryParameters: params);
+      if (result != null && result is Map) {
+        String status = result["status"];
+        if (status == "1") {
+          List object = result["result"];
+          for (var item in object) {
+            String blockNumber = item["blockNumber"];
+            String timeStamp = item["timeStamp"];
+            String hash = item["hash"];
+            String fromADD = item["from"];
+            String to = item["to"];
+            BigInt value = BigInt.parse(item["value"]);
+            BigInt gasPrice = BigInt.parse(item["gasPrice"] ?? "0");
+            String gasUsed = item["gasUsed"] ?? "0";
+            String fee = TRWallet.configFeeValue(
+                cointype: coinType.index,
+                beanValue: gasUsed,
+                offsetValue: gasPrice.tokenString(9));
+
+            TransRecordModel model = TransRecordModel();
+            model.txid = hash;
+            model.fromAdd = fromADD;
+            model.toAdd = to;
+            model.fee = fee;
+            model.amount =
+                decimal == null ? value.toString() : value.tokenString(decimal);
+            model.date = DateUtil.formatDateMs(int.parse(timeStamp) * 1000);
+            model.coinType = coinType.coinTypeString();
+            model.token = symbol;
+            model.transStatus = KTransState.success.index;
+            model.transType = KTransType.transfer.index;
+            model.blockHeight = int.tryParse(blockNumber);
+            model.chainid = chainid;
+            datas.add(model);
+            // if (kTransDataType == KTransDataType.ts_all) {
+            //   datas.add(model);
+            // } else if (kTransDataType == KTransDataType.ts_out &&
+            //     model.isOut(from)) {
+            //   datas.add(model);
+            // } else if (kTransDataType == KTransDataType.ts_in &&
+            //     model.isOut(from) == false) {
+            //   datas.add(model);
+            // }
+          }
+          TransRecordModel.insertTrxLists(datas);
+        }
       }
     }
     return TransRecordModel.queryTrxList(
@@ -560,5 +604,18 @@ class ChainServices {
         return WalletServices.requestIPFSInfo(cid: result);
       }
     }
+  }
+
+  static Future<dynamic> requestOKLink(
+      {required String path,
+      Map<String, dynamic>? queryParameters,
+      dynamic data}) async {
+    String url = NodeModel.getBlockExploreApi(KCoinType.OKChain) + path;
+    Map<String, dynamic> header = {
+      "x-apiKey": "9d88a628-bb7f-4787-8f4f-49a9120d3cc9"
+    };
+    dynamic result = await RequestMethod.manager!.requestData(Method.GET, url,
+        header: header, queryParameters: queryParameters, data: data);
+    return result;
   }
 }

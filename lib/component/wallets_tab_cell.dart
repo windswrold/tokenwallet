@@ -1,4 +1,5 @@
 import 'package:cstoken/component/empty_data.dart';
+import 'package:cstoken/component/nft_typecell.dart';
 import 'package:cstoken/model/nft/nft_model.dart';
 import 'package:cstoken/model/tokens/collection_tokens.dart';
 import 'package:cstoken/pages/wallet/transfer/receive_page.dart';
@@ -213,42 +214,7 @@ class WalletsTabList extends StatelessWidget {
                 provider.walletcellTapReceive(context, index, tapNFT: true);
               }),
         ],
-        child: Container(
-          height: 68.width,
-          margin: EdgeInsets.only(bottom: 8.width),
-          padding: EdgeInsets.symmetric(horizontal: 12.width),
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(8),
-            color: Colors.white,
-          ),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Row(
-                children: [
-                  LoadTokenAssetsImage(imgname, width: 36, height: 36),
-                  8.rowWidget,
-                  Text(
-                    name,
-                    style: TextStyle(
-                      fontWeight: FontWeightUtils.medium,
-                      fontSize: 16.font,
-                      color: ColorUtils.fromHex("#FF000000"),
-                    ),
-                  ),
-                ],
-              ),
-              Text(
-                sum.toString(),
-                style: TextStyle(
-                  fontWeight: FontWeightUtils.bold,
-                  fontSize: 18.font,
-                  color: ColorUtils.fromHex("#FF000000"),
-                ),
-              )
-            ],
-          ),
-        ),
+        child: NFTTypeCell(nftInfo: nftInfo),
       ),
     );
   }

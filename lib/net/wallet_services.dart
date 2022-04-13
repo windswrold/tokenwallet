@@ -387,8 +387,7 @@ class WalletServices {
     return [];
   }
 
-  static Future<List<NFTModel>> getHotNftList(
-      {required String address, required int pageNum}) async {
+  static Future<List<NFTModel>> getHotNftList({required int pageNum}) async {
     final url = RequestURLS.getHost() + RequestURLS.hotNftList;
     Map<String, dynamic>? params = {};
     params["pageSize"] = 20;

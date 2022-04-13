@@ -1,5 +1,6 @@
 import 'package:cstoken/component/assets_cell.dart';
 import 'package:cstoken/component/empty_data.dart';
+import 'package:cstoken/model/nft/nft_model.dart';
 import 'package:cstoken/model/tokens/collection_tokens.dart';
 
 import '../../../public.dart';
@@ -13,8 +14,17 @@ class TokenManager extends StatefulWidget {
 
 class _TokenManagerState extends State<TokenManager> {
   TextEditingController searchController = TextEditingController();
+  int _homeTokenType = 0;
+  @override
+  void initState() {
+    super.initState();
+    _homeTokenType =
+        Provider.of<CurrentChooseWalletState>(context, listen: false)
+            .homeTokenType;
+    _initData();
+  }
 
-  List<MCollectionTokens> _datas = [];
+  List _datas = [];
 
   Widget _topSearchView() {
     return Container(
@@ -68,22 +78,19 @@ class _TokenManagerState extends State<TokenManager> {
     );
   }
 
-  @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-    _initData();
-  }
-
   void _initData() async {
     final walletID =
         Provider.of<CurrentChooseWalletState>(context, listen: false)
             .currentWallet!
             .walletID!;
 
-    List<MCollectionTokens> datas = [];
+    List datas = [];
     KNetType netType = SPManager.getNetType();
-    datas = await MCollectionTokens.findTokens(walletID, netType.index);
+    if (_homeTokenType == 0) {
+      datas = await MCollectionTokens.findTokens(walletID, netType.index);
+    } else {
+      datas = await NFTModel.findTokens(walletID, netType.index);
+    }
     setState(() {
       _datas = datas;
     });
@@ -126,7 +133,7 @@ class _TokenManagerState extends State<TokenManager> {
                 : ListView.builder(
                     itemCount: _datas.length,
                     itemBuilder: (BuildContext context, int index) {
-                      MCollectionTokens token = _datas[index];
+                      dynamic token = _datas[index];
                       return AssetsCell(
                         key: ValueKey(index),
                         token: token,

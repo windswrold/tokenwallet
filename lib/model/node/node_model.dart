@@ -62,6 +62,12 @@ class NodeModel {
       } else {
         host = "https://api-testnet.polygonscan.com";
       }
+    } else if (kCoinType == KCoinType.OKChain) {
+      if (KNetType.Mainnet == netType) {
+        host = "https://www.oklink.com/api/explorer/v1/okc";
+      } else {
+        host = "https://www.oklink.com/api/explorer/v1/okc_test";
+      }
     }
     return host;
   }

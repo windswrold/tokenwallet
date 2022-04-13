@@ -1,3 +1,4 @@
+import 'package:cstoken/model/nft/nft_model.dart';
 import 'package:cstoken/model/tokens/collection_tokens.dart';
 
 import '../public.dart';
@@ -5,9 +6,8 @@ import '../public.dart';
 class AssetsCell extends StatelessWidget {
   const AssetsCell({Key? key, required this.token, required this.onTap})
       : super(key: key);
-  final MCollectionTokens token;
+  final dynamic token;
   final VoidCallback onTap;
-  
 
   Widget _loadImgView(String icon) {
     return Container(
@@ -19,7 +19,8 @@ class AssetsCell extends StatelessWidget {
     );
   }
 
-  Widget _loadContent() {
+  Widget _loadContent(
+      String token, String coinType, int state, String contract) {
     return Expanded(
       child: Container(
         padding: EdgeInsets.only(bottom: 12.width),
@@ -39,8 +40,11 @@ class AssetsCell extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Container(
+                      width: 200.width,
                       child: Text(
-                        token.token ?? "",
+                        token,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
                         style: TextStyle(
                           color: ColorUtils.fromHex("#FF000000"),
                           fontSize: 16.font,
@@ -51,7 +55,7 @@ class AssetsCell extends StatelessWidget {
                     4.columnWidget,
                     Container(
                       child: Text(
-                        token.coinType ?? "",
+                        coinType,
                         style: TextStyle(
                           color: ColorUtils.fromHex("#FF000000"),
                           fontSize: 12.font,
@@ -65,7 +69,7 @@ class AssetsCell extends StatelessWidget {
                   onTap: onTap,
                   behavior: HitTestBehavior.opaque,
                   child: LoadAssetsImage(
-                    token.state == 1
+                    state == 1
                         ? "icons/icon_tokened.png"
                         : "icons/icon_tokenadd.png",
                     width: 20,
@@ -77,9 +81,8 @@ class AssetsCell extends StatelessWidget {
             Container(
               margin: EdgeInsets.only(top: 4.width),
               child: Text(
-                (token.contract?.replaceAll(
-                        "0x0000000000000000000000000000000000000000", "")) ??
-                    (token.coinType ?? ""),
+                (contract.replaceAll(
+                    "0x0000000000000000000000000000000000000000", "")),
                 style: TextStyle(
                   color: ColorUtils.fromHex("#FF000000"),
                   fontSize: 12.font,
@@ -95,14 +98,35 @@ class AssetsCell extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    String icon = "";
+    String tokenContent = "";
+    String coinType = "";
+    int state = 0;
+    String contract = "";
+    if (token is MCollectionTokens) {
+      MCollectionTokens model = token as MCollectionTokens;
+      icon = model.iconPath ?? "";
+      tokenContent = model.token ?? '';
+      coinType = model.coinType ?? "";
+      state = model.state ?? 0;
+      contract = model.contract ?? "";
+    } else {
+      NFTModel model = token as NFTModel;
+      icon = model.url ?? "";
+      state = model.state ?? 0;
+      tokenContent = (model.contractName ?? '').toUpperCase();
+      contract = model.contractAddress ?? '';
+      coinType = model.chainTypeName ?? "";
+    }
+
     return Container(
       padding: EdgeInsets.only(top: 12.width, left: 16.width, right: 16.width),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          _loadImgView(token.iconPath ?? ''),
+          _loadImgView(icon),
           12.rowWidget,
-          _loadContent(),
+          _loadContent(tokenContent, coinType, state, contract),
         ],
       ),
     );
