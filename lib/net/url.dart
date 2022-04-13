@@ -80,4 +80,6 @@ class RequestURLS {
   static String getImage = "/app/secret/getImage";
 
   static String hotNftList = "/app/nft/hotNftList";
+
+  static String addUserNft = "/app/nft/addUserNft";
 }

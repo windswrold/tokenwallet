@@ -153,9 +153,11 @@ class _SearchAddTokenState extends State<SearchAddToken> {
     HWToast.hiddenAllToast();
     _refreshController.loadComplete();
     _refreshController.refreshCompleted();
-    setState(() {
-      _datas.addAll(indexnfts);
-    });
+    if (mounted) {
+      setState(() {
+        _datas.addAll(indexnfts);
+      });
+    }
   }
 
   Widget _topSearchView() {

@@ -192,21 +192,24 @@ class CustomTextField extends StatefulWidget {
     );
   }
 
-  static Widget getInputTextField(BuildContext context,
-      {TextEditingController? controller,
-      String? hintText,
-      String? titleText,
-      String? helpText,
-      bool obscureText = false, //控制秘方
-      EdgeInsetsGeometry padding = EdgeInsets.zero,
-      int? maxLength,
-      int maxLines = 1,
-      EdgeInsetsGeometry contentPadding =
-          const EdgeInsets.fromLTRB(10, 15, 10, 15),
-      bool isPasswordText = false,
-      bool isScanText = false,
-      VoidCallback? onPressBack,
-      bool enabled = true}) {
+  static Widget getInputTextField(
+    BuildContext context, {
+    TextEditingController? controller,
+    String? hintText,
+    String? titleText,
+    String? helpText,
+    bool obscureText = false, //控制秘方
+    EdgeInsetsGeometry padding = EdgeInsets.zero,
+    int? maxLength,
+    int maxLines = 1,
+    EdgeInsetsGeometry contentPadding =
+        const EdgeInsets.fromLTRB(10, 15, 10, 15),
+    bool isPasswordText = false,
+    bool isScanText = false,
+    VoidCallback? onPressBack,
+    bool enabled = true,
+    Color fillColor = Colors.white,
+  }) {
     return Padding(
       padding: padding,
       child: Column(
@@ -214,7 +217,7 @@ class CustomTextField extends StatefulWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Container(
-            margin: const EdgeInsets.only(bottom: 0),
+            margin: const EdgeInsets.only(bottom: 5),
             child: Text(
               titleText ??= "",
               style: TextStyle(
@@ -241,6 +244,7 @@ class CustomTextField extends StatefulWidget {
                   focusedUnderLineColor: ColorUtils.blueColor,
                   underLineWidth: 0.5,
                   hintText: hintText,
+                  fillColor: fillColor,
                   hintStyle: TextStyle(
                     fontSize: 14.font,
                     fontWeight: FontWeightUtils.regular,

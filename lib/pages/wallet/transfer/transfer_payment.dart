@@ -136,12 +136,13 @@ class _TransferPaymentState extends State<TransferPayment> {
                             ),
                             Container(
                               padding: EdgeInsets.only(top: 30.width),
-                              child: Text(widget.nftInfos?["name"] ?? '',
-                               style: TextStyle(
-                                 fontWeight:FontWeightUtils.semiBold,
-                                 color: Colors.black,
-                                 fontSize: 20.font,
-                               ),
+                              child: Text(
+                                widget.nftInfos?["name"] ?? '',
+                                style: TextStyle(
+                                  fontWeight: FontWeightUtils.semiBold,
+                                  color: Colors.black,
+                                  fontSize: 20.font,
+                                ),
                               ),
                             ),
                           ],

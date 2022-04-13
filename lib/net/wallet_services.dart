@@ -5,6 +5,7 @@ import 'package:cstoken/model/tokens/collection_tokens.dart';
 import 'package:cstoken/net/request_method.dart';
 import 'package:cstoken/net/url.dart';
 import 'package:cstoken/public.dart';
+import 'package:cstoken/utils/custom_toast.dart';
 import 'package:cstoken/utils/json_util.dart';
 import 'package:decimal/decimal.dart';
 
@@ -334,7 +335,7 @@ class WalletServices {
     Map<String, dynamic> queryParameters =
         TREncode.convertRemoteParams(ipfsUrl);
     String host = url + queryParameters.url();
-    LogUtil.v("getIpfsImageUrl $host");
+    print("getIpfsImageUrl $host");
     return host;
   }
 
@@ -400,5 +401,23 @@ class WalletServices {
       return models;
     }
     return [];
+  }
+
+  static Future<bool> addUserNft(
+      String contractAddress, String address, String contractName) async {
+    final url = RequestURLS.getHost() + RequestURLS.addUserNft;
+    Map<String, dynamic>? params = {};
+    params["contractAddress"] = contractAddress;
+    params["address"] = address;
+    params["contractName"] = contractName;
+    dynamic result = await RequestMethod.manager!
+        .requestData(Method.POST, url, queryParameters: params);
+    if (result != null && result["code"] == 200) {
+      return true;
+    } else {
+      String a = result["msg"];
+      HWToast.showText(text: a);
+    }
+    return false;
   }
 }

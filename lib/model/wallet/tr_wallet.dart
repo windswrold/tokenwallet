@@ -244,9 +244,11 @@ class TRWallet {
       }
       List indexTokens = await WalletServices.gettokenList(1, 20,
           defaultFlag: true, chainType: chainType);
-      List defaultNFT =
-          await WalletServices.getUserNftList(address: usernftAddress);
-
+      List defaultNFT = [];
+      if (usernftAddress.isNotEmpty) {
+        defaultNFT =
+            await WalletServices.getUserNftList(address: usernftAddress);
+      }
       KNetType netType = RequestURLS.getHost() == RequestURLS.testUrl
           ? KNetType.Testnet
           : KNetType.Mainnet;

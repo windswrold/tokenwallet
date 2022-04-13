@@ -233,5 +233,8 @@
     "homepage_send": "发送",
     "homepage_receivenft": "接受藏品",
     "tokensetting_addnfts": "添加藏品",
-    "tokensetting_searchnfttip": "输入藏品名称或合约地址"
+    "tokensetting_searchnfttip": "输入藏品名称或合约地址",
+    "tokensetting_addnftcon": "请输入需要添加的NFT合约",
+    "tokensetting_addnftconadd": "请输入NFT合约",
+    "tokensetting_addnftconname": "请输入NFT名称"
 }

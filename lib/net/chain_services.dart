@@ -270,6 +270,7 @@ class ChainServices {
     String symbol = tokens.token!;
     if (tokens.tokenType == KTokenType.native.index) {
       path = "/v1/accounts/$from/transactions";
+      decimal = 6;
     } else {
       contract = tokens.contract!;
       path = "/v1/accounts/$from/transactions/trc20";

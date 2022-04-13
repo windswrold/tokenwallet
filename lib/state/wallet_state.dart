@@ -116,7 +116,6 @@ class CurrentChooseWalletState with ChangeNotifier {
     _tokenIndex = 0;
     _homeTokenType = 0;
     _currentWallet = await TRWallet.queryChooseWallet();
-
     _currencyType = SPManager.getAppCurrencyMode();
     initNFTIndex();
     requestAssets();
@@ -138,6 +137,8 @@ class CurrentChooseWalletState with ChangeNotifier {
     if (_currentWallet == null) {
       return;
     }
+    String walletID = _currentWallet!.walletID!;
+    KNetType netType = SPManager.getNetType();
     String? ethAdress;
     String? chainType;
     List<TRWalletInfo> infos =
@@ -155,6 +156,16 @@ class CurrentChooseWalletState with ChangeNotifier {
       return;
     }
     _nftIndexInfo[_currentWallet!.walletID!] = result;
+    List defaultNFT = await WalletServices.getUserNftList(address: ethAdress);
+    for (var item in defaultNFT) {
+      NFTModel nftModel = NFTModel.fromJson(item);
+      nftModel.owner = walletID;
+      nftModel.state = 1;
+      nftModel.tokenID = nftModel.createTokenID(walletID);
+      nftModel.kNetType = netType.index;
+      NFTModel.insertTokens([nftModel]);
+    }
+
     notifyListeners();
   }
 

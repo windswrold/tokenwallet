@@ -166,8 +166,10 @@ class _WalletPageState extends State<WalletPage> {
           ),
           Consumer<CurrentChooseWalletState>(builder: (_, provider, child) {
             return Visibility(
-              visible:
-                  (provider.currentWallet?.chainType != KChainType.BTC.index),
+              visible: (provider.currentWallet?.chainType !=
+                      KChainType.BTC.index &&
+                  (provider.currentWallet?.chainType != KChainType.TRX.index ||
+                      provider.homeTokenType != 1)),
               child: GestureDetector(
                 behavior: HitTestBehavior.opaque,
                 onTap: _tapAssets,
