@@ -90,7 +90,7 @@ class _NFTInfoState extends State<NFTInfo> {
             margin: EdgeInsets.only(
                 left: 16.width, right: 16.width, bottom: 16.width),
             onPressed: () {
-              Routers.push(context, TransferPayment());
+              Routers.push(context, TransferPayment(nftInfos: _infos));
             },
             title: "homepage_send".local(),
           ),

@@ -10,7 +10,8 @@ import 'package:flutter/widgets.dart';
 import '../../../public.dart';
 
 class TransferPayment extends StatefulWidget {
-  TransferPayment({Key? key}) : super(key: key);
+  TransferPayment({Key? key, this.nftInfos}) : super(key: key);
+  final Map? nftInfos;
 
   @override
   State<TransferPayment> createState() => _TransferPaymentState();
@@ -122,6 +123,30 @@ class _TransferPaymentState extends State<TransferPayment> {
                   padding: EdgeInsets.fromLTRB(16.width, 0, 16.width, 24.width),
                   child: Column(
                     children: [
+                      Visibility(
+                        visible: widget.nftInfos != null,
+                        child: Column(
+                          children: [
+                            LoadTokenAssetsImage(
+                              WalletServices.getIpfsImageUrl(
+                                widget.nftInfos?["image"] ?? '',
+                              ),
+                              height: 300.width,
+                              isNft: true,
+                            ),
+                            Container(
+                              padding: EdgeInsets.only(top: 30.width),
+                              child: Text(widget.nftInfos?["name"] ?? '',
+                               style: TextStyle(
+                                 fontWeight:FontWeightUtils.semiBold,
+                                 color: Colors.black,
+                                 fontSize: 20.font,
+                               ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
                       _buildTextField(
                         _kTransferState.addressEC,
                         "transferetype_to".local(),
