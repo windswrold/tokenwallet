@@ -69,6 +69,9 @@ class CurrentChooseWalletState with ChangeNotifier {
   List<MCollectionTokens> get nftInfos =>
       _currentWallet == null ? [] : _nftInfos[_currentWallet?.walletID] ?? [];
 
+  List<KCoinType> _supportCoinTypes = [];
+  List<KCoinType> get supportCoinTypes => _supportCoinTypes;
+
   MCollectionTokens? chooseTokens() {
     if (tokens.length > _tokenIndex) {
       return tokens[_tokenIndex];
@@ -113,13 +116,22 @@ class CurrentChooseWalletState with ChangeNotifier {
     _tokenIndex = 0;
     _homeTokenType = 0;
     _currentWallet = await TRWallet.queryChooseWallet();
+
     _currencyType = SPManager.getAppCurrencyMode();
     initNFTIndex();
-
     requestAssets();
+    _initSuggortCoinTypes();
     _configTimerRequest();
     notifyListeners();
     return _currentWallet;
+  }
+
+  void _initSuggortCoinTypes() async {
+    List<TRWalletInfo> infos = await TRWalletInfo.queryWalletInfosByWalletID(
+        _currentWallet?.walletID ?? "");
+    List<KCoinType> coins = infos.map((e) => e.coinType!.geCoinType()).toList();
+    _supportCoinTypes = coins;
+    LogUtil.v("coinscoins " + coins.length.toString());
   }
 
   void initNFTIndex() async {
@@ -360,6 +372,7 @@ class CurrentChooseWalletState with ChangeNotifier {
     initNFTIndex();
     initNFTTokens();
     requestAssets();
+    _initSuggortCoinTypes();
     notifyListeners();
     return true;
   }

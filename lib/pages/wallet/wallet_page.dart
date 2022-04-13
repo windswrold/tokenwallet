@@ -76,7 +76,7 @@ class _WalletPageState extends State<WalletPage> {
     );
   }
 
-  List<Widget> _getMenuItem(TRWallet wallet) {
+  List<Widget> _getMenuItem(List<KCoinType> coins) {
     Widget _getItem(KCoinType? e) {
       return GestureDetector(
         behavior: HitTestBehavior.translucent,
@@ -100,9 +100,7 @@ class _WalletPageState extends State<WalletPage> {
       );
     }
 
-    List<Widget> datas = wallet.chainType!
-        .getChainType()
-        .getSuppertCoinTypes()
+    List<Widget> datas = coins
         .map(
           (e) => _getItem(e),
         )
@@ -129,9 +127,13 @@ class _WalletPageState extends State<WalletPage> {
                 ),
                 child: IntrinsicWidth(
                   child: SingleChildScrollView(
-                    child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.stretch,
-                        children: _getMenuItem(wallet)),
+                    child: Consumer<CurrentChooseWalletState>(
+                      builder: (_, provider, child) {
+                        return Column(
+                            crossAxisAlignment: CrossAxisAlignment.stretch,
+                            children: _getMenuItem(provider.supportCoinTypes));
+                      },
+                    ),
                   ),
                 ),
               ),
