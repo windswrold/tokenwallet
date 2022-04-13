@@ -232,15 +232,6 @@ class ChainServices {
             model.blockHeight = int.tryParse(blockNumber);
             model.chainid = chainid;
             datas.add(model);
-            // if (kTransDataType == KTransDataType.ts_all) {
-            //   datas.add(model);
-            // } else if (kTransDataType == KTransDataType.ts_out &&
-            //     model.isOut(from)) {
-            //   datas.add(model);
-            // } else if (kTransDataType == KTransDataType.ts_in &&
-            //     model.isOut(from) == false) {
-            //   datas.add(model);
-            // }
           }
           TransRecordModel.insertTrxLists(datas);
         }

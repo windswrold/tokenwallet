@@ -215,7 +215,9 @@ class _SearchAddTokenState extends State<SearchAddToken> {
                     () {
                     Routers.push(context, TokenManager());
                   })
-                : CustomPageView.getCustomIcon("icons/icon_add.png", () {}),
+                : CustomPageView.getCustomIcon("icons/icon_add.png", () {
+                    Routers.push(context, CustomAddNft());
+                  }),
           ),
         ],
         child: Column(
