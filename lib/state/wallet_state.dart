@@ -415,7 +415,9 @@ class CurrentChooseWalletState with ChangeNotifier {
   }
 
   void updateTokenChoose(BuildContext context, int index,
-      {bool pushTransList = false, bool pushPayments = false}) async {
+      {bool pushTransList = false,
+      bool pushPayments = false,
+      bool pushReceive = false}) async {
     _tokenIndex = index;
     final String walletID = _currentWallet!.walletID!;
     List infos = (await TRWalletInfo.queryWalletInfo(
@@ -433,22 +435,26 @@ class CurrentChooseWalletState with ChangeNotifier {
       Routers.push(context, TransferPayment());
       return;
     }
+    if (pushReceive == true) {
+      Routers.push(context, RecervePaymentPage());
+    }
   }
 
   void walletcellTapReceive(BuildContext context, int index,
       {bool tapNFT = false}) async {
     if (tapNFT == false) {
-      updateTokenChoose(context, index, pushTransList: false);
+      updateTokenChoose(context, index, pushReceive: true);
     } else {
       final String walletID = _currentWallet!.walletID!;
       String chainType = nftContracts[index].chainTypeName ?? "";
-      TRWalletInfo infos = (await TRWalletInfo.queryWalletInfo(
-              walletID, chainType.chainTypeGetCoinType()!.index))
-          .first;
-      _walletinfo = infos;
+      List infos = (await TRWalletInfo.queryWalletInfo(
+          walletID, chainType.chainTypeGetCoinType()!.index));
+      if (infos.isEmpty || infos == null) {
+        return;
+      }
+      _walletinfo = infos.first;
+      Routers.push(context, RecervePaymentPage());
     }
-
-    Routers.push(context, RecervePaymentPage());
   }
 
   void deleteWallet(BuildContext context, {required TRWallet wallet}) {
