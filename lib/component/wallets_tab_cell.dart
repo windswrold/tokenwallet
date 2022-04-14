@@ -27,7 +27,7 @@ class WalletsTabList extends StatelessWidget {
     return GestureDetector(
       behavior: HitTestBehavior.opaque,
       onTap: () {
-        provider.updateTokenChoose(context, index);
+        provider.updateTokenChoose(context, index, pushTransList: true);
       },
       child: SwipeActionCell(
         key: ObjectKey(collectToken),
@@ -60,7 +60,7 @@ class WalletsTabList extends StatelessWidget {
                 ),
               ),
               onTap: (handler) async {
-                provider.walletcellTapPayment(context, index);
+                provider.updateTokenChoose(context, index, pushPayments: true);
               }),
         ],
         leadingActions: [

@@ -415,7 +415,7 @@ class CurrentChooseWalletState with ChangeNotifier {
   }
 
   void updateTokenChoose(BuildContext context, int index,
-      {bool pushTransList = true}) async {
+      {bool pushTransList = false, bool pushPayments = false}) async {
     _tokenIndex = index;
     final String walletID = _currentWallet!.walletID!;
     List infos = (await TRWalletInfo.queryWalletInfo(
@@ -427,6 +427,11 @@ class CurrentChooseWalletState with ChangeNotifier {
     LogUtil.v("updateTokenChoose infos " + infos.first.walletAaddress!);
     if (pushTransList == true) {
       Routers.push(context, TransferListPage());
+      return;
+    }
+    if (pushPayments == true) {
+      Routers.push(context, TransferPayment());
+      return;
     }
   }
 
@@ -444,11 +449,6 @@ class CurrentChooseWalletState with ChangeNotifier {
     }
 
     Routers.push(context, RecervePaymentPage());
-  }
-
-  void walletcellTapPayment(BuildContext context, int index) async {
-    updateTokenChoose(context, index, pushTransList: false);
-    Routers.push(context, TransferPayment());
   }
 
   void deleteWallet(BuildContext context, {required TRWallet wallet}) {

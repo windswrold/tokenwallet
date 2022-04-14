@@ -108,7 +108,7 @@ class _NFTListDataState extends State<NFTListData> {
     return GestureDetector(
       behavior: HitTestBehavior.opaque,
       onTap: () {
-        provider.updateTokenChoose(context, index, pushTransList: false);
+        provider.updateTokenChoose(context, index);
         Routers.push(context,
             NFTInfo(nftModel: widget.model, tokenid: infos.tid.toString()));
       },
