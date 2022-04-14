@@ -411,7 +411,7 @@ class WalletServices {
     params["address"] = address;
     params["contractName"] = contractName;
     dynamic result = await RequestMethod.manager!
-        .requestData(Method.POST, url, queryParameters: params);
+        .requestData(Method.POST, url, data: params);
     if (result != null && result["code"] == 200) {
       return true;
     } else {
