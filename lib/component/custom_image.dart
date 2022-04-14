@@ -60,12 +60,15 @@ class LoadTokenAssetsImage extends StatelessWidget {
     String tokenurl = "";
     String chainurl = "";
     String defaultImage = "tokens/token_default.png";
-    if (name.contains(",") == true) {
-      tokenurl = name.split(",").first;
-      chainurl = name.split(",").last;
-    } else {
-      tokenurl = name;
+    if (name.contains("base64") == false) {
+      if (name.contains(",") == true) {
+        tokenurl = name.split(",").first;
+        chainurl = name.split(",").last;
+      } else {
+        tokenurl = name;
+      }
     }
+
     if (isNft == true) {
       defaultImage = "tokens/nft_default.png";
     }
@@ -73,21 +76,33 @@ class LoadTokenAssetsImage extends StatelessWidget {
       child: Stack(
         children: [
           Positioned(
-            child: CachedNetworkImage(
-              imageUrl: tokenurl,
-              height: height?.width,
-              width: width?.width,
-              fit: fit,
-              color: color,
-              placeholder: (context, url) {
-                return LoadAssetsImage(defaultImage,
-                    width: width, height: height);
-              },
-              errorWidget: (context, url, error) {
-                return LoadAssetsImage(defaultImage,
-                    width: width, height: height);
-              },
-            ),
+            child: tokenurl.contains("base64")
+                ? Image.memory(
+                    tokenurl.imgBase64(),
+                    height: height?.width,
+                    width: width?.width,
+                    fit: fit,
+                    color: color,
+                    errorBuilder: (context, url, error) {
+                      return LoadAssetsImage(defaultImage,
+                          width: width, height: height);
+                    },
+                  )
+                : CachedNetworkImage(
+                    imageUrl: tokenurl,
+                    height: height?.width,
+                    width: width?.width,
+                    fit: fit,
+                    color: color,
+                    placeholder: (context, url) {
+                      return LoadAssetsImage(defaultImage,
+                          width: width, height: height);
+                    },
+                    errorWidget: (context, url, error) {
+                      return LoadAssetsImage(defaultImage,
+                          width: width, height: height);
+                    },
+                  ),
           ),
           Positioned(
               bottom: 0,

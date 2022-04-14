@@ -110,7 +110,7 @@ class _NFTListDataState extends State<NFTListData> {
       onTap: () {
         provider.updateTokenChoose(context, index, pushTransList: false);
         Routers.push(context,
-            NFTInfo(nftModel: widget.model, tokenid: infos.toString()));
+            NFTInfo(nftModel: widget.model, tokenid: infos.tid.toString()));
       },
       child: Container(
         height: 75.width,

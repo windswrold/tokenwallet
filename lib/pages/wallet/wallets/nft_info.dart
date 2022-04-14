@@ -1,6 +1,7 @@
 import 'package:cstoken/component/empty_data.dart';
 import 'package:cstoken/model/client/sign_client.dart';
 import 'package:cstoken/model/nft/nft_model.dart';
+import 'package:cstoken/model/nft/nftinfo.dart';
 import 'package:cstoken/net/chain_services.dart';
 import 'package:cstoken/net/wallet_services.dart';
 import 'package:cstoken/pages/wallet/transfer/transfer_payment.dart';
@@ -19,7 +20,7 @@ class NFTInfo extends StatefulWidget {
 }
 
 class _NFTInfoState extends State<NFTInfo> {
-  Map? _infos;
+  NFTIPFSInfo? _infos;
   @override
   void initState() {
     super.initState();
@@ -33,16 +34,18 @@ class _NFTInfoState extends State<NFTInfo> {
     KCoinType coinType = chainTypeName.chainTypeGetCoinType()!;
     Map params =
         SignTransactionClient.get721TokenURI(contractAddress, widget.tokenid);
-    dynamic result =
+    NFTIPFSInfo? result =
         await ChainServices.requestNFTInfo(coinType: coinType, qparams: params);
 
     HWToast.hiddenAllToast();
-    if (result == null || result is! Map) {
+    if (result == null) {
       return;
     }
-    setState(() {
-      _infos = result;
-    });
+    if (mounted) {
+      setState(() {
+        _infos = result;
+      });
+    }
   }
 
   @override
@@ -58,9 +61,10 @@ class _NFTInfoState extends State<NFTInfo> {
                   children: [
                     Expanded(
                       child: LoadTokenAssetsImage(
-                        WalletServices.getIpfsImageUrl(
-                          _infos!["image"] ?? '',
-                        ),
+                        _infos!.imageBase64 == null
+                            ? WalletServices.getIpfsImageUrl(
+                                _infos!.image ?? "")
+                            : _infos!.imageBase64 ?? '',
                         isNft: true,
                       ),
                     ),
@@ -70,7 +74,7 @@ class _NFTInfoState extends State<NFTInfo> {
                         padding: EdgeInsets.only(
                             left: 16.width, right: 16.width, top: 16.width),
                         child: Text(
-                          _infos!["description"] ?? '',
+                          _infos!.description ?? "",
                           style: TextStyle(
                             fontSize: 14.font,
                             color: Color.fromARGB(255, 183, 183, 183),

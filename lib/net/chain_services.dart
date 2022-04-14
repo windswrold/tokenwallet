@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:math';
 
+import 'package:cstoken/model/nft/nftinfo.dart';
 import 'package:cstoken/model/node/node_model.dart';
 import 'package:cstoken/model/tokens/collection_tokens.dart';
 import 'package:cstoken/model/transrecord/trans_record.dart';
@@ -577,7 +578,7 @@ class ChainServices {
     }
   }
 
-  static Future<Map?> requestNFTInfo(
+  static Future<NFTIPFSInfo?> requestNFTInfo(
       {required KCoinType coinType, required dynamic qparams}) async {
     dynamic result = await requestDatas(coinType: coinType, params: qparams);
     if (result == null) {
@@ -592,8 +593,8 @@ class ChainServices {
         result = result.substring(128, 128 + length * 2);
         result = utf8.decoder.convert(hexToBytes(result));
         result = result.replaceAll(" ", "").trim();
-        LogUtil.v("info  $result");
-        return WalletServices.requestIPFSInfo(cid: result);
+        print("info  $result");
+        return WalletServices.requestIPFSInfo(data: result);
       }
     }
   }

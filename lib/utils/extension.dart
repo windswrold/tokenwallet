@@ -1,4 +1,6 @@
+import 'dart:convert';
 import 'dart:math';
+import 'dart:typed_data';
 
 import 'package:cstoken/model/mnemonic/mnemonic.dart';
 import 'package:cstoken/utils/custom_toast.dart';
@@ -220,6 +222,17 @@ extension StringUtil on String {
     value = value * Decimal.fromInt(10).pow(decimals);
     return value.toBigInt();
     return BigInt.parse(value.toString());
+  }
+
+  Uint8List imgBase64() {
+    List strings = split(",");
+    return Base64Decoder().convert(strings.last);
+  }
+
+  String dataBaseDecode64() {
+    List strings = split(",");
+    Uint8List valus = Base64Decoder().convert(strings.last);
+    return Utf8Decoder().convert(valus);
   }
 }
 

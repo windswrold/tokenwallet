@@ -1,4 +1,5 @@
 import 'package:cstoken/component/miner_fee.dart';
+import 'package:cstoken/model/nft/nftinfo.dart';
 import 'package:cstoken/model/tokens/collection_tokens.dart';
 import 'package:cstoken/net/wallet_services.dart';
 import 'package:cstoken/pages/scan/scan.dart';
@@ -11,7 +12,7 @@ import '../../../public.dart';
 
 class TransferPayment extends StatefulWidget {
   TransferPayment({Key? key, this.nftInfos}) : super(key: key);
-  final Map? nftInfos;
+  final NFTIPFSInfo? nftInfos;
 
   @override
   State<TransferPayment> createState() => _TransferPaymentState();
@@ -128,16 +129,17 @@ class _TransferPaymentState extends State<TransferPayment> {
                         child: Column(
                           children: [
                             LoadTokenAssetsImage(
-                              WalletServices.getIpfsImageUrl(
-                                widget.nftInfos?["image"] ?? '',
-                              ),
+                              widget.nftInfos?.imageBase64 == null
+                                  ? WalletServices.getIpfsImageUrl(
+                                      widget.nftInfos?.image ?? "")
+                                  : widget.nftInfos?.imageBase64 ?? '',
                               height: 300.width,
                               isNft: true,
                             ),
                             Container(
                               padding: EdgeInsets.only(top: 30.width),
                               child: Text(
-                                widget.nftInfos?["name"] ?? '',
+                                widget.nftInfos?.name ?? "",
                                 style: TextStyle(
                                   fontWeight: FontWeightUtils.semiBold,
                                   color: Colors.black,

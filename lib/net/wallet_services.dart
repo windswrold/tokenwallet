@@ -1,5 +1,8 @@
+import 'dart:convert';
+
 import 'package:cstoken/model/news/news_model.dart';
 import 'package:cstoken/model/nft/nft_model.dart';
+import 'package:cstoken/model/nft/nftinfo.dart';
 import 'package:cstoken/model/token_price/tokenprice.dart';
 import 'package:cstoken/model/tokens/collection_tokens.dart';
 import 'package:cstoken/net/request_method.dart';
@@ -307,36 +310,45 @@ class WalletServices {
     return [];
   }
 
-  static Future<Map?> requestIPFSInfo({required String cid}) async {
-    cid = cid.replaceAll("ipfs://", "");
-    if (cid.isValidUrl() == false) {
-      cid = "https://ipfs.io/ipfs/$cid";
+  static Future<NFTIPFSInfo?> requestIPFSInfo({required String data}) async {
+    if (data.contains("ipfs") == false) {
+      String jsonString = data.dataBaseDecode64();
+      Map<String, dynamic> json = JsonUtil.getObj(jsonString);
+      return NFTIPFSInfo.fromJson(json);
+    }
+    data = data.replaceAll("ipfs://", "");
+    if (data.isValidUrl() == false) {
+      data = "https://ipfs.io/ipfs/$data";
     }
     String url = RequestURLS.getHost() + RequestURLS.transitGet;
-    Map<String, dynamic> queryParameters = TREncode.convertRemoteParams(cid);
+    Map<String, dynamic> queryParameters = TREncode.convertRemoteParams(data);
     dynamic result = await RequestMethod.manager!
         .requestData(Method.GET, url, queryParameters: queryParameters);
     if (result != null && result is Map) {
       int code = result["code"];
       if (code == 200) {
         String object = result["result"];
-        return JsonUtil.getObj(object);
+        Map<String, dynamic> json = JsonUtil.getObj(object);
+        return NFTIPFSInfo.fromJson(json);
       }
     }
-    return result;
   }
 
   static String getIpfsImageUrl(String ipfsUrl) {
-    ipfsUrl = ipfsUrl.replaceAll("ipfs://", "");
-    if (ipfsUrl.isValidUrl() == false) {
-      ipfsUrl = "https://ipfs.io/ipfs/$ipfsUrl";
+    if (ipfsUrl.contains("ipfs") == false) {
+      return ipfsUrl;
+    } else {
+      ipfsUrl = ipfsUrl.replaceAll("ipfs://", "");
+      if (ipfsUrl.isValidUrl() == false) {
+        ipfsUrl = "https://ipfs.io/ipfs/$ipfsUrl";
+      }
+      String url = RequestURLS.getHost() + RequestURLS.getImage;
+      Map<String, dynamic> queryParameters =
+          TREncode.convertRemoteParams(ipfsUrl);
+      String host = url + queryParameters.url();
+      print("getIpfsImageUrl $host");
+      return host;
     }
-    String url = RequestURLS.getHost() + RequestURLS.getImage;
-    Map<String, dynamic> queryParameters =
-        TREncode.convertRemoteParams(ipfsUrl);
-    String host = url + queryParameters.url();
-    print("getIpfsImageUrl $host");
-    return host;
   }
 
   static Future<List> getUserNftList({required String address}) async {
@@ -378,6 +390,14 @@ class WalletServices {
       //     "contractAddress": "0x064e16771A4864561f767e4Ef4a6989fc4045aE7",
       //     "id": 2,
       //     "nftId": [78932],
+      //     "nftTypeName": "721",
+      //     "sumCount": 0,
+      //   },
+      //   {
+      //     "chainTypeName": "bsc",
+      //     "contractAddress": "0x003f7643d4e257ba7B6133A6c00734ed5F845e11",
+      //     "id": 2,
+      //     "nftId": [9],
       //     "nftTypeName": "721",
       //     "sumCount": 0,
       //   }
