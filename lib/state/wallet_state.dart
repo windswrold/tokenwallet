@@ -117,7 +117,6 @@ class CurrentChooseWalletState with ChangeNotifier {
     _homeTokenType = 0;
     _currentWallet = await TRWallet.queryChooseWallet();
     _currencyType = SPManager.getAppCurrencyMode();
-    initNFTIndex();
     requestAssets();
     _initSuggortCoinTypes();
     _configTimerRequest();
@@ -125,12 +124,31 @@ class CurrentChooseWalletState with ChangeNotifier {
     return _currentWallet;
   }
 
-  void _initSuggortCoinTypes() async {
-    List<TRWalletInfo> infos = await TRWalletInfo.queryWalletInfosByWalletID(
-        _currentWallet?.walletID ?? "");
-    List<KCoinType> coins = infos.map((e) => e.coinType!.geCoinType()).toList();
-    _supportCoinTypes = coins;
-    LogUtil.v("coinscoins " + coins.length.toString());
+  ///定时任务请求
+  void requestAssets() async {
+    queryMyCollectionTokens();
+    _requestMyCollectionTokenAssets();
+    initNFTIndex();
+    initNFTTokens();
+  }
+
+  void queryMyCollectionTokens() async {
+    _currentWallet = await TRWallet.queryChooseWallet();
+    if (_currentWallet == null) {
+      return;
+    }
+    final String walletID = _currentWallet!.walletID!;
+    List<MCollectionTokens> datas = [];
+    KNetType netType = SPManager.getNetType();
+    if (_chooseChainType == null) {
+      datas =
+          await MCollectionTokens.findStateTokens(walletID, 1, netType.index);
+    } else {
+      datas = await MCollectionTokens.findStateChainTokens(
+          walletID, 1, netType.index, _chooseChainType!.index);
+    }
+    _tokens[walletID] = datas;
+    _calTotalAssets();
   }
 
   void initNFTIndex() async {
@@ -271,6 +289,14 @@ class CurrentChooseWalletState with ChangeNotifier {
                 _queryWalletInfo(context, model, p0),
               });
     }
+  }
+
+  void _initSuggortCoinTypes() async {
+    List<TRWalletInfo> infos = await TRWalletInfo.queryWalletInfosByWalletID(
+        _currentWallet?.walletID ?? "");
+    List<KCoinType> coins = infos.map((e) => e.coinType!.geCoinType()).toList();
+    _supportCoinTypes = coins;
+    LogUtil.v("coinscoins " + coins.length.toString());
   }
 
   void _queryWalletInfo(BuildContext context, DAppRecordsDBModel model,
@@ -524,31 +550,6 @@ class CurrentChooseWalletState with ChangeNotifier {
         wrong: () {
           HWToast.showText(text: "dialog_wrongpin".local());
         });
-  }
-
-  void requestAssets() async {
-    queryMyCollectionTokens();
-    _requestMyCollectionTokenAssets();
-    initNFTTokens();
-  }
-
-  void queryMyCollectionTokens() async {
-    _currentWallet = await TRWallet.queryChooseWallet();
-    if (_currentWallet == null) {
-      return;
-    }
-    final String walletID = _currentWallet!.walletID!;
-    List<MCollectionTokens> datas = [];
-    KNetType netType = SPManager.getNetType();
-    if (_chooseChainType == null) {
-      datas =
-          await MCollectionTokens.findStateTokens(walletID, 1, netType.index);
-    } else {
-      datas = await MCollectionTokens.findStateChainTokens(
-          walletID, 1, netType.index, _chooseChainType!.index);
-    }
-    _tokens[walletID] = datas;
-    _calTotalAssets();
   }
 
   void _requestMyCollectionTokenAssets() async {

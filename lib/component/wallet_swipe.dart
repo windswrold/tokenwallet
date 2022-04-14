@@ -25,11 +25,7 @@ class _WalletSwipeState extends State<WalletSwipe> {
   );
 
   _tapNext(int homeTokenType) {
-    if (homeTokenType == 0) {
-      _controller.move(1);
-    } else {
-      _controller.move(0);
-    }
+    _controller.next();
   }
 
   Widget _assetsCell(BuildContext context) {

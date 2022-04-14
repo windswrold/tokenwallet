@@ -162,8 +162,9 @@ class _SearchAddTokenState extends State<SearchAddToken> {
 
   Widget _topSearchView() {
     return Container(
+      alignment: Alignment.center,
+      height: 44.width,
       padding: EdgeInsets.symmetric(horizontal: 16.width),
-      height: 44,
       color: Colors.white,
       child: _searchTextField(),
     );
@@ -172,7 +173,7 @@ class _SearchAddTokenState extends State<SearchAddToken> {
   Widget _searchTextField() {
     return CustomTextField(
       controller: searchController,
-      // maxLines: 1,
+      maxLines: 1,
       onChange: (value) {
         _initData(1, keywords: value);
       },
@@ -193,6 +194,7 @@ class _SearchAddTokenState extends State<SearchAddToken> {
           ),
           focusedBorderColor: ColorUtils.blueColor,
           borderRadius: 22,
+          contentPadding: EdgeInsets.symmetric(horizontal: 10.width),
           prefixIcon: LoadAssetsImage(
             "icons/icon_search.png",
             width: 20,
@@ -223,6 +225,7 @@ class _SearchAddTokenState extends State<SearchAddToken> {
           ),
         ],
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             _topSearchView(),
             Expanded(
