@@ -476,11 +476,15 @@ class _HomePageState extends State<HomePage> {
                                   color: Colors.white,
                                   borderRadius: BorderRadius.circular(16),
                                 ),
-                                child: CachedNetworkImage(
-                                  imageUrl: logoUrl,
-                                  width: 125.width,
-                                  height: 125.width,
-                                  fit: BoxFit.contain,
+                                child: ClipRRect(
+                                  borderRadius: BorderRadius.circular(16),
+                                  child: LoadTokenAssetsImage(
+                                    logoUrl,
+                                    width: 125,
+                                    height: 125,
+                                    fit: BoxFit.cover,
+                                    isNft: true,
+                                  ),
                                 ),
                               ),
                               Container(

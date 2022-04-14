@@ -456,6 +456,8 @@ class TRWallet {
       database?.walletDao.deleteWallet(wallet);
       var item = await MCollectionTokens.findWalletsTokens(walletID);
       MCollectionTokens.deleteTokens(item);
+      var nfts = await NFTModel.findWalletsTokens(walletID);
+      NFTModel.deleteTokens(nfts);
       return true;
     } catch (e) {
       rethrow;

@@ -85,7 +85,7 @@ class LoadTokenAssetsImage extends StatelessWidget {
                     color: color,
                     errorBuilder: (context, url, error) {
                       return LoadAssetsImage(defaultImage,
-                          width: width, height: height);
+                          width: width, height: height, fit: fit);
                     },
                   )
                 : CachedNetworkImage(
@@ -95,12 +95,20 @@ class LoadTokenAssetsImage extends StatelessWidget {
                     fit: fit,
                     color: color,
                     placeholder: (context, url) {
-                      return LoadAssetsImage(defaultImage,
-                          width: width, height: height);
+                      return LoadAssetsImage(
+                        defaultImage,
+                        width: width,
+                        height: height,
+                        fit: fit,
+                      );
                     },
                     errorWidget: (context, url, error) {
-                      return LoadAssetsImage(defaultImage,
-                          width: width, height: height);
+                      return LoadAssetsImage(
+                        defaultImage,
+                        width: width,
+                        height: height,
+                        fit: fit,
+                      );
                     },
                   ),
           ),
