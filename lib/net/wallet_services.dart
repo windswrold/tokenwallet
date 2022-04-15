@@ -363,7 +363,7 @@ class WalletServices {
     dynamic result = await RequestMethod.manager!
         .requestData(Method.GET, url, queryParameters: params);
     if (result != null && result["code"] == 200) {
-      List data = result["result"]["page"] ?? [];
+      List data = result["result"]["page"]["list"] ?? [];
 
       // data.addAll([
       //   {
@@ -425,7 +425,7 @@ class WalletServices {
     dynamic result = await RequestMethod.manager!
         .requestData(Method.GET, url, queryParameters: params);
     if (result != null && result["code"] == 200) {
-      List data = result["result"]["page"] ?? [];
+      List data = result["result"]["page"]["list"] ?? [];
       return data;
     }
     return [];

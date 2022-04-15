@@ -14,6 +14,8 @@ part 'database.g.dart';
 //flutter packages pub run build_runner build
 // updateTokenData
 // findTokensBySQL
+// updateNFTSData
+// findNFTBySQL
 const int dbCurrentVersion = 3;
 
 @Database(version: dbCurrentVersion, entities: [

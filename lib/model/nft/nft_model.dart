@@ -146,6 +146,15 @@ class NFTModel {
       rethrow;
     }
   }
+
+  static Future<void> updateTokenData(String sql) async {
+    try {
+      FlutterDatabase? database = await DataBaseConfig.openDataBase();
+      database?.nftDao.updateNFTSData(sql);
+    } catch (e) {
+      rethrow;
+    }
+  }
 }
 
 @dao
@@ -174,6 +183,9 @@ abstract class NFTModelDao {
       ' WHERE owner = :owner and state = :state and kNetType=:kNetType and chainTypeName =:chainType ')
   Future<List<NFTModel>> findStateChainNFTS(
       String owner, int state, int kNetType, String chainType);
+
+  @Query('SELECT * FROM ' + tableName + ' WHERE :sql ' + ' ORDER BY "index"')
+  Future<List<NFTModel>> findNFTBySQL(String sql);
 
   @Insert(onConflict: OnConflictStrategy.replace)
   Future<void> insertNFTS(List<NFTModel> models);

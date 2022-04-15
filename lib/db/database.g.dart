@@ -1181,9 +1181,27 @@ class _$NFTModelDao extends NFTModelDao {
   }
 
   @override
+  Future<List<NFTModel>> findNFTBySQL(String sql) async {
+    return _queryAdapter.queryList(
+      'SELECT * FROM nft_model_table WHERE $sql  ORDER BY \"index\"',
+      mapper: (Map<String, Object?> row) => NFTModel(
+          tokenID: row['tokenID'] as String?,
+          owner: row['owner'] as String?,
+          chainTypeName: row['chainTypeName'] as String?,
+          contractAddress: row['contractAddress'] as String?,
+          contractName: row['contractName'] as String?,
+          nftId: row['nftId'] as String?,
+          nftTypeName: row['nftTypeName'] as String?,
+          url: row['url'] as String?,
+          state: row['state'] as int?,
+          kNetType: row['kNetType'] as int?,
+          usdtValues: row['usdtValues'] as String?),
+    );
+  }
+
+  @override
   Future<void> updateNFTSData(String sql) async {
-    await _queryAdapter
-        .queryNoReturn('UPDATE nft_model_table SET ?1', arguments: [sql]);
+    await _queryAdapter.queryNoReturn('UPDATE nft_model_table SET $sql');
   }
 
   @override
