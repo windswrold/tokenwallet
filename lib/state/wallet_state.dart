@@ -197,6 +197,14 @@ class CurrentChooseWalletState with ChangeNotifier {
       return;
     }
 
+    double usdtCny = 0.0;
+    if (currencyType == KCurrencyType.CNY) {
+      TokenPrice? priceModel =
+          await TokenPrice.queryTokenPrices("USDT", KCurrencyType.CNY);
+      if (priceModel != null) {
+        usdtCny = double.parse(priceModel.rate ?? "0.0");
+      }
+    }
     List defaultNFT =
         await WalletServices.getUserNftList(address: ethAdress, pageNum: 1);
     for (var item in defaultNFT) {
@@ -205,6 +213,10 @@ class CurrentChooseWalletState with ChangeNotifier {
       nftModel.kNetType = netType.index;
       String tokenID = nftModel.createTokenID(walletID);
       nftModel.tokenID = tokenID;
+      double p = double.tryParse((nftModel.usdtValues ?? "0.0")) ?? 0.0;
+      if (currencyType == KCurrencyType.CNY) {
+        nftModel.usdtValues = (p * usdtCny).toStringAsFixed(2);
+      }
       List<NFTModel> dbs =
           await NFTModel.findNFTBySQL('"tokenID" = \'$tokenID\'');
       if (dbs.isEmpty) {
@@ -699,6 +711,7 @@ class CurrentChooseWalletState with ChangeNotifier {
         if (token.isEmpty) {
           return;
         }
+        token.add("usdt");
         WalletServices.gettokenPrice(token.join(","));
       });
     }
