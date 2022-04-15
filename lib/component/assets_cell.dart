@@ -114,7 +114,7 @@ class AssetsCell extends StatelessWidget {
       NFTModel model = token as NFTModel;
       icon = model.url ?? "";
       state = model.state ?? 0;
-      tokenContent = (model.contractName ?? '').toUpperCase();
+      tokenContent = (model.contractName ?? '');
       contract = model.contractAddress ?? '';
       coinType = model.chainTypeName ?? "";
     }
