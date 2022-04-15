@@ -115,7 +115,8 @@ class _HomePageState extends State<HomePage> {
   }
 
   _initHotNFTS() async {
-    List apps = await WalletServices.getNftList(popularFlag: true);
+    List apps =
+        await WalletServices.getHotNftList(pageNum: 1, popularFlag: true);
     setState(() {
       _hotNFTS = apps;
     });
@@ -443,8 +444,8 @@ class _HomePageState extends State<HomePage> {
               scrollDirection: Axis.horizontal,
               itemBuilder: (BuildContext context, int index) {
                 Map result = _hotNFTS[index];
-                String logoUrl = result["icon_url"] ?? "";
-                String title = result["project_name"] ?? "";
+                String logoUrl = result["url"] ?? "";
+                String title = result["contractName"] ?? "";
                 return GestureDetector(
                   behavior: HitTestBehavior.opaque,
                   onTap: () {},

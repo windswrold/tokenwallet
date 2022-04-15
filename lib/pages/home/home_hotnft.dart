@@ -26,7 +26,7 @@ class _HomeHotNftState extends State<HomeHotNft> {
 
   void _initHotNFTS(int page) async {
     _currentPage = page;
-    List apps = await WalletServices.getNftList(pageNum: _currentPage);
+    List apps = await WalletServices.getHotNftList(pageNum: _currentPage);
     setState(() {
       if (page == 1) {
         _hotNFTS.clear();
@@ -38,9 +38,9 @@ class _HomeHotNftState extends State<HomeHotNft> {
   }
 
   Widget _buildCell(Map model) {
-    String logoUrl = model["icon_url"] ?? "";
-    String title = model["project_name"] ?? "";
-    String from = model["from_source"] ?? "";
+    String logoUrl = model["url"] ?? "";
+    String title = model["contractName"] ?? "";
+    String from = model["contractLabel"] ?? "";
     String desc = model["nft_desc"] ?? "";
 
     return Container(

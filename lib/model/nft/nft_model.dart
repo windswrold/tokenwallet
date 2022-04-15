@@ -10,12 +10,12 @@ class NFTModel {
   @primaryKey
   String? tokenID; //token唯一id
   String? owner; //walletID
-  final String? chainTypeName;
-  final String? contractAddress;
-  final String? contractName;
-  final String? nftId;
-  final String? nftTypeName;
-  final String? url;
+  String? chainTypeName;
+  String? contractAddress;
+  String? contractName;
+  String? nftId;
+  String? nftTypeName;
+  String? url;
   int? state; //是否显示
   int? kNetType; //0 是主网 非0是测试网
 
@@ -40,6 +40,16 @@ class NFTModel {
       nftTypeName: json["nftTypeName"] ?? '',
       url: json["url"] ?? '',
     );
+  }
+
+  static NFTModel fromNftListJson(Map<String, dynamic> json) {
+    return NFTModel(
+        chainTypeName: json["chain_type"] ?? '',
+        contractAddress: json["contract_address"] ?? '',
+        contractName: json["project_name"] ?? '',
+        nftTypeName: json["nft_type"] ?? '',
+        url: json["icon_url"] ?? '',
+        nftId: "");
   }
 
   String createTokenID(String walletID) {

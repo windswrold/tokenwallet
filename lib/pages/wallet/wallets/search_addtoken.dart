@@ -130,8 +130,7 @@ class _SearchAddTokenState extends State<SearchAddToken> {
         : trWallet.chainType!.getChainType().getNetTokenType();
     String walletID = trWallet.walletID!;
     _page = page;
-    List<NFTModel> indexnfts =
-        await WalletServices.getHotNftList(pageNum: page);
+    List<NFTModel> indexnfts = await WalletServices.getNftList(pageNum: page);
     KNetType netType = RequestURLS.getHost() == RequestURLS.testUrl
         ? KNetType.Testnet
         : KNetType.Mainnet;

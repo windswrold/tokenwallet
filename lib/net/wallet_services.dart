@@ -293,7 +293,7 @@ class WalletServices {
     }
   }
 
-  static Future<List> getNftList(
+  static Future<List<NFTModel>> getNftList(
       {int pageNum = 1, bool popularFlag = false}) async {
     final url = RequestURLS.getHost() + RequestURLS.nftList;
     Map<String, dynamic>? params = {};
@@ -305,7 +305,9 @@ class WalletServices {
         .requestData(Method.GET, url, queryParameters: params);
     if (result != null && result["code"] == 200) {
       List data = result["result"]["page"]["list"] ?? [];
-      return data;
+      List<NFTModel> models =
+          data.map((e) => NFTModel.fromNftListJson(e)).toList();
+      return models;
     }
     return [];
   }
@@ -408,17 +410,20 @@ class WalletServices {
     return [];
   }
 
-  static Future<List<NFTModel>> getHotNftList({required int pageNum}) async {
+  static Future<List> getHotNftList(
+      {required int pageNum, bool? popularFlag}) async {
     final url = RequestURLS.getHost() + RequestURLS.hotNftList;
     Map<String, dynamic>? params = {};
     params["pageSize"] = 20;
     params["pageNum"] = pageNum.toString();
+    if (popularFlag != null) {
+      params["popularFlag"] = "1";
+    }
     dynamic result = await RequestMethod.manager!
         .requestData(Method.GET, url, queryParameters: params);
     if (result != null && result["code"] == 200) {
       List data = result["result"]["page"] ?? [];
-      List<NFTModel> models = data.map((e) => NFTModel.fromJson(e)).toList();
-      return models;
+      return data;
     }
     return [];
   }
