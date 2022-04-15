@@ -122,9 +122,11 @@ class ChainServices {
       } else if (kCoinType == KCoinType.Arbitrum) {
         queryParameters["apikey"] = "WUFC43UEE3FCW1SKT3QYE4REHNTA24S1Y9";
       } else if (kCoinType == KCoinType.AVAX) {
-        queryParameters["apikey"] = "S15E9AHU2SG5J3JJXVFZYH4P2I5DA4744Q";
+        queryParameters["apikey"] = "X8IINYPZ7MV6B5H3TC5226E7P3FFWW7AXW";
       } else if (kCoinType == KCoinType.HECO) {
-        queryParameters["apikey"] = "R9UASFXFRCY24SRGJQ6QM22DH4WX26PNSU";
+        queryParameters["apikey"] = "ZR64U734RYXTM57SWM78DIHD9G4X16IKAK";
+      } else if (kCoinType == KCoinType.Matic) {
+        ///404
       }
       dynamic result = await RequestMethod.manager!.requestData(Method.GET, url,
           queryParameters: queryParameters, data: data);
