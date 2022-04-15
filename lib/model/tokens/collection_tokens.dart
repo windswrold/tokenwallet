@@ -191,7 +191,7 @@ class MCollectionTokens {
             }
           }
         }
-      } else if (tokenType == KTokenType.trc20.index) {
+      } else {
         Map params = generateBalanceParams(walletAaddress)!;
         dynamic result = await ChainServices.requestTRXDatas(
             path: "/wallet/triggerconstantcontract",
