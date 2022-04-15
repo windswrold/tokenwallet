@@ -80,7 +80,6 @@ enum KNetType { Mainnet, Testnet }
 
 enum KTransType {
   transfer,
-  
 }
 
 enum KTransDataType {
@@ -298,3 +297,12 @@ Future<File> shareImage(GlobalKey repkey) async {
   final imgFile = File('$fullPath');
   return imgFile.writeAsBytes(image!);
 }
+
+String bsc_apiKey = 'GK3C39199V556I849N46RSPPCJAGYA7RNG';
+String arb_apikey = 'WUFC43UEE3FCW1SKT3QYE4REHNTA24S1Y9';
+String avax_apikey = 'X8IINYPZ7MV6B5H3TC5226E7P3FFWW7AXW';
+String heco_apikey = 'ZR64U734RYXTM57SWM78DIHD9G4X16IKAK';
+
+
+String alltoken_MainContract = "0x6F0b8B05799332Cb6883f6E4e84d259f6cd6b255";
+String alltoken_TestContract = "0x3eD836A6bC50F6c8edC55ab21D4d0Df7ceADA03f";

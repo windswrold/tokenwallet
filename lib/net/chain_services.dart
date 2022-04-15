@@ -118,15 +118,16 @@ class ChainServices {
       return result;
     } else {
       if (kCoinType == KCoinType.BSC) {
-        queryParameters["apikey"] = "GK3C39199V556I849N46RSPPCJAGYA7RNG";
+        queryParameters["apikey"] = bsc_apiKey;
       } else if (kCoinType == KCoinType.Arbitrum) {
-        queryParameters["apikey"] = "WUFC43UEE3FCW1SKT3QYE4REHNTA24S1Y9";
+        queryParameters["apikey"] = arb_apikey;
       } else if (kCoinType == KCoinType.AVAX) {
-        queryParameters["apikey"] = "X8IINYPZ7MV6B5H3TC5226E7P3FFWW7AXW";
+        queryParameters["apikey"] = avax_apikey;
       } else if (kCoinType == KCoinType.HECO) {
-        queryParameters["apikey"] = "ZR64U734RYXTM57SWM78DIHD9G4X16IKAK";
+        queryParameters["apikey"] = heco_apikey;
       } else if (kCoinType == KCoinType.Matic) {
         ///404
+        queryParameters["apikey"] = mati_apikey;
       }
       dynamic result = await RequestMethod.manager!.requestData(Method.GET, url,
           queryParameters: queryParameters, data: data);
