@@ -303,13 +303,20 @@ class WalletServices {
     params["pageNum"] = pageNum.toString();
     params["pageSize"] = "10";
     params["popularFlag"] = popularFlag == false ? "0" : "1";
-    params["defaultFlag"] = "1";
+    // params["defaultFlag"] = "1";
+    
+    
     if (tokenName != null) {
       params["tokenName"] = tokenName;
+      params.remove("popularFlag");
+      params.remove("defaultFlag");
     }
     if (tokenContractAddress != null) {
       params["tokenContractAddress"] = tokenContractAddress;
+      params.remove("popularFlag");
+      params.remove("defaultFlag");
     }
+
     dynamic result = await RequestMethod.manager!
         .requestData(Method.GET, url, queryParameters: params);
     if (result != null && result["code"] == 200) {

@@ -40,7 +40,7 @@ class _SearchAddTokenState extends State<SearchAddToken> {
 
   void _initData(int page, {String? keywords}) async {
     if (_homeTokenType == 1) {
-      _initNFTData(_page, keywords: keywords);
+      _initNFTData(page, keywords: keywords);
       return;
     }
     HWToast.showLoading();
@@ -139,7 +139,8 @@ class _SearchAddTokenState extends State<SearchAddToken> {
     _page = page;
     List<NFTModel> indexnfts = [];
     if (keywords == null || keywords.isEmpty) {
-      indexnfts = await WalletServices.getNftList(pageNum: page);
+      indexnfts =
+          await WalletServices.getNftList(pageNum: page, popularFlag: true);
     } else {
       if (await keywords.checkAddress(KCoinType.ETH) == true) {
         indexnfts = await WalletServices.getNftList(
