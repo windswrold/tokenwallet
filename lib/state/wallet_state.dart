@@ -174,18 +174,109 @@ class CurrentChooseWalletState with ChangeNotifier {
       return;
     }
     _nftIndexInfo[_currentWallet!.walletID!] = result;
+    initNFTNetModel();
+    notifyListeners();
+  }
+
+  void initNFTNetModel() async {
+    if (_currentWallet == null) {
+      return;
+    }
+    String walletID = _currentWallet!.walletID!;
+    KNetType netType = SPManager.getNetType();
+    String? ethAdress;
+    String? chainType;
+    List<TRWalletInfo> infos =
+        await _currentWallet!.queryWalletInfos(coinType: KCoinType.ETH);
+    if (infos.isEmpty) {
+      return;
+    }
+    ethAdress = infos.first.walletAaddress;
+    chainType = infos.first.coinType!.geCoinType().coinTypeString();
+    if (ethAdress == null) {
+      return;
+    }
+
     List defaultNFT =
         await WalletServices.getUserNftList(address: ethAdress, pageNum: 1);
     for (var item in defaultNFT) {
       NFTModel nftModel = NFTModel.fromJson(item);
       nftModel.owner = walletID;
-      nftModel.state = 1;
-      nftModel.tokenID = nftModel.createTokenID(walletID);
       nftModel.kNetType = netType.index;
-      NFTModel.insertTokens([nftModel]);
+      String tokenID = nftModel.createTokenID(walletID);
+      nftModel.tokenID = tokenID;
+      List<NFTModel> dbs =
+          await NFTModel.findNFTBySQL('"tokenID" = \'$tokenID\'');
+      if (dbs.isEmpty) {
+        nftModel.state = 1;
+        NFTModel.insertTokens([nftModel]);
+      } else {
+        NFTModel dbModel = dbs.first;
+        dbModel.chainTypeName = nftModel.chainTypeName;
+        dbModel.contractName = nftModel.contractName;
+        dbModel.usdtValues = nftModel.usdtValues;
+        dbModel.nftTypeName = nftModel.nftTypeName;
+        dbModel.contractAddress = nftModel.contractAddress;
+        dbModel.url = nftModel.url;
+        dbModel.nftId = nftModel.nftId;
+        NFTModel.updateTokens(dbModel);
+      }
     }
-
     notifyListeners();
+  }
+
+  void userNftProjectIds(NFTModel nftModel) async {
+    if (_currentWallet == null) {
+      return;
+    }
+    String walletID = _currentWallet!.walletID!;
+    KNetType netType = SPManager.getNetType();
+    String? ethAdress;
+    String? chainType;
+    List<TRWalletInfo> infos =
+        await _currentWallet!.queryWalletInfos(coinType: KCoinType.ETH);
+    if (infos.isEmpty) {
+      return;
+    }
+    ethAdress = infos.first.walletAaddress;
+    chainType = infos.first.coinType!.geCoinType().coinTypeString();
+    if (ethAdress == null) {
+      return;
+    }
+    String contractAddress = nftModel.contractAddress ?? '';
+    List result =
+        await WalletServices.userNftProjectIds(contractAddress, ethAdress);
+    if (result.isEmpty) {
+      return;
+    }
+    nftModel.nftId = result.join(",");
+    NFTModel.updateTokens(nftModel);
+    initNFTTokensList(nftModel);
+
+    // List defaultNFT =
+    //     await WalletServices.getUserNftList(address: ethAdress, pageNum: 1);
+    // for (var item in defaultNFT) {
+    //   NFTModel nftModel = NFTModel.fromJson(item);
+    //   nftModel.owner = walletID;
+    //   nftModel.kNetType = netType.index;
+    //   String tokenID = nftModel.createTokenID(walletID);
+    //   nftModel.tokenID = tokenID;
+    //   List<NFTModel> dbs = await NFTModel.findNFTBySQL('"tokenID" = \'$tokenID\'');
+    //   if (dbs.isEmpty) {
+    //     nftModel.state = 1;
+    //     NFTModel.insertTokens([nftModel]);
+    //   } else {
+    //     NFTModel dbModel = dbs.first;
+    //     dbModel.chainTypeName = nftModel.chainTypeName;
+    //     dbModel.contractName = nftModel.contractName;
+    //     dbModel.usdtValues = nftModel.usdtValues;
+    //     dbModel.nftTypeName = nftModel.nftTypeName;
+    //     dbModel.contractAddress = nftModel.contractAddress;
+    //     dbModel.url = nftModel.url;
+    //     dbModel.nftId = nftModel.nftId;
+    //     NFTModel.updateTokens(dbModel);
+    //   }
+    // }
   }
 
   void initNFTTokens() async {
@@ -357,6 +448,11 @@ class CurrentChooseWalletState with ChangeNotifier {
   }
 
   void tapNFTInfo(BuildContext context, NFTModel nftInfo) {
+    initNFTTokensList(nftInfo);
+    Routers.push(context, NFTListData(model: nftInfo));
+  }
+
+  void initNFTTokensList(NFTModel nftInfo) {
     List datas = [];
     if (nftInfo.nftId!.isNotEmpty) {
       datas = nftInfo.nftId!.split(",");
@@ -383,7 +479,7 @@ class CurrentChooseWalletState with ChangeNotifier {
       _datas.add(model);
     }
     _nftInfos[walletID] = _datas;
-    Routers.push(context, NFTListData(model: nftInfo));
+    notifyListeners();
   }
 
   void onIndexChanged(BuildContext context, int index) {
@@ -624,10 +720,11 @@ class CurrentChooseWalletState with ChangeNotifier {
     _totalTokenAssets[walletID] = total;
 
     Decimal sumnftAssets = Decimal.zero;
-    List<MCollectionTokens> userNFTTokens = _nftInfos[walletID] ?? [];
+
+    List<NFTModel> userNFTTokens = _nftContracts[walletID] ?? [];
     for (int i = 0; i < userNFTTokens.length; i++) {
-      MCollectionTokens map = userNFTTokens[i];
-      sumnftAssets += Decimal.tryParse(map.assets) ?? Decimal.zero;
+      NFTModel map = userNFTTokens[i];
+      sumnftAssets += Decimal.tryParse(map.assets()) ?? Decimal.zero;
     }
     String totalnft =
         sumnftAssets == Decimal.zero ? "0.00" : sumnftAssets.toString();

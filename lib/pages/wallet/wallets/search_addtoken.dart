@@ -135,7 +135,7 @@ class _SearchAddTokenState extends State<SearchAddToken> {
         ? KNetType.Testnet
         : KNetType.Mainnet;
     List<NFTModel> statesTokens =
-        await NFTModel.findTokens(walletID, netType.index);
+        await NFTModel.findStateTokens(walletID, 1, netType.index);
     for (var item in indexnfts) {
       item.owner = walletID;
       item.kNetType = netType.index;
@@ -260,7 +260,8 @@ class _SearchAddTokenState extends State<SearchAddToken> {
                                     }
                                   } else {
                                     if (item.state == 1) {
-                                      NFTModel.deleteTokens([item]);
+                                      item.state = 0;
+                                      NFTModel.updateTokens(item);
                                     } else {
                                       item.state = 1;
                                       NFTModel.insertTokens([item]);

@@ -1183,7 +1183,7 @@ class _$NFTModelDao extends NFTModelDao {
   @override
   Future<List<NFTModel>> findNFTBySQL(String sql) async {
     return _queryAdapter.queryList(
-      'SELECT * FROM nft_model_table WHERE $sql  ORDER BY \"index\"',
+      'SELECT * FROM nft_model_table WHERE $sql ',
       mapper: (Map<String, Object?> row) => NFTModel(
           tokenID: row['tokenID'] as String?,
           owner: row['owner'] as String?,

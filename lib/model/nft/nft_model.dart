@@ -1,6 +1,7 @@
 import 'package:cstoken/db/database.dart';
 import 'package:cstoken/db/database_config.dart';
 import 'package:cstoken/utils/encode.dart';
+import 'package:cstoken/utils/extension.dart';
 import 'package:floor/floor.dart';
 
 const String tableName = "nft_model_table";
@@ -32,6 +33,16 @@ class NFTModel {
       this.state,
       this.kNetType,
       this.usdtValues});
+
+  String assets() {
+    List datas = [];
+    if (nftId!.isNotEmpty) {
+      datas = nftId!.split(",");
+    }
+    int count = datas.length;
+    double p = double.tryParse((usdtValues ?? "0.0")) ?? 0.0;
+    return StringUtil.dataFormat(p * count, 2);
+  }
 
   static NFTModel fromJson(Map<String, dynamic> json) {
     return NFTModel(
@@ -155,6 +166,15 @@ class NFTModel {
       rethrow;
     }
   }
+
+  static Future<List<NFTModel>> findNFTBySQL(String sql) async {
+    try {
+      FlutterDatabase? database = await DataBaseConfig.openDataBase();
+      return (await database?.nftDao.findNFTBySQL(sql)) ?? [];
+    } catch (e) {
+      rethrow;
+    }
+  }
 }
 
 @dao
@@ -184,7 +204,7 @@ abstract class NFTModelDao {
   Future<List<NFTModel>> findStateChainNFTS(
       String owner, int state, int kNetType, String chainType);
 
-  @Query('SELECT * FROM ' + tableName + ' WHERE :sql ' + ' ORDER BY "index"')
+  @Query('SELECT * FROM ' + tableName + ' WHERE :sql ')
   Future<List<NFTModel>> findNFTBySQL(String sql);
 
   @Insert(onConflict: OnConflictStrategy.replace)

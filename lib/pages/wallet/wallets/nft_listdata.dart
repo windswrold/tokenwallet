@@ -1,6 +1,7 @@
 import 'package:cstoken/component/custom_refresher.dart';
 import 'package:cstoken/model/nft/nft_model.dart';
 import 'package:cstoken/model/tokens/collection_tokens.dart';
+import 'package:cstoken/net/wallet_services.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 import '../../../public.dart';
@@ -16,6 +17,21 @@ class NFTListData extends StatefulWidget {
 
 class _NFTListDataState extends State<NFTListData> {
   RefreshController _refreshController = RefreshController();
+
+  @override
+  void initState() {
+    super.initState();
+    initData();
+  }
+
+  void initData() async {
+    Provider.of<CurrentChooseWalletState>(context, listen: false)
+        .userNftProjectIds(widget.model);
+    Future.delayed(Duration(seconds: 3)).then((value) => {
+          _refreshController.loadComplete(),
+          _refreshController.refreshCompleted()
+        });
+  }
 
   Widget _buildHeader() {
     String nftTypeName = widget.model.nftTypeName ?? "";
@@ -182,19 +198,23 @@ class _NFTListDataState extends State<NFTListData> {
               ),
             ),
           ),
-          Expanded(
-            child: Consumer<CurrentChooseWalletState>(
-              builder: (_, value, child) {
-                return ListView.builder(
-                  itemCount: value.nftInfos.length,
-                  itemBuilder: (BuildContext context, int index) {
-                    MCollectionTokens infos = value.nftInfos[index];
-                    return _buildCell(infos, index, value);
+          Expanded(child: Consumer<CurrentChooseWalletState>(
+            builder: (_, value, child) {
+              return CustomRefresher(
+                  enableFooter: false,
+                  onRefresh: () {
+                    initData();
                   },
-                );
-              },
-            ),
-          ),
+                  refreshController: _refreshController,
+                  child: ListView.builder(
+                    itemCount: value.nftInfos.length,
+                    itemBuilder: (BuildContext context, int index) {
+                      MCollectionTokens infos = value.nftInfos[index];
+                      return _buildCell(infos, index, value);
+                    },
+                  ));
+            },
+          )),
         ],
       ),
     );
