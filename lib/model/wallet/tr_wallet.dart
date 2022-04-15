@@ -321,8 +321,8 @@ class TRWallet {
         NFTModel nftModel = NFTModel.fromJson(item);
         nftModel.owner = walletID;
         nftModel.state = 1;
-        nftModel.tokenID = nftModel.createTokenID(walletID);
         nftModel.kNetType = netType.index;
+        nftModel.tokenID = nftModel.createTokenID(walletID);
         nftDatas.add(nftModel);
       }
       tokens.addAll(cacheTokens);
