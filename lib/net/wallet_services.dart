@@ -353,10 +353,13 @@ class WalletServices {
     }
   }
 
-  static Future<List> getUserNftList({required String address}) async {
+  static Future<List> getUserNftList(
+      {required String address, required int pageNum}) async {
     final url = RequestURLS.getHost() + RequestURLS.userNftList;
     Map<String, dynamic>? params = {};
     params["address"] = address;
+    params["pageNum"] = pageNum;
+    params["pageSize"] = 20;
     dynamic result = await RequestMethod.manager!
         .requestData(Method.GET, url, queryParameters: params);
     if (result != null && result["code"] == 200) {
@@ -444,5 +447,20 @@ class WalletServices {
       HWToast.showText(text: a);
     }
     return false;
+  }
+
+  static Future<List> userNftProjectIds(
+      String contractAddress, String address) async {
+    final url = RequestURLS.getHost() + RequestURLS.userNftProjectIds;
+    Map<String, dynamic>? params = {};
+    params["contractAddress"] = contractAddress;
+    params["address"] = address;
+    dynamic result = await RequestMethod.manager!
+        .requestData(Method.GET, url, queryParameters: params);
+    if (result != null && result["code"] == 200) {
+      List data = result["result"]["page"] ?? [];
+      return data;
+    }
+    return [];
   }
 }

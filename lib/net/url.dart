@@ -82,4 +82,6 @@ class RequestURLS {
   static String hotNftList = "/app/nft/hotNftList";
 
   static String addUserNft = "/app/nft/addUserNft";
+
+  static String userNftProjectIds = "/app/nft/userNftProjectIds";
 }

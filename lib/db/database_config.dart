@@ -15,7 +15,7 @@ class DataBaseConfig {
       });
       final migration2to3 = Migration(2, 3, (migdatabase) async {
         await migdatabase.execute(
-            'CREATE TABLE IF NOT EXISTS `nft_model_table` (`tokenID` TEXT, `owner` TEXT, `chainTypeName` TEXT, `contractAddress` TEXT, `contractName` TEXT, `nftId` TEXT, `nftTypeName` TEXT, `url` TEXT, `state` INTEGER, `kNetType` INTEGER, PRIMARY KEY (`tokenID`))');
+            'CREATE TABLE IF NOT EXISTS `nft_model_table` (`tokenID` TEXT, `owner` TEXT, `chainTypeName` TEXT, `contractAddress` TEXT, `contractName` TEXT, `nftId` TEXT, `nftTypeName` TEXT, `url` TEXT, `usdtValues` TEXT, `state` INTEGER, `kNetType` INTEGER, PRIMARY KEY (`tokenID`))');
       });
       final callback = Callback(
         onOpen: (openDB) async {

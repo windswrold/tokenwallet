@@ -246,8 +246,8 @@ class TRWallet {
           defaultFlag: true, chainType: chainType);
       List defaultNFT = [];
       if (usernftAddress.isNotEmpty) {
-        defaultNFT =
-            await WalletServices.getUserNftList(address: usernftAddress);
+        defaultNFT = await WalletServices.getUserNftList(
+            address: usernftAddress, pageNum: 1);
       }
       KNetType netType = RequestURLS.getHost() == RequestURLS.testUrl
           ? KNetType.Testnet

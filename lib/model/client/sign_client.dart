@@ -6,6 +6,7 @@ import 'package:cstoken/model/tokens/collection_tokens.dart';
 import 'package:cstoken/model/transrecord/trans_record.dart';
 import 'package:cstoken/net/chain_services.dart';
 import 'package:cstoken/net/request_method.dart';
+import 'package:cstoken/public.dart';
 import 'package:cstoken/utils/custom_toast.dart';
 import 'package:cstoken/utils/date_util.dart';
 import 'package:cstoken/utils/encode.dart';
@@ -530,6 +531,31 @@ class SignTransactionClient {
     };
   }
 
+  static Map get721UserAllTokens(String from, String nftContract) {
+    String contract = SPManager.getNetType() == KNetType.Mainnet
+        ? alltoken_MainContract
+        : alltoken_TestContract;
+
+    final contractAddress = EthereumAddress.fromHex(contract);
+    final dc = DeployedContract(_erc721Abi, contractAddress);
+    final function = dc.function('userAllTokens');
+    String data = bytesToHex(
+        function.encodeCall([
+          EthereumAddress.fromHex(nftContract),
+          EthereumAddress.fromHex(from)
+        ]),
+        include0x: true);
+    return {
+      "jsonrpc": "2.0",
+      "id": contract,
+      "method": "eth_call",
+      "params": [
+        {"to": contract, "data": data},
+        "latest"
+      ]
+    };
+  }
+
   int? get ChainID => _chainId;
 }
 
@@ -561,6 +587,10 @@ final ContractAbi _erc721Abi = ContractAbi('ERC721', [
   ]),
   const ContractFunction('tokenURI', [
     FunctionParameter('tokenId', UintType(length: 256)),
+  ]),
+  const ContractFunction('userAllTokens', [
+    FunctionParameter('nftAddress', AddressType()),
+    FunctionParameter('account', AddressType()),
   ]),
   const ContractFunction(
       'balanceOf', [FunctionParameter('from', AddressType())]),

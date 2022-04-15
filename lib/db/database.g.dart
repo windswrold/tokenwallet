@@ -110,7 +110,7 @@ class _$FlutterDatabase extends FlutterDatabase {
         await database.execute(
             'CREATE TABLE IF NOT EXISTS `translist_table` (`txid` TEXT, `toAdd` TEXT, `fromAdd` TEXT, `date` TEXT, `amount` TEXT, `remarks` TEXT, `fee` TEXT, `gasPrice` TEXT, `gasLimit` TEXT, `transStatus` INTEGER, `token` TEXT, `coinType` TEXT, `chainid` INTEGER, `nonce` INTEGER, `contractTo` TEXT, `input` TEXT, `signMessage` TEXT, `repeatPushCount` INTEGER, `blockHeight` INTEGER, `transType` INTEGER, PRIMARY KEY (`txid`))');
         await database.execute(
-            'CREATE TABLE IF NOT EXISTS `nft_model_table` (`tokenID` TEXT, `owner` TEXT, `chainTypeName` TEXT, `contractAddress` TEXT, `contractName` TEXT, `nftId` TEXT, `nftTypeName` TEXT, `url` TEXT, `state` INTEGER, `kNetType` INTEGER, PRIMARY KEY (`tokenID`))');
+            'CREATE TABLE IF NOT EXISTS `nft_model_table` (`tokenID` TEXT, `owner` TEXT, `chainTypeName` TEXT, `contractAddress` TEXT, `contractName` TEXT, `nftId` TEXT, `nftTypeName` TEXT, `url` TEXT, `usdtValues` TEXT, `state` INTEGER, `kNetType` INTEGER, PRIMARY KEY (`tokenID`))');
 
         await callback?.onCreate?.call(database, version);
       },
@@ -1064,6 +1064,7 @@ class _$NFTModelDao extends NFTModelDao {
                   'nftId': item.nftId,
                   'nftTypeName': item.nftTypeName,
                   'url': item.url,
+                  'usdtValues': item.usdtValues,
                   'state': item.state,
                   'kNetType': item.kNetType
                 }),
@@ -1080,6 +1081,7 @@ class _$NFTModelDao extends NFTModelDao {
                   'nftId': item.nftId,
                   'nftTypeName': item.nftTypeName,
                   'url': item.url,
+                  'usdtValues': item.usdtValues,
                   'state': item.state,
                   'kNetType': item.kNetType
                 }),
@@ -1096,6 +1098,7 @@ class _$NFTModelDao extends NFTModelDao {
                   'nftId': item.nftId,
                   'nftTypeName': item.nftTypeName,
                   'url': item.url,
+                  'usdtValues': item.usdtValues,
                   'state': item.state,
                   'kNetType': item.kNetType
                 });
@@ -1126,7 +1129,8 @@ class _$NFTModelDao extends NFTModelDao {
             nftTypeName: row['nftTypeName'] as String?,
             url: row['url'] as String?,
             state: row['state'] as int?,
-            kNetType: row['kNetType'] as int?),
+            kNetType: row['kNetType'] as int?,
+            usdtValues: row['usdtValues'] as String?),
         arguments: [owner]);
   }
 
@@ -1144,7 +1148,8 @@ class _$NFTModelDao extends NFTModelDao {
             nftTypeName: row['nftTypeName'] as String?,
             url: row['url'] as String?,
             state: row['state'] as int?,
-            kNetType: row['kNetType'] as int?),
+            kNetType: row['kNetType'] as int?,
+            usdtValues: row['usdtValues'] as String?),
         arguments: [owner, kNetType]);
   }
 
@@ -1153,7 +1158,7 @@ class _$NFTModelDao extends NFTModelDao {
       String owner, int kNetType, String chainType) async {
     return _queryAdapter.queryList(
         'SELECT * FROM nft_model_table WHERE owner = ?1 and kNetType=?2 and chainTypeName=?3',
-        mapper: (Map<String, Object?> row) => NFTModel(tokenID: row['tokenID'] as String?, owner: row['owner'] as String?, chainTypeName: row['chainTypeName'] as String?, contractAddress: row['contractAddress'] as String?, contractName: row['contractName'] as String?, nftId: row['nftId'] as String?, nftTypeName: row['nftTypeName'] as String?, url: row['url'] as String?, state: row['state'] as int?, kNetType: row['kNetType'] as int?),
+        mapper: (Map<String, Object?> row) => NFTModel(tokenID: row['tokenID'] as String?, owner: row['owner'] as String?, chainTypeName: row['chainTypeName'] as String?, contractAddress: row['contractAddress'] as String?, contractName: row['contractName'] as String?, nftId: row['nftId'] as String?, nftTypeName: row['nftTypeName'] as String?, url: row['url'] as String?, state: row['state'] as int?, kNetType: row['kNetType'] as int?, usdtValues: row['usdtValues'] as String?),
         arguments: [owner, kNetType, chainType]);
   }
 
@@ -1162,7 +1167,7 @@ class _$NFTModelDao extends NFTModelDao {
       String owner, int state, int kNetType) async {
     return _queryAdapter.queryList(
         'SELECT * FROM nft_model_table WHERE owner = ?1 and state = ?2 and kNetType=?3',
-        mapper: (Map<String, Object?> row) => NFTModel(tokenID: row['tokenID'] as String?, owner: row['owner'] as String?, chainTypeName: row['chainTypeName'] as String?, contractAddress: row['contractAddress'] as String?, contractName: row['contractName'] as String?, nftId: row['nftId'] as String?, nftTypeName: row['nftTypeName'] as String?, url: row['url'] as String?, state: row['state'] as int?, kNetType: row['kNetType'] as int?),
+        mapper: (Map<String, Object?> row) => NFTModel(tokenID: row['tokenID'] as String?, owner: row['owner'] as String?, chainTypeName: row['chainTypeName'] as String?, contractAddress: row['contractAddress'] as String?, contractName: row['contractName'] as String?, nftId: row['nftId'] as String?, nftTypeName: row['nftTypeName'] as String?, url: row['url'] as String?, state: row['state'] as int?, kNetType: row['kNetType'] as int?, usdtValues: row['usdtValues'] as String?),
         arguments: [owner, state, kNetType]);
   }
 
@@ -1171,7 +1176,7 @@ class _$NFTModelDao extends NFTModelDao {
       String owner, int state, int kNetType, String chainType) async {
     return _queryAdapter.queryList(
         'SELECT * FROM nft_model_table WHERE owner = ?1 and state = ?2 and kNetType=?3 and chainTypeName =?4',
-        mapper: (Map<String, Object?> row) => NFTModel(tokenID: row['tokenID'] as String?, owner: row['owner'] as String?, chainTypeName: row['chainTypeName'] as String?, contractAddress: row['contractAddress'] as String?, contractName: row['contractName'] as String?, nftId: row['nftId'] as String?, nftTypeName: row['nftTypeName'] as String?, url: row['url'] as String?, state: row['state'] as int?, kNetType: row['kNetType'] as int?),
+        mapper: (Map<String, Object?> row) => NFTModel(tokenID: row['tokenID'] as String?, owner: row['owner'] as String?, chainTypeName: row['chainTypeName'] as String?, contractAddress: row['contractAddress'] as String?, contractName: row['contractName'] as String?, nftId: row['nftId'] as String?, nftTypeName: row['nftTypeName'] as String?, url: row['url'] as String?, state: row['state'] as int?, kNetType: row['kNetType'] as int?, usdtValues: row['usdtValues'] as String?),
         arguments: [owner, state, kNetType, chainType]);
   }
 

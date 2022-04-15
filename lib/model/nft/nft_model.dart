@@ -16,6 +16,7 @@ class NFTModel {
   String? nftId;
   String? nftTypeName;
   String? url;
+  String? usdtValues;
   int? state; //是否显示
   int? kNetType; //0 是主网 非0是测试网
 
@@ -29,17 +30,18 @@ class NFTModel {
       this.nftTypeName,
       this.url,
       this.state,
-      this.kNetType});
+      this.kNetType,
+      this.usdtValues});
 
   static NFTModel fromJson(Map<String, dynamic> json) {
     return NFTModel(
-      chainTypeName: json["chainTypeName"] ?? '',
-      contractAddress: json["contractAddress"] ?? '',
-      contractName: json["contractName"] ?? '',
-      nftId: (json["nftId"] as List).join(','),
-      nftTypeName: json["nftTypeName"] ?? '',
-      url: json["url"] ?? '',
-    );
+        chainTypeName: json["chainTypeName"] ?? '',
+        contractAddress: json["contractAddress"] ?? '',
+        contractName: json["contractName"] ?? '',
+        nftId: (json["nftId"] as List).join(','),
+        nftTypeName: json["nftTypeName"] ?? '',
+        url: json["url"] ?? '',
+        usdtValues: json["usdtValues"] ?? '0');
   }
 
   static NFTModel fromNftListJson(Map<String, dynamic> json) {
@@ -49,6 +51,7 @@ class NFTModel {
         contractName: json["project_name"] ?? '',
         nftTypeName: json["nft_type"] ?? '',
         url: json["icon_url"] ?? '',
+        usdtValues: json["usd_price"] ?? '',
         nftId: "");
   }
 

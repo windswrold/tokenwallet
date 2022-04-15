@@ -174,7 +174,8 @@ class CurrentChooseWalletState with ChangeNotifier {
       return;
     }
     _nftIndexInfo[_currentWallet!.walletID!] = result;
-    List defaultNFT = await WalletServices.getUserNftList(address: ethAdress);
+    List defaultNFT =
+        await WalletServices.getUserNftList(address: ethAdress, pageNum: 1);
     for (var item in defaultNFT) {
       NFTModel nftModel = NFTModel.fromJson(item);
       nftModel.owner = walletID;
