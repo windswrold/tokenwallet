@@ -54,36 +54,35 @@ class _NFTInfoState extends State<NFTInfo> {
       title: CustomPageView.getTitle(title: "homepage_nftinfo".local()),
       child: Column(
         children: [
-          _infos == null
-              ? Expanded(child: EmptyDataPage())
-              : Expanded(
-                  child: Column(
-                  children: [
-                    Expanded(
-                      child: LoadTokenAssetsImage(
-                        _infos!.imageBase64 == null
-                            ? WalletServices.getIpfsImageUrl(
-                                _infos!.image ?? "")
-                            : _infos!.imageBase64 ?? '',
-                        isNft: true,
+          Expanded(
+            child: SingleChildScrollView(
+              child: Column(
+                children: [
+                  LoadTokenAssetsImage(
+                    _infos?.imageBase64 == null
+                        ? WalletServices.getIpfsImageUrl(_infos?.image ?? "")
+                        : _infos?.imageBase64 ?? '',
+                    isNft: true,
+                  ),
+                  Container(
+                    alignment: Alignment.topLeft,
+                    padding: EdgeInsets.only(
+                        left: 16.width,
+                        right: 16.width,
+                        top: 16.width,
+                        bottom: 16.width),
+                    child: Text(
+                      _infos?.description ?? "",
+                      style: TextStyle(
+                        fontSize: 14.font,
+                        color: Color.fromARGB(255, 183, 183, 183),
                       ),
                     ),
-                    Expanded(
-                      child: Container(
-                        alignment: Alignment.topLeft,
-                        padding: EdgeInsets.only(
-                            left: 16.width, right: 16.width, top: 16.width),
-                        child: Text(
-                          _infos!.description ?? "",
-                          style: TextStyle(
-                            fontSize: 14.font,
-                            color: Color.fromARGB(255, 183, 183, 183),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                )),
+                  ),
+                ],
+              ),
+            ),
+          ),
           NextButton(
             bgc: ColorUtils.blueColor,
             textStyle: TextStyle(

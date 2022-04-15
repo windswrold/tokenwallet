@@ -40,7 +40,7 @@ class _SearchAddTokenState extends State<SearchAddToken> {
 
   void _initData(int page, {String? keywords}) async {
     if (_homeTokenType == 1) {
-      _initNFTData(_page);
+      _initNFTData(_page, keywords: keywords);
       return;
     }
     HWToast.showLoading();
@@ -137,7 +137,19 @@ class _SearchAddTokenState extends State<SearchAddToken> {
         : trWallet.chainType!.getChainType().getNetTokenType();
     String walletID = trWallet.walletID!;
     _page = page;
-    List<NFTModel> indexnfts = await WalletServices.getNftList(pageNum: page);
+    List<NFTModel> indexnfts = [];
+    if (keywords == null || keywords.isEmpty) {
+      indexnfts = await WalletServices.getNftList(pageNum: page);
+    } else {
+      if (await keywords.checkAddress(KCoinType.ETH) == true) {
+        indexnfts = await WalletServices.getNftList(
+            pageNum: page, tokenContractAddress: keywords);
+      } else {
+        indexnfts =
+            await WalletServices.getNftList(pageNum: page, tokenName: keywords);
+      }
+    }
+
     KNetType netType = RequestURLS.getHost() == RequestURLS.testUrl
         ? KNetType.Testnet
         : KNetType.Mainnet;

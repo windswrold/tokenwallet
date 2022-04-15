@@ -161,51 +161,58 @@ class _TransferPaymentState extends State<TransferPayment> {
                               _kTransferState.goContract(context);
                             })),
                       ),
-                      Consumer<CurrentChooseWalletState>(
-                          builder: (_, provider, child) {
-                        return _buildTextField(_kTransferState.valueEC,
-                            "transferetype_value".local(),
-                            titleDetail: "paymentsheep_canuse".local() +
-                                provider.chooseTokens()!.balanceString,
-                            hintText: "payments_value".local(),
-                            keyboardType: const TextInputType.numberWithOptions(
-                                decimal: true),
-                            inputFormatters: [
-                              CustomTextField.decimalInputFormatter(18),
-                            ],
-                            suffixIcon: GestureDetector(
-                              behavior: HitTestBehavior.opaque,
-                              onTap: () {
-                                _kTransferState.valueEC.text =
-                                    provider.chooseTokens()!.balanceString;
-                              },
-                              child: Container(
-                                alignment: Alignment.center,
-                                height: 30.width,
-                                child: Text(
-                                  "transferetype_all".local(),
-                                  style: TextStyle(
-                                    fontSize: 12.font,
-                                    fontWeight: FontWeightUtils.medium,
-                                    color: ColorUtils.blueColor,
+                      Visibility(
+                        visible: widget.nftInfos == null,
+                        child: Consumer<CurrentChooseWalletState>(
+                            builder: (_, provider, child) {
+                          return _buildTextField(_kTransferState.valueEC,
+                              "transferetype_value".local(),
+                              titleDetail: "paymentsheep_canuse".local() +
+                                  provider.chooseTokens()!.balanceString,
+                              hintText: "payments_value".local(),
+                              keyboardType:
+                                  const TextInputType.numberWithOptions(
+                                      decimal: true),
+                              inputFormatters: [
+                                CustomTextField.decimalInputFormatter(18),
+                              ],
+                              suffixIcon: GestureDetector(
+                                behavior: HitTestBehavior.opaque,
+                                onTap: () {
+                                  _kTransferState.valueEC.text =
+                                      provider.chooseTokens()!.balanceString;
+                                },
+                                child: Container(
+                                  alignment: Alignment.center,
+                                  height: 30.width,
+                                  child: Text(
+                                    "transferetype_all".local(),
+                                    style: TextStyle(
+                                      fontSize: 12.font,
+                                      fontWeight: FontWeightUtils.medium,
+                                      color: ColorUtils.blueColor,
+                                    ),
                                   ),
                                 ),
-                              ),
-                            ));
-                      }),
-                      Container(
-                        padding: EdgeInsets.only(top: 4.width),
-                        alignment: Alignment.centerLeft,
-                        child: Consumer<KTransferState>(
-                          builder: (context, provider, child) {
-                            return Text(
-                              provider.paymentAssets,
-                              style: TextStyle(
-                                fontSize: 12.font,
-                                color: ColorUtils.fromHex("#FF7685A2"),
-                              ),
-                            );
-                          },
+                              ));
+                        }),
+                      ),
+                      Visibility(
+                        visible: widget.nftInfos == null,
+                        child: Container(
+                          padding: EdgeInsets.only(top: 4.width),
+                          alignment: Alignment.centerLeft,
+                          child: Consumer<KTransferState>(
+                            builder: (context, provider, child) {
+                              return Text(
+                                provider.paymentAssets,
+                                style: TextStyle(
+                                  fontSize: 12.font,
+                                  color: ColorUtils.fromHex("#FF7685A2"),
+                                ),
+                              );
+                            },
+                          ),
                         ),
                       ),
                       _buildFee(),

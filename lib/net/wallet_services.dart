@@ -294,13 +294,22 @@ class WalletServices {
   }
 
   static Future<List<NFTModel>> getNftList(
-      {int pageNum = 1, bool popularFlag = false}) async {
+      {int pageNum = 1,
+      bool popularFlag = false,
+      String? tokenName,
+      String? tokenContractAddress}) async {
     final url = RequestURLS.getHost() + RequestURLS.nftList;
     Map<String, dynamic>? params = {};
     params["pageNum"] = pageNum.toString();
     params["pageSize"] = "10";
     params["popularFlag"] = popularFlag == false ? "0" : "1";
     params["defaultFlag"] = "1";
+    if (tokenName != null) {
+      params["tokenName"] = tokenName;
+    }
+    if (tokenContractAddress != null) {
+      params["tokenContractAddress"] = tokenContractAddress;
+    }
     dynamic result = await RequestMethod.manager!
         .requestData(Method.GET, url, queryParameters: params);
     if (result != null && result["code"] == 200) {

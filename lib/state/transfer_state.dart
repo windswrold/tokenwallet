@@ -170,6 +170,9 @@ class KTransferState with ChangeNotifier {
     String from = _walletInfo!.walletAaddress!;
     String to = _addressEC.text.trim();
     String amount = _valueEC.text.trim();
+    if (_tokens?.tokenType == KTokenType.eip721.index) {
+      amount = "1";
+    }
     String remark = _remarkEC.text.trim();
     bool? isValid = false;
     int coinType = _walletInfo!.coinType!;
