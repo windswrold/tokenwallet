@@ -250,8 +250,8 @@ final String ASSETS_IMG = './assets/images/';
 
 final String SLOGAN = "Aggregation of NFT";
 
-const int transferETHGasLimit = 25000;
-const int transferERC20GasLimit = 65000;
+const int transferETHGasLimit = 21000;
+const int transferERC20GasLimit = 21000;
 
 EventBus eventBus = EventBus();
 

@@ -14,6 +14,7 @@ import 'package:cstoken/model/mnemonic/mnemonic.dart';
 import 'package:cstoken/public.dart';
 import 'package:cstoken/utils/date_util.dart';
 import 'package:cstoken/utils/encode.dart';
+import 'package:cstoken/utils/json_util.dart';
 import 'package:encrypt/encrypt.dart';
 import 'package:cstoken/main.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -109,9 +110,9 @@ void main() {
     // print(abi2);
 
     Map string = SignTransactionClient.get721TokenURI(
-        "0x064e16771A4864561f767e4Ef4a6989fc4045aE7", "78932");
+        "0x061608b32e52dfa400c396a6a59143bb1fffbb47", "1915");
     print("string");
-    print(string);
+    print(JsonUtil.encodeObj(string));
 
     // ascii.encode(string);
   });

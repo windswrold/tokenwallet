@@ -236,5 +236,6 @@
     "tokensetting_searchnfttip": "输入藏品名称或合约地址",
     "tokensetting_addnftcon": "请输入需要添加的NFT合约",
     "tokensetting_addnftconadd": "请输入NFT合约",
-    "tokensetting_addnftconname": "请输入NFT名称"
+    "tokensetting_addnftconname": "请输入NFT名称",
+    "trasnfer_errtip": "如果交易失败 请自定义提高Gas Limit（gas）值"
 }
