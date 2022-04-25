@@ -22,7 +22,7 @@ rootProject.allprojects {
             url = uri("https://maven.pkg.github.com/trustwallet/wallet-core")
             credentials {
                 username = '382690308@qq.com'
-                password = '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'
+                password = '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'
             }
         }
     }
