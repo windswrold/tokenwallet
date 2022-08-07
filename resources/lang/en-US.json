@@ -231,10 +231,5 @@
     "homepage_latest": "Latest forging",
     "homepage_nftinfo": "NFT Details",
     "homepage_send": "Send",
-    "homepage_receivenft": "Accept Collection",
-    "tokensetting_searchnfttip": "Enter collection name or contract address",
-    "tokensetting_addnftcon": "Please enter the NFT contract to be added",
-    "tokensetting_addnftconadd": "Please enter the NFT contract",
-    "tokensetting_addnftconname": "Please enter the NFT name",
-    "trasnfer_errtip": "If the transaction fails, please increase the Gas Limit (gas) value by yourself"
+    "homepage_receivenft": "Accept Collection"
 }

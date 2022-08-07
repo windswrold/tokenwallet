@@ -160,17 +160,6 @@ class _TransfeeViewState extends State<TransfeeView> {
               ],
             ),
           ),
-          Container(
-            alignment: Alignment.centerLeft,
-            padding: EdgeInsets.fromLTRB(0, 8.width, 0, 0),
-            child: Text(
-              "trasnfer_errtip".local(),
-              style: TextStyle(
-                fontSize: 12.font,
-                color: ColorUtils.fromHex("#807685A2"),
-              ),
-            ),
-          ),
         ],
       ),
     );
